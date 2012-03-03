@@ -10,5 +10,5 @@ $_['text_test'] = 'Test';
 
 $_['button_cancel'] = 'Cancel';
 $_['button_save'] = 'Save';
-
+$a = 'b';
 ?>
