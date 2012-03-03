@@ -1,3 +1,4 @@
+
 <?php
 
 $_['heading_title']    = '[ffct.cc] Digital MultiSeller Extension';
