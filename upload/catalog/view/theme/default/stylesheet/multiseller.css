@@ -1,0 +1,22 @@
+.ms-product tr > td {
+	padding-bottom: 10px;
+	vertical-align: top;
+}
+
+.ms-product tr td:first-child {
+	padding-top: 5px;	
+}
+
+.ms-product input[type='text'] {
+	width: 200px;
+}
+
+.ms-product textarea {
+	width: 400px;
+	height: 100px;
+}
+
+.ms-note {
+	font-size: 11px;
+	font-style: italic;
+}
