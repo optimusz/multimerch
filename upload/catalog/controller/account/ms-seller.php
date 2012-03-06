@@ -7,10 +7,13 @@ class ControllerAccountMsSeller extends Controller {
 	public function __construct($registry) {
 		parent::__construct($registry);
 		
+		// commented out for testing purposes
 		/*
-    	if (!$this->customer->isLogged()) {
+    	if (!$this->seller->isLogged()) {
 	  		$this->session->data['redirect'] = $this->url->link('account/ms-seller', '', 'SSL');
 	  		$this->redirect($this->url->link('account/login', '', 'SSL')); 
+    	} else if (!$this->seller->isSeller()) {
+    		// redirect to seller info edit page
     	}
 		*/
 		
@@ -75,11 +78,36 @@ class ControllerAccountMsSeller extends Controller {
 	}	
 	
 	public function jxSaveProduct() {
-		var_dump($this->request->post);
+		//var_dump($this->request->post);
 	}
 	
+	public function jxSaveSellerInfo() {
+		//var_dump($this->request->post);
+		
+		$json = array();
+		
+		if (empty($this->request->post['sellerinfo_nickname'])) {
+			$json['errors'][] = 'Display name cannot be empty'; 
+		}
+		
+		if (empty($json['errors'])) {
+			//$this->load->model('module/multiseller/seller');
+			$json['success'] = $this->language->get('text_success');
+		}
+		
+		//var_dump($json);
+		
+		if (strcmp(VERSION,'1.5.1.3') >= 0) {
+			$this->response->setOutput(json_encode($json));
+		} else {
+			$this->load->library('json');
+			$this->response->setOutput(Json::encode($json));			
+		}
+	}
+		
+	//
 	public function newProduct() {
-		$this->load->model('module/multiseller/seller');		
+		$this->load->model('module/multiseller/seller');
 		$this->document->setTitle($this->language->get('ms_account_newproduct_heading'));
 		
 		$this->load->model('catalog/category');
@@ -91,11 +119,32 @@ class ControllerAccountMsSeller extends Controller {
 	
 	public function products() {
 		$this->load->model('module/multiseller/seller');
-		$products = $this->model_module_multiseller_seller->getSellerProducts($this->seller->getId());
 
+		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
+
+		$sort = array(
+			'order_by'  => 'date_added',
+			'order_way' => 'DESC',
+			'page' => $page,
+			'limit' => 5
+		);
+
+		//$seller_id = $this->seller->getId();
+		$seller_id = 0;
 		
+		$this->data['products'] = $this->model_module_multiseller_seller->getSellerProducts($seller_id, $sort);
+		$pagination = new Pagination();
+		$pagination->total = $this->model_module_multiseller_seller->getTotalSellerProducts($seller_id);
+		$pagination->page = $sort['page'];
+		$pagination->limit = $sort['limit']; 
+		$pagination->text = $this->language->get('text_pagination');
+		$pagination->url = $this->url->link('account/' . $this->name . '/' . __FUNCTION__, 'page={page}', 'SSL');
 		
-		$this->_setBreadcrumbs('text_account_products', __FUNCTION__);		
+		$this->data['pagination'] = $pagination->render();
+		$this->data['continue'] = $this->url->link('account/account', '', 'SSL');
+		
+		$this->document->setTitle($this->language->get('ms_account_products_heading'));		
+		$this->_setBreadcrumbs('ms_account_products_breadcrumbs', __FUNCTION__);		
 		$this->_renderTemplate('ms-account-products');
 	}
 	
@@ -105,13 +154,17 @@ class ControllerAccountMsSeller extends Controller {
 	}
 	
 
-	public function editInfo() {
-		$this->load->model('module/multiseller/seller');		
-		$this->document->setTitle($this->language->get('ms_account_sellerinfo_heading'));
+	//
+	public function sellerInfo() {
+		$this->load->model('module/multiseller/seller');
 		
+		$this->load->model('localisation/country');
+    	$this->data['countries'] = $this->model_localisation_country->getCountries();		
 
-		$this->_setBreadcrumbs('text_account_editinfo', __FUNCTION__);		
-		$this->_renderTemplate('ms-editinfo');
+
+		$this->document->setTitle($this->language->get('ms_account_sellerinfo_heading'));
+		$this->_setBreadcrumbs('ms_account_sellerinfo_breadcrumbs', __FUNCTION__);		
+		$this->_renderTemplate('ms-account-sellerinfo');
 	}
 	
 	public function transactions() {

@@ -1,4 +1,13 @@
 <?php
+
+// Global
+
+$_['ms_product_status_enabled']      = 'Enabled';
+$_['ms_product_status_disabled']      = 'Disabled';
+
+
+// Account - New product
+
 $_['ms_account_newproduct_heading']      = 'New Product';
 $_['ms_account_newproduct_breadcrumbs']       = 'New Product';
 
@@ -26,10 +35,45 @@ $_['ms_account_product_images']     = 'Images';
 $_['ms_account_product_message']     = 'Message';
 $_['ms_account_product_message_note']    = 'Your note text goes here';
 
-//
+
+// Account - Seller info
 
 $_['ms_account_sellerinfo_heading']      = 'Seller Information';
 $_['ms_account_sellerinfo_breadcrumbs']       = 'Seller Information';
+
+$_['ms_account_sellerinfo_activation_notice'] = 'Please complete the following form to activate your seller account';
+
+$_['ms_account_sellerinfo_nickname']    = 'Nickname';
+$_['ms_account_sellerinfo_nickname_note']    = 'This will be displayed blah.';
+$_['ms_account_sellerinfo_description']    = 'Description';
+$_['ms_account_sellerinfo_description_note']    = 'Your note text goes here.';
+$_['ms_account_sellerinfo_company']     = 'Company';
+$_['ms_account_sellerinfo_company_note']    = 'Your note text goes here';
+$_['ms_account_sellerinfo_country']    = 'Country';
+$_['ms_account_sellerinfo_country_note']    = 'Your note text goes here';
+$_['ms_account_sellerinfo_website']    = 'Website';
+$_['ms_account_sellerinfo_website_note']    = 'Your note text goes here';
+$_['ms_account_sellerinfo_avatar']    = 'Avatar';
+$_['ms_account_sellerinfo_avatarl_note']    = 'Your note text goes here';
+$_['ms_account_sellerinfo_paypal']    = 'Paypal';
+$_['ms_account_sellerinfo_paypal_note']    = 'Your note text goes here';
+
+
+// Account - Products
+
+$_['ms_account_products_heading']      = 'Your Products';
+$_['ms_account_products_breadcrumbs']       = 'Your Products';
+
+$_['ms_account_products_product']      = 'Product';
+$_['ms_account_products_publish']       = 'Publish';
+$_['ms_account_products_sales']      = 'Sales';
+$_['ms_account_products_status']       = 'Review status';
+$_['ms_account_products_date']       = 'Date added';
+$_['ms_account_products_action']       = 'Action';
+$_['ms_account_products_action_edit']       = 'Edit';
+$_['ms_account_products_action_delete']       = 'Delete';
+$_['ms_account_products_noproducts']       = 'You don\'t have any products yet!';
+
 
 $_['ms_text_my_newsletter'] = 'Newsletter';
 $_['ms_text_my_account']    = 'My Account';
