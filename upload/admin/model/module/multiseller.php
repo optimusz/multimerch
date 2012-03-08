@@ -20,6 +20,7 @@ class ModelModuleMultiseller extends Model {
              `description` TEXT NOT NULL DEFAULT '',
 			 `country_id` INT(11) NOT NULL DEFAULT '0',
 			 `avatar_path` VARCHAR(255) DEFAULT NULL,
+			 `paypal` VARCHAR(255) DEFAULT NULL,
 			 `date_created` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
 			 `seller_status_id` TINYINT UNSIGNED NOT NULL DEFAULT '1',
         	PRIMARY KEY (`seller_id`)) default CHARSET=utf8";
