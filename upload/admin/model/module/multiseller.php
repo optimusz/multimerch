@@ -14,6 +14,7 @@ class ModelModuleMultiseller extends Model {
 		$sql = "
 			CREATE TABLE `" . DB_PREFIX . "ms_seller` (
              `seller_id` int(11) NOT NULL AUTO_INCREMENT,
+             `nickname` VARCHAR(32) NOT NULL DEFAULT '',
              `company` VARCHAR(32) NOT NULL DEFAULT '',
              `website` VARCHAR(2083) NOT NULL DEFAULT '',
              `description` TEXT NOT NULL DEFAULT '',
