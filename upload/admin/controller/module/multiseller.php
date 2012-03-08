@@ -5,16 +5,17 @@ class ControllerModuleMultiseller extends Controller {
 	private $name = 'multiseller';
 	
 	private $settings = Array(
-		"multiseller_conf_maxlen" => 500		
+		"msconf_seller_validation" => 0		
 	);
 	
 	private $error = array(); 
 	
 	private function editSettings() {
 		$this->load->model("module/{$this->name}");
+		$this->load->model('setting/setting');
 		
 		$set = $this->model_setting_setting->getSetting($this->name);
-		
+
 		foreach($set as $s=>$v) {
 			if (isset($this->request->post[$s])) {
 				$set[$s] = $this->request->post[$s];
@@ -23,20 +24,8 @@ class ControllerModuleMultiseller extends Controller {
 				$this->data[$s] = $this->config->get($s);
 			}
 		}
-		
+
 		$this->model_setting_setting->editSetting($this->name, $set);
-	}
-	
-	private function setTranslations() {
-		$text_strings = array(
-			'heading_title', 'button_cancel', 'button_save', 'text_test'
-		);
-		
-		$this->document->setTitle($this->language->get('heading_title'));
-		
-		foreach ($text_strings as $text) {
-			$this->data[$text] = $this->language->get($text);
-		}		
 	}
 	
 	private function setBreadcrumbs() {
@@ -65,8 +54,7 @@ class ControllerModuleMultiseller extends Controller {
 		$this->load->model("module/{$this->name}");
 		$this->load->model('setting/setting');
 		$this->model_module_multiseller->createTable();
-		//$this->settings["{$this->name}_conf_email"] = $this->config->get('config_email');
-		//$this->model_setting_setting->editSetting($this->name, $this->settings);
+		$this->model_setting_setting->editSetting($this->name, $this->settings);
 	}
 
 	public function uninstall() {
@@ -74,34 +62,28 @@ class ControllerModuleMultiseller extends Controller {
 		$this->model_module_multiseller->dropTable();
 	}
 	
+	public function saveSettings() {
+		$this->editSettings();
+		
+		$json = array();
+		if (strcmp(VERSION,'1.5.1.3') >= 0) {
+			$this->response->setOutput(json_encode($json));
+		} else {
+			$this->load->library('json');
+			$this->response->setOutput(Json::encode($json));			
+		}		
+	}
+	
 	public function index() {
 		$this->load->language("module/{$this->name}");
 		$this->load->model("module/{$this->name}");
-		$this->load->model('setting/setting');
 		
 		foreach($this->settings as $s=>$v) {
 			$this->data[$s] = $this->config->get($s);
 		}
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && ($this->validate())) {
-			if (isset($this->request->post['saveComment'])) {
-				
-	        } else if (isset($this->request->post['delComment'])) {
-	        	
-	        } else if (isset($this->request->post['saveConfig']) || isset($this->request->post['submitPositions'])) {
-	        	
-        	}
-	        $this->session->data['success'] = $this->language->get('text_success');
-		}
-		
- 		if (isset($this->error['warning'])) {
-			$this->data['error_warning'] = $this->error['warning'];
-		} else {
-			$this->data['error_warning'] = '';
-		}
-
 		$this->setBreadcrumbs();
-		$this->setTranslations();
+		$this->data = array_merge($this->data, $this->load->language('module/multiseller'));
 				
         $this->data['action'] = $this->url->link("module/{$this->name}", 'token=' . $this->session->data['token'], 'SSL');
 		$this->data['cancel'] = $this->url->link('extension/module', 'token=' . $this->session->data['token'], 'SSL');

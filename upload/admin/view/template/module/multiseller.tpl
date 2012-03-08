@@ -13,28 +13,56 @@
 		<div class="heading">
 	    	<h1><img src="view/image/module.png"/><?php echo $heading_title; ?></h1>
 			<div class="buttons">
-				<a onclick="$('#form').submit();" class="button"><?php echo $button_save; ?></a>
+				<a class="button" id="saveSettings"><?php echo $button_save; ?></a>
 				<a onclick="location = '<?php echo $cancel; ?>';" class="button"><span><?php echo $button_cancel; ?></span></a>
 			</div>
 	  	</div>
 	  	<div class="content">
-			<form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data">
+			<form id="settings" action="<?php echo $action; ?>" method="post" enctype="multipart/form-data">
 				<table class="form">
 					<tr>
 						<td>
-							<span><?php echo $text_test; ?></span>
-							<span class="help"><?php echo $text_test; ?></span>
+							<span><?php echo $ms_config_seller_validation; ?></span>
+							<span class="help"><?php echo $ms_config_seller_validation_note; ?></span>
 						</td>
 						<td>
-							<input size="2" type="text" name="multiseller_conf_maxlen" value="<?php echo $multiseller_conf_maxlen; ?>" />
+							<input type="radio" name="msconf_seller_validation" value="1" <?php if($msconf_seller_validation) { ?> checked="checked" <?php } ?> />
+                			<?php echo $text_yes; ?>
+                			<input type="radio" name="msconf_seller_validation" value="0" <?php if(!$msconf_seller_validation) { ?> checked="checked" <?php } ?> />
+               				<?php echo $text_no; ?>
 						</td>
-					</tr>
+					</tr>				
 				</table>
 			</form>
 		</div>
 	</div>
   </div>
 </div>
+
+<script>
+$(function() {
+	$("#saveSettings").click(function() {
+	    $.ajax({
+			type: "POST",
+			dataType: "json",
+			url: 'index.php?route=module/multiseller/savesettings&token=<?php echo $token; ?>',
+			data: $('#settings').serialize(),
+			success: function(jsonData) {
+				if (jsonData.errors) {
+					for (error in jsonData.errors) {
+					    if (!jsonData.errors.hasOwnProperty(error)) {
+					        continue;
+					    }
+					    console.log(error + " -> " + jsonData.errors[error]);
+					}				
+				} else {
+					console.log('success');
+				}
+	       	}
+		});
+	});
+});
+</script>  
 
 <?php echo $footer; ?>	
 </div>

@@ -82,20 +82,45 @@ class ControllerAccountMsSeller extends Controller {
 	}
 	
 	public function jxSaveSellerInfo() {
-		//var_dump($this->request->post);
+		$this->load->model('module/multiseller/seller');
+		//require_once(DIR_APPLICATION . 'model/module/multiseller/validator.php');
+		$data = $this->request->post;
+		/*$data = $this->request->post;
+		
+		var_dump($data);
+		$validator = new MsValidator($data);
+		
+		$validator->isEmpty('sellerinfo_nickname', 'error');
+		
+		$errors = $validator->getErrors();
+		
+		var_dump($data);
+		//var_dump($errors);
+
+		return;*/
 		
 		$json = array();
 		
-		if (empty($this->request->post['sellerinfo_nickname'])) {
-			$json['errors'][] = 'Display name cannot be empty'; 
+		if (empty($data['sellerinfo_nickname'])) {
+			$json['errors']['sellerinfo_nickname'] = 'Display name cannot be empty'; 
+		} else if (!ctype_alnum($data['sellerinfo_nickname'])) {
+			$json['errors']['sellerinfo_nickname'] = 'Display name can only contain alphanumeric characters';
+		} else if (strlen($data['sellerinfo_nickname']) < 4 || strlen($data['sellerinfo_nickname']) > 50 ) {
+			$json['errors']['sellerinfo_nickname'] = 'Display name should be between 4 and 50 characters';			
+		} else if ($this->model_module_multiseller_seller->nicknameTaken($data['sellerinfo_nickname'])) {
+			$json['errors']['sellerinfo_nickname'] = 'This display name is already taken';
 		}
+		
+		if (strlen($data['sellerinfo_company']) > 50 ) {
+			$json['errors']['sellerinfo_company'] = 'Company name cannot be longer than 50 characters';			
+		}		
+		
 		
 		if (empty($json['errors'])) {
-			//$this->load->model('module/multiseller/seller');
-			$json['success'] = $this->language->get('text_success');
+			$data['seller_status_id'] = 1;
+			$data['avatar_path'] = '';
+			$this->model_module_multiseller_seller->saveSellerData($data);
 		}
-		
-		//var_dump($json);
 		
 		if (strcmp(VERSION,'1.5.1.3') >= 0) {
 			$this->response->setOutput(json_encode($json));

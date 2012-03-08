@@ -50,6 +50,7 @@ $_['ms_account_sellerinfo_description_note']    = 'Your note text goes here.';
 $_['ms_account_sellerinfo_company']     = 'Company';
 $_['ms_account_sellerinfo_company_note']    = 'Your note text goes here';
 $_['ms_account_sellerinfo_country']    = 'Country';
+$_['ms_account_sellerinfo_country_dont_display']    = 'Do not display my country';
 $_['ms_account_sellerinfo_country_note']    = 'Your note text goes here';
 $_['ms_account_sellerinfo_website']    = 'Website';
 $_['ms_account_sellerinfo_website_note']    = 'Your note text goes here';
