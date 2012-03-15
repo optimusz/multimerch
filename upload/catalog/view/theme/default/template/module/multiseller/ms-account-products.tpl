@@ -35,8 +35,8 @@
 			<td class="left"><?php echo $product['date_added']; ?></td>
 			<td class="center">
 				<!--<a href="#">View</a>-->
-				[ <a href="#"><?php echo $ms_account_products_action_edit; ?></a> ]
-				[ <a href="#"><?php echo $ms_account_products_action_delete; ?></a> ]
+				[ <a href="<?php echo $product['edit_link']; ?>"><?php echo $ms_account_products_action_edit; ?></a> ]
+				[ <a href="<?php echo $product['delete_link']; ?>"><?php echo $ms_account_products_action_delete; ?></a> ]
 			</td>			
 		</tr>
 		<?php } ?>

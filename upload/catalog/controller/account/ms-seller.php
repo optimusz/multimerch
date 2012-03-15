@@ -7,6 +7,8 @@ class ControllerAccountMsSeller extends Controller {
 	public function __construct($registry) {
 		parent::__construct($registry);
 		
+		$seller_account_status = 1;
+		
 		// commented out for testing purposes
 		/*
     	if (!$this->seller->isLogged()) {
@@ -19,22 +21,19 @@ class ControllerAccountMsSeller extends Controller {
 		
 		$this->document->addStyle('catalog/view/theme/' . $this->config->get('config_template') . '/stylesheet/multiseller.css');
 		$this->data = array_merge($this->data, $this->load->language('module/multiseller'),$this->load->language('account/account'));
-		$this->seller =& $this->customer;
-	}
-	
-	/*private function _loadAdminModel($model) {
-		$file  = DIR_ADMINPPLICATION . 'model/' . $model . '.php';
-		$class = 'Model' . preg_replace('/[^a-zA-Z0-9]/', '', $model);
 		
-		if (file_exists($file)) {
-			include_once($file);
-			
-			$this->registry->set('model_' . str_replace('/', '_', $model), new $class($this->registry));
-		} else {
-			trigger_error('Error: Could not load model ' . $model . '!');
-			exit();					
+		
+		
+		//$config = $this->registry->get('config');
+		$this->load->config('ms-config');
+		
+		$this->seller =& $this->customer;
+		
+		$parts = explode('/', $this->request->get['route']);
+		if ($seller_account_status !== 1 && $parts[2] != 'sellerstatus') {
+			$this->redirect($this->url->link('account/ms-seller/sellerstatus', '', 'SSL'));
 		}
-	}*/
+	}
 	
 	private function _setBreadcrumbs($textVar, $function) {
       	$this->data['breadcrumbs'] = array();
@@ -74,8 +73,8 @@ class ControllerAccountMsSeller extends Controller {
 			'common/header'	
 		);
 
-		$this->response->setOutput($this->render());		
-	}	
+		$this->response->setOutput($this->render());
+	}
 	
 	public function jxSaveProduct() {
 		//var_dump($this->request->post);
@@ -117,7 +116,13 @@ class ControllerAccountMsSeller extends Controller {
 		
 		
 		if (empty($json['errors'])) {
-			$data['seller_status_id'] = 1;
+			// 1 = active, 0 = inactive
+			if (!$this->config->get('msconf_seller_validation')) {
+				$data['seller_status_id'] = 1;				
+			} else {
+				$data['seller_status_id'] = 0;
+			}
+			
 			$data['avatar_path'] = '';
 			$this->model_module_multiseller_seller->saveSellerData($data);
 		}
@@ -129,15 +134,45 @@ class ControllerAccountMsSeller extends Controller {
 			$this->response->setOutput(Json::encode($json));			
 		}
 	}
+
+	public function sellerStatus() {
+		$this->load->model('module/multiseller/seller');
+		$this->document->setTitle($this->language->get('ms_account_status_heading'));
+		
+		$seller = $this->registry->get('seller');
+		
+		$this->data['thankyou'] = sprintf($this->language->get('ms_account_sellerinfo_mail_account_thankyou'), $this->config->get('config_name'));
+		
+		switch ($seller->getStatus()) {
+			case MS_SELLER_STATUS_TOBEACTIVATED:
+				$this->data['status'] = $this->language->get('ms_account_status_activation');
+				$this->data['message1'] = $this->language->get('ms_account_status_pleaseactivate');
+				break;
+			case MS_SELLER_STATUS_TOBEAPPROVED:
+				$this->data['status'] = $this->language->get('ms_account_status_approval');
+				$this->data['message1'] = $this->language->get('ms_account_status_willbeapproved');
+				break;
+			case MS_SELLER_STATUS_ACTIVE:
+			default:
+				$this->data['status'] = $this->language->get('ms_account_status_active');
+				$this->data['message1'] = $this->language->get('ms_account_status_fullaccess');
+				break;
+		}
+		
+		$this->data['continue'] = $this->url->link('account/account', '', 'SSL');		
+		$this->_setBreadcrumbs('ms_account_status_breadcrumbs', __FUNCTION__);
+		$this->_renderTemplate('ms-account-sellerstatus');
+	}
 		
 	//
 	public function newProduct() {
 		$this->load->model('module/multiseller/seller');
-		$this->document->setTitle($this->language->get('ms_account_newproduct_heading'));
-		
-		$this->load->model('catalog/category');
 		$this->data['categories'] = $this->model_module_multiseller_seller->getCategories(0);
 
+		$this->data['product'] = FALSE;
+
+		$this->data['heading'] = $this->language->get('ms_account_newproduct_heading');
+		$this->document->setTitle($this->language->get('ms_account_newproduct_heading'));
 		$this->_setBreadcrumbs('ms_account_newproduct_breadcrumbs', __FUNCTION__);
 		$this->_renderTemplate('ms-account-newproduct');
 	}
@@ -154,10 +189,17 @@ class ControllerAccountMsSeller extends Controller {
 			'limit' => 5
 		);
 
-		//$seller_id = $this->seller->getId();
-		$seller_id = 0;
+		$seller_id = $this->seller->getId();
 		
-		$this->data['products'] = $this->model_module_multiseller_seller->getSellerProducts($seller_id, $sort);
+		
+		$products = $this->model_module_multiseller_seller->getSellerProducts($seller_id, $sort);
+		
+		foreach ($products as &$product) {
+			$product['edit_link'] = $this->url->link('account/ms-seller/editproduct', 'product_id=' . $product['product_id'], 'SSL');
+			$product['delete_link'] = $this->url->link('account/ms-seller/deleteproduct', 'product_id=' . $product['product_id'], 'SSL');
+		}
+		
+		$this->data['products'] = $products; 
 		$pagination = new Pagination();
 		$pagination->total = $this->model_module_multiseller_seller->getTotalSellerProducts($seller_id);
 		$pagination->page = $sort['page'];
@@ -174,18 +216,29 @@ class ControllerAccountMsSeller extends Controller {
 	}
 	
 	public function editProduct() {
-		$this->_setBreadcrumbs('text_account_editproduct', __FUNCTION__);		
-		$this->_renderTemplate('ms-account-editproduct');
+		$this->load->model('module/multiseller/seller');
+		$this->data['categories'] = $this->model_module_multiseller_seller->getCategories(0);		
+		
+		$product_id = isset($this->request->get['product_id']) ? (int)$this->request->get['product_id'] : 0;
+		$seller_id = $this->seller->getId();
+		
+    	$this->data['product'] = $this->model_module_multiseller_seller->getProduct($product_id,$seller_id);		
+		
+		var_dump($this->data['product']);
+		
+		$this->data['heading'] = $this->language->get('ms_account_editproduct_heading');
+		$this->document->setTitle($this->language->get('ms_account_editproduct_heading'));		
+		$this->_setBreadcrumbs('ms_account_editproduct_breadcrumbs', __FUNCTION__);		
+		$this->_renderTemplate('ms-account-newproduct');
 	}
 	
 
 	//
 	public function sellerInfo() {
 		$this->load->model('module/multiseller/seller');
-		
+
 		$this->load->model('localisation/country');
     	$this->data['countries'] = $this->model_localisation_country->getCountries();		
-
 
 		$this->document->setTitle($this->language->get('ms_account_sellerinfo_heading'));
 		$this->_setBreadcrumbs('ms_account_sellerinfo_breadcrumbs', __FUNCTION__);		

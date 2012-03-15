@@ -5,6 +5,14 @@
 $_['ms_product_status_enabled']      = 'Enabled';
 $_['ms_product_status_disabled']      = 'Disabled';
 
+$_['ms_product_review_status_draft']       = 'Draft';
+$_['ms_product_review_status_pending']       = 'Pending';
+$_['ms_product_review_status_approved']       = 'Approved';
+$_['ms_product_review_status_declined']       = 'Declined';
+
+$_['ms_mail_greeting']      = 'Hi %s,';
+$_['ms_mail_regards']      = 'Regards,';
+
 
 // Account - New product
 
@@ -36,6 +44,13 @@ $_['ms_account_product_message']     = 'Message';
 $_['ms_account_product_message_note']    = 'Your note text goes here';
 
 
+// Account - Edit product
+
+$_['ms_account_editproduct_heading']      = 'Edit Product';
+$_['ms_account_editproduct_breadcrumbs']       = 'Edit Product';
+
+
+
 // Account - Seller info
 
 $_['ms_account_sellerinfo_heading']      = 'Seller Information';
@@ -58,6 +73,30 @@ $_['ms_account_sellerinfo_avatar']    = 'Avatar';
 $_['ms_account_sellerinfo_avatarl_note']    = 'Your note text goes here';
 $_['ms_account_sellerinfo_paypal']    = 'Paypal';
 $_['ms_account_sellerinfo_paypal_note']    = 'Your note text goes here';
+
+$_['ms_account_sellerinfo_mail_account_thankyou']	= 'Thank you for signing up as a seller at %s!';
+$_['ms_account_sellerinfo_mail_account_created_subject']    = '[%s] Seller account created';
+$_['ms_account_sellerinfo_mail_account_created_message']    = "You now have full access to your seller account and can start publishing your products!";
+
+$_['ms_account_sellerinfo_mail_account_pleaseactivate_subject']    = '[%s] Please activate your seller account';
+$_['ms_account_sellerinfo_mail_account_pleaseactivate_message']    = "Please click the link below to activate your account: ";
+
+$_['ms_account_sellerinfo_mail_account_needsapproval_subject']    = '[%s] Seller account approval';
+$_['ms_account_sellerinfo_mail_account_needsapproval_message']    = "As soon as your account is approved, you will receive a confirmation email.";
+
+
+// Account - Seller account status
+$_['ms_account_status_heading'] = 'Seller account status';
+$_['ms_account_status_breadcrumbs']	= 'Seller account status';;
+
+$_['ms_account_status'] = 'Your seller account status is: ';
+$_['ms_account_status_activation'] = 'Waiting for activation';
+$_['ms_account_status_approval'] = 'Waiting for approval';
+$_['ms_account_status_active'] = 'Active';
+
+$_['ms_account_status_fullaccess']    = "You have full access to your seller account.";
+$_['ms_account_status_pleaseactivate'] = 'Please visit the link contained in the email we sent you to complete the activation process.';
+$_['ms_account_status_willbeapproved'] = 'As soon as your account is approved, you will receive a confirmation email.';
 
 
 // Account - Products

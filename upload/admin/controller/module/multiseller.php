@@ -5,7 +5,8 @@ class ControllerModuleMultiseller extends Controller {
 	private $name = 'multiseller';
 	
 	private $settings = Array(
-		"msconf_seller_validation" => 0		
+		"msconf_seller_validation" => 0,
+		"msconf_seller_commission" => 5,
 	);
 	
 	private $error = array(); 

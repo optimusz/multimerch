@@ -3,4 +3,40 @@
 	<version>1.0</version>
 	<vqmver>1.0.8</vqmver>
 	<author>http://ffct.cc</author>
+
+	<!--
+	<file name="index.php">
+		<operation>
+			<search position="after"><![CDATA[
+				require_once($vqmod->modCheck(DIR_SYSTEM . 'library/customer.php'));
+			]]></search>
+			<add><![CDATA[
+				require_once($vqmod->modCheck(DIR_SYSTEM . 'library/seller.php'));
+			]]></add>
+		</operation>
+		
+		<operation>
+			<search position="after"><![CDATA[
+				$registry->set('customer', new Customer($registry));
+			]]></search>
+			<add><![CDATA[
+				$registry->set('seller', new Seller($registry));
+			]]></add>
+		</operation>		
+	</file>
+	-->	
+	<!--
+	<file name="system/library/language.php">
+		<operation>
+			<search position="after"><![CDATA[
+				private $data = array();
+			]]></search>
+			<add><![CDATA[
+			  	public function _getData() {
+			   		return $this->data;
+			  	}
+			]]></add>
+		</operation>
+	</file>
+	-->
 </modification>

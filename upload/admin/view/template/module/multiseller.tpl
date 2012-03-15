@@ -26,12 +26,23 @@
 							<span class="help"><?php echo $ms_config_seller_validation_note; ?></span>
 						</td>
 						<td>
-							<input type="radio" name="msconf_seller_validation" value="1" <?php if($msconf_seller_validation) { ?> checked="checked" <?php } ?> />
-                			<?php echo $text_yes; ?>
-                			<input type="radio" name="msconf_seller_validation" value="0" <?php if(!$msconf_seller_validation) { ?> checked="checked" <?php } ?> />
-               				<?php echo $text_no; ?>
+			              	<select name="msconf_seller_validation">
+			              	  <option value="0" <?php if($msconf_seller_validation == 0) { ?> selected="selected" <?php } ?>><?php echo $ms_config_seller_validation_none; ?></option>
+			                  <option value="1" <?php if($msconf_seller_validation == 1) { ?> selected="selected" <?php } ?>><?php echo $ms_config_seller_validation_email; ?></option>
+			                  <option value="2" <?php if($msconf_seller_validation == 2) { ?> selected="selected" <?php } ?>><?php echo $ms_config_seller_validation_manual; ?></option>
+			                </select>
 						</td>
-					</tr>				
+					</tr>
+					
+					<tr>
+						<td>
+							<span><?php echo $ms_config_seller_commission; ?></span>
+							<span class="help"><?php echo $ms_config_seller_commission_note; ?></span>
+						</td>
+						<td>
+							<input type="test" name="msconf_seller_commission" value="<?php echo $msconf_seller_commission; ?>"/>
+						</td>
+					</tr>					
 				</table>
 			</form>
 		</div>

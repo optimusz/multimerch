@@ -8,7 +8,7 @@
     <?php } ?>
   </div>
   
-  <h1><?php echo $ms_account_newproduct_heading; ?></h1>
+  <h1><?php echo $heading; ?></h1>
   
   <?php if (isset($error_warning) && ($error_warning)) { ?>
   <div class="warning"><?php echo $error_warning; ?></div>
@@ -21,21 +21,21 @@
         <tr>
           <td><span class="required">*</span> <?php echo $ms_account_product_name; ?></td>
           <td>
-          	<input type="text" name="product_name" value="<?php echo ''; ?>" />
+          	<input type="text" name="product_name" value="<?php echo $product['name']; ?>" />
           	<p class="ms-note"><?php echo $ms_account_product_name_note; ?></p>
           </td>
         </tr>
         <tr>
           <td><span class="required">*</span> <?php echo $ms_account_product_description; ?></td>
           <td>
-          	<textarea name="product_description"><?php echo ''; ?></textarea>
+          	<textarea name="product_description"><?php echo $product['description']; ?></textarea>
           	<p class="ms-note"><?php echo $ms_account_product_description_note; ?></p>
           </td>
         </tr>
         <tr>
           <td><span class="required">*</span> <?php echo $ms_account_product_tags; ?></td>
           <td>
-          	<input type="text" name="product_tags" value="<?php echo ''; ?>" />
+          	<input type="text" name="product_tags" value="<?php echo $product['tags']; ?>" />
           	<p class="ms-note"><?php echo $ms_account_product_tags_note; ?></p>
           </td>
         </tr>        
@@ -44,7 +44,7 @@
         <tr>
           <td><span class="required">*</span> <?php echo $ms_account_product_price; ?></td>
           <td>
-          	<input type="text" name="product_price" value="<?php echo ''; ?>" />
+          	<input type="text" name="product_price" value="<?php echo $product['price']; ?>" />
           	<p class="ms-note"><?php echo $ms_account_product_price_note; ?></p>
           </td>
         </tr>              
@@ -54,8 +54,8 @@
 			<select name="product_category">
             	<option value=""><?php echo ''; ?></option>
                   <?php foreach ($categories as $category) { ?>
-                    <?php if (in_array($category['category_id'], array(1))) { ?>
-                    <option value="<?php echo $category['category_id']; ?>"><?php echo $category['name']; ?></option>
+                    <?php if (in_array($category['category_id'], array($product['category_id']))) { ?>
+                    <option value="<?php echo $category['category_id']; ?>" selected="selected"><?php echo $category['name']; ?></option>
                     <?php } else { ?>
                     <option value="<?php echo $category['category_id']; ?>"><?php echo $category['name']; ?></option>
                     <?php } ?>
@@ -83,7 +83,7 @@
         <tr>
           <td><span class="required">*</span> <?php echo $ms_account_product_message; ?></td>
           <td>
-          	<textarea name="product_message"><?php echo ''; ?></textarea>
+          	<textarea name="product_message"></textarea>
           	<p class="ms-note"><?php echo $ms_account_product_message_note; ?></p>
           </td>          
         </tr>
