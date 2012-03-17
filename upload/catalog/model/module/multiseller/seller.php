@@ -26,6 +26,14 @@ class ModelModuleMultisellerSeller extends Model {
 		return $res->row;
 	}
 		
+	public function getSellerIdByProduct($product_id) {
+		$sql = "SELECT seller_id FROM " . DB_PREFIX . "ms_product
+				WHERE product_id = " . (int)$product_id;
+				
+		$res = $this->db->query($sql);
+		return $res->row;				
+	}		
+		
 	public function getProductStatusArray() {
 		$this->load->language('module/multiseller');
 		return array(
@@ -96,11 +104,7 @@ class ModelModuleMultisellerSeller extends Model {
 		$res = $this->db->query($sql);
 		
 		
-		//TODO
 		$review_statuses = $this->getProductStatusArray();
-		
-		
-		
 		foreach ($res->rows as &$row) {
 			$row['review_status'] = $review_statuses[$row['review_status_id']];
 			$row['status'] = $row['status_id'] ? $this->language->get('text_yes') : $this->language->get('text_no');

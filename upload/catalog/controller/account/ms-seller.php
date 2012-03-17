@@ -372,8 +372,40 @@ class ControllerAccountMsSeller extends Controller {
 	}
 	
 	public function transactions() {
-		$this->_setBreadcrumbs('text_account_transactions', __FUNCTION__);		
-		$this->_renderTemplate('ms-transactions');
+		$this->load->model('module/multiseller/transaction');		
+		
+		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
+
+		$sort = array(
+			'order_by'  => 'date_created',
+			'order_way' => 'DESC',
+			'page' => $page,
+			'limit' => 5
+		);
+
+		$seller_id = $this->customer->getId();
+		
+		
+		$transactions = $this->model_module_multiseller_transaction->getSellerTransactions($seller_id, $sort);
+		
+		/*foreach ($products as &$product) {
+			$product['edit_link'] = $this->url->link('account/ms-seller/editproduct', 'product_id=' . $product['product_id'], 'SSL');
+			$product['delete_link'] = $this->url->link('account/ms-seller/deleteproduct', 'product_id=' . $product['product_id'], 'SSL');
+		}*/
+		
+		$this->data['transactions'] = $transactions; 
+		$pagination = new Pagination();
+		$pagination->total = $this->model_module_multiseller_transaction->getTotalSellerTransactions($seller_id);
+		$pagination->page = $sort['page'];
+		$pagination->limit = $sort['limit']; 
+		$pagination->text = $this->language->get('text_pagination');
+		$pagination->url = $this->url->link('account/' . $this->name . '/' . __FUNCTION__, 'page={page}', 'SSL');
+		
+		$this->data['pagination'] = $pagination->render();
+		$this->data['continue'] = $this->url->link('account/account', '', 'SSL');
+		
+		$this->_setBreadcrumbs('ms_account_transactions_breadcrumbs', __FUNCTION__);		
+		$this->_renderTemplate('ms-account-transactions');
 	}
 	
 	public function requestMoney() {
@@ -424,6 +456,15 @@ class ControllerAccountMsSeller extends Controller {
 		);
 		
 		$this->response->setOutput($this->render(TRUE), $this->config->get('config_compression'));
+	}
+	
+	
+	
+	
+	
+	public function test() {
+		$this->load->model('module/multiseller/transaction');
+		$this->model_module_multiseller_transaction->addTransactionsForOrder(1);
 	}
 }
 ?>

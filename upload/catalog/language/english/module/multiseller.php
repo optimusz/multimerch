@@ -129,18 +129,14 @@ $_['ms_account_products_action_delete']       = 'Delete';
 $_['ms_account_products_noproducts']       = 'You don\'t have any products yet!';
 
 
-$_['ms_text_my_newsletter'] = 'Newsletter';
-$_['ms_text_my_account']    = 'My Account';
-$_['ms_text_my_orders']     = 'My Orders';
-$_['ms_text_my_newsletter'] = 'Newsletter';
-$_['ms_text_edit']          = 'Edit your account information';
-$_['ms_text_password']      = 'Change your password';
-$_['ms_text_address']       = 'Modify your address book entries';
-$_['ms_text_wishlist']      = 'Modify your wish list';
-$_['ms_text_order']         = 'View your order history';
-$_['ms_text_download']      = 'Downloads';
-$_['ms_text_reward']        = 'Your Reward Points'; 
-$_['ms_text_return']        = 'View your return requests'; 
-$_['ms_text_transaction']   = 'Your Transactions'; 
-$_['ms_text_newsletter']    = 'Subscribe / unsubscribe to newsletter';
+// Account - Transactions
+
+$_['ms_account_transactions_heading']      = 'Your Transactions';
+$_['ms_account_transactions_breadcrumbs']       = 'Your Transactions';
+
+$_['ms_account_transactions_date_created']      = 'Date created';
+$_['ms_account_transactions_description']       = 'Description';
+$_['ms_account_transactions_amount']      = 'Amount';
+$_['ms_account_transactions_notransactions']       = 'You don\'t have any transactions yet!';
+
 ?>

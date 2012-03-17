@@ -39,6 +39,18 @@
 			]]></add>
 		</operation>
 	</file>
+
+	<file name="catalog/module/checkout/order.php">
+		<operation>
+			<search position="after"><![CDATA[
+				if ($this->config->get('config_complete_status_id') == $order_status_id) {
+			]]></search>
+			<add><![CDATA[
+				$this->load->model('module/multiseller/transaction');
+				$this->model_module_multiseller_transaction->addTransactionsForOrder($order_id);
+			]]></add>
+		</operation>
+	</file>
 	
 	<!--
 	<file name="index.php">
