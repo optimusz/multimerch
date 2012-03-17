@@ -10,8 +10,23 @@ $_['ms_product_review_status_pending']       = 'Pending';
 $_['ms_product_review_status_approved']       = 'Approved';
 $_['ms_product_review_status_declined']       = 'Declined';
 
+$_['ms_button_submit']      = 'Submit';
+$_['ms_button_save_draft']      = 'Save draft';
+$_['ms_button_save_draft_unpublish']      = 'Save draft / Unpublish';
+$_['ms_button_cancel']      = 'Cancel';
+
 $_['ms_mail_greeting']      = 'Hi %s,';
 $_['ms_mail_regards']      = 'Regards,';
+
+
+// Account - General
+
+$_['ms_account_seller_account']      = 'Seller Account';
+$_['ms_account_sellerinfo']       = 'Seller information';
+$_['ms_account_newproduct']      = 'New product';
+$_['ms_account_products']       = 'Products';
+$_['ms_account_sellerstatus']      = 'Seller account status';
+$_['ms_account_transactions']       = 'Transactions';
 
 
 // Account - New product
@@ -42,7 +57,6 @@ $_['ms_account_product_images']     = 'Images';
 
 $_['ms_account_product_message']     = 'Message';
 $_['ms_account_product_message_note']    = 'Your note text goes here';
-
 
 // Account - Edit product
 
@@ -105,7 +119,7 @@ $_['ms_account_products_heading']      = 'Your Products';
 $_['ms_account_products_breadcrumbs']       = 'Your Products';
 
 $_['ms_account_products_product']      = 'Product';
-$_['ms_account_products_publish']       = 'Publish';
+$_['ms_account_products_publish']       = 'Published';
 $_['ms_account_products_sales']      = 'Sales';
 $_['ms_account_products_status']       = 'Review status';
 $_['ms_account_products_date']       = 'Date added';

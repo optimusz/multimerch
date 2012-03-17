@@ -4,6 +4,42 @@
 	<vqmver>1.0.8</vqmver>
 	<author>http://ffct.cc</author>
 
+	<file name="catalog/view/theme/default/template/account/account.tpl">
+		<operation>
+			<search position="before"><![CDATA[
+				<h2><?php echo $text_my_newsletter; ?></h2>
+			]]></search>
+			<add><![CDATA[
+			  <h2><?php echo $ms_account_seller_account; ?></h2>
+			  <div class="content">
+			    <ul>
+			      <li><a href="<?php echo $ms_link_sellerinfo; ?>"><?php echo $ms_account_sellerinfo; ?></a></li>
+			      <li><a href="<?php echo $ms_link_newproduct; ?>"><?php echo $ms_account_newproduct; ?></a></li>
+			      <li><a href="<?php echo $ms_link_products; ?>"><?php echo $ms_account_products; ?></a></li>
+			      <li><a href="<?php echo $ms_link_sellerstatus; ?>"><?php echo $ms_account_sellerstatus; ?></a></li>
+			      <li><a href="<?php echo $ms_link_transactions; ?>"><?php echo $ms_account_transactions; ?></a></li>
+			    </ul>
+			  </div>
+			]]></add>
+		</operation>
+	</file>
+
+	<file name="catalog/controller/account/account.php">
+		<operation>
+			<search position="before"><![CDATA[
+				$this->response->setOutput($this->render());
+			]]></search>
+			<add><![CDATA[
+				$this->data = array_merge($this->data, $this->load->language('module/multiseller'));			
+				$this->data['ms_link_sellerinfo'] = $this->url->link('account/ms-seller/sellerinfo', '', 'SSL');
+				$this->data['ms_link_newproduct'] = $this->url->link('account/ms-seller/newproduct', '', 'SSL');
+				$this->data['ms_link_products'] = $this->url->link('account/ms-seller/products', '', 'SSL');
+				$this->data['ms_link_sellerstatus'] = $this->url->link('account/ms-seller/sellerstatus', '', 'SSL');
+				$this->data['ms_link_transactions'] = $this->url->link('account/ms-seller/transactions', '', 'SSL');
+			]]></add>
+		</operation>
+	</file>
+	
 	<!--
 	<file name="index.php">
 		<operation>

@@ -1,15 +1,22 @@
 <?php
 
 class ControllerModuleMultiseller extends Controller {
-	
 	private $name = 'multiseller';
 	
-	private $settings = Array(
-		"msconf_seller_validation" => 0,
-		"msconf_seller_commission" => 5,
-	);
+	private $settings;
 	
-	private $error = array(); 
+	private $error = array();
+
+	public function __construct($registry) {
+		parent::__construct($registry);
+		$this->load->config('ms-config');
+		
+		$this->settings = Array(
+			"msconf_seller_validation" => MS_SELLER_VALIDATION_NONE,
+			"msconf_product_validation" => MS_PRODUCT_VALIDATION_NONE,
+			"msconf_seller_commission" => 5,
+		);
+	}	
 	
 	private function editSettings() {
 		$this->load->model("module/{$this->name}");

@@ -15,6 +15,7 @@
   <?php } ?>
   
   <form id="ms-new-product">
+  	<input type="hidden" name="product_id" value="<?php echo $product['product_id']; ?>" />
     <div class="content">
       <table class="ms-product">
         <tr><td><h3><?php echo $ms_account_product_name_description; ?></h3></td></tr>      
@@ -23,6 +24,7 @@
           <td>
           	<input type="text" name="product_name" value="<?php echo $product['name']; ?>" />
           	<p class="ms-note"><?php echo $ms_account_product_name_note; ?></p>
+          	<p class="error" id="error_product_name"></p>
           </td>
         </tr>
         <tr>
@@ -30,6 +32,7 @@
           <td>
           	<textarea name="product_description"><?php echo $product['description']; ?></textarea>
           	<p class="ms-note"><?php echo $ms_account_product_description_note; ?></p>
+          	<p class="error" id="error_product_description"></p>
           </td>
         </tr>
         <tr>
@@ -37,6 +40,7 @@
           <td>
           	<input type="text" name="product_tags" value="<?php echo $product['tags']; ?>" />
           	<p class="ms-note"><?php echo $ms_account_product_tags_note; ?></p>
+          	<p class="error" id="error_product_tags"></p>
           </td>
         </tr>        
         
@@ -46,6 +50,7 @@
           <td>
           	<input type="text" name="product_price" value="<?php echo $product['price']; ?>" />
           	<p class="ms-note"><?php echo $ms_account_product_price_note; ?></p>
+          	<p class="error" id="error_product_price"></p>
           </td>
         </tr>              
         <tr>
@@ -62,6 +67,7 @@
                   <?php } ?>
             </select>
           	<p class="ms-note"><?php echo $ms_account_product_category_note; ?></p>
+          	<p class="error" id="error_product_category"></p>
           </td>
         </tr>
         
@@ -85,13 +91,15 @@
           <td>
           	<textarea name="product_message"></textarea>
           	<p class="ms-note"><?php echo $ms_account_product_message_note; ?></p>
+          	<p class="error" id="error_product_message"></p>
           </td>          
         </tr>
       </table>
     </div>
     <div class="buttons">
-      <div class="left"><a href="<?php echo $back; ?>" class="button"><span><?php echo $button_back; ?></span></a></div>
-      <div class="right"><a class="button" id="ms-submit-button"><span><?php echo $button_continue; ?></span></a></div>
+      <div class="left"><a href="<?php echo $back; ?>" class="button"><span><?php echo $ms_button_cancel; ?></span></a></div>
+      <div class="right"><a class="button" id="ms-submit-button"><span><?php echo $ms_button_submit; ?></span></a></div>
+	  <div class="right" style="margin-right: 20px;"><a class="button" id="ms-savedraft-button"><span><?php echo $ms_button_save_draft; ?></span></a></div>      
     </div>
   </form>
   
@@ -99,22 +107,53 @@
   
 <script>
 $(function() {
-	$("#ms-submit-button").click(function() {
-	//$("#ms-submit-button").after('<span class="wait">&nbsp;<img src="catalog/view/theme/default/image/loading.gif" alt="" /></span>');
-	//$("#ms-submit-button").hide();
+	$("#ms-savedraft-button").click(function() {
 	    $.ajax({
 			type: "POST",
 			dataType: "json",
-			url: 'index.php?route=account/ms-seller/jxsaveproduct',
+			url: 'index.php?route=account/ms-seller/jxsaveproductdraft',
 			data: $(this).parents("form").serialize(),
 			success: function(jsonData) {
-				if (jsonData.hasError) {
-					alert('error');
-				    //for(error in jsonData.errors)
-				   	//$("#ms-submit-button").show();
+				$('.error').text('');				
+				if (jsonData.errors) {
+					for (error in jsonData.errors) {
+					    if (!jsonData.errors.hasOwnProperty(error)) {
+					        continue;
+					    }
+					    $('#error_'+error).text(jsonData.errors[error]);
+					    console.log(error + " -> " + jsonData.errors[error]);
+					    window.scrollTo(0,0);
+					    
+					}				
 				} else {
-					alert('success');
-					//$("#ms-submit-button").show();
+					console.log('success');
+					location = jsonData['redirect'];
+				}
+	       	}
+		});
+	});
+	
+	$("#ms-submit-button").click(function() {
+	    $.ajax({
+			type: "POST",
+			dataType: "json",
+			url: 'index.php?route=account/ms-seller/jxsubmitproduct',
+			data: $(this).parents("form").serialize(),
+			success: function(jsonData) {
+				$('.error').text('');				
+				if (jsonData.errors) {
+					for (error in jsonData.errors) {
+					    if (!jsonData.errors.hasOwnProperty(error)) {
+					        continue;
+					    }
+					    $('#error_'+error).text(jsonData.errors[error]);
+					    console.log(error + " -> " + jsonData.errors[error]);
+					    window.scrollTo(0,0);
+					    
+					}				
+				} else {
+					console.log('success');
+					location = jsonData['redirect'];
 				}
 	       	}
 		});

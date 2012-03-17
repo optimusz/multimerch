@@ -27,12 +27,25 @@
 						</td>
 						<td>
 			              	<select name="msconf_seller_validation">
-			              	  <option value="0" <?php if($msconf_seller_validation == 0) { ?> selected="selected" <?php } ?>><?php echo $ms_config_seller_validation_none; ?></option>
-			                  <option value="1" <?php if($msconf_seller_validation == 1) { ?> selected="selected" <?php } ?>><?php echo $ms_config_seller_validation_email; ?></option>
-			                  <option value="2" <?php if($msconf_seller_validation == 2) { ?> selected="selected" <?php } ?>><?php echo $ms_config_seller_validation_manual; ?></option>
+			              	  <option value="1" <?php if($msconf_seller_validation == 1) { ?> selected="selected" <?php } ?>><?php echo $ms_config_seller_validation_none; ?></option>
+			                  <option value="2" <?php if($msconf_seller_validation == 2) { ?> selected="selected" <?php } ?>><?php echo $ms_config_seller_validation_activation; ?></option>
+			                  <option value="3" <?php if($msconf_seller_validation == 3) { ?> selected="selected" <?php } ?>><?php echo $ms_config_seller_validation_approval; ?></option>
 			                </select>
 						</td>
 					</tr>
+					
+					<tr>
+						<td>
+							<span><?php echo $ms_config_product_validation; ?></span>
+							<span class="help"><?php echo $ms_config_product_validation_note; ?></span>
+						</td>
+						<td>
+			              	<select name="msconf_product_validation">
+			              	  <option value="1" <?php if($msconf_product_validation == 1) { ?> selected="selected" <?php } ?>><?php echo $ms_config_product_validation_none; ?></option>
+			                  <option value="2" <?php if($msconf_product_validation == 2) { ?> selected="selected" <?php } ?>><?php echo $ms_config_product_validation_approval; ?></option>
+			                </select>
+						</td>
+					</tr>					
 					
 					<tr>
 						<td>

@@ -2,7 +2,6 @@
 
 class ControllerAccountMsSeller extends Controller {
 	private $name = 'ms-seller';
-	private $seller;
 	
 	public function __construct($registry) {
 		parent::__construct($registry);
@@ -11,7 +10,7 @@ class ControllerAccountMsSeller extends Controller {
 		
 		// commented out for testing purposes
 		/*
-    	if (!$this->seller->isLogged()) {
+    	if (!$this->customer->isLogged()) {
 	  		$this->session->data['redirect'] = $this->url->link('account/ms-seller', '', 'SSL');
 	  		$this->redirect($this->url->link('account/login', '', 'SSL')); 
     	} else if (!$this->seller->isSeller()) {
@@ -26,8 +25,6 @@ class ControllerAccountMsSeller extends Controller {
 		
 		//$config = $this->registry->get('config');
 		$this->load->config('ms-config');
-		
-		$this->seller =& $this->customer;
 		
 		$parts = explode('/', $this->request->get['route']);
 		if ($seller_account_status !== 1 && $parts[2] != 'sellerstatus') {
@@ -76,8 +73,104 @@ class ControllerAccountMsSeller extends Controller {
 		$this->response->setOutput($this->render());
 	}
 	
-	public function jxSaveProduct() {
-		//var_dump($this->request->post);
+	public function jxSaveProductDraft() {
+		$data = $this->request->post;
+
+		$this->load->model('module/multiseller/seller');
+		
+		$json = array();
+		
+		if (empty($data['product_name'])) {
+			$json['errors']['product_name'] = 'Product name cannot be empty';
+		} else if (strlen($data['product_name']) > 50 ) {
+			$json['errors']['product_name'] = 'Product name too long';			
+		}
+
+		if (strlen($data['product_name']) > 1000 ) {
+			$json['errors']['product_description'] = 'Product description too long';			
+		}
+		
+		if (!is_numeric($data['product_price']) && (!empty($data['product_price']))) {
+			$json['errors']['product_price'] = 'Invalid price';			
+		}		
+
+		if (empty($json['errors'])) {
+			$data['enabled'] = 0;
+			$data['review_status_id'] = MS_PRODUCT_STATUS_DRAFT;
+			
+			if (isset($data['product_id']) && !empty($data['product_id'])) {
+				$this->model_module_multiseller_seller->editProduct($data);
+			} else {
+				$this->model_module_multiseller_seller->saveProduct($data);
+			}
+			$json['redirect'] = $this->url->link('account/ms-seller/products', '', 'SSL');			
+		}
+			
+		if (strcmp(VERSION,'1.5.1.3') >= 0) {
+			$this->response->setOutput(json_encode($json));
+		} else {
+			$this->load->library('json');
+			$this->response->setOutput(Json::encode($json));			
+		}
+	}
+	
+	public function jxSubmitProduct() {
+		$data = $this->request->post;
+		
+		$this->load->model('module/multiseller/seller');
+		
+		$json = array();
+		
+		if (empty($data['product_name'])) {
+			$json['errors']['product_name'] = 'Product name cannot be empty'; 
+		} else if (strlen($data['product_name']) < 4 || strlen($data['product_name']) > 50 ) {
+			$json['errors']['product_name'] = 'Product name should be between 4 and 50 characters';			
+		}
+
+		if (empty($data['product_description'])) {
+			$json['errors']['product_description'] = 'Product name cannot be empty'; 
+		} else if (strlen($data['product_description']) < 25 || strlen($data['product_name']) > 1000 ) {
+			$json['errors']['product_description'] = 'Product description should be between 25 and 1000 characters';			
+		}
+		
+		if (empty($data['product_price'])) {
+			$json['errors']['product_price'] = 'Please specify a price for your product'; 
+		} else if (!is_numeric($data['product_price'])) {
+			$json['errors']['product_price'] = 'Invalid price';			
+		}		
+
+		if (empty($data['product_category'])) {
+			$json['errors']['product_category'] = 'Please select a category'; 
+		}
+		
+		if (empty($json['errors'])) {
+			switch ($this->config->get('msconf_product_validation')) {
+				case MS_PRODUCT_VALIDATION_APPROVAL:
+					$data['enabled'] = 0;
+					$data['review_status_id'] = MS_PRODUCT_STATUS_PENDING;
+					break;
+					
+				case MS_PRODUCT_VALIDATION_NONE:
+				default:
+					$data['enabled'] = 1;
+					$data['review_status_id'] = MS_PRODUCT_STATUS_APPROVED;
+					break;
+			}
+			
+			if (isset($data['product_id']) && !empty($data['product_id'])) {
+				$this->model_module_multiseller_seller->editProduct($data);
+			} else {
+				$this->model_module_multiseller_seller->saveProduct($data);
+			}
+			$json['redirect'] = $this->url->link('account/ms-seller/products', '', 'SSL');
+		}
+		
+		if (strcmp(VERSION,'1.5.1.3') >= 0) {
+			$this->response->setOutput(json_encode($json));
+		} else {
+			$this->load->library('json');
+			$this->response->setOutput(Json::encode($json));			
+		}
 	}
 	
 	public function jxSaveSellerInfo() {
@@ -116,11 +209,19 @@ class ControllerAccountMsSeller extends Controller {
 		
 		
 		if (empty($json['errors'])) {
-			// 1 = active, 0 = inactive
-			if (!$this->config->get('msconf_seller_validation')) {
-				$data['seller_status_id'] = 1;				
-			} else {
-				$data['seller_status_id'] = 0;
+			switch ($this->config->get('msconf_seller_validation')) {
+				case MS_SELLER_VALIDATION_ACTIVATION:
+					$data['seller_status_id'] = MS_SELLER_STATUS_TOBEACTIVATED;
+					break;
+					
+				case MS_SELLER_VALIDATION_APPROVAL:
+					$data['seller_status_id'] = MS_SELLER_STATUS_TOBEAPPROVED;
+					break;
+				
+				case MS_SELLER_VALIDATION_APPROVAL:
+				default:
+					$data['seller_status_id'] = MS_SELLER_STATUS_ACTIVE;
+					break;
 			}
 			
 			$data['avatar_path'] = '';
@@ -169,12 +270,15 @@ class ControllerAccountMsSeller extends Controller {
 		$this->load->model('module/multiseller/seller');
 		$this->data['categories'] = $this->model_module_multiseller_seller->getCategories(0);
 
+		$this->load->model('localisation/language');
+		$this->data['languages'] = $this->model_localisation_language->getLanguages();
+
 		$this->data['product'] = FALSE;
 
 		$this->data['heading'] = $this->language->get('ms_account_newproduct_heading');
 		$this->document->setTitle($this->language->get('ms_account_newproduct_heading'));
 		$this->_setBreadcrumbs('ms_account_newproduct_breadcrumbs', __FUNCTION__);
-		$this->_renderTemplate('ms-account-newproduct');
+		$this->_renderTemplate('ms-account-product-form');
 	}
 	
 	public function products() {
@@ -189,7 +293,7 @@ class ControllerAccountMsSeller extends Controller {
 			'limit' => 5
 		);
 
-		$seller_id = $this->seller->getId();
+		$seller_id = $this->customer->getId();
 		
 		
 		$products = $this->model_module_multiseller_seller->getSellerProducts($seller_id, $sort);
@@ -219,18 +323,40 @@ class ControllerAccountMsSeller extends Controller {
 		$this->load->model('module/multiseller/seller');
 		$this->data['categories'] = $this->model_module_multiseller_seller->getCategories(0);		
 		
+		$this->load->model('localisation/language');
+		$this->data['languages'] = $this->model_localisation_language->getLanguages();		
+		
 		$product_id = isset($this->request->get['product_id']) ? (int)$this->request->get['product_id'] : 0;
-		$seller_id = $this->seller->getId();
+		$seller_id = $this->customer->getId();
 		
-    	$this->data['product'] = $this->model_module_multiseller_seller->getProduct($product_id,$seller_id);		
-		
-		var_dump($this->data['product']);
-		
-		$this->data['heading'] = $this->language->get('ms_account_editproduct_heading');
-		$this->document->setTitle($this->language->get('ms_account_editproduct_heading'));		
-		$this->_setBreadcrumbs('ms_account_editproduct_breadcrumbs', __FUNCTION__);		
-		$this->_renderTemplate('ms-account-newproduct');
+    	$product = $this->model_module_multiseller_seller->getProduct($product_id,$seller_id);		
+
+		if (!$product['product_id']) {
+			$this->redirect($this->url->link('account/ms-seller/products', '', 'SSL'));
+		} else {
+			$this->data['product'] = $product;
+			if($product['enabled']) {
+				$this->data['ms_button_save_draft'] = $this->language->get('ms_button_save_draft_unpublish');
+			}
+			$this->data['heading'] = $this->language->get('ms_account_editproduct_heading');
+			$this->document->setTitle($this->language->get('ms_account_editproduct_heading'));		
+			$this->_setBreadcrumbs('ms_account_editproduct_breadcrumbs', __FUNCTION__);		
+			$this->_renderTemplate('ms-account-product-form');			 
+		}
 	}
+	
+	public function deleteProduct() {
+		$this->load->model('module/multiseller/seller');
+		
+		$product_id = (int)$this->request->get['product_id'];
+		$seller_id = (int)$this->customer->getId();
+		
+		if ($this->model_module_multiseller_seller->productOwnedBySeller($product_id, $seller_id)) {
+			$this->model_module_multiseller_seller->deleteProduct($product_id);			
+		}
+		
+		$this->redirect($this->url->link('account/ms-seller/products', '', 'SSL'));		
+	}	
 	
 
 	//

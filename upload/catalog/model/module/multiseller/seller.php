@@ -3,24 +3,26 @@ class ModelModuleMultisellerSeller extends Model {
 	public function getProduct($product_id, $seller_id) {
 		$sql = "SELECT 	p.price,
 						p.product_id,
+						p.status as enabled,
 						pd.name as name,
 						pd.description as description,
 						ptc.category_id,
+						mp.review_status_id,
 						group_concat(pt.tag separator ', ') as tags
 				FROM `" . DB_PREFIX . "product` p
 				INNER JOIN `" . DB_PREFIX . "product_description` pd
 					ON p.product_id = pd.product_id
 				INNER JOIN `" . DB_PREFIX . "product_to_category` ptc
-					ON p.product_id = ptc.product_id
+					ON pd.product_id = ptc.product_id
 				INNER JOIN `" . DB_PREFIX . "ms_product` mp
-					ON pd.product_id = mp.product_id
+					ON ptc.product_id = mp.product_id
 				LEFT JOIN `" . DB_PREFIX . "product_tag` pt
 					ON mp.product_id = pt.product_id
 				WHERE p.product_id = " . (int)$product_id . " 
 				AND mp.seller_id = " . (int)$seller_id;
 		
 		$res = $this->db->query($sql);
-		var_dump($sql);
+
 		return $res->row;
 	}
 		
@@ -97,6 +99,8 @@ class ModelModuleMultisellerSeller extends Model {
 		//TODO
 		$review_statuses = $this->getProductStatusArray();
 		
+		
+		
 		foreach ($res->rows as &$row) {
 			$row['review_status'] = $review_statuses[$row['review_status_id']];
 			$row['status'] = $row['status_id'] ? $this->language->get('text_yes') : $this->language->get('text_no');
@@ -105,7 +109,103 @@ class ModelModuleMultisellerSeller extends Model {
 		return $res->rows;
 	}
 	
-	public function saveProduct($product_id) {
+	public function editProduct($data) {
+		$language_id = 1;		
+		$product_id = $data['product_id'];
+
+		$sql = "UPDATE " . DB_PREFIX . "product
+				SET price = " . (float)$data['product_price'] . ",
+					status = " . (int)$data['enabled'] . ",
+					date_modified = NOW()
+				WHERE product_id = " . (int)$product_id;
+		
+		$this->db->query($sql);
+
+		$sql = "UPDATE " . DB_PREFIX . "product_description
+				SET name = '". $this->db->escape($data['product_name']) ."',
+					description = '". $this->db->escape($data['product_description']) ."'
+				WHERE product_id = " . (int)$product_id . "
+				AND language_id = " . (int)$language_id;
+				
+		$this->db->query($sql);
+		
+		$sql = "UPDATE " . DB_PREFIX . "ms_product
+				SET review_status_id = " . (int)$data['review_status_id'] . "
+				WHERE product_id = " . (int)$product_id; 
+		
+		$this->db->query($sql);
+		
+		$sql = "UPDATE " . DB_PREFIX . "product_to_category
+				SET category_id = " . (int)$data['product_category'] . "
+				WHERE product_id = " . (int)$product_id;
+		
+		$this->db->query($sql);		
+
+		$sql = "DELETE FROM " . DB_PREFIX . "product_tag
+				WHERE product_id = " . (int)$product_id;
+		$this->db->query($sql);
+
+		if ($data['product_tags']) {
+			$tags = explode(',', $data['product_tags']);
+				
+			foreach ($tags as $tag) {
+				$this->db->query("INSERT INTO " . DB_PREFIX . "product_tag SET product_id = '" . (int)$product_id . "', language_id = '" . (int)$language_id . "', tag = '" . $this->db->escape(trim($tag)) . "'");
+			}
+		}
+	}	
+	
+	public function saveProduct($data) {
+		$language_id = 1;		
+		$store_id = $this->config->get('config_store_id');
+
+
+		$sql = "INSERT INTO " . DB_PREFIX . "product
+				SET price = " . (float)$data['product_price'] . ",
+					model = '".$this->db->escape($data['product_name']) ."',
+					subtract = 0,
+					quantity = 1,
+					shipping = 0,
+					status = " . (int)$data['enabled'] . ",
+					date_available = NOW(),				
+					date_added = NOW(),
+					date_modified = NOW()";
+		
+		$this->db->query($sql);
+		$product_id = $this->db->getLastId();
+
+		$sql = "INSERT INTO " . DB_PREFIX . "product_description
+				SET product_id = " . (int)$product_id . ",
+					name = '". $this->db->escape($data['product_name']) ."',
+					description = '". $this->db->escape($data['product_description']) ."',
+					language_id = " . (int)$language_id;
+		$this->db->query($sql);
+		
+		$sql = "INSERT INTO " . DB_PREFIX . "ms_product
+				SET product_id = " . (int)$product_id . ",
+					seller_id = " . (int)$this->customer->getId() . ",
+					review_status_id = " . (int)$data['review_status_id'];
+		
+		$this->db->query($sql);
+		
+		$sql = "INSERT INTO " . DB_PREFIX . "product_to_category
+				SET product_id = " . (int)$product_id . ",
+					category_id = " . (int)$data['product_category'];
+		
+		$this->db->query($sql);		
+
+		$sql = "INSERT INTO " . DB_PREFIX . "product_to_store
+				SET product_id = " . (int)$product_id . ",
+					store_id = " . (int)$store_id;
+		
+		$this->db->query($sql);
+
+		if ($data['product_tags']) {
+			$tags = explode(',', $data['product_tags']);
+				
+			foreach ($tags as $tag) {
+				$this->db->query("INSERT INTO " . DB_PREFIX . "product_tag SET product_id = '" . (int)$product_id . "', language_id = '" . (int)$language_id . "', tag = '" . $this->db->escape(trim($tag)) . "'");
+			}
+		}
 	}
 	
 	public function saveSellerData($data) {
@@ -186,4 +286,97 @@ class ModelModuleMultisellerSeller extends Model {
 		}
 		*/
 	}
+	
+	public function productOwnedBySeller($product_id, $seller_id) {
+		$sql = "SELECT COUNT(*) as 'total'
+				FROM `" . DB_PREFIX . "ms_product`
+				WHERE seller_id = " . (int)$seller_id . " 
+				AND product_id = " . (int)$product_id;
+		
+		$res = $this->db->query($sql);
+		
+		return $res->row['total'];			
+	}
+	
+	public function deleteProduct($product_id) {
+		$sql = "DELETE FROM " . DB_PREFIX . "product
+				WHERE product_id = " . (int)$product_id;
+		
+		$this->db->query($sql);
+
+
+		$sql = "DELETE FROM " . DB_PREFIX . "product_description
+				WHERE product_id = " . (int)$product_id;
+				
+		$this->db->query($sql);
+
+		
+		$sql = "DELETE FROM " . DB_PREFIX . "ms_product
+				WHERE product_id = " . (int)$product_id;
+		
+		$this->db->query($sql);
+
+
+		$sql = "DELETE FROM " . DB_PREFIX . "product_tag
+				WHERE product_id = " . (int)$product_id;
+		
+		$this->db->query($sql);
+		
+		$sql = "DELETE FROM " . DB_PREFIX . "product_to_category
+				WHERE product_id = " . (int)$product_id;
+		
+		$this->db->query($sql);
+		
+		$sql = "DELETE FROM " . DB_PREFIX . "product_to_store
+				WHERE product_id = " . (int)$product_id;
+		
+		$this->db->query($sql);
+
+		/*
+		$message = sprintf($this->language->get('ms_mail_greeting'), $this->customer->getFirstName()) . "\n\n";
+		$message .= sprintf($this->language->get('ms_account_sellerinfo_mail_account_thankyou'), $this->config->get('config_name')) . "\n\n";		
+		
+		$v = $this->config->get('msconf_seller_validation');
+		$v = 2;
+		switch ($v) {
+			// activation link
+			case MS_SELLER_VALIDATION_ACTIVATION:
+				$subject = sprintf($this->language->get('ms_account_sellerinfo_mail_account_pleaseactivate_subject'), $this->config->get('config_name'));
+				$message .= sprintf($this->language->get('ms_account_sellerinfo_mail_account_pleaseactivate_message'), $this->config->get('config_name')) . "\n\n";
+				$message .= 'http://dolboeb.eu/' . "\n\n";
+				break;
+				
+			// manual approval
+			case MS_SELLER_VALIDATION_APPROVAL:
+				$subject = sprintf($this->language->get('ms_account_sellerinfo_mail_account_needsapproval_subject'), $this->config->get('config_name'));
+				$message .= sprintf($this->language->get('ms_account_sellerinfo_mail_account_needsapproval_message'), $this->config->get('config_name')) . "\n\n";			
+				break;
+				
+			// no validation
+			case MS_SELLER_VALIDATION_NONE:
+			default:
+				$subject = sprintf($this->language->get('ms_account_sellerinfo_mail_account_created_subject'), $this->config->get('config_name'));
+				$message .= sprintf($this->language->get('ms_account_sellerinfo_mail_account_created_message'), $this->config->get('config_name')) . "\n\n";
+				break;								
+		}
+		
+		$message .= sprintf($this->language->get('ms_mail_regards'), HTTP_SERVER) . "\n" . $this->config->get('config_name');
+
+		$mail = new Mail();
+		$mail->protocol = $this->config->get('config_mail_protocol');
+		$mail->parameter = $this->config->get('config_mail_parameter');
+		$mail->hostname = $this->config->get('config_smtp_host');
+		$mail->username = $this->config->get('config_smtp_username');
+		$mail->password = $this->config->get('config_smtp_password');
+		$mail->port = $this->config->get('config_smtp_port');
+		$mail->timeout = $this->config->get('config_smtp_timeout');				
+		$mail->setTo($this->customer->getEmail());
+		$mail->setFrom($this->config->get('config_email'));
+		$mail->setSender($this->config->get('config_name'));
+		$mail->setSubject($subject);
+		$mail->setText($message);
+		$mail->send();
+		*/
+	}	
+	
 }
