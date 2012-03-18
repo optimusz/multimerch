@@ -21,3 +21,15 @@
 	font-style: italic;
 	margin-bottom: 0;
 }
+
+.product-info .ms-sellerinfo {
+	border-bottom: none;
+    border-top: 1px solid #E7E7E7;
+    color: #4D4D4D;
+    line-height: 20px;
+    padding: 5px 5px 10px;
+}
+
+.product-info .ms-sellerinfo span {
+	color: #38B0E3;
+}

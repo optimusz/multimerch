@@ -25,8 +25,9 @@ $_['ms_account_seller_account']      = 'Seller Account';
 $_['ms_account_sellerinfo']       = 'Seller information';
 $_['ms_account_newproduct']      = 'New product';
 $_['ms_account_products']       = 'Products';
-$_['ms_account_sellerstatus']      = 'Seller account status';
+$_['ms_account_sellerstatus']      = 'Account status';
 $_['ms_account_transactions']       = 'Transactions';
+$_['ms_account_withdraw']       = 'Request earnings';
 
 
 // Account - New product
@@ -134,9 +135,25 @@ $_['ms_account_products_noproducts']       = 'You don\'t have any products yet!'
 $_['ms_account_transactions_heading']      = 'Your Transactions';
 $_['ms_account_transactions_breadcrumbs']       = 'Your Transactions';
 
+$_['ms_account_transactions_balance']      = 'Your current balance:';
 $_['ms_account_transactions_date_created']      = 'Date created';
+$_['ms_account_transactions_date_modified']      = 'Date modified';
 $_['ms_account_transactions_description']       = 'Description';
 $_['ms_account_transactions_amount']      = 'Amount';
+$_['ms_account_transactions_status']      = 'Status';
 $_['ms_account_transactions_notransactions']       = 'You don\'t have any transactions yet!';
+
+// Account - Request withdrawal
+
+$_['ms_account_withdraw_heading']      = 'Request Earnings';
+$_['ms_account_withdraw_breadcrumbs']       = 'Request Earnings';
+
+$_['ms_account_withdraw_balance']      = 'Your current balance:';
+
+
+// Product page - Seller information
+$_['ms_catalog_product_seller']      = 'Seller:';
+$_['ms_catalog_product_date_added']      = 'Date added:';
+$_['ms_catalog_product_sales']      = 'Sales:';
 
 ?>

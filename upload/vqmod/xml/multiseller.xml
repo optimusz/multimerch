@@ -3,7 +3,47 @@
 	<version>1.0</version>
 	<vqmver>1.0.8</vqmver>
 	<author>http://ffct.cc</author>
+	
+	<!-- loader for catalog models -->
+	<!--
+	<file name="system/engine/loader.php">
+		<operation>
+			<search position="before"><![CDATA[
+				public function database($driver, $hostname, $username, $password, $database, $prefix = NULL, $charset = 'UTF8') {
+			]]></search>
+			<add><![CDATA[
+			 	public function catalogModel($model) {
+			 		$file  = DIR_APPLICATION . '../catalog/model/' . $model . '.php';
+			 		$class = 'Model' . preg_replace('/[^a-zA-Z0-9]/', '', $model);
+			 		
+			 		if (file_exists($file)) {
+			 			include_once($file);
+			 			
+			 			$this->registry->set('catalog_model_' . str_replace('/', '_', $model), new $class($this->registry));
+			 		} else {
+			 			trigger_error('Error: Could not load model ' . $model . '!');
+			 			exit();					
+			 		}
+			 	}
+			]]></add>
+		</operation>
+	</file>
+	-->
+	
+	<file name="system/engine/loader.php">
+		<operation>
+			<search position="after"><![CDATA[
+			$file  = DIR_APPLICATION . 'model/' . $model . '.php';
+			]]></search>
+			<add><![CDATA[
+			if (!file_exists($file))
+				$file = 'catalog' . '/' . 'model/' . $model . '.php';
+			]]></add>
+		</operation>
+	</file>
 
+
+	<!-- seller account area links -->
 	<file name="catalog/view/theme/default/template/account/account.tpl">
 		<operation>
 			<search position="before"><![CDATA[
@@ -18,6 +58,7 @@
 			      <li><a href="<?php echo $ms_link_products; ?>"><?php echo $ms_account_products; ?></a></li>
 			      <li><a href="<?php echo $ms_link_sellerstatus; ?>"><?php echo $ms_account_sellerstatus; ?></a></li>
 			      <li><a href="<?php echo $ms_link_transactions; ?>"><?php echo $ms_account_transactions; ?></a></li>
+			      <li><a href="<?php echo $ms_link_withdraw; ?>"><?php echo $ms_account_withdraw; ?></a></li>
 			    </ul>
 			  </div>
 			]]></add>
@@ -36,18 +77,145 @@
 				$this->data['ms_link_products'] = $this->url->link('account/ms-seller/products', '', 'SSL');
 				$this->data['ms_link_sellerstatus'] = $this->url->link('account/ms-seller/sellerstatus', '', 'SSL');
 				$this->data['ms_link_transactions'] = $this->url->link('account/ms-seller/transactions', '', 'SSL');
+				$this->data['ms_link_withdraw'] = $this->url->link('account/ms-seller/withdraw', '', 'SSL');
 			]]></add>
 		</operation>
 	</file>
 
-	<file name="catalog/module/checkout/order.php">
+	<!-- seller account SIDEBAR area links -->
+	<file name="catalog/view/theme/default/template/module/account.tpl">
 		<operation>
-			<search position="after"><![CDATA[
-				if ($this->config->get('config_complete_status_id') == $order_status_id) {
+			<search position="before"><![CDATA[
+			</ul>
+			]]></search>
+			<add><![CDATA[
+				<br />
+			  <li style="list-style-type: none"><b><?php echo $ms_account_seller_account; ?></b></li>
+			      <li><a href="<?php echo $ms_link_sellerinfo; ?>"><?php echo $ms_account_sellerinfo; ?></a></li>
+			      <li><a href="<?php echo $ms_link_newproduct; ?>"><?php echo $ms_account_newproduct; ?></a></li>
+			      <li><a href="<?php echo $ms_link_products; ?>"><?php echo $ms_account_products; ?></a></li>
+			      <li><a href="<?php echo $ms_link_sellerstatus; ?>"><?php echo $ms_account_sellerstatus; ?></a></li>
+			      <li><a href="<?php echo $ms_link_transactions; ?>"><?php echo $ms_account_transactions; ?></a></li>
+			      <li><a href="<?php echo $ms_link_withdraw; ?>"><?php echo $ms_account_withdraw; ?></a></li>
+			]]></add>
+		</operation>
+	</file>
+
+	<file name="catalog/controller/module/account.php">
+		<operation>
+			<search position="before"><![CDATA[
+				$this->render();
+			]]></search>
+			<add><![CDATA[
+				$this->data = array_merge($this->data, $this->load->language('module/multiseller'));			
+				$this->data['ms_link_sellerinfo'] = $this->url->link('account/ms-seller/sellerinfo', '', 'SSL');
+				$this->data['ms_link_newproduct'] = $this->url->link('account/ms-seller/newproduct', '', 'SSL');
+				$this->data['ms_link_products'] = $this->url->link('account/ms-seller/products', '', 'SSL');
+				$this->data['ms_link_sellerstatus'] = $this->url->link('account/ms-seller/sellerstatus', '', 'SSL');
+				$this->data['ms_link_transactions'] = $this->url->link('account/ms-seller/transactions', '', 'SSL');
+				$this->data['ms_link_withdraw'] = $this->url->link('account/ms-seller/withdraw', '', 'SSL');
+			]]></add>
+		</operation>
+	</file>
+
+
+
+
+	<!-- transactions for order -->
+	<file name="catalog/model/checkout/order.php">
+		<operation>
+			<search position="before"><![CDATA[
+				return $order_id;
 			]]></search>
 			<add><![CDATA[
 				$this->load->model('module/multiseller/transaction');
 				$this->model_module_multiseller_transaction->addTransactionsForOrder($order_id);
+			]]></add>
+		</operation>
+		
+		<operation>
+			<search position="after"><![CDATA[
+				$this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int)$order_status_id . "', date_modified = NOW() WHERE order_id = '" . (int)$order_id . "'");
+			]]></search>
+			<add><![CDATA[
+				$this->load->model('module/multiseller/transaction');
+				$this->model_module_multiseller_transaction->updateTransactionsForOrder($order_id);
+			]]></add>
+		</operation>
+		
+		<!-- increment sold counter -->		
+		<operation>
+			<search position="after"><![CDATA[
+				$this->db->query("UPDATE " . DB_PREFIX . "product SET quantity = (quantity - " . (int)$order_product['quantity'] . ") WHERE product_id = '" . (int)$order_product['product_id'] . "' AND subtract = '1'");
+			]]></search>
+			<add><![CDATA[
+				$this->load->model('module/multiseller/seller');
+				$this->db->query("UPDATE " . DB_PREFIX . "ms_product SET number_sold (number_sold + " . (int)$order_product['quantity'] . ") WHERE product_id = '" . (int)$order_product['product_id'] . "'");
+			]]></add>
+		</operation>		
+	</file>
+	
+	<file name="admin/model/sale/order.php">
+		<operation>
+			<search position="after" index="1"><![CDATA[
+				$this->db->query("UPDATE `" . DB_PREFIX . "order` SET total = '" . (float)$total . "' WHERE order_id = '" . (int)$order_id . "'");
+			]]></search>
+			<add><![CDATA[
+				$this->load->model('module/multiseller/transaction');
+				$this->model_module_multiseller_transaction->addTransactionsForOrder($order_id);
+			]]></add>
+		</operation>
+		
+		<operation>
+			<search position="after" index="2"><![CDATA[
+				$this->db->query("UPDATE `" . DB_PREFIX . "order` SET total = '" . (float)$total . "' WHERE order_id = '" . (int)$order_id . "'");
+			]]></search>
+			<add><![CDATA[
+				$this->load->model('module/multiseller/transaction');
+				$this->model_module_multiseller_transaction->updateTransactionsForOrder($order_id);
+			]]></add>
+		</operation>
+
+		<operation>
+			<search position="after"><![CDATA[
+				$this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int)$data['order_status_id'] . "', date_modified = NOW() WHERE order_id = '" . (int)$order_id . "'");
+			]]></search>
+			<add><![CDATA[
+				$this->load->model('module/multiseller/transaction');
+				$this->model_module_multiseller_transaction->updateTransactionsForOrder($order_id);
+			]]></add>
+		</operation>
+	</file>	
+	
+	
+	<!-- seller information on product page -->
+	<file name="catalog/view/theme/default/template/product/product.tpl">
+		<operation>
+			<search position="before"><![CDATA[
+			<div class="description">
+			]]></search>
+			<add><![CDATA[
+			<?php if ($sellerinfo) { ?>
+			<div class="ms-sellerinfo">
+				<span><?php echo $ms_catalog_product_seller; ?></span> <?php echo $sellerinfo['nickname']; ?><br />
+				<span><?php echo $ms_catalog_product_date_added; ?></span> <?php echo $sellerinfo['date_added']; ?><br />
+				<span><?php echo $ms_catalog_product_sales; ?></span> <?php echo $sellerinfo['sales']; ?>
+			</div>
+			<? } ?>
+			]]></add>
+		</operation>
+	</file>
+
+	<file name="catalog/controller/product/product.php">
+		<operation>
+			<search position="after"><![CDATA[
+			if ($product_info) {
+			]]></search>
+			<add><![CDATA[
+			$this->document->addStyle('catalog/view/theme/' . $this->config->get('config_template') . '/stylesheet/multiseller.css');
+			$this->data = array_merge($this->data, $this->load->language('module/multiseller'));
+			$this->load->model('module/multiseller/seller');
+			$this->data['sellerinfo'] = $this->model_module_multiseller_seller->getStatsForProduct($this->request->get['product_id']);
 			]]></add>
 		</operation>
 	</file>

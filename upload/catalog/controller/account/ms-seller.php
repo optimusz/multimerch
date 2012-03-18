@@ -86,7 +86,7 @@ class ControllerAccountMsSeller extends Controller {
 			$json['errors']['product_name'] = 'Product name too long';			
 		}
 
-		if (strlen($data['product_name']) > 1000 ) {
+		if (strlen($data['product_description']) > 1000 ) {
 			$json['errors']['product_description'] = 'Product description too long';			
 		}
 		
@@ -128,8 +128,8 @@ class ControllerAccountMsSeller extends Controller {
 		}
 
 		if (empty($data['product_description'])) {
-			$json['errors']['product_description'] = 'Product name cannot be empty'; 
-		} else if (strlen($data['product_description']) < 25 || strlen($data['product_name']) > 1000 ) {
+			$json['errors']['product_description'] = 'Product description cannot be empty'; 
+		} else if (strlen($data['product_description']) < 25 || strlen($data['product_description']) > 1000 ) {
 			$json['errors']['product_description'] = 'Product description should be between 25 and 1000 characters';			
 		}
 		
@@ -372,7 +372,7 @@ class ControllerAccountMsSeller extends Controller {
 	}
 	
 	public function transactions() {
-		$this->load->model('module/multiseller/transaction');		
+		$this->load->model('module/multiseller/transaction');
 		
 		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
 
@@ -385,15 +385,15 @@ class ControllerAccountMsSeller extends Controller {
 
 		$seller_id = $this->customer->getId();
 		
-		
 		$transactions = $this->model_module_multiseller_transaction->getSellerTransactions($seller_id, $sort);
 		
-		/*foreach ($products as &$product) {
-			$product['edit_link'] = $this->url->link('account/ms-seller/editproduct', 'product_id=' . $product['product_id'], 'SSL');
-			$product['delete_link'] = $this->url->link('account/ms-seller/deleteproduct', 'product_id=' . $product['product_id'], 'SSL');
-		}*/
-		
-		$this->data['transactions'] = $transactions; 
+    	foreach ($transactions as &$transaction) {
+   			$transaction['amount'] = $this->currency->format($transaction['amount'], $this->config->get('config_currency'));
+   			$transaction['date_created'] = date($this->language->get('date_format_short'), strtotime($transaction['date_created']));
+		}
+
+		$this->data['transactions'] = $transactions;
+		$this->data['balance'] =  $this->currency->format($this->model_module_multiseller_seller->getBalanceForSeller($seller_id),$this->config->get('config_currency'));
 		$pagination = new Pagination();
 		$pagination->total = $this->model_module_multiseller_transaction->getTotalSellerTransactions($seller_id);
 		$pagination->page = $sort['page'];
@@ -404,13 +404,21 @@ class ControllerAccountMsSeller extends Controller {
 		$this->data['pagination'] = $pagination->render();
 		$this->data['continue'] = $this->url->link('account/account', '', 'SSL');
 		
+		$this->document->setTitle($this->language->get('ms_account_transactions_heading'));
 		$this->_setBreadcrumbs('ms_account_transactions_breadcrumbs', __FUNCTION__);		
 		$this->_renderTemplate('ms-account-transactions');
 	}
 	
-	public function requestMoney() {
-		$this->_setBreadcrumbs('text_account_requestmoney', __FUNCTION__);		
-		$this->_renderTemplate('ms-requestmoney');
+	public function withdraw() {
+		$this->load->model('module/multiseller/seller');
+		
+		$seller_id = $this->customer->getId();
+		$this->data['balance'] =  $this->currency->format($this->model_module_multiseller_seller->getBalanceForSeller($seller_id),$this->config->get('config_currency'));
+		
+		$this->data['continue'] = $this->url->link('account/account', '', 'SSL');
+		$this->document->setTitle($this->language->get('ms_account_withdraw_heading'));
+		$this->_setBreadcrumbs('ms_account_withdraw_breadcrumbs', __FUNCTION__);		
+		$this->_renderTemplate('ms-account-withdraw');
 	}
 
 	public function index() {

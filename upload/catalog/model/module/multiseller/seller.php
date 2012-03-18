@@ -1,5 +1,34 @@
 <?php
 class ModelModuleMultisellerSeller extends Model {
+	public function getStatsForProduct($product_id) {
+		$sql = "SELECT 	p.date_added,
+						mp.seller_id,
+						mp.number_sold as sales,
+						ms.nickname,
+						ms.country_id,
+						ms.avatar_path
+				FROM `" . DB_PREFIX . "product` p
+				INNER JOIN `" . DB_PREFIX . "ms_product` mp
+					ON p.product_id = mp.product_id
+				INNER JOIN `" . DB_PREFIX . "ms_seller` ms
+					ON mp.seller_id = ms.seller_id
+				WHERE p.product_id = " . (int)$product_id; 
+
+		$res = $this->db->query($sql);
+
+		return $res->row;		
+	}
+	
+	public function getCommissionForSeller($seller_id) {
+		$sql = "SELECT 	commission
+				FROM `" . DB_PREFIX . "ms_seller`
+				WHERE seller_id = " . (int)$seller_id; 
+
+		$res = $this->db->query($sql);
+
+		return $res->row['commission'];		
+	}	
+	
 	public function getProduct($product_id, $seller_id) {
 		$sql = "SELECT 	p.price,
 						p.product_id,
@@ -26,6 +55,16 @@ class ModelModuleMultisellerSeller extends Model {
 		return $res->row;
 	}
 		
+	public function getBalanceForSeller($seller_id) {
+		$sql = "SELECT SUM(amount) as total
+				FROM `" . DB_PREFIX . "ms_transaction`
+				WHERE seller_id = " . (int)$seller_id;
+		
+		$res = $this->db->query($sql);
+		
+		return $res->row['total'];
+	}
+		
 	public function getSellerIdByProduct($product_id) {
 		$sql = "SELECT seller_id FROM " . DB_PREFIX . "ms_product
 				WHERE product_id = " . (int)$product_id;
@@ -43,7 +82,19 @@ class ModelModuleMultisellerSeller extends Model {
 			MS_PRODUCT_STATUS_DECLINED => $this->language->get('ms_product_review_status_declined'),
 		);		
 	}
-	
+
+	public function getOrderStatusArray($language_id) {
+		$order_statuses = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_status WHERE language_id = " . (int)$language_id);
+
+		$result = array();		
+		foreach ($order_statuses->rows as $status) {
+			$result[$status['order_status_id']] = $status['name'];
+			
+		}
+		
+		return $result;
+	}	
+
 	public function nicknameTaken($nickname) {
 		$sql = "SELECT nickname
 				FROM `" . DB_PREFIX . "ms_seller` p
@@ -225,14 +276,14 @@ class ModelModuleMultisellerSeller extends Model {
 					avatar_path = '" . $this->db->escape($data['avatar_path']) . "',
 					date_created = NOW()";
 		
-		//$this->db->query($sql);
+		$this->db->query($sql);
 		
 		
 		$message = sprintf($this->language->get('ms_mail_greeting'), $this->customer->getFirstName()) . "\n\n";
 		$message .= sprintf($this->language->get('ms_account_sellerinfo_mail_account_thankyou'), $this->config->get('config_name')) . "\n\n";		
 		
 		$v = $this->config->get('msconf_seller_validation');
-		$v = 2;
+
 		switch ($v) {
 			// activation link
 			case MS_SELLER_VALIDATION_ACTIVATION:
