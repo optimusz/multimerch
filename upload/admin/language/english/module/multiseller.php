@@ -1,5 +1,15 @@
 <?php
 
+$_['ms_menu_multiseller'] = 'Multiseller';
+$_['ms_menu_dashboard'] = 'Dashboard';
+$_['ms_menu_sellers'] = 'Sellers';
+$_['ms_menu_products'] = 'Products';
+$_['ms_menu_transactions'] = 'Transactions';
+$_['ms_menu_settings'] = 'Settings';
+$_['ms_menu_reports'] = 'Reports';
+$_['ms_menu_reports_sales'] = 'Sales';
+
+
 $_['heading_title']    = '[ffct.cc] Digital MultiSeller Extension';
 $_['text_module']         = 'Modules';
 

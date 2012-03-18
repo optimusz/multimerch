@@ -4,6 +4,12 @@
 	<vqmver>1.0.8</vqmver>
 	<author>http://ffct.cc</author>
 	
+	<!-- ************************ -->
+	<!-- ************************ -->
+	<!--         SYSTEM           -->
+	<!-- ************************ -->	
+	<!-- ************************ -->
+		
 	<!-- loader for catalog models -->
 	<!--
 	<file name="system/engine/loader.php">
@@ -40,8 +46,16 @@
 				$file = 'catalog' . '/' . 'model/' . $model . '.php';
 			]]></add>
 		</operation>
-	</file>
-
+	</file>	
+	
+	
+	
+	
+	<!-- ************************ -->
+	<!-- ************************ -->
+	<!--       FRONT OFFICE       -->
+	<!-- ************************ -->	
+	<!-- ************************ -->	
 
 	<!-- seller account area links -->
 	<file name="catalog/view/theme/default/template/account/account.tpl">
@@ -117,8 +131,6 @@
 			]]></add>
 		</operation>
 	</file>
-
-
 
 
 	<!-- transactions for order -->
@@ -219,40 +231,48 @@
 			]]></add>
 		</operation>
 	</file>
+
+
+
+
+
+	<!-- ************************ -->
+	<!-- ************************ -->
+	<!--       BACK OFFICE        -->
+	<!-- ************************ -->	
+	<!-- ************************ -->
+
+	<file name="admin/view/template/common/header.tpl">
+		<operation>
+			<search position="before" offset="1"><![CDATA[
+			<ul class="right">
+			]]></search>
+			<add><![CDATA[
+		      <li id="multiseller"><a class="top"><?php echo $ms_menu_multiseller; ?></a>
+		        <ul>
+		          <li><a href="#"><?php echo $ms_menu_dashboard; ?></a></li>
+		          <li><a href="#"><?php echo $ms_menu_sellers; ?></a></li>
+		          <li><a href="#"><?php echo $ms_menu_transactions; ?></a></li>
+		          <li><a class="parent"><?php echo $ms_menu_reports; ?></a>
+		            <ul>
+		              <li><a href="#"><?php echo $ms_menu_reports_sales; ?></a></li>
+		            </ul>
+		          </li>
+		          <li><a href="#"><?php echo $ms_menu_settings; ?></a></li>
+		        </ul>
+		      </li>
+			]]></add>
+		</operation>
+	</file>
 	
-	<!--
-	<file name="index.php">
+	<file name="admin/controller/common/header.php">
 		<operation>
 			<search position="after"><![CDATA[
-				require_once($vqmod->modCheck(DIR_SYSTEM . 'library/customer.php'));
+			protected function index() {
 			]]></search>
 			<add><![CDATA[
-				require_once($vqmod->modCheck(DIR_SYSTEM . 'library/seller.php'));
-			]]></add>
-		</operation>
-		
-		<operation>
-			<search position="after"><![CDATA[
-				$registry->set('customer', new Customer($registry));
-			]]></search>
-			<add><![CDATA[
-				$registry->set('seller', new Seller($registry));
-			]]></add>
-		</operation>		
-	</file>
-	-->	
-	<!--
-	<file name="system/library/language.php">
-		<operation>
-			<search position="after"><![CDATA[
-				private $data = array();
-			]]></search>
-			<add><![CDATA[
-			  	public function _getData() {
-			   		return $this->data;
-			  	}
+			$this->data = array_merge($this->data, $this->load->language('module/multiseller'));
 			]]></add>
 		</operation>
 	</file>
-	-->
 </modification>
