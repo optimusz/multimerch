@@ -1,5 +1,14 @@
 <?php
 
+// General
+
+$_['heading_title']    = '[ffct.cc] Digital MultiSeller Extension';
+$_['text_module']         = 'Modules';
+$_['error_permission'] = 'Warning: You do not have permission to modify module!';
+
+
+// Menu
+
 $_['ms_menu_multiseller'] = 'Multiseller';
 $_['ms_menu_dashboard'] = 'Dashboard';
 $_['ms_menu_sellers'] = 'Sellers';
@@ -10,10 +19,24 @@ $_['ms_menu_reports'] = 'Reports';
 $_['ms_menu_reports_sales'] = 'Sales';
 
 
-$_['heading_title']    = '[ffct.cc] Digital MultiSeller Extension';
-$_['text_module']         = 'Modules';
+// Seller - List
 
-$_['error_permission'] = 'Warning: You do not have permission to modify module!';
+$_['ms_seller_heading'] = 'Sellers';
+$_['ms_seller_breadcrumbs'] = 'Sellers';
+
+$_['ms_seller_name'] = 'Name';
+$_['ms_seller_display_name'] = 'Display name';
+$_['ms_seller_email'] = 'Email';
+$_['ms_seller_total_products'] = 'Products';
+$_['ms_seller_total_sales'] = 'Sales';
+$_['ms_seller_total_earnings'] = 'Earnings';
+$_['ms_seller_current_balance'] = 'Balance';
+$_['ms_seller_status'] = 'Status';
+$_['ms_seller_date_created'] = 'Date created';
+$_['ms_seller_status_tobeactivated'] = 'Waiting for activation';
+$_['ms_seller_status_tobeapproved'] = 'Waiting for approval';
+$_['ms_seller_status_active'] = 'Active';
+
 
 $_['ms_config_seller_validation'] = 'Seller validation';
 $_['ms_config_seller_validation_note'] = 'Seller validation';
@@ -31,5 +54,6 @@ $_['ms_config_seller_commission_note'] = 'Default seller commission';
 
 $_['button_cancel'] = 'Cancel';
 $_['button_save'] = 'Save';
+$_['ms_action'] = 'Action';
 
 ?>

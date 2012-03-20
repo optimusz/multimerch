@@ -1,0 +1,112 @@
+<?php
+class ModelModuleMultisellerSeller extends Model {
+	//TODO
+	public function getSellerStatus($seller_status_id = NULL) {
+		$this->load->language('module/multiseller');
+		$result = array(
+			MS_SELLER_STATUS_ACTIVE => $this->language->get('ms_seller_status_active'),
+			MS_SELLER_STATUS_TOBEACTIVATED => $this->language->get('ms_seller_status_tobeactivated'),
+			MS_SELLER_STATUS_TOBEAPPROVED => $this->language->get('ms_seller_status_tobeapproved'),
+		);		
+		
+		if ($seller_status_id) {
+			return $result[$seller_status_id];
+		} else {
+			return $result;
+		}
+	}
+	
+	public function getSellers($sort) {
+		$sql = "SELECT  CONCAT(c.firstname, ' ', c.lastname) as name,
+						c.email as email,
+						ms.seller_id,
+						ms.nickname,
+						ms.seller_status_id,
+						ms.date_created as date_created,
+						ms.commission
+				FROM `" . DB_PREFIX . "customer` c
+				INNER JOIN `" . DB_PREFIX . "ms_seller` ms
+					ON c.customer_id = ms.seller_id
+        		ORDER BY {$sort['order_by']} {$sort['order_way']}" 
+        		. ($sort['limit'] ? " LIMIT ".(int)(($sort['page'] - 1) * $sort['limit']).', '.(int)($sort['limit']) : '');
+
+		var_dump($sql);
+
+		$res = $this->db->query($sql);
+		
+		return $res->rows;		
+	}
+
+	public function getTotalSellers() {
+		$sql = "SELECT COUNT(*) as 'total'
+				FROM `" . DB_PREFIX . "ms_seller`";
+		
+		$res = $this->db->query($sql);
+		
+		return $res->row['total'];		
+	}
+	
+	public function getBalanceForSeller($seller_id) {
+		$sql = "SELECT SUM(amount) as total
+				FROM `" . DB_PREFIX . "ms_transaction`
+				WHERE seller_id = " . (int)$seller_id;
+		
+		$res = $this->db->query($sql);
+		
+		return $res->row['total'];
+	}
+
+	public function getEarningsForSeller($seller_id) {
+		$sql = "SELECT SUM(amount) as total
+				FROM `" . DB_PREFIX . "ms_transaction`
+				WHERE seller_id = " . (int)$seller_id . "
+				AND	amount > 0";
+		
+		$res = $this->db->query($sql);
+		
+		return $res->row['total'];
+	}
+
+	public function getSalesForSeller($seller_id) {
+		$sql = "SELECT IFNULL(SUM(number_sold),0) as total
+				FROM `" . DB_PREFIX . "ms_product`
+				WHERE seller_id = " . (int)$seller_id;
+		
+		$res = $this->db->query($sql);
+		
+		return $res->row['total'];
+	}	
+		
+	public function getTotalSellerProducts($seller_id) {
+		$sql = "SELECT COUNT(*) as 'total'
+				FROM `" . DB_PREFIX . "ms_product` p
+				WHERE p.seller_id = " . (int)$seller_id;
+		
+		$res = $this->db->query($sql);
+		
+		return $res->row['total'];		
+	}
+	
+	public function getSellerProducts($seller_id, $sort) {
+		$sql = "SELECT c.product_id, name, date_added, status as status_id, number_sold, review_status_id 
+				FROM `" . DB_PREFIX . "product_description` a
+				INNER JOIN `" . DB_PREFIX . "product` b
+					ON a.product_id = b.product_id 
+				INNER JOIN `" . DB_PREFIX . "ms_product` c
+					ON b.product_id = c.product_id
+				WHERE c.seller_id = " . (int)$seller_id . "
+        		ORDER BY {$sort['order_by']} {$sort['order_way']}" 
+        		. ($sort['limit'] ? " LIMIT ".(int)(($sort['page'] - 1) * $sort['limit']).', '.(int)($sort['limit']) : '');				
+		
+		$res = $this->db->query($sql);
+		
+		
+		$review_statuses = $this->getProductStatusArray();
+		foreach ($res->rows as &$row) {
+			$row['review_status'] = $review_statuses[$row['review_status_id']];
+			$row['status'] = $row['status_id'] ? $this->language->get('text_yes') : $this->language->get('text_no');
+		}
+		
+		return $res->rows;
+	}
+}

@@ -93,7 +93,7 @@ class ModelModuleMultisellerSeller extends Model {
 		}
 		
 		return $result;
-	}	
+	}
 
 	public function nicknameTaken($nickname) {
 		$sql = "SELECT nickname

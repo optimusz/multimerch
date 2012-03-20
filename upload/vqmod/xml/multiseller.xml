@@ -242,6 +242,7 @@
 	<!-- ************************ -->	
 	<!-- ************************ -->
 
+	<!-- navigation menu -->
 	<file name="admin/view/template/common/header.tpl">
 		<operation>
 			<search position="before" offset="1"><![CDATA[
@@ -251,7 +252,7 @@
 		      <li id="multiseller"><a class="top"><?php echo $ms_menu_multiseller; ?></a>
 		        <ul>
 		          <li><a href="#"><?php echo $ms_menu_dashboard; ?></a></li>
-		          <li><a href="#"><?php echo $ms_menu_sellers; ?></a></li>
+		          <li><a href="<?php echo $ms_link_sellers; ?>"><?php echo $ms_menu_sellers; ?></a></li>
 		          <li><a href="#"><?php echo $ms_menu_transactions; ?></a></li>
 		          <li><a class="parent"><?php echo $ms_menu_reports; ?></a>
 		            <ul>
@@ -271,8 +272,11 @@
 			protected function index() {
 			]]></search>
 			<add><![CDATA[
+			$this->data['ms_link_sellers'] = $this->url->link('module/multiseller/sellers', 'token=' . $this->session->data['token'], 'SSL'); 
 			$this->data = array_merge($this->data, $this->load->language('module/multiseller'));
 			]]></add>
 		</operation>
 	</file>
+	
+	
 </modification>
