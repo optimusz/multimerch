@@ -14,8 +14,9 @@
   <div class="warning"><?php echo $error_warning; ?></div>
   <?php } ?>
   
-  <form id="ms-new-product">
+  <form id="ms-new-product" method="post" enctype="multipart/form-data">
   	<input type="hidden" name="product_id" value="<?php echo $product['product_id']; ?>" />
+  	<input type="hidden" name="action" id="ms_action" />
     <div class="content">
       <table class="ms-product">
         <tr><td><h3><?php echo $ms_account_product_name_description; ?></h3></td></tr>      
@@ -74,11 +75,29 @@
         <tr><td><h3><?php echo $ms_account_product_files; ?></h3></td></tr>
         <tr>
           <td><span class="required">*</span> <?php echo $ms_account_product_thumbnail; ?></td>
-          <td><input type="file" name="product_thumbnail" /></td>
+          <td>
+          	<input type="file" name="product_thumbnail" id="product_thumbnail" />
+          	<p class="ms-note"><?php echo $ms_account_product_thumbnail_note; ?></p>
+          	<p class="error" id="error_product_thumbnail"></p>
+          	<div id="product_thumbnail_images">
+          		<img src="<?php echo $product['thumbnail_src']; ?>" />
+          	</div>
+          </td>
         </tr>
         <tr>
-          <td><span class="required">*</span> <?php echo $ms_account_product_images; ?></td>
-          <td></td>
+          <td><span class="required">*</span> <?php echo $ms_account_product_image; ?></td>
+          <td>
+          	<input type="file" name="product_image" id="product_image" />
+          	<p class="ms-note"><?php echo $ms_account_product_image_note; ?></p>
+          	<p class="error" id="error_product_image"></p>
+          	<div id="product_image_images">
+          	<?php if (isset($product['images'])) { ?>
+	          	<?php foreach ($product['images'] as $image) { ?>
+	          		<img src="<?php echo $image['src']; ?>" />
+	          	<?php } ?>
+          	<?php } ?>
+          	</div>
+          </td>
         </tr>
         <tr>
           <td><span class="required">*</span> <?php echo $ms_account_product_download; ?></td>
@@ -107,6 +126,77 @@
   
 <script>
 $(function() {
+	$('#product_image').live('change', function() {
+		$('#ms_action').val('image');
+		$('#error_product_thumbnail').text('');
+		$('#error_product_image').text('');		
+		$("#ms-new-product").ajaxForm({
+			url:  "index.php?route=account/ms-seller/jxuploadimage",
+			dataType: 'json', 
+		    beforeSend: function() {
+				$("#product_image_images").append('<span class="wait">&nbsp;<img src="catalog/view/theme/default/image/loading.gif" alt="" /></span>');
+				
+		    },
+			success: function(jsonData) {
+				$('#product_image_images span.wait').remove();
+			
+				if (!jQuery.isEmptyObject(jsonData.errors)) {
+					$('#error_product_image').text('');
+					for (error in jsonData.errors) {
+					    if (!jsonData.errors.hasOwnProperty(error)) {
+					        continue;
+					    }
+					    if (error == '0') {
+					    $('#error_product_image').text(jsonData.errors[error]);
+					    } else {
+					    $('#error_'+error).text(jsonData.errors[error]);
+					    }
+					    console.log(error + " -> " + jsonData.errors[error]);
+					}				
+				} else {
+					$("#product_image_images").append('<input type="hidden" value="'+jsonData.image.name+'" name="product_images[]" />');
+					$("#product_image_images").append('<img src="'+jsonData.image.thumb+'" />');				
+				}			
+			}
+		}).submit();
+	});
+	
+	$('#product_thumbnail').live('change', function() {
+		$('#ms_action').val('thumbnail');
+		$('#error_product_thumbnail').text('');
+		$('#error_product_image').text('');
+		$("#ms-new-product").ajaxForm({
+			url:  "index.php?route=account/ms-seller/jxuploadimage",
+			dataType: 'json', 
+		    beforeSend: function() {
+				$("#product_thumbnail_images").html('<span class="wait">&nbsp;<img src="catalog/view/theme/default/image/loading.gif" alt="" /></span>');
+		    },
+			success: function(jsonData) {
+				$('#product_thumbnail_images span.wait').remove();
+				if (!jQuery.isEmptyObject(jsonData.errors)) {
+					$("#product_thumbnail_images").html('');
+					$('#error_product_thumbnail').text('');
+					for (error in jsonData.errors) {
+					    if (!jsonData.errors.hasOwnProperty(error)) {
+					        continue;
+					    }
+					    if (error == '0') {
+					    $('#error_product_thumbnail').text(jsonData.errors[error]);
+					    } else {
+					    $('#error_'+error).text(jsonData.errors[error]);
+					    }
+					    console.log(error + " -> " + jsonData.errors[error]);
+					}				
+				} else {
+					$("#product_thumbnail_images").html('<input type="hidden" value="'+jsonData.image.name+'" name="product_thumbnail" />');
+					$("#product_thumbnail_images").append('<img src="'+jsonData.image.thumb+'" />');				
+					//$("#product_thumbnail_images").append('<input type="hidden" value="'+jsonData.image.name+'" />');
+					//$("#product_thumbnail_images").append('<img src="'+jsonData.image.thumb+'" />');
+				}			
+			}
+		}).submit();
+	});
+
 	$("#ms-savedraft-button").click(function() {
 	    $.ajax({
 			type: "POST",
@@ -114,8 +204,8 @@ $(function() {
 			url: 'index.php?route=account/ms-seller/jxsaveproductdraft',
 			data: $(this).parents("form").serialize(),
 			success: function(jsonData) {
-				$('.error').text('');				
-				if (jsonData.errors) {
+				$('.error').text('');
+				if (!jQuery.isEmptyObject(jsonData.errors)) {
 					for (error in jsonData.errors) {
 					    if (!jsonData.errors.hasOwnProperty(error)) {
 					        continue;
@@ -140,8 +230,8 @@ $(function() {
 			url: 'index.php?route=account/ms-seller/jxsubmitproduct',
 			data: $(this).parents("form").serialize(),
 			success: function(jsonData) {
-				$('.error').text('');				
-				if (jsonData.errors) {
+				$('.error').text('');
+				if (!jQuery.isEmptyObject(jsonData.errors)) {
 					for (error in jsonData.errors) {
 					    if (!jsonData.errors.hasOwnProperty(error)) {
 					        continue;
@@ -152,7 +242,7 @@ $(function() {
 					    
 					}				
 				} else {
-					console.log('success');
+					//success
 					location = jsonData['redirect'];
 				}
 	       	}

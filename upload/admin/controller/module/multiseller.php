@@ -17,6 +17,8 @@ class ControllerModuleMultiseller extends Controller {
 			"msconf_seller_validation" => MS_SELLER_VALIDATION_NONE,
 			"msconf_product_validation" => MS_PRODUCT_VALIDATION_NONE,
 			"msconf_seller_commission" => 5,
+			"msconf_image_preview_width" => 100,
+			"msconf_image_preview_height" => 100,
 		);
 	}	
 	
@@ -199,7 +201,7 @@ class ControllerModuleMultiseller extends Controller {
 			$this->data[$s] = $this->config->get($s);
 		}
 
-		$this->_setBreadcrumbs();
+		//$this->_setBreadcrumbs();
 		$this->data = array_merge($this->data, $this->load->language('module/multiseller'));
 				
         $this->data['action'] = $this->url->link("module/{$this->name}", 'token=' . $this->session->data['token'], 'SSL');
@@ -209,13 +211,9 @@ class ControllerModuleMultiseller extends Controller {
 		$this->load->model('design/layout');
 		$this->data['layouts'] = $this->model_design_layout->getLayouts();
 		
-		$this->template = "module/{$this->name}.tpl";
-		$this->children = array(
-			'common/header',	
-			'common/footer'	
-		);
-		
-		$this->response->setOutput($this->render(TRUE), $this->config->get('config_compression'));
+		//$this->document->setTitle($this->language->get('ms_seller_heading'));
+		$this->_setBreadcrumbs('ms_seller_breadcrumbs', __FUNCTION__);
+		$this->_renderTemplate('multiseller');	
 	}
 }
 ?>

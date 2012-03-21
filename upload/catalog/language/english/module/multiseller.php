@@ -53,8 +53,10 @@ $_['ms_account_product_category_note']    = 'Your note text goes here';
 
 $_['ms_account_product_files']    = 'Files';
 $_['ms_account_product_thumbnail']     = 'Thumbnail';
+$_['ms_account_product_thumbnail_note']    = 'Your note text goes here';
 $_['ms_account_product_download']     = 'Download';
-$_['ms_account_product_images']     = 'Images';
+$_['ms_account_product_image']     = 'Images';
+$_['ms_account_product_image_note']     = 'Your note text goes here';
 
 $_['ms_account_product_message']     = 'Message';
 $_['ms_account_product_message_note']    = 'Your note text goes here';

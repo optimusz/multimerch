@@ -73,12 +73,144 @@ class ControllerAccountMsSeller extends Controller {
 		$this->response->setOutput($this->render());
 	}
 	
+	private function  _moveImage($from, $to) {
+		
+	}
+	
+	private function _setJsonResponse($json) {
+		if (strcmp(VERSION,'1.5.1.3') >= 0) {
+			$this->response->setOutput(json_encode($json));
+		} else {
+			$this->load->library('json');
+			$this->response->setOutput(Json::encode($json));			
+		}		
+	}
+	
+	private function _validateImage($file) {
+		//var_dump($file);
+		$allowed_filetypes = $this->config->get('config_upload_allowed');
+		//$ms_config_max_filesize = $this->config->get('config_upload_allowed');
+		
+		$ms_config_max_filesize = 500000;
+		
+		$filetypes = explode(',', $allowed_filetypes);
+		$filetypes = array_map('strtolower', $filetypes);
+		$filetypes = array_map('trim', $filetypes);
+				
+		$errors = array();
+		
+		$size = getimagesize($file["tmp_name"]);
+
+		if(!isset($size) || stripos($file['type'],'image/') === FALSE || stripos($size['mime'],'image/') === FALSE) {
+	        $errors[] = 'Invalid file type';
+		}
+		
+		
+		$ext = explode('.', $file['name']);
+		$ext = end($ext);
+		
+		if (!in_array($ext,$filetypes)) {
+			 $errors[] = 'Invalid extension';
+		}
+			
+		if ($file["size"] > $ms_config_max_filesize
+		 || $file["error"] === UPLOAD_ERR_INI_SIZE
+		 || $file["error"] === UPLOAD_ERR_FORM_SIZE) {
+		 	$errors[] = 'File too big';
+		}
+		
+		
+		if (!empty($errors)) {
+			return $errors;
+		} else {
+			return TRUE;
+		}
+	}
+	
+	private function _isNewUpload($file) {
+		if (dirname($file) == '' || dirname($file) == '.')
+			return true;
+			
+		return false;
+	}
+	
+	public function jxUploadImage() {
+		//TODO
+		//$this->config->get('msconf_image_preview_width')
+		$json = array();
+
+		if ($this->request->post['action'] == 'image') {
+			unset($_FILES['product_thumbnail']);
+		} else if ($this->request->post['action'] == 'thumbnail') {
+			unset($_FILES['product_image']);
+		}
+
+		if ($this->request->post['action'] == 'image' && isset($this->request->post['product_images']) && count($this->request->post['product_images']) >= 3) {
+			$json['errors'][] = 'No more images allowed';
+			$this->_setJsonResponse($json);
+			return;
+		}
+		
+		if (empty($_FILES)) {
+			$POST_MAX_SIZE = ini_get('post_max_size');
+			$mul = substr($POST_MAX_SIZE, -1);
+			$mul = ($mul == 'M' ? 1048576 : ($mul == 'K' ? 1024 : ($mul == 'G' ? 1073741824 : 1)));
+	 		if ($_SERVER['CONTENT_LENGTH'] > $mul * (int)$POST_MAX_SIZE && $POST_MAX_SIZE) {
+				$json['errors'][] = 'File too big';	 			
+	 		} else {
+	 			$json['errors'][] = 'Unknown upload error';
+	 		}
+		} 
+		
+		foreach ($_FILES as $file) {
+			$errors = $this->_validateImage($file);
+			
+			if (is_array($errors)) {
+				$json['errors'][key($_FILES)] = $errors[0];
+			} else {
+	        	$tmp_name = $file["tmp_name"];
+	        	$name = time() . '_' . uniqid() . '_' . $file["name"];
+	        	//var_dump($file,$tmp_name,$name);
+	        	
+	        	move_uploaded_file($tmp_name, DIR_IMAGE .  $name);
+	
+				$this->load->model('tool/image');
+				$thumb = $this->model_tool_image->resize($name, $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'));
+		
+				$this->session->data['multiseller']['images'][] = $name;
+				
+				$json['image'] = array(
+					'name' => $name,
+					'thumb' => $thumb
+				);
+			}        				
+		}
+		
+		$this->_setJsonResponse($json);
+	}	
+	
 	public function jxSaveProductDraft() {
 		$data = $this->request->post;
-
 		$this->load->model('module/multiseller/seller');
 		
+		if (isset($data['product_id']) && !empty($data['product_id'])) {
+			$product = $this->model_module_multiseller_seller->getProduct($data['product_id'], $this->customer->getId());
+			$data['product_thumbnail_path'] = $product['thumbnail'];
+		}
+
 		$json = array();
+
+		$change_thumbnail = FALSE;
+		if (isset($data['product_thumbnail_name']) || !empty($data['product_thumbnail_name'])) {
+			$json['errors']['product_thumbnail'] = 'Invalid product thumbnail'; 
+			foreach ($this->session->data['multiseller']['images'] as $key => $image) {
+				if (($image == $data['product_thumbnail_name']) && file_exists(DIR_IMAGE . $image)) {
+					$offset = $key;
+					$change_thumbnail = TRUE;
+					unset($json['errors']['product_thumbnail']);
+				}
+			}
+		}
 		
 		if (empty($data['product_name'])) {
 			$json['errors']['product_name'] = 'Product name cannot be empty';
@@ -98,28 +230,70 @@ class ControllerAccountMsSeller extends Controller {
 			$data['enabled'] = 0;
 			$data['review_status_id'] = MS_PRODUCT_STATUS_DRAFT;
 			
+			if ($change_thumbnail) {
+				$newpath = 'data/' . $data['product_thumbnail_name'];
+				$data['product_thumbnail_path'] = $newpath;
+			}
+			
 			if (isset($data['product_id']) && !empty($data['product_id'])) {
 				$this->model_module_multiseller_seller->editProduct($data);
 			} else {
 				$this->model_module_multiseller_seller->saveProduct($data);
 			}
+			
+			if ($change_thumbnail) {
+				unset ($this->session->data['multiseller']['images'][$offset]);
+				rename(DIR_IMAGE. $data['product_thumbnail_name'],  DIR_IMAGE . $newpath);
+			}
+			
 			$json['redirect'] = $this->url->link('account/ms-seller/products', '', 'SSL');			
 		}
-			
-		if (strcmp(VERSION,'1.5.1.3') >= 0) {
-			$this->response->setOutput(json_encode($json));
-		} else {
-			$this->load->library('json');
-			$this->response->setOutput(Json::encode($json));			
-		}
+
+		$this->_setJsonResponse($json);
 	}
 	
 	public function jxSubmitProduct() {
 		$data = $this->request->post;
-		
 		$this->load->model('module/multiseller/seller');
+
+		if (isset($data['product_id']) && !empty($data['product_id'])) {
+			$product = $this->model_module_multiseller_seller->getProduct($data['product_id'], $this->customer->getId());
+			$data['product_thumbnail_path'] = $product['thumbnail'];
+			$data['images'] = $this->model_module_multiseller_seller->getProductImages($data['product_id']);
+		}
 		
 		$json = array();
+
+		if (!isset($data['product_thumbnail_name']) || empty($data['product_thumbnail_name'])) {
+			if (empty($product['thumbnail'])) {
+				$json['errors']['product_thumbnail'] = 'Please upload a thumbnail';
+			}
+		} else {
+			$json['errors']['product_thumbnail'] = 'Invalid product thumbnail'; 
+			foreach ($this->session->data['multiseller']['images'] as $key => $image) {
+				if (($image == $data['product_thumbnail_name']) && file_exists(DIR_IMAGE . $image)) {
+					$offset = $key;
+					$change_thumbnail = TRUE;
+					unset($json['errors']['product_thumbnail']);
+				}
+			}
+		}		
+		
+		$change_thumbnail = FALSE;
+		if (!isset($data['product_thumbnail_name']) || empty($data['product_thumbnail_name'])) {
+			if (empty($product['thumbnail'])) {
+				$json['errors']['product_thumbnail'] = 'Please upload a thumbnail';
+			}
+		} else {
+			$json['errors']['product_thumbnail'] = 'Invalid product thumbnail'; 
+			foreach ($this->session->data['multiseller']['images'] as $key => $image) {
+				if (($image == $data['product_thumbnail_name']) && file_exists(DIR_IMAGE . $image)) {
+					$offset = $key;
+					$change_thumbnail = TRUE;
+					unset($json['errors']['product_thumbnail']);
+				}
+			}
+		}
 		
 		if (empty($data['product_name'])) {
 			$json['errors']['product_name'] = 'Product name cannot be empty'; 
@@ -143,6 +317,28 @@ class ControllerAccountMsSeller extends Controller {
 			$json['errors']['product_category'] = 'Please select a category'; 
 		}
 		
+		
+		//var_dump($data['product_images']); $json['errors'] = array();
+		
+		// only validating images if all other errors are fixed
+		if (empty($json['errors'])) {
+			foreach ($data['product_images'] as &$image) {
+				$key = array_search($image, $this->session->data['multiseller']['images']);
+				if ($key !== FALSE) {
+					if ($this->_isNewUpload($image)) {
+						$newpath = 'data/' . $image;
+						unset ($this->session->data['multiseller']['images'][$key]);
+						rename(DIR_IMAGE. $image,  DIR_IMAGE . $newpath);
+						$image = $newpath;						
+					} else {
+						//
+					}
+				}
+			}
+		}
+		
+		//var_dump($data['product_images']); return false;
+		
 		if (empty($json['errors'])) {
 			switch ($this->config->get('msconf_product_validation')) {
 				case MS_PRODUCT_VALIDATION_APPROVAL:
@@ -156,21 +352,27 @@ class ControllerAccountMsSeller extends Controller {
 					$data['review_status_id'] = MS_PRODUCT_STATUS_APPROVED;
 					break;
 			}
+
+			if ($change_thumbnail) {
+				$newpath = 'data/' . $data['product_thumbnail_name'];
+				$data['product_thumbnail_path'] = $newpath;
+			}
 			
 			if (isset($data['product_id']) && !empty($data['product_id'])) {
 				$this->model_module_multiseller_seller->editProduct($data);
 			} else {
 				$this->model_module_multiseller_seller->saveProduct($data);
 			}
+			
+			if ($change_thumbnail) {
+				unset ($this->session->data['multiseller']['images'][$offset]);
+				rename(DIR_IMAGE. $data['product_thumbnail_name'],  DIR_IMAGE . $newpath);
+			}
+			
 			$json['redirect'] = $this->url->link('account/ms-seller/products', '', 'SSL');
 		}
 		
-		if (strcmp(VERSION,'1.5.1.3') >= 0) {
-			$this->response->setOutput(json_encode($json));
-		} else {
-			$this->load->library('json');
-			$this->response->setOutput(Json::encode($json));			
-		}
+		$this->_setJsonResponse($json);
 	}
 	
 	public function jxSaveSellerInfo() {
@@ -228,12 +430,7 @@ class ControllerAccountMsSeller extends Controller {
 			$this->model_module_multiseller_seller->saveSellerData($data);
 		}
 		
-		if (strcmp(VERSION,'1.5.1.3') >= 0) {
-			$this->response->setOutput(json_encode($json));
-		} else {
-			$this->load->library('json');
-			$this->response->setOutput(Json::encode($json));			
-		}
+		$this->_setJsonResponse($json);
 	}
 
 	public function sellerStatus() {
@@ -268,6 +465,8 @@ class ControllerAccountMsSeller extends Controller {
 	//
 	public function newProduct() {
 		$this->load->model('module/multiseller/seller');
+		$this->document->addScript('catalog/view/javascript/jquery.form.js');
+				
 		$this->data['categories'] = $this->model_module_multiseller_seller->getCategories(0);
 
 		$this->load->model('localisation/language');
@@ -321,6 +520,9 @@ class ControllerAccountMsSeller extends Controller {
 	
 	public function editProduct() {
 		$this->load->model('module/multiseller/seller');
+		$this->load->model('tool/image');
+		$this->document->addScript('catalog/view/javascript/jquery.form.js');
+		
 		$this->data['categories'] = $this->model_module_multiseller_seller->getCategories(0);		
 		
 		$this->load->model('localisation/language');
@@ -334,10 +536,20 @@ class ControllerAccountMsSeller extends Controller {
 		if (!$product['product_id']) {
 			$this->redirect($this->url->link('account/ms-seller/products', '', 'SSL'));
 		} else {
+			if (!empty($product['thumbnail'])) {
+				$product['thumbnail_src'] = $this->model_tool_image->resize($product['thumbnail'], $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'));
+				$image = array(
+					'thumb' => $product['thumbnail_src'],
+					'name' => $product['thumbnail']
+				);				
+			}
+			
 			$this->data['product'] = $product;
 			if($product['enabled']) {
 				$this->data['ms_button_save_draft'] = $this->language->get('ms_button_save_draft_unpublish');
 			}
+			
+			$this->data['ms_button_save_draft'] = $this->language->get('ms_button_save_draft_unpublish');
 			$this->data['heading'] = $this->language->get('ms_account_editproduct_heading');
 			$this->document->setTitle($this->language->get('ms_account_editproduct_heading'));		
 			$this->_setBreadcrumbs('ms_account_editproduct_breadcrumbs', __FUNCTION__);		

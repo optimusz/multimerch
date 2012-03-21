@@ -53,9 +53,21 @@
 							<span class="help"><?php echo $ms_config_seller_commission_note; ?></span>
 						</td>
 						<td>
-							<input type="test" name="msconf_seller_commission" value="<?php echo $msconf_seller_commission; ?>"/>
+							<input type="test" name="msconf_seller_commission" value="<?php echo $msconf_seller_commission; ?>" size="3"/>
 						</td>
-					</tr>					
+					</tr>
+		            
+		            <tr>
+			              <td>
+			              		<span><?php echo $ms_config_image_preview_size; ?></span>
+								<span class="help"><?php echo $ms_config_image_preview_size_note; ?></span>
+			              </td>
+			              <td>
+			              	<input type="text" name="msconf_image_preview_width" value="<?php echo $msconf_image_preview_width; ?>" size="3" />
+			                x
+			                <input type="text" name="msconf_image_preview_height" value="<?php echo $msconf_image_preview_height; ?>" size="3" />
+			              </td>
+		            </tr>		            
 				</table>
 			</form>
 		</div>

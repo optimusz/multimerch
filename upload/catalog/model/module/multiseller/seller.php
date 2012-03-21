@@ -1,5 +1,11 @@
 <?php
 class ModelModuleMultisellerSeller extends Model {
+	public function getProductImages($product_id) {
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_image WHERE product_id = '" . (int)$product_id . "'");
+		
+		return $query->rows;
+	}	
+	
 	public function getStatsForProduct($product_id) {
 		$sql = "SELECT 	p.date_added,
 						mp.seller_id,
@@ -33,6 +39,7 @@ class ModelModuleMultisellerSeller extends Model {
 		$sql = "SELECT 	p.price,
 						p.product_id,
 						p.status as enabled,
+						p.image as thumbnail,
 						pd.name as name,
 						pd.description as description,
 						ptc.category_id,
@@ -171,6 +178,7 @@ class ModelModuleMultisellerSeller extends Model {
 		$sql = "UPDATE " . DB_PREFIX . "product
 				SET price = " . (float)$data['product_price'] . ",
 					status = " . (int)$data['enabled'] . ",
+					image = '" . $this->db->escape($data['product_thumbnail_path']) . "',
 					date_modified = NOW()
 				WHERE product_id = " . (int)$product_id;
 		
@@ -207,6 +215,8 @@ class ModelModuleMultisellerSeller extends Model {
 				$this->db->query("INSERT INTO " . DB_PREFIX . "product_tag SET product_id = '" . (int)$product_id . "', language_id = '" . (int)$language_id . "', tag = '" . $this->db->escape(trim($tag)) . "'");
 			}
 		}
+		
+		$this->cache->delete('product');
 	}	
 	
 	public function saveProduct($data) {
@@ -217,6 +227,7 @@ class ModelModuleMultisellerSeller extends Model {
 		$sql = "INSERT INTO " . DB_PREFIX . "product
 				SET price = " . (float)$data['product_price'] . ",
 					model = '".$this->db->escape($data['product_name']) ."',
+					image = '" . $this->db->escape($data['product_thumbnail_path']) . "',
 					subtract = 0,
 					quantity = 1,
 					shipping = 0,
@@ -261,6 +272,14 @@ class ModelModuleMultisellerSeller extends Model {
 				$this->db->query("INSERT INTO " . DB_PREFIX . "product_tag SET product_id = '" . (int)$product_id . "', language_id = '" . (int)$language_id . "', tag = '" . $this->db->escape(trim($tag)) . "'");
 			}
 		}
+
+		if (isset($data['product_image'])) {
+			foreach ($data['product_image'] as $key => $image) {
+				$this->db->query("INSERT INTO " . DB_PREFIX . "product_image SET product_id = '" . (int)$product_id . "', image = '" . $this->db->escape(html_entity_decode($image['image'], ENT_QUOTES, 'UTF-8')) . "', sort_order = '" . (int)$key . "'");
+			}
+		}
+		
+		$this->cache->delete('product');
 	}
 	
 	public function saveSellerData($data) {
@@ -354,38 +373,32 @@ class ModelModuleMultisellerSeller extends Model {
 	}
 	
 	public function deleteProduct($product_id) {
-		$sql = "DELETE FROM " . DB_PREFIX . "product
-				WHERE product_id = " . (int)$product_id;
-		
-		$this->db->query($sql);
-
-
-		$sql = "DELETE FROM " . DB_PREFIX . "product_description
-				WHERE product_id = " . (int)$product_id;
-				
-		$this->db->query($sql);
-
 		
 		$sql = "DELETE FROM " . DB_PREFIX . "ms_product
 				WHERE product_id = " . (int)$product_id;
 		
 		$this->db->query($sql);
 
-
-		$sql = "DELETE FROM " . DB_PREFIX . "product_tag
-				WHERE product_id = " . (int)$product_id;
+		$this->db->query("DELETE FROM " . DB_PREFIX . "product WHERE product_id = '" . (int)$product_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "product_attribute WHERE product_id = '" . (int)$product_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "product_description WHERE product_id = '" . (int)$product_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "product_discount WHERE product_id = '" . (int)$product_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "product_image WHERE product_id = '" . (int)$product_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "product_option WHERE product_id = '" . (int)$product_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "product_option_value WHERE product_id = '" . (int)$product_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "product_related WHERE product_id = '" . (int)$product_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "product_related WHERE related_id = '" . (int)$product_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "product_reward WHERE product_id = '" . (int)$product_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "product_special WHERE product_id = '" . (int)$product_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "product_tag WHERE product_id='" . (int)$product_id. "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "product_to_category WHERE product_id = '" . (int)$product_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "product_to_download WHERE product_id = '" . (int)$product_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "product_to_layout WHERE product_id = '" . (int)$product_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "product_to_store WHERE product_id = '" . (int)$product_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "review WHERE product_id = '" . (int)$product_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "url_alias WHERE query = 'product_id=" . (int)$product_id. "'");
 		
-		$this->db->query($sql);
-		
-		$sql = "DELETE FROM " . DB_PREFIX . "product_to_category
-				WHERE product_id = " . (int)$product_id;
-		
-		$this->db->query($sql);
-		
-		$sql = "DELETE FROM " . DB_PREFIX . "product_to_store
-				WHERE product_id = " . (int)$product_id;
-		
-		$this->db->query($sql);
+		$this->cache->delete('product');		
 
 		/*
 		$message = sprintf($this->language->get('ms_mail_greeting'), $this->customer->getFirstName()) . "\n\n";

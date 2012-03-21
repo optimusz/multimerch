@@ -52,6 +52,9 @@ $_['ms_config_product_validation_approval'] = 'Manual approval';
 $_['ms_config_seller_commission'] = 'Default seller commission (%)';
 $_['ms_config_seller_commission_note'] = 'Default seller commission';
 
+$_['ms_config_image_preview_size'] = 'Image preview size';
+$_['ms_config_image_preview_size_note'] = 'Image preview size';
+
 $_['button_cancel'] = 'Cancel';
 $_['button_save'] = 'Save';
 $_['ms_action'] = 'Action';
