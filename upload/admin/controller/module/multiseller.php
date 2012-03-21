@@ -23,7 +23,7 @@ class ControllerModuleMultiseller extends Controller {
 	}	
 	
 	private function _editSettings() {
-		$this->load->model("module/{$this->name}");
+		$this->load->model("module/{$this->name}/multiseller");
 		$this->load->model('setting/setting');
 		
 		$set = $this->model_setting_setting->getSetting($this->name);
@@ -74,14 +74,14 @@ class ControllerModuleMultiseller extends Controller {
 	}	
 	
 	public function install() {
-		$this->load->model("module/{$this->name}");
+		$this->load->model("module/{$this->name}/multiseller");
 		$this->load->model('setting/setting');
 		$this->model_module_multiseller->createTable();
 		$this->model_setting_setting->editSetting($this->name, $this->settings);
 	}
 
 	public function uninstall() {
-		$this->load->model("module/{$this->name}");
+		$this->load->model("module/{$this->name}/multiseller");
 		$this->model_module_multiseller->dropTable();
 	}	
 	
@@ -194,8 +194,8 @@ class ControllerModuleMultiseller extends Controller {
 	}
 	
 	public function index() {
-		$this->load->language("module/{$this->name}");
-		$this->load->model("module/{$this->name}");
+		$this->load->language("module/{$this->name}/multiseller");
+		$this->load->model("module/{$this->name}/multiseller");
 		
 		foreach($this->settings as $s=>$v) {
 			$this->data[$s] = $this->config->get($s);
@@ -204,7 +204,7 @@ class ControllerModuleMultiseller extends Controller {
 		//$this->_setBreadcrumbs();
 		$this->data = array_merge($this->data, $this->load->language('module/multiseller'));
 				
-        $this->data['action'] = $this->url->link("module/{$this->name}", 'token=' . $this->session->data['token'], 'SSL');
+        $this->data['action'] = $this->url->link("module/{$this->name}/multiseller", 'token=' . $this->session->data['token'], 'SSL');
 		$this->data['cancel'] = $this->url->link('extension/module', 'token=' . $this->session->data['token'], 'SSL');
 		
 		$this->data['token'] = $this->session->data['token'];
