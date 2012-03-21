@@ -80,7 +80,8 @@
           	<p class="ms-note"><?php echo $ms_account_product_thumbnail_note; ?></p>
           	<p class="error" id="error_product_thumbnail"></p>
           	<div id="product_thumbnail_images">
-          		<img src="<?php echo $product['thumbnail_src']; ?>" />
+          		<input type="hidden" name="product_thumbnail_name" value="<?php echo $product['thumbnail']['name']; ?>" />
+          		<img src="<?php echo $product['thumbnail']['src']; ?>" />
           	</div>
           </td>
         </tr>
@@ -93,6 +94,7 @@
           	<div id="product_image_images">
           	<?php if (isset($product['images'])) { ?>
 	          	<?php foreach ($product['images'] as $image) { ?>
+	          		<input type="hidden" name="product_images[]" value="<?php echo $image['name']; ?>" />
 	          		<img src="<?php echo $image['src']; ?>" />
 	          	<?php } ?>
           	<?php } ?>
@@ -188,7 +190,7 @@ $(function() {
 					    console.log(error + " -> " + jsonData.errors[error]);
 					}				
 				} else {
-					$("#product_thumbnail_images").html('<input type="hidden" value="'+jsonData.image.name+'" name="product_thumbnail" />');
+					$("#product_thumbnail_images").html('<input type="hidden" value="'+jsonData.image.name+'" name="product_thumbnail_name" />');
 					$("#product_thumbnail_images").append('<img src="'+jsonData.image.thumb+'" />');				
 					//$("#product_thumbnail_images").append('<input type="hidden" value="'+jsonData.image.name+'" />');
 					//$("#product_thumbnail_images").append('<img src="'+jsonData.image.thumb+'" />');
