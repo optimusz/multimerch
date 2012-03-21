@@ -76,13 +76,13 @@ class ControllerModuleMultiseller extends Controller {
 	public function install() {
 		$this->load->model("module/{$this->name}/multiseller");
 		$this->load->model('setting/setting');
-		$this->model_module_multiseller->createTable();
+		$this->model_module_multiseller_multiseller->createTable();
 		$this->model_setting_setting->editSetting($this->name, $this->settings);
 	}
 
 	public function uninstall() {
 		$this->load->model("module/{$this->name}/multiseller");
-		$this->model_module_multiseller->dropTable();
+		$this->model_module_multiseller_multiseller->dropTable();
 	}	
 	
 	
