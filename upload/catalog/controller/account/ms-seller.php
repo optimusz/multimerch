@@ -109,7 +109,7 @@ class ControllerAccountMsSeller extends Controller {
 		$ext = explode('.', $file['name']);
 		$ext = end($ext);
 		
-		if (!in_array($ext,$filetypes)) {
+		if (!in_array(strtolower($ext),$filetypes)) {
 			 $errors[] = 'Invalid extension';
 		}
 			
