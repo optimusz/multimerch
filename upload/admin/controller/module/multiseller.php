@@ -194,7 +194,7 @@ class ControllerModuleMultiseller extends Controller {
 	}
 	
 	public function index() {
-		$this->load->language("module/{$this->name}/multiseller");
+		$this->load->language("module/{$this->name}");
 		$this->load->model("module/{$this->name}/multiseller");
 		
 		foreach($this->settings as $s=>$v) {
