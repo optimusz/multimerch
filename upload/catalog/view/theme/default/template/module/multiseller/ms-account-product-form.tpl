@@ -128,6 +128,11 @@
   
 <script>
 $(function() {
+	$("#product_image_images img, #product_thumbnail_images img").click(function() {
+		$(this).prev("input:hidden").remove();
+		$(this).remove();
+	});
+
 	$('#product_image').live('change', function() {
 		$('#ms_action').val('image');
 		$('#error_product_thumbnail').text('');

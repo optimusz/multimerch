@@ -83,7 +83,7 @@ class ControllerAccountMsSeller extends Controller {
 		} else {
 			$this->load->library('json');
 			$this->response->setOutput(Json::encode($json));			
-		}		
+		}
 	}
 	
 	private function _validateImage($file) {
@@ -200,22 +200,11 @@ class ControllerAccountMsSeller extends Controller {
 		if (isset($data['product_id']) && !empty($data['product_id'])) {
 			$product = $this->model_module_multiseller_seller->getProduct($data['product_id'], $this->customer->getId());
 			$data['product_thumbnail_path'] = $product['thumbnail'];
+			$data['images'] = $this->model_module_multiseller_seller->getProductImages($data['product_id']);
 		}
 
 		$json = array();
 
-		$change_thumbnail = FALSE;
-		if (isset($data['product_thumbnail_name']) || !empty($data['product_thumbnail_name'])) {
-			$json['errors']['product_thumbnail'] = 'Invalid product thumbnail'; 
-			foreach ($this->session->data['multiseller']['images'] as $key => $image) {
-				if (($image == $data['product_thumbnail_name']) && file_exists(DIR_IMAGE . $image)) {
-					$offset = $key;
-					$change_thumbnail = TRUE;
-					unset($json['errors']['product_thumbnail']);
-				}
-			}
-		}
-		
 		if (empty($data['product_name'])) {
 			$json['errors']['product_name'] = 'Product name cannot be empty';
 		} else if (strlen($data['product_name']) > 50 ) {
@@ -230,24 +219,54 @@ class ControllerAccountMsSeller extends Controller {
 			$json['errors']['product_price'] = 'Invalid price';			
 		}		
 
+		// only renaming/moving thumbnails if all other errors are fixed
+		if (empty($json['errors'])) {
+			if (isset($data['product_thumbnail_name']) && !empty($data['product_thumbnail_name'])) {
+				$key = array_search($data['product_thumbnail_name'], $this->session->data['multiseller']['images']);
+				if ($key !== FALSE) {
+					if ($this->_isNewUpload($data['product_thumbnail_name'])) {
+						$newpath = 'data/' . $data['product_thumbnail_name'];
+						unset ($this->session->data['multiseller']['images'][$key]);
+						rename(DIR_IMAGE. $data['product_thumbnail_name'],  DIR_IMAGE . $newpath);
+						$data['product_thumbnail_path'] = $newpath;						
+					} else {
+						$data['product_thumbnail_path'] = $data['product_thumbnail_name'];
+					}
+				} else{
+					$json['errors']['product_thumbnail'] = 'Thumbnail ATTACK!';					
+				}
+			}
+		}
+		
+		// only renaming/moving images if all other errors are fixed
+		if (empty($json['errors'])) {
+			if (isset($data['product_images'])) {
+				foreach ($data['product_images'] as &$image) {
+					$key = array_search($image, $this->session->data['multiseller']['images']);
+					if ($key !== FALSE) {
+						if ($this->_isNewUpload($image)) {
+							$newpath = 'data/' . $image;
+							unset ($this->session->data['multiseller']['images'][$key]);
+							rename(DIR_IMAGE. $image,  DIR_IMAGE . $newpath);
+							$image = $newpath;						
+						} else {
+							//
+						}
+					} else {
+						$json['errors']['product_image'] = 'Image ATTACK!';
+					}
+				}
+			}
+		}
+
 		if (empty($json['errors'])) {
 			$data['enabled'] = 0;
 			$data['review_status_id'] = MS_PRODUCT_STATUS_DRAFT;
-			
-			if ($change_thumbnail) {
-				$newpath = 'data/' . $data['product_thumbnail_name'];
-				$data['product_thumbnail_path'] = $newpath;
-			}
 			
 			if (isset($data['product_id']) && !empty($data['product_id'])) {
 				$this->model_module_multiseller_seller->editProduct($data);
 			} else {
 				$this->model_module_multiseller_seller->saveProduct($data);
-			}
-			
-			if ($change_thumbnail) {
-				unset ($this->session->data['multiseller']['images'][$offset]);
-				rename(DIR_IMAGE. $data['product_thumbnail_name'],  DIR_IMAGE . $newpath);
 			}
 			
 			$json['redirect'] = $this->url->link('account/ms-seller/products', '', 'SSL');			
@@ -292,14 +311,17 @@ class ControllerAccountMsSeller extends Controller {
 		
 		// only renaming/moving thumbnails if all other errors are fixed
 		if (empty($json['errors'])) {
+			// if thumbnail submitted
 			if (isset($data['product_thumbnail_name']) && !empty($data['product_thumbnail_name'])) {
+				// need to make sure name matches the one in session
 				$key = array_search($data['product_thumbnail_name'], $this->session->data['multiseller']['images']);
 				if ($key !== FALSE) {
+					// file has just been uploaded
 					if ($this->_isNewUpload($data['product_thumbnail_name'])) {
 						$newpath = 'data/' . $data['product_thumbnail_name'];
 						unset ($this->session->data['multiseller']['images'][$key]);
 						rename(DIR_IMAGE. $data['product_thumbnail_name'],  DIR_IMAGE . $newpath);
-						$data['product_thumbnail_path'] = $newpath;						
+						$data['product_thumbnail_path'] = $newpath;
 					} else {
 						$data['product_thumbnail_path'] = $data['product_thumbnail_name'];
 					}
@@ -308,7 +330,7 @@ class ControllerAccountMsSeller extends Controller {
 				}
 			} else {
 				if (isset($data['product_thumbnail_path']) && !empty($data['product_thumbnail_path'])) {
-					
+					// thumbnail deleted from form, no new uploaded, need to delete physically
 				} else {
 					$json['errors']['product_thumbnail'] = 'Please upload a thumbnail!';
 				}
@@ -317,19 +339,21 @@ class ControllerAccountMsSeller extends Controller {
 		
 		// only renaming/moving images if all other errors are fixed
 		if (empty($json['errors'])) {
-			foreach ($data['product_images'] as &$image) {
-				$key = array_search($image, $this->session->data['multiseller']['images']);
-				if ($key !== FALSE) {
-					if ($this->_isNewUpload($image)) {
-						$newpath = 'data/' . $image;
-						unset ($this->session->data['multiseller']['images'][$key]);
-						rename(DIR_IMAGE. $image,  DIR_IMAGE . $newpath);
-						$image = $newpath;						
+			if (isset($data['product_images'])) {
+				foreach ($data['product_images'] as &$image) {
+					$key = array_search($image, $this->session->data['multiseller']['images']);
+					if ($key !== FALSE) {
+						if ($this->_isNewUpload($image)) {
+							$newpath = 'data/' . $image;
+							unset ($this->session->data['multiseller']['images'][$key]);
+							rename(DIR_IMAGE. $image,  DIR_IMAGE . $newpath);
+							$image = $newpath;						
+						} else {
+							//
+						}
 					} else {
-						//
+						$json['errors']['product_image'] = 'Image ATTACK!';
 					}
-				} else {
-					$json['errors']['product_image'] = 'Image ATTACK!';
 				}
 			}
 		}
@@ -541,15 +565,11 @@ class ControllerAccountMsSeller extends Controller {
 			}
 
 			$this->data['product'] = $product;
-			if($product['enabled']) {
-				$this->data['ms_button_save_draft'] = $this->language->get('ms_button_save_draft_unpublish');
-			}
 			
-			$this->data['ms_button_save_draft'] = $this->language->get('ms_button_save_draft_unpublish');
 			$this->data['heading'] = $this->language->get('ms_account_editproduct_heading');
 			$this->document->setTitle($this->language->get('ms_account_editproduct_heading'));		
 			$this->_setBreadcrumbs('ms_account_editproduct_breadcrumbs', __FUNCTION__);		
-			$this->_renderTemplate('ms-account-product-form');			 
+			$this->_renderTemplate('ms-account-product-form');
 		}
 	}
 	

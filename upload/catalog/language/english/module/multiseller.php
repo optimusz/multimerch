@@ -12,7 +12,7 @@ $_['ms_product_review_status_declined']       = 'Declined';
 
 $_['ms_button_submit']      = 'Submit';
 $_['ms_button_save_draft']      = 'Save draft';
-$_['ms_button_save_draft_unpublish']      = 'Save draft / Unpublish';
+$_['ms_button_save_draft_unpublish']      = 'This product will be unpublished';
 $_['ms_button_cancel']      = 'Cancel';
 
 $_['ms_mail_greeting']      = 'Hi %s,';
