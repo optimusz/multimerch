@@ -1,5 +1,5 @@
 <?php
-class ModelModuleMultisellerMultiseller extends Model {
+class ModelModuleMultisellerSettings extends Model {
 	public function createTable() {
 		$sql = "
 			CREATE TABLE `" . DB_PREFIX . "ms_product` (
@@ -42,6 +42,8 @@ class ModelModuleMultisellerMultiseller extends Model {
 		$sql = "
 			CREATE TABLE `" . DB_PREFIX . "ms_transaction` (
              `transaction_id` int(11) NOT NULL AUTO_INCREMENT,
+			 `type` TINYINT NOT NULL DEFAULT '0',			
+			 `parent_transaction_id` int(11) DEFAULT NULL,
              `amount` DECIMAL(15,4) NOT NULL DEFAULT '0',
              `seller_id` int(11) NOT NULL,
              `order_id` int(11) DEFAULT NULL,

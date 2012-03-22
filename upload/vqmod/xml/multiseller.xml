@@ -36,6 +36,7 @@
 	</file>
 	-->
 	
+	<!--
 	<file name="system/engine/loader.php">
 		<operation>
 			<search position="after"><![CDATA[
@@ -47,7 +48,7 @@
 			]]></add>
 		</operation>
 	</file>	
-	
+	-->
 	
 	
 	
@@ -135,6 +136,7 @@
 
 	<!-- transactions for order -->
 	<file name="catalog/model/checkout/order.php">
+		<!--
 		<operation>
 			<search position="before"><![CDATA[
 				return $order_id;
@@ -144,6 +146,7 @@
 				$this->model_module_multiseller_transaction->addTransactionsForOrder($order_id);
 			]]></add>
 		</operation>
+		-->
 		
 		<operation>
 			<search position="after"><![CDATA[
@@ -151,7 +154,11 @@
 			]]></search>
 			<add><![CDATA[
 				$this->load->model('module/multiseller/transaction');
-				$this->model_module_multiseller_transaction->updateTransactionsForOrder($order_id);
+				if (in_array($order_status_id, explode(',',$this->config->get('msconf_credit_order_statuses')))) {
+					$this->model_module_multiseller_transaction->addTransactionsForOrder($order_id);
+				} else if (in_array($order_status_id, explode(',',$this->config->get('msconf_debit_order_statuses')))) {
+					$this->model_module_multiseller_transaction->addTransactionsForOrder($order_id, TRUE);
+				}
 			]]></add>
 		</operation>
 		
@@ -166,39 +173,6 @@
 			]]></add>
 		</operation>		
 	</file>
-	
-	<file name="admin/model/sale/order.php">
-		<operation>
-			<search position="after" index="1"><![CDATA[
-				$this->db->query("UPDATE `" . DB_PREFIX . "order` SET total = '" . (float)$total . "' WHERE order_id = '" . (int)$order_id . "'");
-			]]></search>
-			<add><![CDATA[
-				$this->load->model('module/multiseller/transaction');
-				$this->model_module_multiseller_transaction->addTransactionsForOrder($order_id);
-			]]></add>
-		</operation>
-		
-		<operation>
-			<search position="after" index="2"><![CDATA[
-				$this->db->query("UPDATE `" . DB_PREFIX . "order` SET total = '" . (float)$total . "' WHERE order_id = '" . (int)$order_id . "'");
-			]]></search>
-			<add><![CDATA[
-				$this->load->model('module/multiseller/transaction');
-				$this->model_module_multiseller_transaction->updateTransactionsForOrder($order_id);
-			]]></add>
-		</operation>
-
-		<operation>
-			<search position="after"><![CDATA[
-				$this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int)$data['order_status_id'] . "', date_modified = NOW() WHERE order_id = '" . (int)$order_id . "'");
-			]]></search>
-			<add><![CDATA[
-				$this->load->model('module/multiseller/transaction');
-				$this->model_module_multiseller_transaction->updateTransactionsForOrder($order_id);
-			]]></add>
-		</operation>
-	</file>	
-	
 	
 	<!-- seller information on product page -->
 	<file name="catalog/view/theme/default/template/product/product.tpl">
@@ -242,6 +216,36 @@
 	<!-- ************************ -->	
 	<!-- ************************ -->
 
+	<file name="admin/model/sale/order.php">
+		<operation>
+			<search position="after"><![CDATA[
+				$this->db->query("UPDATE `" . DB_PREFIX . "order` SET total = '" . (float)$total . "' WHERE order_id = '" . (int)$order_id . "'");
+			]]></search>
+			<add><![CDATA[
+				$this->load->model('module/multiseller/transaction');
+				if (in_array($data['order_status_id'], explode(',',$this->config->get('msconf_credit_order_statuses')))) {
+					$this->model_module_multiseller_transaction->addTransactionsForOrder($order_id);
+				} else if (in_array($data['order_status_id'], explode(',',$this->config->get('msconf_debit_order_statuses')))) {
+					$this->model_module_multiseller_transaction->addTransactionsForOrder($order_id, TRUE);
+				}
+			]]></add>
+		</operation>
+		
+		<operation>
+			<search position="after"><![CDATA[
+				$this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int)$data['order_status_id'] . "', date_modified = NOW() WHERE order_id = '" . (int)$order_id . "'");
+			]]></search>
+			<add><![CDATA[
+				$this->load->model('module/multiseller/transaction');
+				if (in_array($data['order_status_id'], explode(',',$this->config->get('msconf_credit_order_statuses')))) {
+					$this->model_module_multiseller_transaction->addTransactionsForOrder($order_id);
+				} else if (in_array($data['order_status_id'], explode(',',$this->config->get('msconf_debit_order_statuses')))) {
+					$this->model_module_multiseller_transaction->addTransactionsForOrder($order_id, TRUE);
+				}
+			]]></add>
+		</operation>
+	</file>	
+
 	<!-- navigation menu -->
 	<file name="admin/view/template/common/header.tpl">
 		<operation>
@@ -278,5 +282,49 @@
 		</operation>
 	</file>
 	
+	<file name="admin/controller/sale/order.php">
+		<operation>
+			<search position="before"><![CDATA[
+			$this->data['products'][] = array(
+			]]></search>
+			<add><![CDATA[
+			$this->load->model('module/multiseller/seller');
+			$this->language->load('module/multiseller');
+			$this->data['column_seller'] = $this->language->get('ms_seller_seller');
+			$seller = $this->model_module_multiseller_seller->getSellerDataForProduct($product['product_id']);
+			]]></add>
+		</operation>	
 	
+		<operation>
+			<search position="after"><![CDATA[
+			$this->data['products'][] = array(
+			]]></search>
+			<add><![CDATA[
+			'seller' => array(
+				'seller_id' => $seller['seller_id'],
+				'nickname' => $seller['nickname']
+			),
+			]]></add>
+		</operation>
+	</file>
+	
+	<file name="admin/view/template/sale/order_info.tpl">
+		<operation>
+			<search position="before"><![CDATA[
+			<td class="left"><?php echo $column_product; ?></td>
+			]]></search>
+			<add><![CDATA[
+			<td class="left"><?php echo $column_seller; ?></td>
+			]]></add>
+		</operation>	
+	
+		<operation>
+			<search position="before"><![CDATA[
+			<td class="left"><a href="<?php echo $product['href']; ?>"><?php echo $product['name']; ?></a>
+			]]></search>
+			<add><![CDATA[
+			<td class="left"><a href="#"><?php echo $product['seller']['nickname']; ?></a>
+			]]></add>
+		</operation>
+	</file>
 </modification>

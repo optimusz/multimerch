@@ -28,8 +28,8 @@ class ModelModuleMultisellerTransaction extends Model {
 	
 	public function addTransactionsForOrder($order_id, $debit = FALSE) {
 		$this->load->model('module/multiseller/seller');
-		$this->load->model('checkout/order');
-		$order_info = $this->model_checkout_order->getOrder($order_id);
+		$this->load->model('sale/order');
+		$order_info = $this->model_sale_order->getOrder($order_id);
 		$order_products = $this->_getOrderProducts($order_id);
 		
 		if (!$order_products)

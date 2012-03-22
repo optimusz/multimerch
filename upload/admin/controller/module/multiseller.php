@@ -19,11 +19,13 @@ class ControllerModuleMultiseller extends Controller {
 			"msconf_seller_commission" => 5,
 			"msconf_image_preview_width" => 100,
 			"msconf_image_preview_height" => 100,
+			"msconf_credit_order_statuses" => "5",
+			"msconf_debit_order_statuses" => "8"
 		);
 	}	
 	
 	private function _editSettings() {
-		$this->load->model("module/{$this->name}/multiseller");
+		$this->load->model("module/{$this->name}/settings");
 		$this->load->model('setting/setting');
 		
 		$set = $this->model_setting_setting->getSetting($this->name);
@@ -74,14 +76,14 @@ class ControllerModuleMultiseller extends Controller {
 	}	
 	
 	public function install() {
-		$this->load->model("module/{$this->name}/multiseller");
+		$this->load->model("module/{$this->name}/settings");
 		$this->load->model('setting/setting');
 		$this->model_module_multiseller_multiseller->createTable();
 		$this->model_setting_setting->editSetting($this->name, $this->settings);
 	}
 
 	public function uninstall() {
-		$this->load->model("module/{$this->name}/multiseller");
+		$this->load->model("module/{$this->name}/settings");
 		$this->model_module_multiseller_multiseller->dropTable();
 	}	
 	
@@ -182,6 +184,9 @@ class ControllerModuleMultiseller extends Controller {
 	}
 	
 	public function saveSettings() {
+		$this->request->post['msconf_credit_order_statuses'] = implode(',',$this->request->post['msconf_credit_order_statuses']);
+		$this->request->post['msconf_debit_order_statuses'] = implode(',',$this->request->post['msconf_debit_order_statuses']);		
+		
 		$this->_editSettings();
 		
 		$json = array();
@@ -195,16 +200,18 @@ class ControllerModuleMultiseller extends Controller {
 	
 	public function index() {
 		$this->load->language("module/{$this->name}");
-		$this->load->model("module/{$this->name}/multiseller");
+		$this->load->model("module/{$this->name}/settings");
 		
 		foreach($this->settings as $s=>$v) {
 			$this->data[$s] = $this->config->get($s);
 		}
 
+		$this->load->model("localisation/order_status");	
+		$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
 		//$this->_setBreadcrumbs();
 		$this->data = array_merge($this->data, $this->load->language('module/multiseller'));
 				
-        $this->data['action'] = $this->url->link("module/{$this->name}/multiseller", 'token=' . $this->session->data['token'], 'SSL');
+        $this->data['action'] = $this->url->link("module/{$this->name}/settings", 'token=' . $this->session->data['token'], 'SSL');
 		$this->data['cancel'] = $this->url->link('extension/module', 'token=' . $this->session->data['token'], 'SSL');
 		
 		$this->data['token'] = $this->session->data['token'];

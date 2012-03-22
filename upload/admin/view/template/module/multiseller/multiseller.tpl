@@ -67,6 +67,54 @@
 			                x
 			                <input type="text" name="msconf_image_preview_height" value="<?php echo $msconf_image_preview_height; ?>" size="3" />
 			              </td>
+		            </tr>
+		            
+		            <tr>
+			              <td>
+			              		<span><?php echo $ms_config_credit_order_statuses; ?></span>
+								<span class="help"><?php echo $ms_config_credit_order_statuses_note; ?></span>
+			              </td>
+			              <td>
+			              	<div class="scrollbox">
+			                  <?php $class = 'odd'; ?>
+			                  <?php foreach ($order_statuses as $status) { ?>
+			                  <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+			                  <div class="<?php echo $class; ?>">
+			                    <?php if (in_array($status['order_status_id'], explode(',',$msconf_credit_order_statuses))) { ?>
+			                    <input type="checkbox" name="msconf_credit_order_statuses[]" value="<?php echo $status['order_status_id']; ?>" checked="checked" />
+			                    <?php echo $status['name']; ?>
+			                    <?php } else { ?>
+			                    <input type="checkbox" name="msconf_credit_order_statuses[]" value="<?php echo $status['order_status_id']; ?>" />
+			                    <?php echo $status['name']; ?>
+			                    <?php } ?>
+			                  </div>
+			                  <?php } ?>
+			                </div>
+			              </td>
+		            </tr>
+		            
+		            <tr>
+			              <td>
+			              		<span><?php echo $ms_config_debit_order_statuses; ?></span>
+								<span class="help"><?php echo $ms_config_debit_order_statuses_note; ?></span>
+			              </td>
+			              <td>
+			              	<div class="scrollbox">
+			                  <?php $class = 'odd'; ?>
+			                  <?php foreach ($order_statuses as $status) { ?>
+			                  <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+			                  <div class="<?php echo $class; ?>">
+			                    <?php if (in_array($status['order_status_id'], explode(',',$msconf_debit_order_statuses))) { ?>
+			                    <input type="checkbox" name="msconf_debit_order_statuses[]" value="<?php echo $status['order_status_id']; ?>" checked="checked" />
+			                    <?php echo $status['name']; ?>
+			                    <?php } else { ?>
+			                    <input type="checkbox" name="msconf_debit_order_statuses[]" value="<?php echo $status['order_status_id']; ?>" />
+			                    <?php echo $status['name']; ?>
+			                    <?php } ?>
+			                  </div>
+			                  <?php } ?>
+			                </div>
+			              </td>
 		            </tr>		            
 				</table>
 			</form>

@@ -6,6 +6,8 @@ $_['heading_title']    = '[ffct.cc] Digital MultiSeller Extension';
 $_['text_module']         = 'Modules';
 $_['error_permission'] = 'Warning: You do not have permission to modify module!';
 
+$_['ms_seller_seller'] = 'Seller';
+
 
 // Menu
 
@@ -54,6 +56,12 @@ $_['ms_config_seller_commission_note'] = 'Default seller commission';
 
 $_['ms_config_image_preview_size'] = 'Image preview size';
 $_['ms_config_image_preview_size_note'] = 'Image preview size';
+
+$_['ms_config_credit_order_statuses'] = 'Credit statuses';
+$_['ms_config_credit_order_statuses_note'] = 'Order statuses to credit seller balance';
+
+$_['ms_config_debit_order_statuses'] = 'Debit statuses';
+$_['ms_config_debit_order_statuses_note'] = 'Order statuses to debit seller balance';
 
 $_['button_cancel'] = 'Cancel';
 $_['button_save'] = 'Save';

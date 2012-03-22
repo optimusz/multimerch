@@ -16,6 +16,43 @@ class ModelModuleMultisellerSeller extends Model {
 		}
 	}
 	
+	public function getCommissionForSeller($seller_id) {
+		$sql = "SELECT 	commission
+				FROM `" . DB_PREFIX . "ms_seller`
+				WHERE seller_id = " . (int)$seller_id; 
+
+		$res = $this->db->query($sql);
+
+		return $res->row['commission'];		
+	}	
+	
+	public function getSellerIdByProduct($product_id) {
+		$sql = "SELECT seller_id FROM " . DB_PREFIX . "ms_product
+				WHERE product_id = " . (int)$product_id;
+				
+		$res = $this->db->query($sql);
+		return $res->row;
+	}
+	
+	public function getSellerDataForProduct($product_id) {
+		$sql = "SELECT 	p.date_added,
+						mp.seller_id,
+						mp.number_sold as sales,
+						ms.nickname,
+						ms.country_id,
+						ms.avatar_path
+				FROM `" . DB_PREFIX . "product` p
+				INNER JOIN `" . DB_PREFIX . "ms_product` mp
+					ON p.product_id = mp.product_id
+				INNER JOIN `" . DB_PREFIX . "ms_seller` ms
+					ON mp.seller_id = ms.seller_id
+				WHERE p.product_id = " . (int)$product_id; 
+
+		$res = $this->db->query($sql);
+
+		return $res->row;		
+	}	
+	
 	public function getSellers($sort) {
 		$sql = "SELECT  CONCAT(c.firstname, ' ', c.lastname) as name,
 						c.email as email,

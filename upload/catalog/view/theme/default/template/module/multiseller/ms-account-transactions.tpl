@@ -18,10 +18,10 @@
 	<thead>
 		<tr>
 			<td class="left"><?php echo $ms_account_transactions_date_created; ?></td>
-			<td class="left"><?php echo $ms_account_transactions_date_modified; ?></td>
+			<!--<td class="left"><?php echo $ms_account_transactions_date_modified; ?></td>-->
 			<td class="left"><?php echo $ms_account_transactions_description; ?></td>
 			<td class="left"><?php echo $ms_account_transactions_amount; ?></td>
-			<td class="left"><?php echo $ms_account_transactions_status; ?></td>			
+			<!--<td class="left"><?php echo $ms_account_transactions_status; ?></td>-->			
 		</tr>
 	</thead>
 	<tbody>
@@ -29,10 +29,10 @@
 		<?php foreach ($transactions  as $transaction) { ?>
 		<tr>
 			<td class="left"><?php echo $transaction['date_created']; ?></td>
-			<td class="left"><?php echo $transaction['date_modified']; ?></td>
+			<!--<td class="left"><?php echo $transaction['date_modified']; ?></td>-->
 			<td class="left"><?php echo $transaction['description']; ?></td>
 			<td class="left"><?php echo $transaction['amount']; ?></td>
-			<td class="left"><?php echo $transaction['status']; ?></td>			
+			<!--<td class="left"><?php echo $transaction['status']; ?></td>-->			
 		</tr>
 		<?php } ?>
 		<?php } else { ?>

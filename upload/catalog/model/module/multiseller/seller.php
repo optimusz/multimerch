@@ -33,7 +33,7 @@ class ModelModuleMultisellerSeller extends Model {
 		$res = $this->db->query($sql);
 
 		return $res->row['commission'];		
-	}	
+	}
 	
 	public function getProduct($product_id, $seller_id) {
 		$sql = "SELECT 	p.price,
@@ -77,8 +77,8 @@ class ModelModuleMultisellerSeller extends Model {
 				WHERE product_id = " . (int)$product_id;
 				
 		$res = $this->db->query($sql);
-		return $res->row;				
-	}		
+		return $res->row;
+	}
 		
 	public function getProductStatusArray() {
 		$this->load->language('module/multiseller');

@@ -601,6 +601,7 @@ class ControllerAccountMsSeller extends Controller {
 	
 	public function transactions() {
 		$this->load->model('module/multiseller/transaction');
+		$this->load->model('module/multiseller/seller');
 		
 		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
 
