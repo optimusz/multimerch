@@ -169,7 +169,7 @@
 			]]></search>
 			<add><![CDATA[
 				$this->load->model('module/multiseller/seller');
-				$this->db->query("UPDATE " . DB_PREFIX . "ms_product SET number_sold (number_sold + " . (int)$order_product['quantity'] . ") WHERE product_id = '" . (int)$order_product['product_id'] . "'");
+				$this->db->query("UPDATE " . DB_PREFIX . "ms_product SET number_sold  = (number_sold + " . (int)$order_product['quantity'] . ") WHERE product_id = '" . (int)$order_product['product_id'] . "'");
 			]]></add>
 		</operation>		
 	</file>
