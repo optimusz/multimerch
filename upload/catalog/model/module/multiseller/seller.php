@@ -175,10 +175,18 @@ class ModelModuleMultisellerSeller extends Model {
 		$language_id = 1;		
 		$product_id = $data['product_id'];
 
+		if (isset($data['product_thumbnail_name'])) {
+			$image = MsImage::byName($this->registry, $data['product_thumbnail_name']);
+			$image->move();
+			$thumbnail = $image->getName();
+		} else {
+			$thumbnail = '';
+		}
+
 		$sql = "UPDATE " . DB_PREFIX . "product
 				SET price = " . (float)$data['product_price'] . ",
 					status = " . (int)$data['enabled'] . ",
-					image = '" . $this->db->escape($data['product_thumbnail_path']) . "',
+					image = '" . $this->db->escape($thumbnail) . "',
 					date_modified = NOW()
 				WHERE product_id = " . (int)$product_id;
 		
@@ -220,7 +228,9 @@ class ModelModuleMultisellerSeller extends Model {
 		
 		if (isset($data['product_images'])) {
 			foreach ($data['product_images'] as $key => $product_image) {
-				$this->db->query("INSERT INTO " . DB_PREFIX . "product_image SET product_id = '" . (int)$product_id . "', image = '" . $this->db->escape(html_entity_decode($product_image, ENT_QUOTES, 'UTF-8')) . "', sort_order = '" . (int)$key . "'");
+				$image = MsImage::byName($this->registry, $product_image);
+				$image->move();				
+				$this->db->query("INSERT INTO " . DB_PREFIX . "product_image SET product_id = '" . (int)$product_id . "', image = '" . $this->db->escape(html_entity_decode($image->getName, ENT_QUOTES, 'UTF-8')) . "', sort_order = '" . (int)$key . "'");
 			}
 		}		
 		
@@ -231,11 +241,18 @@ class ModelModuleMultisellerSeller extends Model {
 		$language_id = 1;		
 		$store_id = $this->config->get('config_store_id');
 
+		if (isset($data['product_thumbnail_name'])) {
+			$image = MsImage::byName($this->registry, $data['product_thumbnail_name']);
+			$image->move();
+			$thumbnail = $image->getName();
+		} else {
+			$thumbnail = '';
+		}
 
 		$sql = "INSERT INTO " . DB_PREFIX . "product
 				SET price = " . (float)$data['product_price'] . ",
 					model = '".$this->db->escape($data['product_name']) ."',
-					image = '" . $this->db->escape($data['product_thumbnail_path']) . "',
+					image = '" .  $this->db->escape($thumbnail)  . "',
 					subtract = 0,
 					quantity = 1,
 					shipping = 0,
@@ -282,8 +299,10 @@ class ModelModuleMultisellerSeller extends Model {
 		}
 
 		if (isset($data['product_images'])) {
-			foreach ($data['product_images'] as $key => $image) {
-				$this->db->query("INSERT INTO " . DB_PREFIX . "product_image SET product_id = '" . (int)$product_id . "', image = '" . $this->db->escape(html_entity_decode($image, ENT_QUOTES, 'UTF-8')) . "', sort_order = '" . (int)$key . "'");
+			foreach ($data['product_images'] as $key => $img) {
+				$image = MsImage::byName($this->registry, $img);
+				$image->move();
+				$this->db->query("INSERT INTO " . DB_PREFIX . "product_image SET product_id = '" . (int)$product_id . "', image = '" . $this->db->escape(html_entity_decode($image->getName(), ENT_QUOTES, 'UTF-8')) . "', sort_order = '" . (int)$key . "'");
 			}
 		}
 		

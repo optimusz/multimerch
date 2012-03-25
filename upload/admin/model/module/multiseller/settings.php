@@ -58,6 +58,21 @@ class ModelModuleMultisellerSettings extends Model {
 			 `date_modified` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
         	PRIMARY KEY (`transaction_id`)) default CHARSET=utf8";
         
+        $this->db->query($sql);
+        
+		$sql = "
+			CREATE TABLE `" . DB_PREFIX . "ms_request` (
+             `request_id` int(11) NOT NULL AUTO_INCREMENT,
+             `seller_id` int(11) DEFAULT NULL,
+             `product_id` int(11) DEFAULT NULL,
+			 `request_type` TINYINT NOT NULL DEFAULT '1',
+			 `date_created` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+			 `date_processed` DATETIME DEFAULT NULL,
+             `processed_by_user_id` int(11) DEFAULT NULL,
+             `created_message` TEXT NOT NULL DEFAULT '',
+             `processed_message` TEXT NOT NULL DEFAULT '',
+        	PRIMARY KEY (`request_id`)) default CHARSET=utf8";
+        
         $this->db->query($sql);        
 	}
 	
@@ -66,7 +81,8 @@ class ModelModuleMultisellerSettings extends Model {
 				`" . DB_PREFIX . "ms_product`,
 				`" . DB_PREFIX . "ms_seller`,
 				`" . DB_PREFIX . "ms_product_rating`,
-				`" . DB_PREFIX . "ms_transaction`";
+				`" . DB_PREFIX . "ms_transaction`,
+				`" . DB_PREFIX . "ms_request`";				
 								
 		$this->db->query($sql);
     }

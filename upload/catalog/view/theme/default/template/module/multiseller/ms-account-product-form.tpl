@@ -80,8 +80,10 @@
           	<p class="ms-note"><?php echo $ms_account_product_thumbnail_note; ?></p>
           	<p class="error" id="error_product_thumbnail"></p>
           	<div id="product_thumbnail_images">
+          		<?php if (!empty($product['thumbnail'])) { ?>
           		<input type="hidden" name="product_thumbnail_name" value="<?php echo $product['thumbnail']['name']; ?>" />
           		<img src="<?php echo $product['thumbnail']['src']; ?>" />
+          		<?php } ?>
           	</div>
           </td>
         </tr>
@@ -153,7 +155,7 @@ $(function() {
 					    if (!jsonData.errors.hasOwnProperty(error)) {
 					        continue;
 					    }
-					    if (error == '0') {
+					    if (error == '') {
 					    $('#error_product_image').text(jsonData.errors[error]);
 					    } else {
 					    $('#error_'+error).text(jsonData.errors[error]);
@@ -187,7 +189,7 @@ $(function() {
 					    if (!jsonData.errors.hasOwnProperty(error)) {
 					        continue;
 					    }
-					    if (error == '0') {
+					    if (error == '') {
 					    $('#error_product_thumbnail').text(jsonData.errors[error]);
 					    } else {
 					    $('#error_'+error).text(jsonData.errors[error]);
