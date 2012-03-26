@@ -257,6 +257,8 @@ class ModelModuleMultisellerSeller extends Model {
 		}		
 		
 		$this->cache->delete('product');
+		
+		return $product_id;		
 	}	
 	
 	public function saveProduct($data) {
@@ -329,6 +331,8 @@ class ModelModuleMultisellerSeller extends Model {
 		}
 		
 		$this->cache->delete('product');
+		
+		return $product_id;
 	}
 	
 	public function saveSellerData($data) {

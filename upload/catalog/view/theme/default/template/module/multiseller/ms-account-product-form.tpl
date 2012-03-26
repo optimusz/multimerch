@@ -226,7 +226,7 @@ $(function() {
 					}				
 				} else {
 					console.log('success');
-					location = jsonData['redirect'];
+					//location = jsonData['redirect'];
 				}
 	       	}
 		});
@@ -252,7 +252,7 @@ $(function() {
 					}				
 				} else {
 					//success
-					location = jsonData['redirect'];
+					//location = jsonData['redirect'];
 				}
 	       	}
 		});

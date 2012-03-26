@@ -156,6 +156,7 @@ class ControllerAccountMsSeller extends Controller {
 			if (!$thumbnail->checkImageAgainstSession()) {
 				$json['errors']['product_thumbnail'] = $thumbnail->getErrors();
 			}
+			unset($thumbnail);
 		}
 		
 		if (isset($data['product_images'])) {
@@ -164,6 +165,7 @@ class ControllerAccountMsSeller extends Controller {
 				if (!$img->checkImageAgainstSession()) {
 					$json['errors']['product_image'] = $img->getErrors();
 				}
+				unset($img);
 			}
 		}
 
@@ -185,6 +187,8 @@ class ControllerAccountMsSeller extends Controller {
 	
 	public function jxSubmitProduct() {
 		require_once(DIR_SYSTEM . 'library/ms-image.php');
+		require_once(DIR_SYSTEM . 'library/ms-request.php');
+		
 		$data = $this->request->post;
 		$this->load->model('module/multiseller/seller');
 
@@ -223,6 +227,7 @@ class ControllerAccountMsSeller extends Controller {
 			if (!$thumbnail->checkImageAgainstSession()) {
 				$json['errors']['product_thumbnail'] = $thumbnail->getErrors();
 			}
+			unset($thumbnail);
 		} else {
 			$json['errors']['product_thumbnail'] = 'Please upload a thumbnail!';			
 		}
@@ -233,6 +238,7 @@ class ControllerAccountMsSeller extends Controller {
 				if (!$img->checkImageAgainstSession()) {
 					$json['errors']['product_image'] = $img->getErrors();
 				}
+				unset($img);
 			}
 		}
 		
@@ -242,6 +248,13 @@ class ControllerAccountMsSeller extends Controller {
 				case MS_PRODUCT_VALIDATION_APPROVAL:
 					$data['enabled'] = 0;
 					$data['review_status_id'] = MS_PRODUCT_STATUS_PENDING;
+					
+					if (isset($data['product_id']) && !empty($data['product_id'])) {
+						$request_type = MS_REQUEST_PRODUCT_CREATED;
+					} else {
+						$request_type = MS_REQUEST_PRODUCT_UPDATED;
+					}
+					
 					break;
 					
 				case MS_PRODUCT_VALIDATION_NONE:
@@ -252,9 +265,20 @@ class ControllerAccountMsSeller extends Controller {
 			}
 
 			if (isset($data['product_id']) && !empty($data['product_id'])) {
-				$this->model_module_multiseller_seller->editProduct($data);
+				$product_id = $this->model_module_multiseller_seller->editProduct($data);
 			} else {
-				$this->model_module_multiseller_seller->saveProduct($data);
+				$product_id = $this->model_module_multiseller_seller->saveProduct($data);
+			}
+			
+			if (isset($request_type)) {
+				$r = new MsRequest($this->registry);
+				$r->createRequest(array(
+					'product_id' => $product_id,
+					'seller_id' => $this->customer->getId(),
+					'request_type' => $request_type,
+					'created_message' => isset($data['product_message']) ? $data['product_message'] : '',
+				));
+				unset($r);
 			}
 			
 			$json['redirect'] = $this->url->link('account/ms-seller/products', '', 'SSL');
@@ -316,6 +340,13 @@ class ControllerAccountMsSeller extends Controller {
 			
 			$data['avatar_path'] = '';
 			$this->model_module_multiseller_seller->saveSellerData($data);
+			
+			$r = new MsRequest($this->registry);
+			$r->createRequest(array(
+				'seller_id' => $this->customer->getId(),
+				'request_type' => MS_REQUEST_SELLER_CREATED,
+			));
+			unset($r);
 		}
 		
 		$this->_setJsonResponse($json);
@@ -424,7 +455,6 @@ class ControllerAccountMsSeller extends Controller {
 		if (!$product['product_id']) {
 			$this->redirect($this->url->link('account/ms-seller/products', '', 'SSL'));
 		} else {
-			var_dump($product);
 			if (!empty($product['thumbnail'])) {
 				$thumb_name = $product['thumbnail'];
 				unset($product['thumbnail']);
