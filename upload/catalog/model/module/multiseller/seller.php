@@ -46,24 +46,41 @@ class ModelModuleMultisellerSeller extends Model {
 						p.product_id,
 						p.status as enabled,
 						p.image as thumbnail,
-						pd.name as name,
-						pd.description as description,
 						ptc.category_id,
-						mp.review_status_id,
-						group_concat(pt.tag separator ', ') as tags
+						mp.review_status_id
 				FROM `" . DB_PREFIX . "product` p
-				INNER JOIN `" . DB_PREFIX . "product_description` pd
-					ON p.product_id = pd.product_id
 				INNER JOIN `" . DB_PREFIX . "product_to_category` ptc
-					ON pd.product_id = ptc.product_id
+					ON p.product_id = ptc.product_id
 				INNER JOIN `" . DB_PREFIX . "ms_product` mp
 					ON ptc.product_id = mp.product_id
-				LEFT JOIN `" . DB_PREFIX . "product_tag` pt
-					ON mp.product_id = pt.product_id
 				WHERE p.product_id = " . (int)$product_id . " 
 				AND mp.seller_id = " . (int)$seller_id;
 		
 		$res = $this->db->query($sql);
+
+		
+		$sql = "SELECT pd.*,
+					   group_concat(pt.tag separator ', ') as tags
+				FROM " . DB_PREFIX . "product_description pd
+				LEFT JOIN `" . DB_PREFIX . "product_tag` pt
+					ON pd.product_id = pt.product_id
+					AND pd.language_id = pt.language_id
+				WHERE pd.product_id = " . (int)$product_id . "
+				GROUP BY language_id";
+
+		$descriptions = $this->db->query($sql);
+		$product_description_data = array();
+		foreach ($descriptions->rows as $result) {
+			$product_description_data[$result['language_id']] = array(
+				'name'             => $result['name'],
+				'description'      => $result['description'],
+				'tags'      => $result['tags'],
+				//'meta_keyword'     => $result['meta_keyword'],
+				//'meta_description' => $result['meta_description']
+			);
+		}
+
+		$res->row['languages'] = $product_description_data;
 
 		return $res->row;
 	}
@@ -162,6 +179,7 @@ class ModelModuleMultisellerSeller extends Model {
 				INNER JOIN `" . DB_PREFIX . "ms_product` c
 					ON b.product_id = c.product_id
 				WHERE c.seller_id = " . (int)$seller_id . "
+				AND a.language_id = " . $this->config->get('config_language_id'). "
         		ORDER BY {$sort['order_by']} {$sort['order_way']}" 
         		. ($sort['limit'] ? " LIMIT ".(int)(($sort['page'] - 1) * $sort['limit']).', '.(int)($sort['limit']) : '');				
 		
@@ -178,7 +196,7 @@ class ModelModuleMultisellerSeller extends Model {
 	}
 	
 	public function editProduct($data) {
-		$language_id = 1;		
+		reset($data['languages']); $first = key($data['languages']);
 		$product_id = $data['product_id'];
 
 		$old_thumbnail = $this->getProductThumbnail($product_id);
@@ -205,13 +223,27 @@ class ModelModuleMultisellerSeller extends Model {
 		
 		$this->db->query($sql);
 
-		$sql = "UPDATE " . DB_PREFIX . "product_description
-				SET name = '". $this->db->escape($data['product_name']) ."',
-					description = '". $this->db->escape($data['product_description']) ."'
-				WHERE product_id = " . (int)$product_id . "
-				AND language_id = " . (int)$language_id;
-				
+
+		$sql = "DELETE FROM " . DB_PREFIX . "product_tag
+				WHERE product_id = " . (int)$product_id;
 		$this->db->query($sql);
+
+		foreach ($data['languages'] as $language_id => $language) {
+			$sql = "UPDATE " . DB_PREFIX . "product_description
+					SET name = '". $this->db->escape($language['product_name']) ."',
+						description = '". $this->db->escape($language['product_description']) ."'
+					WHERE product_id = " . (int)$product_id . "
+					AND language_id = " . (int)$language_id;
+					
+			$this->db->query($sql);
+			
+			if ($language['product_tags']) {
+				$tags = explode(',', $language['product_tags']);
+				foreach ($tags as $tag) {
+					$this->db->query("INSERT INTO " . DB_PREFIX . "product_tag SET product_id = '" . (int)$product_id . "', language_id = '" . (int)$language_id . "', tag = '" . $this->db->escape(trim($tag)) . "'");
+				}
+			}
+		}		
 		
 		$sql = "UPDATE " . DB_PREFIX . "ms_product
 				SET review_status_id = " . (int)$data['review_status_id'] . "
@@ -224,18 +256,6 @@ class ModelModuleMultisellerSeller extends Model {
 				WHERE product_id = " . (int)$product_id;
 		
 		$this->db->query($sql);		
-
-		$sql = "DELETE FROM " . DB_PREFIX . "product_tag
-				WHERE product_id = " . (int)$product_id;
-		$this->db->query($sql);
-
-		if ($data['product_tags']) {
-			$tags = explode(',', $data['product_tags']);
-				
-			foreach ($tags as $tag) {
-				$this->db->query("INSERT INTO " . DB_PREFIX . "product_tag SET product_id = '" . (int)$product_id . "', language_id = '" . (int)$language_id . "', tag = '" . $this->db->escape(trim($tag)) . "'");
-			}
-		}
 
 		// delete old images		
 		$old_images = $this->getProductImages($product_id);
@@ -262,7 +282,7 @@ class ModelModuleMultisellerSeller extends Model {
 	}	
 	
 	public function saveProduct($data) {
-		$language_id = 1;		
+		reset($data['languages']); $first = key($data['languages']);
 		$store_id = $this->config->get('config_store_id');
 
 		if (isset($data['product_thumbnail_name'])) {
@@ -275,7 +295,7 @@ class ModelModuleMultisellerSeller extends Model {
 
 		$sql = "INSERT INTO " . DB_PREFIX . "product
 				SET price = " . (float)$data['product_price'] . ",
-					model = '".$this->db->escape($data['product_name']) ."',
+					model = '".$this->db->escape($data['languages'][$first]['product_name']) ."',
 					image = '" .  $this->db->escape($thumbnail)  . "',
 					subtract = 0,
 					quantity = 1,
@@ -288,12 +308,22 @@ class ModelModuleMultisellerSeller extends Model {
 		$this->db->query($sql);
 		$product_id = $this->db->getLastId();
 
-		$sql = "INSERT INTO " . DB_PREFIX . "product_description
-				SET product_id = " . (int)$product_id . ",
-					name = '". $this->db->escape($data['product_name']) ."',
-					description = '". $this->db->escape($data['product_description']) ."',
-					language_id = " . (int)$language_id;
-		$this->db->query($sql);
+		foreach ($data['languages'] as $language_id => $language) {
+			$sql = "INSERT INTO " . DB_PREFIX . "product_description
+					SET product_id = " . (int)$product_id . ",
+						name = '". $this->db->escape($language['product_name']) ."',
+						description = '". $this->db->escape($language['product_description']) ."',
+						language_id = " . (int)$language_id;
+			$this->db->query($sql);
+			
+			if ($language['product_tags']) {
+				$tags = explode(',', $language['product_tags']);
+					
+				foreach ($tags as $tag) {
+					$this->db->query("INSERT INTO " . DB_PREFIX . "product_tag SET product_id = '" . (int)$product_id . "', language_id = '" . (int)$language_id . "', tag = '" . $this->db->escape(trim($tag)) . "'");
+				}
+			}
+		}
 		
 		$sql = "INSERT INTO " . DB_PREFIX . "ms_product
 				SET product_id = " . (int)$product_id . ",
@@ -313,14 +343,6 @@ class ModelModuleMultisellerSeller extends Model {
 					store_id = " . (int)$store_id;
 		
 		$this->db->query($sql);
-
-		if ($data['product_tags']) {
-			$tags = explode(',', $data['product_tags']);
-				
-			foreach ($tags as $tag) {
-				$this->db->query("INSERT INTO " . DB_PREFIX . "product_tag SET product_id = '" . (int)$product_id . "', language_id = '" . (int)$language_id . "', tag = '" . $this->db->escape(trim($tag)) . "'");
-			}
-		}
 
 		if (isset($data['product_images'])) {
 			foreach ($data['product_images'] as $key => $img) {

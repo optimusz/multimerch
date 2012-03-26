@@ -127,6 +127,7 @@ class ControllerAccountMsSeller extends Controller {
 	public function jxSaveProductDraft() {
 		require_once(DIR_SYSTEM . 'library/ms-image.php');
 		$data = $this->request->post;
+		
 		$this->load->model('module/multiseller/seller');
 		
 		if (isset($data['product_id']) && !empty($data['product_id'])) {
@@ -137,14 +138,19 @@ class ControllerAccountMsSeller extends Controller {
 
 		$json = array();
 
-		if (empty($data['product_name'])) {
-			$json['errors']['product_name'] = 'Product name cannot be empty';
-		} else if (strlen($data['product_name']) > 50 ) {
-			$json['errors']['product_name'] = 'Product name too long';			
-		}
-
-		if (strlen($data['product_description']) > 1000 ) {
-			$json['errors']['product_description'] = 'Product description too long';			
+		// only check default language for errors
+		foreach ($data['languages'] as $language) {
+			if (empty($language['product_name'])) {
+				$json['errors']['product_name'] = 'Product name cannot be empty';
+			} else if (strlen($language['product_name']) > 50 ) {
+				$json['errors']['product_name'] = 'Product name too long';			
+			}
+	
+			if (strlen($language['product_description']) > 1000 ) {
+				$json['errors']['product_description'] = 'Product description too long';			
+			}
+			
+			break;
 		}
 		
 		if (!is_numeric($data['product_price']) && (!empty($data['product_price']))) {
@@ -190,6 +196,7 @@ class ControllerAccountMsSeller extends Controller {
 		require_once(DIR_SYSTEM . 'library/ms-request.php');
 		
 		$data = $this->request->post;
+		
 		$this->load->model('module/multiseller/seller');
 
 		if (isset($data['product_id']) && !empty($data['product_id'])) {
@@ -200,16 +207,21 @@ class ControllerAccountMsSeller extends Controller {
 		
 		$json = array();
 
-		if (empty($data['product_name'])) {
-			$json['errors']['product_name'] = 'Product name cannot be empty'; 
-		} else if (strlen($data['product_name']) < 4 || strlen($data['product_name']) > 50 ) {
-			$json['errors']['product_name'] = 'Product name should be between 4 and 50 characters';			
-		}
-
-		if (empty($data['product_description'])) {
-			$json['errors']['product_description'] = 'Product description cannot be empty'; 
-		} else if (strlen($data['product_description']) < 25 || strlen($data['product_description']) > 1000 ) {
-			$json['errors']['product_description'] = 'Product description should be between 25 and 1000 characters';			
+		// only check default language for errors
+		foreach ($data['languages'] as $language) {
+			if (empty($language['product_name'])) {
+				$json['errors']['product_name'] = 'Product name cannot be empty'; 
+			} else if (strlen($language['product_name']) < 4 || strlen($language['product_name']) > 50 ) {
+				$json['errors']['product_name'] = 'Product name should be between 4 and 50 characters';			
+			}
+	
+			if (empty($language['product_description'])) {
+				$json['errors']['product_description'] = 'Product description cannot be empty'; 
+			} else if (strlen($language['product_description']) < 25 || strlen($language['product_description']) > 1000 ) {
+				$json['errors']['product_description'] = 'Product description should be between 25 and 1000 characters';			
+			}
+			
+			break;
 		}
 		
 		if (empty($data['product_price'])) {
@@ -402,6 +414,9 @@ class ControllerAccountMsSeller extends Controller {
 	public function products() {
 		$this->load->model('module/multiseller/seller');
 
+		$this->load->model('localisation/language');
+		$this->data['languages'] = $this->model_localisation_language->getLanguages();
+
 		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
 
 		$sort = array(
@@ -455,6 +470,7 @@ class ControllerAccountMsSeller extends Controller {
 		if (!$product['product_id']) {
 			$this->redirect($this->url->link('account/ms-seller/products', '', 'SSL'));
 		} else {
+			var_dump($product);
 			if (!empty($product['thumbnail'])) {
 				$thumb_name = $product['thumbnail'];
 				unset($product['thumbnail']);

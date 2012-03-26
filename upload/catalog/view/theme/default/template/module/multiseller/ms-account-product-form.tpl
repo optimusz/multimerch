@@ -18,33 +18,47 @@
   	<input type="hidden" name="product_id" value="<?php echo $product['product_id']; ?>" />
   	<input type="hidden" name="action" id="ms_action" />
     <div class="content">
+	<div class="htabs" id="htabs">
+		<?php foreach ($languages as $language) { ?>
+		<a class="lang" href="#language<?php echo $language['language_id']; ?>"><img src="image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?></a>
+		<?php } ?>
+	</div>
+	<?php
+	reset($languages); $first = key($languages);
+	foreach ($languages as $k => $language) {
+	$langId = $language['language_id'];
+	?>    
+	<div class="ms-language-div" id="language<?php echo $langId; ?>">
       <table class="ms-product">
         <tr><td><h3><?php echo $ms_account_product_name_description; ?></h3></td></tr>      
         <tr>
-          <td><span class="required">*</span> <?php echo $ms_account_product_name; ?></td>
+          <td><span class="required"><?php if ($k == $first) { echo '*'; } ?></span> <?php echo $ms_account_product_name; ?></td>
           <td>
-          	<input type="text" name="product_name" value="<?php echo $product['name']; ?>" />
+          	<input type="text" name="languages[<?php echo $langId; ?>][product_name]" value="<?php echo $product['languages'][$langId]['name']; ?>" />
           	<p class="ms-note"><?php echo $ms_account_product_name_note; ?></p>
           	<p class="error" id="error_product_name"></p>
           </td>
         </tr>
         <tr>
-          <td><span class="required">*</span> <?php echo $ms_account_product_description; ?></td>
+          <td><span class="required"><?php if ($k == $first) { echo '*'; } ?></span> <?php echo $ms_account_product_description; ?></td>
           <td>
-          	<textarea name="product_description"><?php echo $product['description']; ?></textarea>
+          	<textarea name="languages[<?php echo $langId; ?>][product_description]"><?php echo $product['languages'][$langId]['description']; ?></textarea>
           	<p class="ms-note"><?php echo $ms_account_product_description_note; ?></p>
           	<p class="error" id="error_product_description"></p>
           </td>
         </tr>
         <tr>
-          <td><span class="required">*</span> <?php echo $ms_account_product_tags; ?></td>
+          <td><span class="required"><?php if ($k == $first) { echo '*'; } ?></span> <?php echo $ms_account_product_tags; ?></td>
           <td>
-          	<input type="text" name="product_tags" value="<?php echo $product['tags']; ?>" />
+          	<input type="text" name="languages[<?php echo $langId; ?>][product_tags]" value="<?php echo $product['languages'][$langId]['tags']; ?>" />
           	<p class="ms-note"><?php echo $ms_account_product_tags_note; ?></p>
           	<p class="error" id="error_product_tags"></p>
           </td>
         </tr>        
-        
+      </table>
+    </div>
+    <?php } ?>
+      <table class="ms-product">  
         <tr><td><h3><?php echo $ms_account_product_price_attributes; ?></h3></td></tr>
         <tr>
           <td><span class="required">*</span> <?php echo $ms_account_product_price; ?></td>
@@ -130,6 +144,8 @@
   
 <script>
 $(function() {
+	$('#htabs a.lang').tabs();
+
 	$("#product_image_images img, #product_thumbnail_images img").click(function() {
 		$(this).prev("input:hidden").remove();
 		$(this).remove();
