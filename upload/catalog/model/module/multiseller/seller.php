@@ -4,7 +4,13 @@ class ModelModuleMultisellerSeller extends Model {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_image WHERE product_id = '" . (int)$product_id . "'");
 		
 		return $query->rows;
-	}	
+	}
+
+	public function getProductThumbnail($product_id) {
+		$query = $this->db->query("SELECT image FROM " . DB_PREFIX . "product WHERE product_id = '" . (int)$product_id . "'");
+		
+		return $query->row;
+	}
 	
 	public function getStatsForProduct($product_id) {
 		$sql = "SELECT 	p.date_added,
@@ -175,6 +181,13 @@ class ModelModuleMultisellerSeller extends Model {
 		$language_id = 1;		
 		$product_id = $data['product_id'];
 
+		$old_thumbnail = $this->getProductThumbnail($product_id);
+		
+		if (!isset($data['product_thumbnail_name']) || ($old_thumbnail['image'] != $data['product_thumbnail_name'])) {
+			$image = MsImage::byName($this->registry, $old_thumbnail['image']);
+			$image->delete();				
+		}
+		
 		if (isset($data['product_thumbnail_name'])) {
 			$image = MsImage::byName($this->registry, $data['product_thumbnail_name']);
 			$image->move();
@@ -223,14 +236,23 @@ class ModelModuleMultisellerSeller extends Model {
 				$this->db->query("INSERT INTO " . DB_PREFIX . "product_tag SET product_id = '" . (int)$product_id . "', language_id = '" . (int)$language_id . "', tag = '" . $this->db->escape(trim($tag)) . "'");
 			}
 		}
-		
+
+		// delete old images		
+		$old_images = $this->getProductImages($product_id);
+		foreach($old_images as $old_image) {
+			if (!isset($data['product_images']) || array_search($old_image['image'], $data['product_images']) === FALSE) {
+				$image = MsImage::byName($this->registry, $old_image['image']);
+				$image->delete();				
+			}
+		}
 		$this->db->query("DELETE FROM " . DB_PREFIX . "product_image WHERE product_id = '" . (int)$product_id . "'");
 		
+		// add new images
 		if (isset($data['product_images'])) {
 			foreach ($data['product_images'] as $key => $product_image) {
 				$image = MsImage::byName($this->registry, $product_image);
 				$image->move();				
-				$this->db->query("INSERT INTO " . DB_PREFIX . "product_image SET product_id = '" . (int)$product_id . "', image = '" . $this->db->escape(html_entity_decode($image->getName, ENT_QUOTES, 'UTF-8')) . "', sort_order = '" . (int)$key . "'");
+				$this->db->query("INSERT INTO " . DB_PREFIX . "product_image SET product_id = '" . (int)$product_id . "', image = '" . $this->db->escape(html_entity_decode($image->getName(), ENT_QUOTES, 'UTF-8')) . "', sort_order = '" . (int)$key . "'");
 			}
 		}		
 		

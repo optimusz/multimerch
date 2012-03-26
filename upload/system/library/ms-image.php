@@ -105,6 +105,16 @@ class MsImage {
 		unset ($this->session->data['multiseller']['images'][$key]);		
   	}
   	
+  	public function delete() {
+  		echo "Deleting " . $this->fileName .  "\n";
+		$key = array_search($this->fileName, $this->session->data['multiseller']['images']);
+		if (file_exists(DIR_IMAGE. $this->fileName)) {
+			//@unlink(DIR_IMAGE. $this->fileName);
+			unlink(DIR_IMAGE. $this->fileName);
+		}
+		unset ($this->session->data['multiseller']['images'][$key]);		
+  	}  	
+  	
   	public function getName () {
   		return $this->fileName;
   	}
