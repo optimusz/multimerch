@@ -71,7 +71,6 @@
 			      <li><a href="<?php echo $ms_link_sellerinfo; ?>"><?php echo $ms_account_sellerinfo; ?></a></li>
 			      <li><a href="<?php echo $ms_link_newproduct; ?>"><?php echo $ms_account_newproduct; ?></a></li>
 			      <li><a href="<?php echo $ms_link_products; ?>"><?php echo $ms_account_products; ?></a></li>
-			      <li><a href="<?php echo $ms_link_sellerstatus; ?>"><?php echo $ms_account_sellerstatus; ?></a></li>
 			      <li><a href="<?php echo $ms_link_transactions; ?>"><?php echo $ms_account_transactions; ?></a></li>
 			      <li><a href="<?php echo $ms_link_withdraw; ?>"><?php echo $ms_account_withdraw; ?></a></li>
 			    </ul>
@@ -90,7 +89,6 @@
 				$this->data['ms_link_sellerinfo'] = $this->url->link('account/ms-seller/sellerinfo', '', 'SSL');
 				$this->data['ms_link_newproduct'] = $this->url->link('account/ms-seller/newproduct', '', 'SSL');
 				$this->data['ms_link_products'] = $this->url->link('account/ms-seller/products', '', 'SSL');
-				$this->data['ms_link_sellerstatus'] = $this->url->link('account/ms-seller/sellerstatus', '', 'SSL');
 				$this->data['ms_link_transactions'] = $this->url->link('account/ms-seller/transactions', '', 'SSL');
 				$this->data['ms_link_withdraw'] = $this->url->link('account/ms-seller/withdraw', '', 'SSL');
 			]]></add>
@@ -109,7 +107,6 @@
 			      <li><a href="<?php echo $ms_link_sellerinfo; ?>"><?php echo $ms_account_sellerinfo; ?></a></li>
 			      <li><a href="<?php echo $ms_link_newproduct; ?>"><?php echo $ms_account_newproduct; ?></a></li>
 			      <li><a href="<?php echo $ms_link_products; ?>"><?php echo $ms_account_products; ?></a></li>
-			      <li><a href="<?php echo $ms_link_sellerstatus; ?>"><?php echo $ms_account_sellerstatus; ?></a></li>
 			      <li><a href="<?php echo $ms_link_transactions; ?>"><?php echo $ms_account_transactions; ?></a></li>
 			      <li><a href="<?php echo $ms_link_withdraw; ?>"><?php echo $ms_account_withdraw; ?></a></li>
 			]]></add>
@@ -126,7 +123,6 @@
 				$this->data['ms_link_sellerinfo'] = $this->url->link('account/ms-seller/sellerinfo', '', 'SSL');
 				$this->data['ms_link_newproduct'] = $this->url->link('account/ms-seller/newproduct', '', 'SSL');
 				$this->data['ms_link_products'] = $this->url->link('account/ms-seller/products', '', 'SSL');
-				$this->data['ms_link_sellerstatus'] = $this->url->link('account/ms-seller/sellerstatus', '', 'SSL');
 				$this->data['ms_link_transactions'] = $this->url->link('account/ms-seller/transactions', '', 'SSL');
 				$this->data['ms_link_withdraw'] = $this->url->link('account/ms-seller/withdraw', '', 'SSL');
 			]]></add>

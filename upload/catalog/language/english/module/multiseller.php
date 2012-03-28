@@ -11,6 +11,7 @@ $_['ms_product_review_status_approved']       = 'Approved';
 $_['ms_product_review_status_declined']       = 'Declined';
 
 $_['ms_button_submit']      = 'Submit';
+$_['ms_button_save']      = 'Save';
 $_['ms_button_save_draft']      = 'Save draft';
 $_['ms_button_save_draft_unpublish']      = 'This product will be unpublished';
 $_['ms_button_cancel']      = 'Cancel';
@@ -55,7 +56,7 @@ $_['ms_account_product_category_note']    = 'Your note text goes here';
 $_['ms_account_product_files']    = 'Files';
 $_['ms_account_product_thumbnail']     = 'Thumbnail';
 $_['ms_account_product_thumbnail_note']    = 'Your note text goes here';
-$_['ms_account_product_download']     = 'Download';
+$_['ms_account_product_download']     = 'Downloads';
 $_['ms_account_product_download_note']     = 'Your note text goes here';
 $_['ms_account_product_image']     = 'Images';
 $_['ms_account_product_image_note']     = 'Your note text goes here';
@@ -89,7 +90,7 @@ $_['ms_account_sellerinfo_country_note']    = 'Your note text goes here';
 $_['ms_account_sellerinfo_website']    = 'Website';
 $_['ms_account_sellerinfo_website_note']    = 'Your note text goes here';
 $_['ms_account_sellerinfo_avatar']    = 'Avatar';
-$_['ms_account_sellerinfo_avatarl_note']    = 'Your note text goes here';
+$_['ms_account_sellerinfo_avatar_note']    = 'Your note text goes here';
 $_['ms_account_sellerinfo_paypal']    = 'Paypal';
 $_['ms_account_sellerinfo_paypal_note']    = 'Your note text goes here';
 
@@ -105,17 +106,14 @@ $_['ms_account_sellerinfo_mail_account_needsapproval_message']    = "As soon as 
 
 
 // Account - Seller account status
-$_['ms_account_status_heading'] = 'Seller account status';
-$_['ms_account_status_breadcrumbs']	= 'Seller account status';;
-
 $_['ms_account_status'] = 'Your seller account status is: ';
 $_['ms_account_status_activation'] = 'Waiting for activation';
 $_['ms_account_status_approval'] = 'Waiting for approval';
 $_['ms_account_status_active'] = 'Active';
-
-$_['ms_account_status_fullaccess']    = "You have full access to your seller account.";
+$_['ms_account_status_fullaccess']    = 'You have full access to your seller account.';
 $_['ms_account_status_pleaseactivate'] = 'Please visit the link contained in the email we sent you to complete the activation process.';
 $_['ms_account_status_willbeapproved'] = 'As soon as your account is approved, you will receive a confirmation email.';
+$_['ms_account_status_please_fill_in'] = 'Please complete the following form to create a seller account.';
 
 
 // Account - Products

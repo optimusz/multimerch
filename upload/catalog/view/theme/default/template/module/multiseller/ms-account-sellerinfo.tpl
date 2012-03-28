@@ -10,32 +10,51 @@
   
   <h1><?php echo $ms_account_sellerinfo_heading; ?></h1>
   
-  <?php if (isset($error_warning) && ($error_warning)) { ?>
-  <div class="warning"><?php echo $error_warning; ?></div>
+  <?php if (isset($success) && ($success)) { ?>
+  <div class="success"><?php echo $success; ?></div>
+  <?php } ?>
+  
+  <?php if (isset($statustext) && ($statustext)) { ?>
+  <div class="attention"><?php echo $statustext; ?></div>
   <?php } ?>
   
   <form id="ms-sellerinfo">
+  	<input type="hidden" name="action" id="ms_action" />
     <div class="content">
-      <table class="ms-product">
+    	<?php if (isset($seller['seller_status_id']) && $seller['seller_status_id'] != MS_SELLER_STATUS_ACTIVE) { ?>
+  	  <div class="overlay"></div>    
+  	  	<?php } ?>
+      <table class="ms-product" id="ms-sellerinfo">
         <tr>
-          <td><span class="required">*</span> <?php echo $ms_account_sellerinfo_nickname; ?></td>
-          <td>
-          	<input type="text" name="sellerinfo_nickname" value="<?php echo ''; ?>" />
-          	<p class="ms-note"><?php echo $ms_account_sellerinfo_nickname_note; ?></p>
-          </td>
+			<?php if (!empty($seller['nickname'])) { ?>
+	          <td><?php echo $ms_account_sellerinfo_nickname; ?></td>
+	          <td style="padding-top: 5px">
+	          	<b><?php echo $seller['nickname']; ?></b>
+	          </td>			
+			<?php } else { ?>
+	          <td><span class="required">*</span> <?php echo $ms_account_sellerinfo_nickname; ?></td>
+	          <td>
+	          	<input type="text" name="sellerinfo_nickname" value="<?php echo $seller['nickname']; ?>" />
+	          	<p class="ms-note"><?php echo $ms_account_sellerinfo_nickname_note; ?></p>
+	          	<p class="error" id="error_sellerinfo_nickname"></p>
+	          </td>          		
+          	<?php } ?>
+
         </tr>
         <tr>
           <td><?php echo $ms_account_sellerinfo_description; ?></td>
           <td>
-          	<textarea name="sellerinfo_description"><?php echo ''; ?></textarea>
+          	<textarea name="sellerinfo_description"><?php echo $seller['description']; ?></textarea>
           	<p class="ms-note"><?php echo $ms_account_sellerinfo_description_note; ?></p>
+          	<p class="error" id="error_sellerinfo_description"></p>
           </td>
         </tr>
         <tr>
           <td><?php echo $ms_account_sellerinfo_company; ?></td>
           <td>
-          	<input type="text" name="sellerinfo_company" value="<?php echo ''; ?>" />
+          	<input type="text" name="sellerinfo_company" value="<?php echo $seller['company']; ?>" />
           	<p class="ms-note"><?php echo $ms_account_sellerinfo_company_note; ?></p>
+          	<p class="error" id="error_sellerinfo_company"></p>
           </td>
         </tr>
         <tr>
@@ -48,33 +67,47 @@
               <?php } ?>
               
               <?php foreach ($countries as $country) { ?>
-              <?php if (1 == 0) { ?>
+              <?php if ($seller['country_id'] == $country['country_id']) { ?>
               <option value="<?php echo $country['country_id']; ?>" selected="selected"><?php echo $country['name']; ?></option>
               <?php } else { ?>
               <option value="<?php echo $country['country_id']; ?>"><?php echo $country['name']; ?></option>
               <?php } ?>
               <?php } ?>
             </select>
-          	<p class="ms-note"><?php echo $ms_account_sellerinfo_company_note; ?></p>            
+          	<p class="ms-note"><?php echo $ms_account_sellerinfo_country_note; ?></p>
+          	<p class="error" id="error_sellerinfo_country"></p>            
         </tr>
         
         <tr>
           <td><?php echo $ms_account_sellerinfo_paypal; ?></td>
           <td>
-          	<input type="text" name="sellerinfo_paypal" value="<?php echo ''; ?>" />
+          	<input type="text" name="sellerinfo_paypal" value="<?php echo $seller['paypal']; ?>" />
           	<p class="ms-note"><?php echo $ms_account_sellerinfo_paypal_note; ?></p>
+          	<p class="error" id="error_sellerinfo_paypal"></p>
           </td>
         </tr>
                 
         <tr>
           <td><?php echo $ms_account_sellerinfo_avatar; ?></td>
-          <td><input type="file" name="sellerinfo_avatar" /></td>
-        </tr>
+          <td>
+          	<input type="file" name="sellerinfo_avatar" id="sellerinfo_avatar" />
+          	<p class="ms-note"><?php echo $ms_account_sellerinfo_avatar_note; ?></p>
+          	<p class="error" id="error_sellerinfo_avatar"></p>
+          	<div id="sellerinfo_avatar_files">
+          		<?php if (!empty($seller['avatar'])) { ?>
+          		<input type="hidden" name="sellerinfo_avatar_name" value="<?php echo $seller['avatar']['name']; ?>" />
+          		<img src="<?php echo $seller['avatar']['thumb']; ?>" />
+          		<?php } ?>
+          	</div>
+          </td>
+        </tr>        
       </table>
     </div>
     <div class="buttons">
       <div class="left"><a href="<?php echo $back; ?>" class="button"><span><?php echo $button_back; ?></span></a></div>
-      <div class="right"><a class="button" id="ms-submit-button"><span><?php echo $button_continue; ?></span></a></div>
+    	<?php if ($seller['seller_status_id'] == MS_SELLER_STATUS_ACTIVE || !isset($seller['seller_status_id'])) { ?>
+      	<div class="right"><a class="button" id="ms-submit-button"><span><?php echo $ms_button_save; ?></span></a></div>
+		<?php } ?>
     </div>
   </form>
   
@@ -83,6 +116,7 @@
 <script>
 $(function() {
 	$("#ms-submit-button").click(function() {
+	var id = $(this).attr('id');
 	//$("#ms-submit-button").after('<span class="wait">&nbsp;<img src="catalog/view/theme/default/image/loading.gif" alt="" /></span>');
 	//$("#ms-submit-button").hide();
 	    $.ajax({
@@ -91,19 +125,77 @@ $(function() {
 			url: 'index.php?route=account/ms-seller/jxsavesellerinfo',
 			data: $(this).parents("form").serialize(),
 			success: function(jsonData) {
-				if (jsonData.errors) {
+				if (!jQuery.isEmptyObject(jsonData.errors)) {
+					$('#error_'+id).text('');
 					for (error in jsonData.errors) {
 					    if (!jsonData.errors.hasOwnProperty(error)) {
 					        continue;
 					    }
+					    
+					    if ($('#error_'+error).length > 0) {
+					    	$('#error_'+error).text(jsonData.errors[error]);
+					    } else {
+					    	$('#error_'+id).text(jsonData.errors[error]);
+					   	}
 					    console.log(error + " -> " + jsonData.errors[error]);
-					}				
+					}
+					window.scrollTo(0,0);
 				} else {
-					alert('success');
+					window.location.reload();
 				}
 	       	}
 		});
 	});
+	
+	$("#product_download_files").delegate("span", "click", function() {
+		$(this).parent("p").prev("input:hidden").remove();
+		$(this).parent("p").remove();
+	});
+	
+
+	$("#sellerinfo_avatar_files").delegate("img", "click", function() {
+		$(this).prev("input:hidden").remove();
+		$(this).remove();
+	});	
+
+	$('#sellerinfo_avatar').live('change', function() {
+		var element = $(this);
+		var id = $(this).attr('id');
+		$('#ms_action').val(id);
+		$('#error_'+id).text('');
+		$("#ms-sellerinfo").ajaxForm({
+			url:  "index.php?route=account/ms-seller/jxuploadfile",
+			dataType: 'json', 
+		    beforeSend: function() {
+				$('#'+id+'_files').append('<span class="wait">&nbsp;<img src="catalog/view/theme/default/image/loading.gif" alt="" /></span>');
+				
+		    },
+			success: function(jsonData) {
+				$(element).replaceWith('<input type="file" name="'+$(element).attr('name')+'" id="'+$(element).attr('id')+'"/>');
+				$('#'+id+'_files span.wait').remove();
+			
+				if (!jQuery.isEmptyObject(jsonData.errors)) {
+					$('#error_'+id).text('');
+					for (error in jsonData.errors) {
+					    if (!jsonData.errors.hasOwnProperty(error)) {
+					        continue;
+					    }
+					    
+					    if ($('#error_'+error).length > 0) {
+					    	$('#error_'+error).text(jsonData.errors[error]);
+					    } else {
+					    	$('#error_'+id).text(jsonData.errors[error]);
+					   	}
+					    console.log(error + " -> " + jsonData.errors[error]);
+					}
+					window.scrollTo(0,0);
+				} else {
+					$("#sellerinfo_avatar_files").html('<input type="hidden" value="'+jsonData.file.name+'" name="sellerinfo_avatar_name" />');
+					$("#sellerinfo_avatar_files").append('<img src="'+jsonData.file.thumb+'" />');
+				}			
+			}
+		}).submit();
+	});	
 });
 </script>  
 <?php echo $footer; ?>

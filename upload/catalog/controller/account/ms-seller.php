@@ -5,31 +5,31 @@ class ControllerAccountMsSeller extends Controller {
 	
 	public function __construct($registry) {
 		parent::__construct($registry);
+
+		require_once(DIR_SYSTEM . 'library/ms-image.php');
+		require_once(DIR_SYSTEM . 'library/ms-request.php');
 		
-		$seller_account_status = 1;
+		$parts = explode('/', $this->request->request['route']);
 		
-		// commented out for testing purposes
-		/*
     	if (!$this->customer->isLogged()) {
 	  		$this->session->data['redirect'] = $this->url->link('account/ms-seller', '', 'SSL');
 	  		$this->redirect($this->url->link('account/login', '', 'SSL')); 
     	} else if (!$this->seller->isSeller()) {
-    		// redirect to seller info edit page
+    		if (!in_array($parts[2], array('jxuploadfile','sellerinfo','jxsavesellerinfo'))) {
+    			$this->redirect($this->url->link('account/ms-seller/sellerinfo', '', 'SSL'));
+    		}
     	}
-		*/
 		
 		$this->document->addStyle('catalog/view/theme/' . $this->config->get('config_template') . '/stylesheet/multiseller.css');
 		$this->data = array_merge($this->data, $this->load->language('module/multiseller'),$this->load->language('account/account'));
 		
-		
-		
 		//$config = $this->registry->get('config');
 		$this->load->config('ms-config');
 		
-		$parts = explode('/', $this->request->get['route']);
-		if ($seller_account_status !== 1 && $parts[2] != 'sellerstatus') {
-			$this->redirect($this->url->link('account/ms-seller/sellerstatus', '', 'SSL'));
-		}
+		//$parts = explode('/', $this->request->get['route']);
+		//if ($seller_account_status !== 1 && $parts[2] != 'sellerstatus') {
+		//	$this->redirect($this->url->link('account/ms-seller/sellerstatus', '', 'SSL'));
+		//}
 	}
 	
 	private function _setBreadcrumbs($textVar, $function) {
@@ -83,7 +83,6 @@ class ControllerAccountMsSeller extends Controller {
 	}
 	
 	public function jxUploadFile() {
-		require_once(DIR_SYSTEM . 'library/ms-image.php');
 		$json = array();
 		$file = array();
 				
@@ -142,7 +141,7 @@ class ControllerAccountMsSeller extends Controller {
 	}	
 	
 	public function jxSaveProductDraft() {
-		require_once(DIR_SYSTEM . 'library/ms-image.php');
+		
 		$data = $this->request->post;
 		
 		$this->load->model('module/multiseller/seller');
@@ -219,9 +218,6 @@ class ControllerAccountMsSeller extends Controller {
 	}
 	
 	public function jxSubmitProduct() {
-		require_once(DIR_SYSTEM . 'library/ms-image.php');
-		require_once(DIR_SYSTEM . 'library/ms-request.php');
-		
 		$data = $this->request->post;
 		
 		$this->load->model('module/multiseller/seller');
@@ -354,83 +350,76 @@ class ControllerAccountMsSeller extends Controller {
 
 		return;*/
 		
+		$seller = $this->model_module_multiseller_seller->getSellerData($this->customer->getId());
 		$json = array();
 		
-		if (empty($data['sellerinfo_nickname'])) {
-			$json['errors']['sellerinfo_nickname'] = 'Display name cannot be empty'; 
-		} else if (!ctype_alnum($data['sellerinfo_nickname'])) {
-			$json['errors']['sellerinfo_nickname'] = 'Display name can only contain alphanumeric characters';
-		} else if (strlen($data['sellerinfo_nickname']) < 4 || strlen($data['sellerinfo_nickname']) > 50 ) {
-			$json['errors']['sellerinfo_nickname'] = 'Display name should be between 4 and 50 characters';			
-		} else if ($this->model_module_multiseller_seller->nicknameTaken($data['sellerinfo_nickname'])) {
-			$json['errors']['sellerinfo_nickname'] = 'This display name is already taken';
+		if (!empty($seller) && ($seller['seller_status_id'] != MS_SELLER_STATUS_ACTIVE)) {
+			$this->_setJsonResponse($json);
+			return;
+		}
+		
+		if (empty($seller)) {
+			if (empty($data['sellerinfo_nickname'])) {
+				$json['errors']['sellerinfo_nickname'] = 'Username cannot be empty'; 
+			} else if (!ctype_alnum($data['sellerinfo_nickname'])) {
+				$json['errors']['sellerinfo_nickname'] = 'Username can only contain alphanumeric characters';
+			} else if (strlen($data['sellerinfo_nickname']) < 4 || strlen($data['sellerinfo_nickname']) > 50 ) {
+				$json['errors']['sellerinfo_nickname'] = 'Username should be between 4 and 50 characters';			
+			} else if ($this->model_module_multiseller_seller->nicknameTaken($data['sellerinfo_nickname'])) {
+				$json['errors']['sellerinfo_nickname'] = 'This username is already taken';
+			}
 		}
 		
 		if (strlen($data['sellerinfo_company']) > 50 ) {
 			$json['errors']['sellerinfo_company'] = 'Company name cannot be longer than 50 characters';			
 		}		
 		
+		if (isset($data['sellerinfo_avatar_name']) && !empty($data['sellerinfo_avatar_name'])) {
+			$avatar = MsImage::byName($this->registry, $data['sellerinfo_avatar_name']);
+			if (!$avatar->checkFileAgainstSession()) {
+				$json['errors']['sellerinfo_avatar'] = $avatar->getErrors();
+			}
+			unset($avatar);
+		}		
 		
 		if (empty($json['errors'])) {
-			switch ($this->config->get('msconf_seller_validation')) {
-				case MS_SELLER_VALIDATION_ACTIVATION:
-					$data['seller_status_id'] = MS_SELLER_STATUS_TOBEACTIVATED;
-					break;
+			if (empty($seller)) {
+				// new seller
+				switch ($this->config->get('msconf_seller_validation')) {
+					case MS_SELLER_VALIDATION_ACTIVATION:
+						$data['seller_status_id'] = MS_SELLER_STATUS_TOBEACTIVATED;
+						break;
+						
+					case MS_SELLER_VALIDATION_APPROVAL:
+						$data['seller_status_id'] = MS_SELLER_STATUS_TOBEAPPROVED;
+						break;
 					
-				case MS_SELLER_VALIDATION_APPROVAL:
-					$data['seller_status_id'] = MS_SELLER_STATUS_TOBEAPPROVED;
-					break;
+					case MS_SELLER_VALIDATION_APPROVAL:
+					default:
+						$data['seller_status_id'] = MS_SELLER_STATUS_ACTIVE;
+						break;
+				}			
+				$this->model_module_multiseller_seller->createSeller($data);
 				
-				case MS_SELLER_VALIDATION_APPROVAL:
-				default:
-					$data['seller_status_id'] = MS_SELLER_STATUS_ACTIVE;
-					break;
+				$r = new MsRequest($this->registry);
+				$r->createRequest(array(
+					'seller_id' => $this->customer->getId(),
+					'request_type' => MS_REQUEST_SELLER_CREATED,
+				));
+				unset($r);
+				
+				$this->session->data['success'] = 'Seller account data saved.';
+			} else {
+				// edit seller
+				$data['seller_id'] = $seller['seller_id'];
+				$this->model_module_multiseller_seller->editSeller($data);
+				$this->session->data['success'] = 'Seller account data saved.';
 			}
-			
-			$data['avatar_path'] = '';
-			$this->model_module_multiseller_seller->saveSellerData($data);
-			
-			$r = new MsRequest($this->registry);
-			$r->createRequest(array(
-				'seller_id' => $this->customer->getId(),
-				'request_type' => MS_REQUEST_SELLER_CREATED,
-			));
-			unset($r);
 		}
 		
 		$this->_setJsonResponse($json);
 	}
 
-	public function sellerStatus() {
-		$this->load->model('module/multiseller/seller');
-		$this->document->setTitle($this->language->get('ms_account_status_heading'));
-		
-		$seller = $this->registry->get('seller');
-		
-		$this->data['thankyou'] = sprintf($this->language->get('ms_account_sellerinfo_mail_account_thankyou'), $this->config->get('config_name'));
-		
-		switch ($seller->getStatus()) {
-			case MS_SELLER_STATUS_TOBEACTIVATED:
-				$this->data['status'] = $this->language->get('ms_account_status_activation');
-				$this->data['message1'] = $this->language->get('ms_account_status_pleaseactivate');
-				break;
-			case MS_SELLER_STATUS_TOBEAPPROVED:
-				$this->data['status'] = $this->language->get('ms_account_status_approval');
-				$this->data['message1'] = $this->language->get('ms_account_status_willbeapproved');
-				break;
-			case MS_SELLER_STATUS_ACTIVE:
-			default:
-				$this->data['status'] = $this->language->get('ms_account_status_active');
-				$this->data['message1'] = $this->language->get('ms_account_status_fullaccess');
-				break;
-		}
-		
-		$this->data['continue'] = $this->url->link('account/account', '', 'SSL');		
-		$this->_setBreadcrumbs('ms_account_status_breadcrumbs', __FUNCTION__);
-		$this->_renderTemplate('ms-account-sellerstatus');
-	}
-		
-	//
 	public function newProduct() {
 		$this->load->model('module/multiseller/seller');
 		$this->document->addScript('catalog/view/javascript/jquery.form.js');
@@ -490,7 +479,7 @@ class ControllerAccountMsSeller extends Controller {
 	}
 	
 	public function editProduct() {
-		require_once(DIR_SYSTEM . 'library/ms-image.php');
+		
 		$this->load->model('module/multiseller/seller');
 		$this->load->model('tool/image');
 		$this->document->addScript('catalog/view/javascript/jquery.form.js');
@@ -562,10 +551,52 @@ class ControllerAccountMsSeller extends Controller {
 
 	//
 	public function sellerInfo() {
+		$this->document->addScript('catalog/view/javascript/jquery.form.js');
 		$this->load->model('module/multiseller/seller');
 
 		$this->load->model('localisation/country');
     	$this->data['countries'] = $this->model_localisation_country->getCountries();		
+
+		$seller = $this->model_module_multiseller_seller->getSellerData($this->customer->getId());
+
+		if (!empty($seller)) {
+			$this->data['seller'] = $seller;
+			
+			if (!empty($seller['avatar_path'])) {
+				$image = MsImage::byName($this->registry, $seller['avatar_path']);
+				$this->data['seller']['avatar']['name'] = $seller['avatar_path'];
+				$this->data['seller']['avatar']['thumb'] = $image->resize($seller['avatar_path'], $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'));
+				$this->session->data['multiseller']['files'][] = $seller['avatar_path'];
+
+			}
+			
+			switch ($seller['seller_status_id']) {
+				case MS_SELLER_STATUS_TOBEACTIVATED:
+					$this->data['statustext'] = $this->language->get('ms_account_status') . '<b>' . $this->language->get('ms_account_status_activation') . '</b>';
+					$this->data['statustext'] .= '<br />' . $this->language->get('ms_account_status_pleaseactivate');
+					break;
+				case MS_SELLER_STATUS_TOBEAPPROVED:
+					$this->data['statustext'] = $this->language->get('ms_account_status') . '<b>' . $this->language->get('ms_account_status_approval') . '</b>';
+					$this->data['statustext'] .= '<br />' . $this->language->get('ms_account_status_willbeapproved');
+					break;
+				case MS_SELLER_STATUS_ACTIVE:
+				default:
+					//$this->data['statustext'] = $this->language->get('ms_account_status') . $this->language->get('ms_account_status_active');
+					//$this->data['statustext'] .= '<br />' . $this->language->get('ms_account_status_fullaccess');
+					break;
+			}			
+			
+		} else { 		
+			$this->data['seller'] = FALSE;
+			$this->data['statustext'] = $this->language->get('ms_account_status_please_fill_in');			
+		}
+
+		if (isset($this->session->data['success'])) {
+			$this->data['success'] = $this->session->data['success'];
+    		unset($this->session->data['success']);
+		} else {
+			$this->data['success'] = '';
+		}
 
 		$this->document->setTitle($this->language->get('ms_account_sellerinfo_heading'));
 		$this->_setBreadcrumbs('ms_account_sellerinfo_breadcrumbs', __FUNCTION__);		

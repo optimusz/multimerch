@@ -22,6 +22,12 @@ class ModelModuleMultisellerSeller extends Model {
 		
 		return $query->row;
 	}
+
+	public function getSellerAvatar($seller_id) {
+		$query = $this->db->query("SELECT avatar_path as avatar FROM " . DB_PREFIX . "ms_seller WHERE seller_id = '" . (int)$seller_id . "'");
+		
+		return $query->row;
+	}
 	
 	public function getStatsForProduct($product_id) {
 		$sql = "SELECT 	p.date_added,
@@ -111,7 +117,7 @@ class ModelModuleMultisellerSeller extends Model {
 				WHERE product_id = " . (int)$product_id;
 				
 		$res = $this->db->query($sql);
-		return $res->row;
+		return $res->row['seller_id'];
 	}
 		
 	public function getProductStatusArray() {
@@ -205,6 +211,16 @@ class ModelModuleMultisellerSeller extends Model {
 		
 		return $res->rows;
 	}
+	
+	public function getSellerData($seller_id) {
+		$sql = "SELECT * 
+				FROM `" . DB_PREFIX . "ms_seller`
+				WHERE seller_id = " . (int)$seller_id;
+		
+		$res = $this->db->query($sql);
+		
+		return $res->row;
+	}	
 	
 	public function editProduct($data) {
 		reset($data['languages']); $first = key($data['languages']);
@@ -406,7 +422,7 @@ class ModelModuleMultisellerSeller extends Model {
 		return $product_id;
 	}
 	
-	public function saveSellerData($data) {
+	public function createSeller($data) {
 		$sql = "INSERT INTO " . DB_PREFIX . "ms_seller
 				SET seller_id = " . (int)$this->customer->getId() . ",
 					seller_status_id = " . (int)$data['seller_status_id'] . ",
@@ -483,6 +499,35 @@ class ModelModuleMultisellerSeller extends Model {
 			}
 		}
 		*/
+	}
+	
+	public function editSeller($data) {
+		$seller_id = (int)$data['seller_id'];
+
+		$old_avatar = $this->getSellerAvatar($seller_id);
+		
+		if (!isset($data['sellerinfo_avatar_name']) || ($old_avatar['avatar'] != $data['sellerinfo_avatar_name'])) {
+			$image = MsImage::byName($this->registry, $old_avatar['avatar']);
+			$image->delete('I');				
+		}
+		
+		if (isset($data['sellerinfo_avatar_name'])) {
+			$image = MsImage::byName($this->registry, $data['sellerinfo_avatar_name']);
+			$image->move('I');
+			$avatar = $image->getName();
+		} else {
+			$avatar = '';
+		}
+
+		$sql = "UPDATE " . DB_PREFIX . "ms_seller
+				SET description = '" . $this->db->escape($data['sellerinfo_description']) . "',
+					company = '" . $this->db->escape($data['sellerinfo_company']) . "',
+					country_id = " . (int)$data['sellerinfo_country'] . ",
+					paypal = '" . $this->db->escape($data['sellerinfo_paypal']) . "',
+					avatar_path = '" . $avatar . "'
+				WHERE seller_id = " . (int)$seller_id;
+		
+		$this->db->query($sql);	
 	}
 	
 	public function productOwnedBySeller($product_id, $seller_id) {

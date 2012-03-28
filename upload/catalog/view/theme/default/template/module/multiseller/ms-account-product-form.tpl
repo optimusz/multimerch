@@ -30,7 +30,7 @@
 	?>    
 	<div class="ms-language-div" id="language<?php echo $langId; ?>">
       <table class="ms-product">
-        <tr><td><h3><?php echo $ms_account_product_name_description; ?></h3></td></tr>      
+        <tr><td colspan="2"><h3><?php echo $ms_account_product_name_description; ?></h3></td></tr>      
         <tr>
           <td><span class="required"><?php if ($k == $first) { echo '*'; } ?></span> <?php echo $ms_account_product_name; ?></td>
           <td>
@@ -59,7 +59,7 @@
     </div>
     <?php } ?>
       <table class="ms-product">  
-        <tr><td><h3><?php echo $ms_account_product_price_attributes; ?></h3></td></tr>
+        <tr><td colspan="2"><h3><?php echo $ms_account_product_price_attributes; ?></h3></td></tr>
         <tr>
           <td><span class="required">*</span> <?php echo $ms_account_product_price; ?></td>
           <td>
@@ -86,7 +86,7 @@
           </td>
         </tr>
         
-        <tr><td><h3><?php echo $ms_account_product_files; ?></h3></td></tr>
+        <tr><td colspan="2"><h3><?php echo $ms_account_product_files; ?></h3></td></tr>
         <tr>
           <td><span class="required">*</span> <?php echo $ms_account_product_thumbnail; ?></td>
           <td>
@@ -134,7 +134,7 @@
           </td>
         </tr>
         
-        <tr><td><h3>Message to the reviewer</h3></td></tr>        
+        <tr><td colspan="2"><h3>Message to the reviewer</h3></td></tr>        
         <tr>
           <td><?php echo $ms_account_product_message; ?></td>
           <td>
@@ -190,19 +190,19 @@ $(function() {
 					    if (!jsonData.errors.hasOwnProperty(error)) {
 					        continue;
 					    }
-					    if (error == '') {
-					    $('#error_'+id).text(jsonData.errors[error]);
+					    
+					    if ($('#error_'+error).length > 0) {
+					    	$('#error_'+error).text(jsonData.errors[error]);
 					    } else {
-					    $('#error_'+error).text(jsonData.errors[error]);
-					    }
+					    	$('#error_'+id).text(jsonData.errors[error]);
+					   	}
 					    console.log(error + " -> " + jsonData.errors[error]);
-					}				
+					}
 				} else {
 					if (id == 'product_image') {
 						$("#product_image_files").append('<input type="hidden" value="'+jsonData.file.name+'" name="product_images[]" />');
 						$("#product_image_files").append('<img src="'+jsonData.file.thumb+'" />');
 					} else if (id == 'product_thumbnail') {
-						$("#product_thumbnail_files").html('');
 						$("#product_thumbnail_files").html('<input type="hidden" value="'+jsonData.file.name+'" name="product_thumbnail_name" />');
 						$("#product_thumbnail_files").append('<img src="'+jsonData.file.thumb+'" />');
 					} else {
@@ -240,7 +240,7 @@ $(function() {
 					}				
 				} else {
 					console.log('success');
-					//location = jsonData['redirect'];
+					location = jsonData['redirect'];
 				}
 	       	}
 		});

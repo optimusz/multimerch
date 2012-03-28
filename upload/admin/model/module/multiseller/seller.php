@@ -31,7 +31,7 @@ class ModelModuleMultisellerSeller extends Model {
 				WHERE product_id = " . (int)$product_id;
 				
 		$res = $this->db->query($sql);
-		return $res->row;
+		return $res->row['seller_id'];
 	}
 	
 	public function getSellerDataForProduct($product_id) {
