@@ -6,6 +6,17 @@ class ModelModuleMultisellerSeller extends Model {
 		return $query->rows;
 	}
 
+	public function getProductDownloads($product_id) {
+		$sql = "SELECT 	*
+				FROM `" . DB_PREFIX . "download` d
+				LEFT JOIN `" . DB_PREFIX . "product_to_download` pd
+					USING(download_id)
+				WHERE pd.product_id = " . (int)$product_id;
+		$res = $this->db->query($sql);
+				
+		return $res->rows;
+	}
+
 	public function getProductThumbnail($product_id) {
 		$query = $this->db->query("SELECT image FROM " . DB_PREFIX . "product WHERE product_id = '" . (int)$product_id . "'");
 		
@@ -203,12 +214,12 @@ class ModelModuleMultisellerSeller extends Model {
 		
 		if (!isset($data['product_thumbnail_name']) || ($old_thumbnail['image'] != $data['product_thumbnail_name'])) {
 			$image = MsImage::byName($this->registry, $old_thumbnail['image']);
-			$image->delete();				
+			$image->delete('I');				
 		}
 		
 		if (isset($data['product_thumbnail_name'])) {
 			$image = MsImage::byName($this->registry, $data['product_thumbnail_name']);
-			$image->move();
+			$image->move('I');
 			$thumbnail = $image->getName();
 		} else {
 			$thumbnail = '';
@@ -262,7 +273,7 @@ class ModelModuleMultisellerSeller extends Model {
 		foreach($old_images as $old_image) {
 			if (!isset($data['product_images']) || array_search($old_image['image'], $data['product_images']) === FALSE) {
 				$image = MsImage::byName($this->registry, $old_image['image']);
-				$image->delete();				
+				$image->delete('I');				
 			}
 		}
 		$this->db->query("DELETE FROM " . DB_PREFIX . "product_image WHERE product_id = '" . (int)$product_id . "'");
@@ -271,10 +282,34 @@ class ModelModuleMultisellerSeller extends Model {
 		if (isset($data['product_images'])) {
 			foreach ($data['product_images'] as $key => $product_image) {
 				$image = MsImage::byName($this->registry, $product_image);
-				$image->move();				
+				$image->move('I');				
 				$this->db->query("INSERT INTO " . DB_PREFIX . "product_image SET product_id = '" . (int)$product_id . "', image = '" . $this->db->escape(html_entity_decode($image->getName(), ENT_QUOTES, 'UTF-8')) . "', sort_order = '" . (int)$key . "'");
 			}
 		}		
+
+		$old_downloads = $this->getProductDownloads($product_id);
+		foreach($old_downloads as $old_download) {
+			if (!isset($data['product_downloads']) || array_search($old_download['filename'], $data['product_downloads']) === FALSE) {
+				$file = MsImage::byName($this->registry, $old_download['filename']);
+				$file->delete('F');
+			}
+		}
+		$this->db->query("DELETE FROM " . DB_PREFIX . "download WHERE download_id IN (SELECT download_id FROM " . DB_PREFIX . "product_to_download WHERE product_id ='" . (int)$product_id . "')");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "download_description WHERE download_id IN (SELECT download_id FROM " . DB_PREFIX . "product_to_download WHERE product_id ='" . (int)$product_id . "')");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "product_to_download WHERE product_id = '" . (int)$product_id . "'");		
+		if (isset($data['product_downloads'])) {
+			foreach ($data['product_downloads'] as $key => $dl) {
+				$image = MsImage::byName($this->registry, $dl);
+				$image->move('F');
+				$this->db->query("INSERT INTO " . DB_PREFIX . "download SET filename = '" . $this->db->escape($image->getName()) . "', mask = '" . $this->db->escape(substr($image->getName(),0,strrpos($image->getName(),'.'))) . "'");
+				$download_id = $this->db->getLastId();
+				$this->db->query("INSERT INTO " . DB_PREFIX . "product_to_download SET product_id = '" . (int)$product_id . "', download_id = '" . (int)$download_id . "'");
+				
+				foreach ($data['languages'] as $language_id => $language) {
+					$this->db->query("INSERT INTO " . DB_PREFIX . "download_description SET download_id = '" . (int)$download_id . "', name = '" . $this->db->escape($image->getName()) . "', language_id = '" . (int)$language_id . "'");
+				}
+			}
+		}
 		
 		$this->cache->delete('product');
 		
@@ -287,7 +322,7 @@ class ModelModuleMultisellerSeller extends Model {
 
 		if (isset($data['product_thumbnail_name'])) {
 			$image = MsImage::byName($this->registry, $data['product_thumbnail_name']);
-			$image->move();
+			$image->move('I');
 			$thumbnail = $image->getName();
 		} else {
 			$thumbnail = '';
@@ -329,26 +364,40 @@ class ModelModuleMultisellerSeller extends Model {
 				SET product_id = " . (int)$product_id . ",
 					seller_id = " . (int)$this->customer->getId() . ",
 					review_status_id = " . (int)$data['review_status_id'];
-		
 		$this->db->query($sql);
+		
 		
 		$sql = "INSERT INTO " . DB_PREFIX . "product_to_category
 				SET product_id = " . (int)$product_id . ",
 					category_id = " . (int)$data['product_category'];
-		
 		$this->db->query($sql);		
+
 
 		$sql = "INSERT INTO " . DB_PREFIX . "product_to_store
 				SET product_id = " . (int)$product_id . ",
 					store_id = " . (int)$store_id;
-		
 		$this->db->query($sql);
+
 
 		if (isset($data['product_images'])) {
 			foreach ($data['product_images'] as $key => $img) {
 				$image = MsImage::byName($this->registry, $img);
-				$image->move();
+				$image->move('I');
 				$this->db->query("INSERT INTO " . DB_PREFIX . "product_image SET product_id = '" . (int)$product_id . "', image = '" . $this->db->escape(html_entity_decode($image->getName(), ENT_QUOTES, 'UTF-8')) . "', sort_order = '" . (int)$key . "'");
+			}
+		}
+		
+		if (isset($data['product_downloads'])) {
+			foreach ($data['product_downloads'] as $key => $dl) {
+				$image = MsImage::byName($this->registry, $dl);
+				$image->move('F');
+				$this->db->query("INSERT INTO " . DB_PREFIX . "download SET filename = '" . $this->db->escape($image->getName()) . "', mask = '" . $this->db->escape(substr($image->getName(),0,strrpos($image->getName(),'.'))) . "'");
+				$download_id = $this->db->getLastId();
+				$this->db->query("INSERT INTO " . DB_PREFIX . "product_to_download SET product_id = '" . (int)$product_id . "', download_id = '" . (int)$download_id . "'");
+				
+				foreach ($data['languages'] as $language_id => $language) {
+					$this->db->query("INSERT INTO " . DB_PREFIX . "download_description SET download_id = '" . (int)$download_id . "', name = '" . $this->db->escape(substr($image->getName(),0,strrpos($image->getName(),'.'))) . "', language_id = '" . (int)$language_id . "'");
+				}
 			}
 		}
 		

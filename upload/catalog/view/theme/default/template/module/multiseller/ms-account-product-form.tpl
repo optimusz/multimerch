@@ -93,10 +93,10 @@
           	<input type="file" name="product_thumbnail" id="product_thumbnail" />
           	<p class="ms-note"><?php echo $ms_account_product_thumbnail_note; ?></p>
           	<p class="error" id="error_product_thumbnail"></p>
-          	<div id="product_thumbnail_images">
+          	<div id="product_thumbnail_files">
           		<?php if (!empty($product['thumbnail'])) { ?>
           		<input type="hidden" name="product_thumbnail_name" value="<?php echo $product['thumbnail']['name']; ?>" />
-          		<img src="<?php echo $product['thumbnail']['src']; ?>" />
+          		<img src="<?php echo $product['thumbnail']['thumb']; ?>" />
           		<?php } ?>
           	</div>
           </td>
@@ -107,11 +107,11 @@
           	<input type="file" name="product_image" id="product_image" />
           	<p class="ms-note"><?php echo $ms_account_product_image_note; ?></p>
           	<p class="error" id="error_product_image"></p>
-          	<div id="product_image_images">
+          	<div id="product_image_files">
           	<?php if (isset($product['images'])) { ?>
 	          	<?php foreach ($product['images'] as $image) { ?>
 	          		<input type="hidden" name="product_images[]" value="<?php echo $image['name']; ?>" />
-	          		<img src="<?php echo $image['src']; ?>" />
+	          		<img src="<?php echo $image['thumb']; ?>" />
 	          	<?php } ?>
           	<?php } ?>
           	</div>
@@ -119,12 +119,24 @@
         </tr>
         <tr>
           <td><span class="required">*</span> <?php echo $ms_account_product_download; ?></td>
-          <td></td>
+          <td>
+          	<input type="file" name="product_download" id="product_download" />
+          	<p class="ms-note"><?php echo $ms_account_product_download_note; ?></p>
+          	<p class="error" id="error_product_download"></p>
+          	<div id="product_download_files">
+          	<?php if (isset($product['downloads'])) { ?>
+	          	<?php foreach ($product['downloads'] as $download) { ?>
+	          		<input type="hidden" name="product_downloads[]" value="<?php echo $download['src']; ?>" />
+	          		<p><a href="<?php echo $download['href']; ?>"><?php echo $download['name']; ?></a> <span style="cursor: pointer">[ <?php echo $ms_delete; ?> ]</span></p>
+	          	<?php } ?>
+          	<?php } ?>
+          	</div>
+          </td>
         </tr>
         
         <tr><td><h3>Message to the reviewer</h3></td></tr>        
         <tr>
-          <td><span class="required">*</span> <?php echo $ms_account_product_message; ?></td>
+          <td><?php echo $ms_account_product_message; ?></td>
           <td>
           	<textarea name="product_message"></textarea>
           	<p class="ms-note"><?php echo $ms_account_product_message_note; ?></p>
@@ -141,92 +153,78 @@
   </form>
   
   <?php echo $content_bottom; ?></div>
-  
+
 <script>
 $(function() {
 	$('#htabs a.lang').tabs();
 
-	$("#product_image_images img, #product_thumbnail_images img").click(function() {
+	$("#product_image_files, #product_thumbnail_files").delegate("img", "click", function() {
 		$(this).prev("input:hidden").remove();
 		$(this).remove();
 	});
 
-	$('#product_image').live('change', function() {
-		$('#ms_action').val('image');
-		$('#error_product_thumbnail').text('');
-		$('#error_product_image').text('');		
+	$("#product_download_files").delegate("span", "click", function() {
+		$(this).parent("p").prev("input:hidden").remove();
+		$(this).parent("p").remove();
+	});
+
+	$('#ms-new-product input[type="file"]').live('change', function() {
+		var element = $(this);
+		var id = $(this).attr('id');
+		$('#ms_action').val(id);
+		$('#error_'+id).text('');
 		$("#ms-new-product").ajaxForm({
-			url:  "index.php?route=account/ms-seller/jxuploadimage",
+			url:  "index.php?route=account/ms-seller/jxuploadfile",
 			dataType: 'json', 
 		    beforeSend: function() {
-				$("#product_image_images").append('<span class="wait">&nbsp;<img src="catalog/view/theme/default/image/loading.gif" alt="" /></span>');
+				$('#'+id+'_files').append('<span class="wait">&nbsp;<img src="catalog/view/theme/default/image/loading.gif" alt="" /></span>');
 				
 		    },
 			success: function(jsonData) {
-				$('#product_image_images span.wait').remove();
+				$(element).replaceWith('<input type="file" name="'+$(element).attr('name')+'" id="'+$(element).attr('id')+'"/>');
+				$('#'+id+'_files span.wait').remove();
 			
 				if (!jQuery.isEmptyObject(jsonData.errors)) {
-					$('#error_product_image').text('');
+					$('#error_'+id).text('');
 					for (error in jsonData.errors) {
 					    if (!jsonData.errors.hasOwnProperty(error)) {
 					        continue;
 					    }
 					    if (error == '') {
-					    $('#error_product_image').text(jsonData.errors[error]);
+					    $('#error_'+id).text(jsonData.errors[error]);
 					    } else {
 					    $('#error_'+error).text(jsonData.errors[error]);
 					    }
 					    console.log(error + " -> " + jsonData.errors[error]);
 					}				
 				} else {
-					$("#product_image_images").append('<input type="hidden" value="'+jsonData.image.name+'" name="product_images[]" />');
-					$("#product_image_images").append('<img src="'+jsonData.image.thumb+'" />');				
-				}			
-			}
-		}).submit();
-	});
-	
-	$('#product_thumbnail').live('change', function() {
-		$('#ms_action').val('thumbnail');
-		$('#error_product_thumbnail').text('');
-		$('#error_product_image').text('');
-		$("#ms-new-product").ajaxForm({
-			url:  "index.php?route=account/ms-seller/jxuploadimage",
-			dataType: 'json', 
-		    beforeSend: function() {
-				$("#product_thumbnail_images").html('<span class="wait">&nbsp;<img src="catalog/view/theme/default/image/loading.gif" alt="" /></span>');
-		    },
-			success: function(jsonData) {
-				$('#product_thumbnail_images span.wait').remove();
-				if (!jQuery.isEmptyObject(jsonData.errors)) {
-					$("#product_thumbnail_images").html('');
-					$('#error_product_thumbnail').text('');
-					for (error in jsonData.errors) {
-					    if (!jsonData.errors.hasOwnProperty(error)) {
-					        continue;
-					    }
-					    if (error == '') {
-					    $('#error_product_thumbnail').text(jsonData.errors[error]);
-					    } else {
-					    $('#error_'+error).text(jsonData.errors[error]);
-					    }
-					    console.log(error + " -> " + jsonData.errors[error]);
-					}				
-				} else {
-					$("#product_thumbnail_images").html('<input type="hidden" value="'+jsonData.image.name+'" name="product_thumbnail_name" />');
-					$("#product_thumbnail_images").append('<img src="'+jsonData.image.thumb+'" />');				
-					//$("#product_thumbnail_images").append('<input type="hidden" value="'+jsonData.image.name+'" />');
-					//$("#product_thumbnail_images").append('<img src="'+jsonData.image.thumb+'" />');
+					if (id == 'product_image') {
+						$("#product_image_files").append('<input type="hidden" value="'+jsonData.file.name+'" name="product_images[]" />');
+						$("#product_image_files").append('<img src="'+jsonData.file.thumb+'" />');
+					} else if (id == 'product_thumbnail') {
+						$("#product_thumbnail_files").html('');
+						$("#product_thumbnail_files").html('<input type="hidden" value="'+jsonData.file.name+'" name="product_thumbnail_name" />');
+						$("#product_thumbnail_files").append('<img src="'+jsonData.file.thumb+'" />');
+					} else {
+						$("#product_download_files").append('<input type="hidden" value="'+jsonData.file.src+'" name="product_downloads[]" />');
+						$("#product_download_files").append('<p><b>'+jsonData.file.name+'</b> <span style="cursor: pointer">[ <?php echo $ms_delete; ?> ]</span></p>');						
+					}
 				}			
 			}
 		}).submit();
 	});
 
-	$("#ms-savedraft-button").click(function() {
+	$("#ms-savedraft-button, #ms-submit-button").click(function() {
+		if ($(this).attr('id') == 'ms-savedraft-button') {
+			var url = 'jxsaveproductdraft';
+		} else {
+			var url = 'jxsubmitproduct';
+		}
+		
 	    $.ajax({
 			type: "POST",
 			dataType: "json",
-			url: 'index.php?route=account/ms-seller/jxsaveproductdraft',
+			url: 'index.php?route=account/ms-seller/'+url,
 			data: $(this).parents("form").serialize(),
 			success: function(jsonData) {
 				$('.error').text('');
@@ -242,32 +240,6 @@ $(function() {
 					}				
 				} else {
 					console.log('success');
-					//location = jsonData['redirect'];
-				}
-	       	}
-		});
-	});
-	
-	$("#ms-submit-button").click(function() {
-	    $.ajax({
-			type: "POST",
-			dataType: "json",
-			url: 'index.php?route=account/ms-seller/jxsubmitproduct',
-			data: $(this).parents("form").serialize(),
-			success: function(jsonData) {
-				$('.error').text('');
-				if (!jQuery.isEmptyObject(jsonData.errors)) {
-					for (error in jsonData.errors) {
-					    if (!jsonData.errors.hasOwnProperty(error)) {
-					        continue;
-					    }
-					    $('#error_'+error).text(jsonData.errors[error]);
-					    console.log(error + " -> " + jsonData.errors[error]);
-					    window.scrollTo(0,0);
-					    
-					}				
-				} else {
-					//success
 					//location = jsonData['redirect'];
 				}
 	       	}

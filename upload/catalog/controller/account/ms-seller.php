@@ -82,44 +82,61 @@ class ControllerAccountMsSeller extends Controller {
 		}
 	}
 	
-	public function jxUploadImage() {
+	public function jxUploadFile() {
 		require_once(DIR_SYSTEM . 'library/ms-image.php');
 		$json = array();
-		
-		if (!empty($this->request->post)) {
-			// unset the second file input field
-			if ($this->request->post['action'] == 'image') {
-				unset($_FILES['product_thumbnail']);
-			} else if ($this->request->post['action'] == 'thumbnail') {
-				unset($_FILES['product_image']);
-			}
+		$file = array();
+				
+		if (!empty($this->request->post) && !empty($_FILES)) {
+	
+			if  (isset($_FILES[$this->request->post['action']]))
+				//$file[$this->request->post['action']] = $_FILES[$this->request->post['action']]; 
+				$file = $_FILES[$this->request->post['action']];
 	
 			// allow a maximum of N images
-			if ($this->request->post['action'] == 'image' && isset($this->request->post['product_images']) && count($this->request->post['product_images']) >= 3) {
+			if ($this->request->post['action'] == 'product_image' && isset($this->request->post['product_images']) && count($this->request->post['product_images']) >= 3) {
 				$json['errors'][] = 'No more images allowed';
-				$this->_setJsonResponse($json);
-				return;
+
 			}
+		} else {
+			$POST_MAX_SIZE = ini_get('post_max_size');
+			$mul = substr($POST_MAX_SIZE, -1);
+			$mul = ($mul == 'M' ? 1048576 : ($mul == 'K' ? 1024 : ($mul == 'G' ? 1073741824 : 1)));
+	 		if ($_SERVER['CONTENT_LENGTH'] > $mul * (int)$POST_MAX_SIZE && $POST_MAX_SIZE) {
+				$json['errors'][] = 'File too big';	 			
+	 		} else {
+	 			$json['errors'][] = 'Unknown upload error';
+	 		}
+			$this->_setJsonResponse($json);
+			return;
 		}
-		
-		// only uploading one image at a time
-		reset($_FILES);
-		$file = current($_FILES);
 		
 		$image = new MsImage($this->registry);
 		
-		if (!$image->validate($file)) {
-			$errors = $image->getErrors();
-			$json['errors'][key($_FILES)] = $errors[0];
+		if ($this->request->post['action'] != 'product_download') {
+			if (!$image->validate($file,'I')) {
+				$errors = $image->getErrors();
+				$json['errors'][$this->request->post['action']] = $errors[0];
+			} else {
+				$name = $image->upload($file,'I');
+				$thumb = $image->resize($image->getTmpPath() . $name, $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'));
+				$json['file'] = array(
+					'name' => $name,
+					'thumb' => $thumb
+				);				
+			}
 		} else {
-			$name = $image->upload($file);
-			$this->load->model('tool/image');
-			$thumb = $this->model_tool_image->resize($name, $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'));
-			$json['image'] = array(
-				'name' => $name,
-				'thumb' => $thumb
-			);				
-		} 
+			if (!$image->validate($file,'F')) {
+				$errors = $image->getErrors();
+				$json['errors'][key($_FILES)] = $errors[0];
+			} else {
+				$name = $image->upload($file,'F');
+				$json['file'] = array(
+					'name' => $file['name'],
+					'src' => $name
+				);				
+			}			
+		}
 		
 		$this->_setJsonResponse($json);
 	}	
@@ -159,16 +176,26 @@ class ControllerAccountMsSeller extends Controller {
 
 		if (isset($data['product_thumbnail_name']) && !empty($data['product_thumbnail_name'])) {
 			$thumbnail = MsImage::byName($this->registry, $data['product_thumbnail_name']);
-			if (!$thumbnail->checkImageAgainstSession()) {
+			if (!$thumbnail->checkFileAgainstSession()) {
 				$json['errors']['product_thumbnail'] = $thumbnail->getErrors();
 			}
 			unset($thumbnail);
+		}
+
+		if (isset($data['product_downloads'])) {
+			foreach ($data['product_downloads'] as $download) {
+				$dl = MsImage::byName($this->registry, $download);
+				if (!$dl->checkFileAgainstSession()) {
+					$json['errors']['product_download'] = $dl->getErrors();
+				}
+				unset($dl);
+			}
 		}
 		
 		if (isset($data['product_images'])) {
 			foreach ($data['product_images'] as $image) {
 				$img = MsImage::byName($this->registry, $image);
-				if (!$img->checkImageAgainstSession()) {
+				if (!$img->checkFileAgainstSession()) {
 					$json['errors']['product_image'] = $img->getErrors();
 				}
 				unset($img);
@@ -236,18 +263,28 @@ class ControllerAccountMsSeller extends Controller {
 		
 		if (isset($data['product_thumbnail_name']) && !empty($data['product_thumbnail_name'])) {
 			$thumbnail = MsImage::byName($this->registry, $data['product_thumbnail_name']);
-			if (!$thumbnail->checkImageAgainstSession()) {
+			if (!$thumbnail->checkFileAgainstSession()) {
 				$json['errors']['product_thumbnail'] = $thumbnail->getErrors();
 			}
 			unset($thumbnail);
 		} else {
 			$json['errors']['product_thumbnail'] = 'Please upload a thumbnail!';			
 		}
+
+		if (isset($data['product_downloads'])) {
+			foreach ($data['product_downloads'] as $download) {
+				$dl = MsImage::byName($this->registry, $download);
+				if (!$dl->checkFileAgainstSession()) {
+					$json['errors']['product_download'] = $dl->getErrors();
+				}
+				unset($dl);
+			}
+		}
 		
 		if (isset($data['product_images'])) {
 			foreach ($data['product_images'] as $image) {
 				$img = MsImage::byName($this->registry, $image);
-				if (!$img->checkImageAgainstSession()) {
+				if (!$img->checkFileAgainstSession()) {
 					$json['errors']['product_image'] = $img->getErrors();
 				}
 				unset($img);
@@ -453,6 +490,7 @@ class ControllerAccountMsSeller extends Controller {
 	}
 	
 	public function editProduct() {
+		require_once(DIR_SYSTEM . 'library/ms-image.php');
 		$this->load->model('module/multiseller/seller');
 		$this->load->model('tool/image');
 		$this->document->addScript('catalog/view/javascript/jquery.form.js');
@@ -470,24 +508,33 @@ class ControllerAccountMsSeller extends Controller {
 		if (!$product['product_id']) {
 			$this->redirect($this->url->link('account/ms-seller/products', '', 'SSL'));
 		} else {
-			var_dump($product);
 			if (!empty($product['thumbnail'])) {
-				$thumb_name = $product['thumbnail'];
+				$thumbnail = $product['thumbnail'];
 				unset($product['thumbnail']);
-				$product['thumbnail']['name'] = $thumb_name;
-				$product['thumbnail']['src'] = $this->model_tool_image->resize($thumb_name, $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'));
-				$this->session->data['multiseller']['images'][] = $thumb_name;
+				$image = MsImage::byName($this->registry, $thumbnail);
+				$product['thumbnail']['name'] = $thumbnail;
+				$product['thumbnail']['thumb'] = $image->resize($thumbnail, $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'));
+				$this->session->data['multiseller']['files'][] = $thumbnail;
 			}
 			
-			
 			$images = $this->model_module_multiseller_seller->getProductImages($product_id);
-
 			foreach ($images as $image) {
+				$img = MsImage::byName($this->registry, $image['image']);
 				$product['images'][] = array(
 					'name' => $image['image'],
-					'src' => $this->model_tool_image->resize($image['image'], $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'))
+					'thumb' => $img->resize($image['image'], $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'))
 				);
-				$this->session->data['multiseller']['images'][] = $image['image'];
+				$this->session->data['multiseller']['files'][] = $image['image'];
+			}
+
+			$downloads = $this->model_module_multiseller_seller->getProductDownloads($product_id);
+			foreach ($downloads as $download) {
+				$product['downloads'][] = array(
+					'name' => $download['mask'],
+					'src' => $download['filename'],
+					'href' => HTTPS_SERVER . 'download/' . $download['filename'],
+				);
+				$this->session->data['multiseller']['files'][] = $download['filename'];
 			}
 
 			$this->data['product'] = $product;
