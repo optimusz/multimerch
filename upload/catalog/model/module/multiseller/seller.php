@@ -111,6 +111,18 @@ class ModelModuleMultisellerSeller extends Model {
 		
 		return $res->row['total'];
 	}
+	
+	public function getReservedAmount($seller_id) {
+		$sql = "SELECT SUM(amount) as total
+				FROM `" . DB_PREFIX . "ms_transaction`
+				WHERE seller_id = " . (int)$seller_id . "
+				AND type = " . MS_TRANSACTION_WITHDRAWAL . ";
+				AND transaction_status_id = " . MS_TRANSACTION_STATUS_PENDING;
+		
+		$res = $this->db->query($sql);
+		
+		return $res->row['total'];
+	}	
 		
 	public function getSellerIdByProduct($product_id) {
 		$sql = "SELECT seller_id FROM " . DB_PREFIX . "ms_product

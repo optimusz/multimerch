@@ -63,6 +63,12 @@ $_['ms_config_credit_order_statuses_note'] = 'Order statuses to credit seller ba
 $_['ms_config_debit_order_statuses'] = 'Debit statuses';
 $_['ms_config_debit_order_statuses_note'] = 'Order statuses to debit seller balance';
 
+$_['ms_config_minimum_withdrawal'] = 'Minimum withdrawal amount';
+$_['ms_config_minimum_withdrawal_note'] = 'Minimum withdrawal amount note';
+
+$_['ms_config_allow_partial_withdrawal'] = 'Allow partial withdrawal';
+$_['ms_config_allow_partial_withdrawal_note'] = 'Allow partial withdrawal note';
+
 $_['button_cancel'] = 'Cancel';
 $_['button_save'] = 'Save';
 $_['ms_action'] = 'Action';

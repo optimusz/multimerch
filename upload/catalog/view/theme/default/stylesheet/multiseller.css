@@ -55,3 +55,19 @@
 	color: #38B0E3;
 }
 
+.ms-pending {
+	color: #AAA;
+}
+
+#ms-withdrawal input[type='radio'], #ms-withdrawal span {
+	vertical-align: middle;
+	margin: 0;
+}
+
+#ms-withdrawal tr:first-child + tr td:first-child + td {
+	padding-top: 5px;
+}
+
+#ms-withdrawal p {
+	margin-bottom: 10px;
+}

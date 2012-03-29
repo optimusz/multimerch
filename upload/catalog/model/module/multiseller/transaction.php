@@ -67,6 +67,28 @@ class ModelModuleMultisellerTransaction extends Model {
 		}
 	}
 	
+	public function addTransaction($data) {
+			$sql = "INSERT INTO " . DB_PREFIX . "ms_transaction
+					SET parent_transaction_id = " . (int)$data['parent_transaction_id'] . ",
+						order_id = " . (int)$data['order_id'] . ",
+						product_id = " .(int)$data['product_id'] . ",
+						seller_id = " . (int)$data['seller_id'] . ",
+						amount = ". (float)$data['amount'] . ",
+						currency_id = ". (int)$data['currency_id'] . ",
+						currency_code = '" . $this->db->escape($data['currency_code']) . "',
+						currency_value = " . (float)$data['currency_value'] . ",
+						commission = " . (float)$data['commission'] . ",
+						description = '" . $this->db->escape($data['description']) . "',
+						date_created = NOW(),
+						date_modified = NOW()";
+
+			$this->db->query($sql);
+			
+			if ((int)$data['parent_transaction_id'] == 0) {
+				$this->db->query("UPDATE " . DB_PREFIX . "ms_transaction SET parent_transaction_id = LAST_INSERT_ID() WHERE transaction_id = LAST_INSERT_ID()");
+			}
+	}	
+	
 	public function getSellerTransactions($seller_id, $sort) {
 		$language_id = 1;
 		

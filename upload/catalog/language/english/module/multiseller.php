@@ -11,6 +11,7 @@ $_['ms_product_review_status_approved']       = 'Approved';
 $_['ms_product_review_status_declined']       = 'Declined';
 
 $_['ms_button_submit']      = 'Submit';
+$_['ms_button_submit_request']      = 'Submit request';
 $_['ms_button_save']      = 'Save';
 $_['ms_button_save_draft']      = 'Save draft';
 $_['ms_button_save_draft_unpublish']      = 'This product will be unpublished';
@@ -151,6 +152,17 @@ $_['ms_account_withdraw_heading']      = 'Request Earnings';
 $_['ms_account_withdraw_breadcrumbs']       = 'Request Earnings';
 
 $_['ms_account_withdraw_balance']      = 'Your current balance:';
+$_['ms_account_withdraw_minimum']      = 'Minimum withdrawal amount:';
+
+$_['ms_account_withdraw_amount']      = 'Amount:';
+$_['ms_account_withdraw_amount_note']      = 'Amount note';
+
+$_['ms_account_withdraw_method']      = 'Payment method:';
+$_['ms_account_withdraw_method_note']      = 'Method note';
+$_['ms_account_withdraw_method_paypal']      = 'PayPal';
+
+$_['ms_account_withdraw_all']      = 'All earnings currently available';
+$_['ms_account_withdraw_impossible']      = 'Your total balance is less than the minimum withdrawal amount!';
 
 
 // Product page - Seller information

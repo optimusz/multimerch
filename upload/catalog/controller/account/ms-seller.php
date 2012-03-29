@@ -10,7 +10,7 @@ class ControllerAccountMsSeller extends Controller {
 		require_once(DIR_SYSTEM . 'library/ms-request.php');
 		
 		$parts = explode('/', $this->request->request['route']);
-		
+
     	if (!$this->customer->isLogged()) {
 	  		$this->session->data['redirect'] = $this->url->link('account/ms-seller', '', 'SSL');
 	  		$this->redirect($this->url->link('account/login', '', 'SSL')); 
@@ -19,6 +19,11 @@ class ControllerAccountMsSeller extends Controller {
     			$this->redirect($this->url->link('account/ms-seller/sellerinfo', '', 'SSL'));
     		}
     	}
+
+		//if (!empty($sller) && ($seller['seller_status_id'] != MS_SELLER_STATUS_ACTIVE)) {
+		//	$this->_setJsonResponse($json);
+		//	return;
+		//}
 		
 		$this->document->addStyle('catalog/view/theme/' . $this->config->get('config_template') . '/stylesheet/multiseller.css');
 		$this->data = array_merge($this->data, $this->load->language('module/multiseller'),$this->load->language('account/account'));
@@ -329,6 +334,65 @@ class ControllerAccountMsSeller extends Controller {
 			$json['redirect'] = $this->url->link('account/ms-seller/products', '', 'SSL');
 		}
 		
+		$this->_setJsonResponse($json);
+	}
+
+	public function jxRequestMoney() {
+		$this->load->model('module/multiseller/seller');
+		$this->load->model('module/multiseller/transaction');
+		//require_once(DIR_APPLICATION . 'model/module/multiseller/validator.php');
+		$data = $this->request->post;
+		/*$data = $this->request->post;
+		
+		var_dump($data);
+		$validator = new MsValidator($data);
+		
+		$validator->isEmpty('sellerinfo_nickname', 'error');
+		
+		$errors = $validator->getErrors();
+		
+		var_dump($data);
+		//var_dump($errors);
+
+		return;*/
+		
+		$seller = $this->model_module_multiseller_seller->getSellerData($this->customer->getId());
+		
+		$balance = $this->model_module_multiseller_seller->getBalanceForSeller($this->customer->getId());
+		$json = array();
+		
+		if (preg_match("/[^0-9.]/",$data['withdraw_amount'])) {
+			$json['errors']['withdraw_amount'] = 'Incorrect amount';
+		} else if (round($data['withdraw_amount'],2) < $balance) {
+			$json['errors']['withdraw_amount'] = 'Low balance';
+		} else if (round($data['withdraw_amount'],2) < $this->config->get('msconf_minimum_withdrawal_amount')) {
+			$json['errors']['withdraw_amount'] = 'You cannot withdraw less than minumum amount';
+		}
+		/*
+		if (empty($json['errors'])) {
+			$transaction = array(
+				'parent_transaction_id' => 0,
+				'order_id' => 0,
+				'product_id' => 0,
+				'seller_id' => 0,
+				'amount' => round($data['withdraw_amount'],2),
+				'currency_id' => '',
+				'currency_code' =>'',
+				'currency_value' =>'',
+				'commission' =>''		
+			);
+			
+			$t = new MsTransaction();
+			$transaction->addTransaction()				
+			
+			$r = new MsRequest($this->registry);
+			$r->createRequest(array(
+				'seller_id' => $this->customer->getId(),
+				'request_type' => MS_REQUEST_WITHDRAWAL,
+			));
+			$this->session->data['success'] = 'Your request is submitted.';
+		}
+		*/
 		$this->_setJsonResponse($json);
 	}
 	
@@ -647,8 +711,17 @@ class ControllerAccountMsSeller extends Controller {
 		
 		$seller_id = $this->customer->getId();
 		$this->data['balance'] =  $this->currency->format($this->model_module_multiseller_seller->getBalanceForSeller($seller_id),$this->config->get('config_currency'));
+		$this->data['msconf_minimum_withdrawal_amount'] =  $this->currency->format($this->config->get('msconf_minimum_withdrawal_amount'),$this->config->get('config_currency'));
+		$this->data['allow_partial_withdrawal'] = $this->config->get('msconf_allow_partial_withdrawal');
+		$this->data['currency_code'] = $this->config->get('config_currency');
 		
-		$this->data['continue'] = $this->url->link('account/account', '', 'SSL');
+		if ($this->model_module_multiseller_seller->getBalanceForSeller($seller_id) - $this->config->get('msconf_minimum_withdrawal_amount') > 0) {
+			$this->data['withdrawal_possible'] = TRUE;
+		} else {
+			$this->data['withdrawal_possible'] = FALSE;
+		}
+			
+		$this->data['back'] = $this->url->link('account/account', '', 'SSL');
 		$this->document->setTitle($this->language->get('ms_account_withdraw_heading'));
 		$this->_setBreadcrumbs('ms_account_withdraw_breadcrumbs', __FUNCTION__);		
 		$this->_renderTemplate('ms-account-withdraw');

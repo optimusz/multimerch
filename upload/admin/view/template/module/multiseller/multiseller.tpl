@@ -53,7 +53,7 @@
 							<span class="help"><?php echo $ms_config_seller_commission_note; ?></span>
 						</td>
 						<td>
-							<input type="test" name="msconf_seller_commission" value="<?php echo $msconf_seller_commission; ?>" size="3"/>
+							<input type="text" name="msconf_seller_commission" value="<?php echo $msconf_seller_commission; ?>" size="3"/>
 						</td>
 					</tr>
 		            
@@ -115,7 +115,30 @@
 			                  <?php } ?>
 			                </div>
 			              </td>
-		            </tr>		            
+		            </tr>
+		            
+					<tr>
+						<td>
+							<span><?php echo $ms_config_minimum_withdrawal; ?></span>
+							<span class="help"><?php echo $ms_config_minimum_withdrawal_note; ?></span>
+						</td>
+						<td>
+							<input type="text" name="msconf_minimum_withdrawal_amount" value="<?php echo $msconf_minimum_withdrawal_amount; ?>" size="3"/>
+						</td>
+					</tr>
+					
+		            <tr>
+		            	<td>
+							<span><?php echo $ms_config_allow_partial_withdrawal; ?></span>
+							<span class="help"><?php echo $ms_config_allow_partial_withdrawal_note; ?></span>
+						</td>
+		            	<td>
+			                <input type="radio" name="msconf_allow_partial_withdrawal" value="1" <?php if($msconf_allow_partial_withdrawal == 1) { ?> checked="checked" <?php } ?>  />
+			                <?php echo $text_yes; ?>
+			                <input type="radio" name="msconf_allow_partial_withdrawal" value="0" <?php if($msconf_allow_partial_withdrawal == 0) { ?> checked="checked" <?php } ?>  />
+			                <?php echo $text_no; ?>
+		              	</td>
+		            </tr>					
 				</table>
 			</form>
 		</div>

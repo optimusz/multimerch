@@ -27,7 +27,7 @@
 	<tbody>
 		<?php if ($transactions) { ?>
 		<?php foreach ($transactions  as $transaction) { ?>
-		<tr>
+		<tr <?php if ($transaction['transaction_status_id'] == MS_TRANSACTION_STATUS_PENDING) { ?>class="ms-pending"<?php }?>>
 			<td class="left"><?php echo $transaction['date_created']; ?></td>
 			<!--<td class="left"><?php echo $transaction['date_modified']; ?></td>-->
 			<td class="left"><?php echo $transaction['description']; ?></td>

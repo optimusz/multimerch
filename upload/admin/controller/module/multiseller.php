@@ -20,7 +20,9 @@ class ControllerModuleMultiseller extends Controller {
 			"msconf_image_preview_width" => 100,
 			"msconf_image_preview_height" => 100,
 			"msconf_credit_order_statuses" => "5",
-			"msconf_debit_order_statuses" => "8"
+			"msconf_debit_order_statuses" => "8",
+			"msconf_minimum_withdrawal_amount" => "50",
+			"msconf_allow_partial_withdrawal" => 1
 		);
 	}	
 	
