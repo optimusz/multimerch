@@ -6,8 +6,15 @@ $_['heading_title']    = '[ffct.cc] Digital MultiSeller Extension';
 $_['text_module']         = 'Modules';
 $_['error_permission'] = 'Warning: You do not have permission to modify module!';
 
-$_['ms_seller_seller'] = 'Seller';
+$_['ms_seller'] = 'Seller';
+$_['ms_amount'] = 'Amount';
+$_['ms_paypal'] = 'PayPal';
+$_['ms_date_created'] = 'Created on';
+$_['ms_status'] = 'Status';
+$_['ms_processed_by'] = 'Processed by';
+$_['ms_date_processed'] = 'Processed on';
 
+$_['ms_button_pay'] = 'Pay';
 
 // Menu
 
@@ -16,6 +23,11 @@ $_['ms_menu_dashboard'] = 'Dashboard';
 $_['ms_menu_sellers'] = 'Sellers';
 $_['ms_menu_products'] = 'Products';
 $_['ms_menu_transactions'] = 'Transactions';
+
+$_['ms_menu_finances'] = 'Finances';
+$_['ms_menu_finances_transactions'] = 'Transactions';
+$_['ms_menu_finances_withdrawals'] = 'Withdrawals';
+
 $_['ms_menu_settings'] = 'Settings';
 $_['ms_menu_reports'] = 'Reports';
 $_['ms_menu_reports_sales'] = 'Sales';
@@ -68,6 +80,25 @@ $_['ms_config_minimum_withdrawal_note'] = 'Minimum withdrawal amount note';
 
 $_['ms_config_allow_partial_withdrawal'] = 'Allow partial withdrawal';
 $_['ms_config_allow_partial_withdrawal_note'] = 'Allow partial withdrawal note';
+
+$_['ms_config_minimum_withdrawal'] = 'Minimum withdrawal amount';
+$_['ms_config_minimum_withdrawal_note'] = 'Minimum withdrawal amount note';
+
+$_['ms_config_paypal_api_username'] = 'PayPal API username';
+$_['ms_config_paypal_api_username_note'] = 'PayPal API username note';
+
+$_['ms_config_paypal_api_password'] = 'PayPal API password';
+$_['ms_config_paypal_api_password_note'] = 'PayPal API password note';
+
+$_['ms_config_paypal_api_signature'] = 'PayPal API signature';
+$_['ms_config_paypal_api_signature_note'] = 'PayPal API signature note';
+
+// Finances - Withdrawals
+
+$_['ms_finances_withdrawals_heading'] = 'Withdrawals';
+$_['ms_finances_withdrawals_breadcrumbs'] = 'Withdrawals';
+
+
 
 $_['button_cancel'] = 'Cancel';
 $_['button_save'] = 'Save';

@@ -138,7 +138,37 @@
 			                <input type="radio" name="msconf_allow_partial_withdrawal" value="0" <?php if($msconf_allow_partial_withdrawal == 0) { ?> checked="checked" <?php } ?>  />
 			                <?php echo $text_no; ?>
 		              	</td>
-		            </tr>					
+		            </tr>
+		            
+					<tr>
+						<td>
+							<span><?php echo $ms_config_paypal_api_username; ?></span>
+							<span class="help"><?php echo $ms_config_paypal_api_username_note; ?></span>
+						</td>
+						<td>
+							<input type="text" name="msconf_paypal_api_username" value="<?php echo $msconf_paypal_api_username; ?>" size="30"/>
+						</td>
+					</tr>
+					
+					<tr>
+						<td>
+							<span><?php echo $ms_config_paypal_api_password; ?></span>
+							<span class="help"><?php echo $ms_config_paypal_api_password_note; ?></span>
+						</td>
+						<td>
+							<input type="text" name="msconf_paypal_api_password" value="<?php echo $msconf_paypal_api_password; ?>" size="30"/>
+						</td>
+					</tr>
+					
+					<tr>
+						<td>
+							<span><?php echo $ms_config_paypal_api_signature; ?></span>
+							<span class="help"><?php echo $ms_config_paypal_api_signature_note; ?></span>
+						</td>
+						<td>
+							<input type="text" name="msconf_paypal_api_signature" value="<?php echo $msconf_paypal_api_signature; ?>" size="30"/>
+						</td>
+					</tr>
 				</table>
 			</form>
 		</div>

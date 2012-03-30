@@ -33,14 +33,60 @@ class MsRequest {
 		$this->db->query($sql);
 	}
 	
-	public function processRequest($data) {
-		$processed_message = isset($data['processed_message']) ? $this->db->escape($data['processed_message']) : '';
+	public function processRequest($request_id, $processed_by, $message = '') {
 		$sql = "UPDATE " . DB_PREFIX . "ms_request
-				SET processed_message = '" . $processed_message . "',
-					processed_by_user_id = " . (int)$data['user_id'] . ",
-					date_processed = NOW()";
+				SET processed_message = '" . $this->db->escape($message) . "',
+					processed_by_user_id = " . (int)$processed_by . ",
+					date_processed = NOW()
+				WHERE request_id = " . (int)$request_id;
 		
 		$this->db->query($sql);
+	}
+	
+	public function getRequests($type) {
+		$sql = "SELECT * FROM " . DB_PREFIX . "ms_request
+				WHERE request_type = " . (int)$type;
+		
+		$res = $this->db->query($sql);
+		return $res->rows;
+	}
+	
+	public function getWithdrawalRequests() {
+		$sql = "SELECT 	*,
+						mr.request_id as 'req.id',
+						ms.nickname as 'sel.nickname',
+						mt.amount as 'trn.amount',
+					   	mr.date_created as 'req.date_created',
+					   	mr.date_processed as 'req.date_processed',
+						u.username as 'u.username'
+				FROM " . DB_PREFIX . "ms_request mr
+				INNER JOIN	" . DB_PREFIX . "ms_transaction mt
+					USING(transaction_id)
+				INNER JOIN	" . DB_PREFIX . "ms_seller ms
+					ON mt.seller_id = ms.seller_id
+				LEFT JOIN	" . DB_PREFIX . "user u
+					ON mr.processed_by_user_id = u.user_id
+				WHERE mr.request_type = " . (int)MS_REQUEST_WITHDRAWAL;
+		
+		$res = $this->db->query($sql);
+		return $res->rows;
+	}
+
+	public function getRequestPaymentData($request_id) {
+		$sql = "SELECT 	*,
+						mr.request_id as 'req.id',
+						ms.nickname as 'sel.nickname',
+						ms.paypal as 'sel.paypal',
+						mt.amount as 'trn.amount'
+				FROM " . DB_PREFIX . "ms_request mr
+				INNER JOIN	" . DB_PREFIX . "ms_transaction mt
+					USING(transaction_id)
+				INNER JOIN	" . DB_PREFIX . "ms_seller ms
+					ON mt.seller_id = ms.seller_id
+				WHERE mr.request_id = " . (int)$request_id;
+		
+		$res = $this->db->query($sql);
+		return $res->row;
 	}	
 }
 ?>

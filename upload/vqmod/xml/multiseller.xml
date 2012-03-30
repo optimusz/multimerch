@@ -259,6 +259,12 @@
 		              <li><a href="#"><?php echo $ms_menu_reports_sales; ?></a></li>
 		            </ul>
 		          </li>
+		          <li><a class="parent"><?php echo $ms_menu_finances; ?></a>
+		            <ul>
+		              <li><a href="#"><?php echo $ms_menu_finances_transactions ?></a></li>
+		              <li><a href="<?php echo $ms_link_finances_withdrawals; ?>"><?php echo $ms_menu_finances_withdrawals; ?></a></li>
+		            </ul>
+		          </li>		          
 		          <li><a href="#"><?php echo $ms_menu_settings; ?></a></li>
 		        </ul>
 		      </li>
@@ -272,7 +278,8 @@
 			protected function index() {
 			]]></search>
 			<add><![CDATA[
-			$this->data['ms_link_sellers'] = $this->url->link('module/multiseller/sellers', 'token=' . $this->session->data['token'], 'SSL'); 
+			$this->data['ms_link_sellers'] = $this->url->link('module/multiseller/sellers', 'token=' . $this->session->data['token'], 'SSL');
+			$this->data['ms_link_finances_withdrawals'] = $this->url->link('module/multiseller/withdrawals', 'token=' . $this->session->data['token'], 'SSL'); 
 			$this->data = array_merge($this->data, $this->load->language('module/multiseller'));
 			]]></add>
 		</operation>

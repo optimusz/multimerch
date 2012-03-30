@@ -63,12 +63,13 @@ class ModelModuleMultisellerSettings extends Model {
 		$sql = "
 			CREATE TABLE `" . DB_PREFIX . "ms_request` (
              `request_id` int(11) NOT NULL AUTO_INCREMENT,
-             `seller_id` int(11) DEFAULT NULL,
-             `product_id` int(11) DEFAULT NULL,
+             `seller_id` int(11) NOT NULL DEFAULT '0',
+             `product_id` int(11) NOT NULL DEFAULT '0',
+             `transaction_id` int(11) NOT NULL DEFAULT '0',
 			 `request_type` TINYINT NOT NULL DEFAULT '1',
 			 `date_created` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
 			 `date_processed` DATETIME DEFAULT NULL,
-             `processed_by_user_id` int(11) DEFAULT NULL,
+             `processed_by_user_id` int(11) NOT NULL DEFAULT '0',
              `created_message` TEXT NOT NULL DEFAULT '',
              `processed_message` TEXT NOT NULL DEFAULT '',
         	PRIMARY KEY (`request_id`)) default CHARSET=utf8";
