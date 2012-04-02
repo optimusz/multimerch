@@ -139,7 +139,7 @@
 			]]></search>
 			<add><![CDATA[
 				$this->load->model('module/multiseller/transaction');
-				$this->model_module_multiseller_transaction->addTransactionsForOrder($order_id);
+				$msTransaction->addTransactionsForOrder($order_id);
 			]]></add>
 		</operation>
 		-->
@@ -149,11 +149,12 @@
 				$this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int)$order_status_id . "', date_modified = NOW() WHERE order_id = '" . (int)$order_id . "'");
 			]]></search>
 			<add><![CDATA[
-				$this->load->model('module/multiseller/transaction');
+				require_once(DIR_SYSTEM . 'library/ms-transaction.php');
+				$msTransaction = new MsTransaction($this->registry);
 				if (in_array($order_status_id, explode(',',$this->config->get('msconf_credit_order_statuses')))) {
-					$this->model_module_multiseller_transaction->addTransactionsForOrder($order_id);
+					$msTransaction->addTransactionsForOrder($order_id);
 				} else if (in_array($order_status_id, explode(',',$this->config->get('msconf_debit_order_statuses')))) {
-					$this->model_module_multiseller_transaction->addTransactionsForOrder($order_id, TRUE);
+					$msTransaction->addTransactionsForOrder($order_id, TRUE);
 				}
 			]]></add>
 		</operation>
@@ -218,11 +219,12 @@
 				$this->db->query("UPDATE `" . DB_PREFIX . "order` SET total = '" . (float)$total . "' WHERE order_id = '" . (int)$order_id . "'");
 			]]></search>
 			<add><![CDATA[
-				$this->load->model('module/multiseller/transaction');
+				require_once(DIR_SYSTEM . 'library/ms-transaction.php');
+				$msTransaction = new MsTransaction($this->registry);
 				if (in_array($data['order_status_id'], explode(',',$this->config->get('msconf_credit_order_statuses')))) {
-					$this->model_module_multiseller_transaction->addTransactionsForOrder($order_id);
+					$msTransaction->addTransactionsForOrder($order_id);
 				} else if (in_array($data['order_status_id'], explode(',',$this->config->get('msconf_debit_order_statuses')))) {
-					$this->model_module_multiseller_transaction->addTransactionsForOrder($order_id, TRUE);
+					$msTransaction->addTransactionsForOrder($order_id, TRUE);
 				}
 			]]></add>
 		</operation>
@@ -232,11 +234,12 @@
 				$this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int)$data['order_status_id'] . "', date_modified = NOW() WHERE order_id = '" . (int)$order_id . "'");
 			]]></search>
 			<add><![CDATA[
-				$this->load->model('module/multiseller/transaction');
+				require_once(DIR_SYSTEM . 'library/ms-transaction.php');
+				$msTransaction = new MsTransaction($this->registry);
 				if (in_array($data['order_status_id'], explode(',',$this->config->get('msconf_credit_order_statuses')))) {
-					$this->model_module_multiseller_transaction->addTransactionsForOrder($order_id);
+					$msTransaction->addTransactionsForOrder($order_id);
 				} else if (in_array($data['order_status_id'], explode(',',$this->config->get('msconf_debit_order_statuses')))) {
-					$this->model_module_multiseller_transaction->addTransactionsForOrder($order_id, TRUE);
+					$msTransaction->addTransactionsForOrder($order_id, TRUE);
 				}
 			]]></add>
 		</operation>

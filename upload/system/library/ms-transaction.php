@@ -1,11 +1,17 @@
 <?php
-final class MsTransaction {
+final class MsTransaction extends Model {
 	private $data;
+	
+	private function _modelExists($model) {
+		$file  = DIR_APPLICATION . 'model/' . $model . '.php';
+		return file_exists($file);
+	}
 	
 	private function _prepareData(&$data) {
 	}
 	
   	public function __construct($registry) {
+  		parent::__construct($registry);
 		$this->config = $registry->get('config');
 		$this->db = $registry->get('db');
 		$this->request = $registry->get('request');
@@ -63,8 +69,16 @@ final class MsTransaction {
 	
 	public function addTransactionsForOrder($order_id, $debit = FALSE) {
 		$this->load->model('module/multiseller/seller');
-		$this->load->model('checkout/order');
-		$order_info = $this->model_checkout_order->getOrder($order_id);
+		
+		
+		if ($this->_modelExists('checkout/order')) {
+			$this->load->model('checkout/order');
+			$order_info = $this->model_checkout_order->getOrder($order_id);			
+		} else {
+			$this->load->model('sale/order');
+			$order_info = $this->model_sale_order->getOrder($order_id);			
+		}
+		
 		$order_products = $this->_getOrderProducts($order_id);
 		
 		if (!$order_products)
@@ -100,7 +114,7 @@ final class MsTransaction {
 				$this->db->query("UPDATE " . DB_PREFIX . "ms_transaction SET parent_transaction_id = LAST_INSERT_ID() WHERE transaction_id = LAST_INSERT_ID()");
 			}
 		}
-	}
+	}	
 	
 	public function getSellerTransactions($seller_id, $sort) {
 		$language_id = 1;

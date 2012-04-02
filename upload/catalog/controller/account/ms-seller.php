@@ -8,6 +8,7 @@ class ControllerAccountMsSeller extends Controller {
 
 		require_once(DIR_SYSTEM . 'library/ms-image.php');
 		require_once(DIR_SYSTEM . 'library/ms-request.php');
+		require_once(DIR_SYSTEM . 'library/ms-transaction.php');
 		
 		$parts = explode('/', $this->request->request['route']);
 
@@ -339,7 +340,7 @@ class ControllerAccountMsSeller extends Controller {
 
 	public function jxRequestMoney() {
 		$this->load->model('module/multiseller/seller');
-		$this->load->model('module/multiseller/transaction');
+		$msTransaction = new MsTransaction($this->registry);
 		//require_once(DIR_APPLICATION . 'model/module/multiseller/validator.php');
 		$data = $this->request->post;
 		/*$data = $this->request->post;
@@ -668,7 +669,7 @@ class ControllerAccountMsSeller extends Controller {
 	}
 	
 	public function transactions() {
-		$this->load->model('module/multiseller/transaction');
+		$msTransaction = new MsTransaction($this->registry);
 		$this->load->model('module/multiseller/seller');
 		
 		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
@@ -682,7 +683,7 @@ class ControllerAccountMsSeller extends Controller {
 
 		$seller_id = $this->customer->getId();
 		
-		$transactions = $this->model_module_multiseller_transaction->getSellerTransactions($seller_id, $sort);
+		$transactions = $msTransaction->getSellerTransactions($seller_id, $sort);
 		
     	foreach ($transactions as &$transaction) {
    			$transaction['amount'] = $this->currency->format($transaction['amount'], $this->config->get('config_currency'));
@@ -692,7 +693,7 @@ class ControllerAccountMsSeller extends Controller {
 		$this->data['transactions'] = $transactions;
 		$this->data['balance'] =  $this->currency->format($this->model_module_multiseller_seller->getBalanceForSeller($seller_id),$this->config->get('config_currency'));
 		$pagination = new Pagination();
-		$pagination->total = $this->model_module_multiseller_transaction->getTotalSellerTransactions($seller_id);
+		$pagination->total = $msTransaction->getTotalSellerTransactions($seller_id);
 		$pagination->page = $sort['page'];
 		$pagination->limit = $sort['limit']; 
 		$pagination->text = $this->language->get('text_pagination');
@@ -778,8 +779,8 @@ class ControllerAccountMsSeller extends Controller {
 	
 	public function test() {
 		unset($this->session->data['multiseller']);
-		$this->load->model('module/multiseller/transaction');
-		$this->model_module_multiseller_transaction->addTransactionsForOrder(1);
+		$msTransaction = new MsTransaction($this->registry);
+		$msTransaction->addTransactionsForOrder(1);
 	}
 }
 ?>
