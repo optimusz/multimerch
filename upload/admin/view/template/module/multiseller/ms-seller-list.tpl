@@ -22,16 +22,15 @@
           <thead>
             <tr>
               	<td width="1" style="text-align: center;"><input type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);" /></td>
-				<td class="left"><a href="<?php echo $link_sort_name; ?>"><?php echo $ms_seller_name; ?></a></td>
-				<td class="left"><a href="<?php echo $link_sort_nickname; ?>"><?php echo $ms_seller_display_name; ?></a></td>
-				<td class="left"><a href="<?php echo $link_sort_email; ?>"><?php echo $ms_seller_email; ?></a></td>
-				<td class="left"><a href="<?php echo $link_sort_total_products; ?>"><?php echo $ms_seller_total_products; ?></a></td>
-				<td class="left"><a href="<?php echo $link_sort_total_sales; ?>"><?php echo $ms_seller_total_sales; ?></a></td>
-				<td class="left"><a href="<?php echo $link_sort_total_earnings; ?>"><?php echo $ms_seller_total_earnings; ?></a></td>
-				<td class="left"><a href="<?php echo $link_sort_current_balance; ?>"><?php echo $ms_seller_current_balance; ?></a></td>												
-				<td class="left"><a href="<?php echo $link_sort_seller_status_id; ?>"><?php echo $ms_seller_status; ?></a></td>
-				<td class="left"><a href="<?php echo $link_sort_date_created; ?>"><?php echo $ms_seller_date_created; ?></a></td>
-				<td class="left"><?php echo $ms_action; ?></td>
+				<td><?php echo $ms_seller; ?></td>
+				<td><?php echo $ms_seller_email; ?></td>
+				<td><?php echo $ms_seller_total_products; ?></td>
+				<td><?php echo $ms_seller_total_sales; ?></td>
+				<td><?php echo $ms_seller_total_earnings; ?></td>
+				<td><?php echo $ms_seller_current_balance; ?></td>												
+				<td><?php echo $ms_seller_status; ?></td>
+				<td><?php echo $ms_seller_date_created; ?></td>
+				<td><?php echo $ms_action; ?></td>
             </tr>
           </thead>
           <tbody>
@@ -41,15 +40,14 @@
               <td style="text-align: center;">
                 <input type="checkbox" name="selected[]" value="<?php echo $seller['seller_id']; ?>" />
               </td>
-              <td class="left"><?php echo $seller['name']; ?></td>
-              <td class="left"><?php echo $seller['nickname']; ?></td>
-              <td class="left"><?php echo $seller['email']; ?></td>
-              <td class="center"><?php echo $seller['total_products']; ?></td>
-              <td class="center"><?php echo $seller['total_sales']; ?></td>
-              <td class="center"><?php echo $seller['total_earnings']; ?></td>
-              <td class="center"><?php echo $seller['current_balance']; ?></td>
-              <td class="center"><?php echo $seller['status']; ?></td>
-              <td class="left"><?php echo $seller['date_created']; ?></td>
+              <td><?php echo $seller['name'] . ' (' . $seller['nickname'] . ')'; ?></td>
+              <td><?php echo $seller['email']; ?></td>
+              <td><?php echo $seller['total_products']; ?></td>
+              <td><?php echo $seller['total_sales']; ?></td>
+              <td><?php echo $seller['total_earnings']; ?></td>
+              <td><?php echo $seller['current_balance']; ?></td>
+              <td><?php echo $seller['status']; ?></td>
+              <td><?php echo $seller['date_created']; ?></td>
               <td class="right"><?php foreach ($seller['action'] as $action) { ?>
                 [ <a href="<?php echo $action['href']; ?>"><?php echo $action['text']; ?></a> ]
                 <?php } ?></td>                            

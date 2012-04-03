@@ -162,7 +162,8 @@ $_['ms_account_withdraw_method_note']      = 'Method note';
 $_['ms_account_withdraw_method_paypal']      = 'PayPal';
 
 $_['ms_account_withdraw_all']      = 'All earnings currently available';
-$_['ms_account_withdraw_impossible']      = 'Your total balance is less than the minimum withdrawal amount!';
+$_['ms_account_withdraw_minimum_not_reached']      = 'Your total balance is less than the minimum withdrawal amount!';
+$_['ms_account_withdraw_disabled']      = 'We don\'t accept withdrawal requests. You will be paid automatically.';
 
 
 // Product page - Seller information

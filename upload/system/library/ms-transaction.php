@@ -70,7 +70,6 @@ final class MsTransaction extends Model {
 	public function addTransactionsForOrder($order_id, $debit = FALSE) {
 		$this->load->model('module/multiseller/seller');
 		
-		
 		if ($this->_modelExists('checkout/order')) {
 			$this->load->model('checkout/order');
 			$order_info = $this->model_checkout_order->getOrder($order_id);			
@@ -117,13 +116,11 @@ final class MsTransaction extends Model {
 	}	
 	
 	public function getSellerTransactions($seller_id, $sort) {
-		$language_id = 1;
-		
-		$sql = "SELECT * FROM " . DB_PREFIX . "ms_transaction
+		$sql = "SELECT *, (amount-(amount*commission/100)) as net_amount FROM " . DB_PREFIX . "ms_transaction
 				WHERE seller_id = " . (int)$seller_id . "
     			ORDER BY {$sort['order_by']} {$sort['order_way']}" 
     			. ($sort['limit'] ? " LIMIT ".(int)(($sort['page'] - 1) * $sort['limit']).', '.(int)($sort['limit']) : '');
-        			
+        
 		$res = $this->db->query($sql);
 		return $res->rows;
 	}

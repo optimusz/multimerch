@@ -687,6 +687,7 @@ class ControllerAccountMsSeller extends Controller {
 		
     	foreach ($transactions as &$transaction) {
    			$transaction['amount'] = $this->currency->format($transaction['amount'], $this->config->get('config_currency'));
+   			$transaction['net_amount'] = $this->currency->format($transaction['net_amount'], $this->config->get('config_currency'));
    			$transaction['date_created'] = date($this->language->get('date_format_short'), strtotime($transaction['date_created']));
 		}
 
@@ -713,13 +714,14 @@ class ControllerAccountMsSeller extends Controller {
 		$seller_id = $this->customer->getId();
 		$this->data['balance'] =  $this->currency->format($this->model_module_multiseller_seller->getBalanceForSeller($seller_id),$this->config->get('config_currency'));
 		$this->data['msconf_minimum_withdrawal_amount'] =  $this->currency->format($this->config->get('msconf_minimum_withdrawal_amount'),$this->config->get('config_currency'));
-		$this->data['allow_partial_withdrawal'] = $this->config->get('msconf_allow_partial_withdrawal');
+		$this->data['msconf_allow_partial_withdrawal'] = $this->config->get('msconf_allow_partial_withdrawal');
+		$this->data['msconf_allow_withdrawal_requests'] = $this->config->get('msconf_allow_withdrawal_requests');
 		$this->data['currency_code'] = $this->config->get('config_currency');
 		
 		if ($this->model_module_multiseller_seller->getBalanceForSeller($seller_id) - $this->config->get('msconf_minimum_withdrawal_amount') > 0) {
-			$this->data['withdrawal_possible'] = TRUE;
+			$this->data['withdrawal_minimum_reached'] = TRUE;
 		} else {
-			$this->data['withdrawal_possible'] = FALSE;
+			$this->data['withdrawal_minimum_reached'] = FALSE;
 		}
 			
 		$this->data['back'] = $this->url->link('account/account', '', 'SSL');

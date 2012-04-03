@@ -103,7 +103,7 @@ class ModelModuleMultisellerSeller extends Model {
 	}
 		
 	public function getBalanceForSeller($seller_id) {
-		$sql = "SELECT SUM(amount) as total
+		$sql = "SELECT SUM(amount - (amount*commission/100)) as total
 				FROM `" . DB_PREFIX . "ms_transaction`
 				WHERE seller_id = " . (int)$seller_id;
 		
@@ -113,7 +113,7 @@ class ModelModuleMultisellerSeller extends Model {
 	}
 	
 	public function getReservedAmount($seller_id) {
-		$sql = "SELECT SUM(amount) as total
+		$sql = "SELECT SUM(amount - (amount*commission/100)) as total
 				FROM `" . DB_PREFIX . "ms_transaction`
 				WHERE seller_id = " . (int)$seller_id . "
 				AND type = " . MS_TRANSACTION_WITHDRAWAL . ";

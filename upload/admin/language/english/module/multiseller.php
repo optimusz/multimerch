@@ -84,6 +84,9 @@ $_['ms_config_allow_partial_withdrawal_note'] = 'Allow partial withdrawal note';
 $_['ms_config_minimum_withdrawal'] = 'Minimum withdrawal amount';
 $_['ms_config_minimum_withdrawal_note'] = 'Minimum withdrawal amount note';
 
+$_['ms_config_allow_withdrawal_requests'] = 'Allow withdrawal requests';
+$_['ms_config_allow_withdrawal_requestsnote'] = 'Allow withdrawal requests';
+
 $_['ms_config_paypal_api_username'] = 'PayPal API username';
 $_['ms_config_paypal_api_username_note'] = 'PayPal API username note';
 

@@ -31,7 +31,7 @@
 			<td class="left"><?php echo $transaction['date_created']; ?></td>
 			<!--<td class="left"><?php echo $transaction['date_modified']; ?></td>-->
 			<td class="left"><?php echo $transaction['description']; ?></td>
-			<td class="left"><?php echo $transaction['amount']; ?></td>
+			<td class="left"><?php echo $transaction['net_amount']; ?></td>
 			<!--<td class="left"><?php echo $transaction['status']; ?></td>-->			
 		</tr>
 		<?php } ?>

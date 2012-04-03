@@ -25,7 +25,8 @@ class ControllerModuleMultiseller extends Controller {
 			"msconf_allow_partial_withdrawal" => 1,
 			"msconf_paypal_api_username" => "",
 			"msconf_paypal_api_password" => "",
-			"msconf_paypal_api_signature" => ""
+			"msconf_paypal_api_signature" => "",
+			"msconf_allow_withdrawal_requests" => 1
 		);
 	}	
 	
@@ -104,8 +105,7 @@ class ControllerModuleMultiseller extends Controller {
 	
 	
 	public function sellers() {
-		$url = '';
-		
+		/*
 		$columns = array(
 			'name',
 			'nickname',
@@ -117,20 +117,7 @@ class ControllerModuleMultiseller extends Controller {
 			'seller_status_id',
 			'date_created',
 		);
-		
-		
-		/*
-		foreach ($filters as $filter) {
-			if (isset($this->request->get[$filter])) {
-				$url .= '&' . $filter . '=' . $this->request->get[$filter];
-			}			
-		}*/
-
-		//$this->data['approve'] = $this->url->link('sale/customer/approve', 'token=' . $this->session->data['token'] . $url, 'SSL');
-		//$this->data['insert'] = $this->url->link('sale/customer/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-		//$this->data['delete'] = $this->url->link('sale/customer/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
-		
-		
+		*/
 		$this->load->model("module/{$this->name}/seller");
 		
 		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
@@ -156,8 +143,8 @@ class ControllerModuleMultiseller extends Controller {
 			$result['total_sales'] = $this->model_module_multiseller_seller->getSalesForSeller($result['seller_id']);
 			$result['status'] = $this->model_module_multiseller_seller->getSellerStatus($result['seller_status_id']);
 			$result['action'][] = array(
-				'text' => $this->language->get('text_edit'),
-				'href' => $this->url->link("module/{$this->name}/editSeller", 'token=' . $this->session->data['token'] . '&seller_id=' . $result['seller_id'], 'SSL')
+				'text' => $this->language->get('text_view'),
+				'href' => $this->url->link('sale/customer/update', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['seller_id'], 'SSL')
 			);
 		}
 			
@@ -185,11 +172,11 @@ class ControllerModuleMultiseller extends Controller {
 			$this->data['success'] = '';
 		}		
 
-		
+		/*
 		foreach($columns as $column) {
 			$this->data["link_sort_$column"] = $this->url->link("module/{$this->name}/sellers", 'token=' . $this->session->data['token'] . "&orderby=$column" . $url, 'SSL');
 		}
-
+		*/
 		$this->data['token'] = $this->session->data['token'];		
 		$this->data['heading'] = $this->language->get('ms_seller_heading');
 		$this->document->setTitle($this->language->get('ms_seller_heading'));

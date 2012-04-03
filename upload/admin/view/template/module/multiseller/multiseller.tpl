@@ -169,6 +169,19 @@
 							<input type="text" name="msconf_paypal_api_signature" value="<?php echo $msconf_paypal_api_signature; ?>" size="30"/>
 						</td>
 					</tr>
+					
+		            <tr>
+		            	<td>
+							<span><?php echo $ms_config_allow_withdrawal_requests; ?></span>
+							<span class="help"><?php echo $ms_config_allow_withdrawal_requests; ?></span>
+						</td>
+		            	<td>
+			                <input type="radio" name="msconf_allow_withdrawal_requests" value="1" <?php if($msconf_allow_withdrawal_requests == 1) { ?> checked="checked" <?php } ?>  />
+			                <?php echo $text_yes; ?>
+			                <input type="radio" name="msconf_allow_withdrawal_requests" value="0" <?php if($msconf_allow_withdrawal_requests == 0) { ?> checked="checked" <?php } ?>  />
+			                <?php echo $text_no; ?>
+		              	</td>
+		            </tr>					
 				</table>
 			</form>
 		</div>
