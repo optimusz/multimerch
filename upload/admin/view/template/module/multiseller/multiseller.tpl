@@ -181,7 +181,17 @@
 			                <input type="radio" name="msconf_allow_withdrawal_requests" value="0" <?php if($msconf_allow_withdrawal_requests == 0) { ?> checked="checked" <?php } ?>  />
 			                <?php echo $text_no; ?>
 		              	</td>
-		            </tr>					
+		            </tr>				
+		            
+					<tr>
+						<td>
+							<span><?php echo $ms_config_comments_maxlen; ?></span>
+							<span class="help"><?php echo $ms_config_comments_maxlen_note; ?></span>
+						</td>
+						<td>
+							<input type="text" name="msconf_comments_maxlen" value="<?php echo $msconf_comments_maxlen; ?>" size="3"/>
+						</td>
+					</tr>		            
 				</table>
 			</form>
 		</div>

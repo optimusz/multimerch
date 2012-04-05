@@ -203,7 +203,50 @@
 		</operation>
 	</file>
 
-
+	<!-- ************************ -->
+	<!--     product comments     -->
+	<!-- ************************ -->	
+	<file name="catalog/view/theme/default/template/product/product.tpl">
+		<operation>
+			<search position="before" offset="1"><![CDATA[
+				<div id="tab-description" class="tab-content"><?php echo $description; ?></div>
+			]]></search>
+			<add><![CDATA[
+  				<a href="#tab-comments"><?php echo $tab_comments ?></a>
+			]]></add>
+		</operation>
+		
+		<operation>
+			<search position="before"><![CDATA[
+				<?php if ($tags) { ?>
+			]]></search>
+			<add><![CDATA[
+  				<div id="tab-comments" class="tab-content"></div>
+			]]></add>
+		</operation>
+		
+		<operation>
+			<search position="before"><![CDATA[
+				$('#button-review').bind('click', function() {
+			]]></search>
+			<add><![CDATA[
+  				$('#tab-comments').load('index.php?route=module/ms-comments/getComments&product_id=<?php echo $product_id; ?>');
+			]]></add>
+		</operation>				
+	</file>
+	
+	<file name="catalog/controller/product/product.php">
+		<operation>
+			<search position="before"><![CDATA[
+			    $this->data['tab_related'] = $this->language->get('tab_related');
+			]]></search>
+			<add><![CDATA[
+				$this->load->model('module/multiseller/comments');
+				$this->language->load('module/multiseller');
+				$this->data['tab_comments'] = sprintf($this->language->get('ms_comments_tab_comments'), $this->model_module_multiseller_comments->getCommentsCount($this->request->get['product_id']));
+			]]></add>
+		</operation>
+	</file>	
 
 
 

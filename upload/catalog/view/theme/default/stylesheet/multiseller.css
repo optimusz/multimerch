@@ -71,3 +71,37 @@
 #ms-withdrawal p {
 	margin-bottom: 10px;
 }
+
+
+/* comments */
+
+#tab-comments .content span.comment {
+    display: block;
+    font-weight: bold;
+}
+
+#tab-comments .content .comment-name {
+    font-weight: bold;
+}
+
+#tab-comments .content .comment-date {
+    float: right;
+}
+
+#tab-comments .content .comment-content {
+    margin: 10px;
+}	
+
+#pcCommentlist #pagination {
+    margin: 20px auto;
+    float: left;
+    left: 50%;
+    position: relative;
+    
+}
+
+#pcCommentlist #pagination ul {
+    float: left;
+    position: relative;
+    right: 50%;
+}

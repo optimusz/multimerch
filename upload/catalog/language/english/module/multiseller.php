@@ -171,4 +171,22 @@ $_['ms_catalog_product_seller']      = 'Seller:';
 $_['ms_catalog_product_date_added']      = 'Date added:';
 $_['ms_catalog_product_sales']      = 'Sales:';
 
+// Product page - Comments
+$_['ms_comments_post_comment']  = 'Post Comment';
+$_['ms_comments_name']          = 'Name';
+$_['ms_comments_note']          = '<span style="color: #FF0000;">Note:</span> HTML is not translated!';
+$_['ms_comments_email']         = 'E-mail';
+$_['ms_comments_comment']      = 'Comment';
+$_['ms_comments_button_continue']    = 'Submit';
+$_['ms_comments_wait']         = 'Please Wait!';
+$_['ms_comments_error_name']        = 'Warning: Name must be between 3 and 25 characters!';
+$_['ms_comments_error_text_long']   = 'Warning: Comment text too long!';
+$_['ms_comments_error_email_long']  = 'Warning: Email is too long!';
+$_['ms_comments_error_text_empty']  = 'Warning: Comment can not be empty!';
+$_['ms_comments_error_captcha']     = 'Warning: Verification code does not match the image!';
+$_['ms_comments_success']      = 'Thank you for your comment.';
+$_['ms_comments_captcha']     = 'Enter the code in the box below:';
+$_['ms_comments_no_comments_yet'] = 'No comments added yet';
+$_['ms_comments_tab_comments']       = 'Comments (%s)';
+
 ?>

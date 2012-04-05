@@ -74,7 +74,21 @@ class ModelModuleMultisellerSettings extends Model {
              `processed_message` TEXT NOT NULL DEFAULT '',
         	PRIMARY KEY (`request_id`)) default CHARSET=utf8";
         
-        $this->db->query($sql);        
+        $this->db->query($sql);
+        
+		$createTable = "
+			CREATE TABLE " . DB_PREFIX . "ms_comments (
+             `id` int(11) NOT NULL AUTO_INCREMENT,
+             `id_product` int(11) NOT NULL,
+             `id_customer` int(10) UNSIGNED DEFAULT NULL,
+             `name` varchar(32) NOT NULL DEFAULT '',
+             `email` varchar(128) NOT NULL DEFAULT '',
+             `comment` text NOT NULL,
+             `create_time` int(11) NOT NULL DEFAULT '0',
+             `display` tinyint(1) NOT NULL DEFAULT '0',
+        	PRIMARY KEY (`id`)) default CHARSET=utf8";
+        
+        $this->db->query($createTable);        
 	}
 	
 	public function dropTable() {
@@ -83,7 +97,8 @@ class ModelModuleMultisellerSettings extends Model {
 				`" . DB_PREFIX . "ms_seller`,
 				`" . DB_PREFIX . "ms_product_rating`,
 				`" . DB_PREFIX . "ms_transaction`,
-				`" . DB_PREFIX . "ms_request`";				
+				`" . DB_PREFIX . "ms_request`,
+				`" . DB_PREFIX . "ms_comments`";
 								
 		$this->db->query($sql);
     }
