@@ -14,6 +14,7 @@ class MsImage {
 		$this->db = $registry->get('db');
 		$this->request = $registry->get('request');
 		$this->session = $registry->get('session');
+		$this->language = $registry->get('language');
 		
 		$this->tmpPath = 'tmp/';
 		
@@ -29,11 +30,11 @@ class MsImage {
   	public function validate($file, $type) {
   		if ($type == 'I' || $type == 'T') {
   			// images, thumbnails
-			$allowed_filetypes = $this->config->get('config_upload_allowed');
+			$allowed_filetypes = $this->config->get('msconf_allowed_image_types');
 			$ms_config_max_filesize = 500000;
   		} else {
   			// downloads
-			$allowed_filetypes = $this->config->get('config_upload_allowed');
+			$allowed_filetypes = $this->config->get('msconf_allowed_download_types');
 			$ms_config_max_filesize = 500000;  			
   		}
   		
@@ -46,7 +47,7 @@ class MsImage {
 			// images, thumbnails
 			$size = getimagesize($file["tmp_name"]);
 			if(!isset($size) || stripos($file['type'],'image/') === FALSE || stripos($size['mime'],'image/') === FALSE) {
-		        $this->errors[] = 'Invalid file type';
+		        $this->errors[] = $this->language->get('ms_error_file_type');
 			}
 		}
 		
@@ -54,13 +55,13 @@ class MsImage {
 		$ext = end($ext);
 		
 		if (!in_array(strtolower($ext),$filetypes)) {
-			 $this->errors[] = 'Invalid extension';
+			 $this->errors[] = $this->language->get('ms_error_file_extension');
 		}
 			
 		if ($file["size"] > $ms_config_max_filesize
 		 || $file["error"] === UPLOAD_ERR_INI_SIZE
 		 || $file["error"] === UPLOAD_ERR_FORM_SIZE) {
-		 	$this->errors[] = 'File too big';
+		 	$this->errors[] = $this->language->get('ms_error_file_size');
 		}
 		
 		return empty($this->errors);
@@ -80,7 +81,7 @@ class MsImage {
   	
   	public function checkFileAgainstSession() {
 		if (array_search($this->fileName, $this->session->data['multiseller']['files']) === FALSE) {
-			$this->errors[] = 'File ATTACK!';
+			$this->errors[] = $this->language->get('ms_error_file_upload_error');
 			return FALSE;
 		}
 		

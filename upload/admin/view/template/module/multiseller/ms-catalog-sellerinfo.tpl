@@ -1,0 +1,153 @@
+<?php echo $header; ?>
+<div id="content">
+  <div class="breadcrumb">
+    <?php foreach ($breadcrumbs as $breadcrumb) { ?>
+    <?php echo $breadcrumb['separator']; ?><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a>
+    <?php } ?>
+  </div>
+  <div class="box">
+    <div class="heading">
+      <h1><img src="view/image/customer.png" alt="" /> <?php echo $ms_catalog_sellerinfo_heading; ?></h1>
+      <div class="buttons"><a id="ms-submit-button" class="button"><?php echo $button_save; ?></a></div>
+    </div>
+    <div class="content">
+    <form id="ms-sellerinfo">
+    	<input type="hidden" id="seller_id" name="seller_id" value="<?php echo $seller['seller_id']; ?>" />
+      <table class="ms-product form" id="ms-sellerinfo">
+        <tr>
+			<?php if (!empty($seller['nickname'])) { ?>
+	          <td><?php echo $ms_catalog_sellerinfo_nickname; ?></td>
+	          <td style="padding-top: 5px">
+	          	<b><?php echo $seller['nickname']; ?></b>
+	          </td>			
+			<?php } else { ?>
+	          <td><span class="required">*</span> <?php echo $ms_catalog_sellerinfo_nickname; ?></td>
+	          <td>
+	          	<input type="text" name="sellerinfo_nickname" value="<?php echo $seller['nickname']; ?>" />
+	          	<p class="error" id="error_sellerinfo_nickname"></p>
+	          </td>          		
+          	<?php } ?>
+        </tr>
+        <tr>
+          <td><?php echo $ms_catalog_sellerinfo_description; ?></td>
+          <td>
+          	<textarea name="sellerinfo_description"><?php echo $seller['description']; ?></textarea>
+          	<p class="error" id="error_sellerinfo_description"></p>
+          </td>
+        </tr>
+        <tr>
+          <td><?php echo $ms_catalog_sellerinfo_company; ?></td>
+          <td>
+          	<input type="text" name="sellerinfo_company" value="<?php echo $seller['company']; ?>" />
+          	<p class="error" id="error_sellerinfo_company"></p>
+          </td>
+        </tr>
+        <tr>
+          <td><?php echo $ms_catalog_sellerinfo_country; ?></td>
+          <td><select name="sellerinfo_country">
+          	  <?php if (1==1) { ?>
+              <option value="" selected="selected"><?php echo $ms_catalog_sellerinfo_country_dont_display; ?></option>
+              <?php } else { ?>
+              <option value=""><?php echo $ms_catalog_sellerinfo_country_dont_display; ?></option>
+              <?php } ?>
+              
+              <?php foreach ($countries as $country) { ?>
+              <?php if ($seller['country_id'] == $country['country_id']) { ?>
+              <option value="<?php echo $country['country_id']; ?>" selected="selected"><?php echo $country['name']; ?></option>
+              <?php } else { ?>
+              <option value="<?php echo $country['country_id']; ?>"><?php echo $country['name']; ?></option>
+              <?php } ?>
+              <?php } ?>
+            </select>
+          	<p class="error" id="error_sellerinfo_country"></p>
+          </td>          	
+        </tr>
+        
+        <tr>
+          <td><?php echo $ms_catalog_sellerinfo_paypal; ?></td>
+          <td>
+          	<input type="text" name="sellerinfo_paypal" value="<?php echo $seller['paypal']; ?>" />
+          	<p class="error" id="error_sellerinfo_paypal"></p>
+          </td>
+        </tr>
+                
+        <tr>
+          <td><?php echo $ms_catalog_sellerinfo_avatar; ?></td>
+          <td>
+          	<p class="error" id="error_sellerinfo_avatar"></p>
+          	<div id="sellerinfo_avatar_files">
+          		<?php if (!empty($seller['avatar'])) { ?>
+          		<input type="hidden" name="sellerinfo_avatar_name" value="<?php echo $seller['avatar']['name']; ?>" />
+          		<img src="<?php echo $seller['avatar']['thumb']; ?>" />
+          		<?php } ?>
+          	</div>
+          </td>
+        </tr>
+        
+        <tr>
+          <td><?php echo $ms_status; ?></td>
+          <td style="padding-top: 5px">
+          	<b><?php echo $seller['status']; ?></b>
+          </td>
+        </tr>        
+        
+        <tr>
+          <td><?php echo $ms_action; ?></td>
+          <td>
+          	<select name="sellerinfo_action">
+			  <option value="0" selected="selected"></option>          	
+              <option value="1"><?php echo $ms_enable; ?></option>
+              <option value="2"><?php echo $ms_disable; ?></option>
+            </select>
+          	<p class="error" id="error_sellerinfo_country"></p>
+          </td>
+        </tr>
+        
+        <tr>
+          <td><?php echo $ms_catalog_sellerinfo_message; ?></td>
+          <td>
+          	<textarea name="sellerinfo_message"></textarea>
+          	<p class="error" id="error_sellerinfo_message"></p>
+          </td>
+        </tr>     
+      </table>
+    </div>
+  </form>
+  </div>
+  </div>
+<script>
+$(function() {
+	$("#ms-submit-button").click(function() {
+	var id = $(this).attr('id');
+	//$("#ms-submit-button").after('<span class="wait">&nbsp;<img src="catalog/view/theme/default/image/loading.gif" alt="" /></span>');
+	//$("#ms-submit-button").hide();
+	    $.ajax({
+			type: "POST",
+			dataType: "json",
+			url: 'index.php?route=module/multiseller/jxsavesellerinfo&token=<?php echo $token; ?>',
+			data: $('#ms-sellerinfo').serialize(),
+			success: function(jsonData) {
+				if (!jQuery.isEmptyObject(jsonData.errors)) {
+					$('#error_'+id).text('');
+					for (error in jsonData.errors) {
+					    if (!jsonData.errors.hasOwnProperty(error)) {
+					        continue;
+					    }
+					    
+					    if ($('#error_'+error).length > 0) {
+					    	$('#error_'+error).text(jsonData.errors[error]);
+					    } else {
+					    	$('#error_'+id).text(jsonData.errors[error]);
+					   	}
+					    console.log(error + " -> " + jsonData.errors[error]);
+					}
+					window.scrollTo(0,0);
+				} else {
+					window.location = 'index.php?route=module/multiseller/sellers&token=<?php echo $token; ?>';
+				}
+	       	}
+		});
+	});
+});
+</script>  
+<?php echo $footer; ?>

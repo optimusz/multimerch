@@ -57,6 +57,36 @@
 						</td>
 					</tr>
 		            
+					<tr>
+						<td>
+							<span><?php echo $ms_config_minimum_product_price; ?></span>
+							<span class="help"><?php echo $ms_config_minimum_product_price_note; ?></span>
+						</td>
+						<td>
+							<input type="text" name="msconf_minimum_product_price" value="<?php echo $msconf_minimum_product_price; ?>" size="3"/>
+						</td>
+					</tr>		            
+		            
+		            <tr>
+			              <td>
+			              		<span><?php echo $ms_config_allowed_image_types; ?></span>
+								<span class="help"><?php echo $ms_config_allowed_image_types_note; ?></span>
+			              </td>
+			              <td>
+			              	<input type="text" name="msconf_allowed_image_types" value="<?php echo $msconf_allowed_image_types; ?>" />
+			              </td>
+		            </tr>
+		            
+		            <tr>
+			              <td>
+			              		<span><?php echo $ms_config_allowed_download_types; ?></span>
+								<span class="help"><?php echo $ms_config_allowed_download_types_note; ?></span>
+			              </td>
+			              <td>
+			              	<input type="text" name="msconf_allowed_download_types" value="<?php echo $msconf_allowed_download_types; ?>" />
+			              </td>
+		            </tr>
+		            
 		            <tr>
 			              <td>
 			              		<span><?php echo $ms_config_image_preview_size; ?></span>

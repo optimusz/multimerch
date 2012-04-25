@@ -1,5 +1,11 @@
 <?php
 final class MsTransaction extends Model {
+	const MS_TRANSACTION_TYPE_PRODUCT = 1;
+	const MS_TRANSACTION_TYPE_WITHDRAWAL = 2;
+	
+	const MS_TRANSACTION_STATUS_COMPLETE = 1;
+	const MS_TRANSACTION_STATUS_PENDING = 2;
+	
 	private $data;
 	
 	private function _modelExists($model) {
@@ -132,5 +138,28 @@ final class MsTransaction extends Model {
 		$res = $this->db->query($sql);
 		return $res->row['total'];
 	}
+	
+	public function getTransactions($sort) {
+		$sql = "SELECT  (mt.amount-(mt.amount*mt.commission/100)) as 'trn.net_amount',
+						mt.date_created as 'trn.date_created',
+						mt.date_modified as 'trn.date_modified',
+						mt.description as 'trn.description',
+						ms.nickname as 'sel.nickname'
+				FROM " . DB_PREFIX . "ms_transaction mt
+				INNER JOIN " . DB_PREFIX . "ms_seller ms
+					ON (mt.seller_id = ms.seller_id)
+    			ORDER BY {$sort['order_by']} {$sort['order_way']}" 
+    			. ($sort['limit'] ? " LIMIT ".(int)(($sort['page'] - 1) * $sort['limit']).', '.(int)($sort['limit']) : '');
+        
+		$res = $this->db->query($sql);
+		return $res->rows;
+	}
+	
+	public function getTotalTransactions() {
+		$sql = "SELECT COUNT(*) as total FROM " . DB_PREFIX . "ms_transaction";
+				
+		$res = $this->db->query($sql);
+		return $res->row['total'];
+	}		
 }
 ?>

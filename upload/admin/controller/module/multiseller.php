@@ -8,14 +8,20 @@ class ControllerModuleMultiseller extends Controller {
 	private $error = array();
 
 	public function __construct($registry) {
+		require_once(DIR_SYSTEM . 'library/ms-request.php');
+		require_once(DIR_SYSTEM . 'library/ms-product.php');
+		require_once(DIR_SYSTEM . 'library/ms-transaction.php');		
+		require_once(DIR_SYSTEM . 'library/ms-image.php');
+		
 		parent::__construct($registry);
 		$this->load->config('ms-config');
 		
 		$this->data = array_merge($this->data, $this->load->language('module/multiseller'));
+		$this->data['token'] = $this->session->data['token'];
 		
 		$this->settings = Array(
 			"msconf_seller_validation" => MS_SELLER_VALIDATION_NONE,
-			"msconf_product_validation" => MS_PRODUCT_VALIDATION_NONE,
+			"msconf_product_validation" => MsProduct::MS_PRODUCT_VALIDATION_NONE,
 			"msconf_seller_commission" => 5,
 			"msconf_image_preview_width" => 100,
 			"msconf_image_preview_height" => 100,
@@ -29,6 +35,10 @@ class ControllerModuleMultiseller extends Controller {
 			"msconf_allow_withdrawal_requests" => 1,
 			
 			"msconf_comments_maxlen" => 500,
+			
+			"msconf_allowed_image_types" => "png,jpg",
+			"msconf_allowed_download_types" => "zip,rar",
+			"msconf_minimum_product_price" => 0
 		);
 	}	
 	
@@ -104,7 +114,57 @@ class ControllerModuleMultiseller extends Controller {
 		$this->model_module_multiseller_multiseller->dropTable();
 	}	
 	
-	
+	public function jxSaveSellerInfo() {
+		$this->load->model('module/multiseller/seller');
+		$data = $this->request->post;
+		
+		$seller = $this->model_module_multiseller_seller->getSellerData($data['seller_id']);
+		$json = array();
+		
+		if (empty($seller)) {
+			if (empty($data['sellerinfo_nickname'])) {
+				$json['errors']['sellerinfo_nickname'] = 'Username cannot be empty'; 
+			} else if (!ctype_alnum($data['sellerinfo_nickname'])) {
+				$json['errors']['sellerinfo_nickname'] = 'Username can only contain alphanumeric characters';
+			} else if (strlen($data['sellerinfo_nickname']) < 4 || strlen($data['sellerinfo_nickname']) > 50 ) {
+				$json['errors']['sellerinfo_nickname'] = 'Username should be between 4 and 50 characters';			
+			} else if ($this->model_module_multiseller_seller->nicknameTaken($data['sellerinfo_nickname'])) {
+				$json['errors']['sellerinfo_nickname'] = 'This username is already taken';
+			}
+		}
+		
+		if (strlen($data['sellerinfo_company']) > 50 ) {
+			$json['errors']['sellerinfo_company'] = 'Company name cannot be longer than 50 characters';			
+		}
+		
+		if (empty($json['errors'])) {
+			if ($data['sellerinfo_action'] != 0) {
+				switch ($data['sellerinfo_action']) {
+					case 2:
+						$data['seller_status_id'] = MS_SELLER_STATUS_DISABLED;
+						break;
+					case 1:
+						$data['seller_status_id'] = MS_SELLER_STATUS_ACTIVE;
+						break;
+				}
+				
+				//process requests
+				$r = new MsRequest($this->registry);
+				$r->processSellerRequests($data['seller_id'], $this->user->getId(), $data['sellerinfo_message']);
+				unset($r);
+				
+				//send email				
+			} else {
+				$data['seller_status_id'] = $seller['seller_status_id'];
+			}
+			
+			// edit seller
+			$this->model_module_multiseller_seller->editSeller($data);
+			$this->session->data['success'] = 'Seller account data saved.';
+		}
+		
+		$this->_setJsonResponse($json);
+	}	
 	
 	public function sellers() {
 		/*
@@ -146,8 +206,10 @@ class ControllerModuleMultiseller extends Controller {
 			$result['status'] = $this->model_module_multiseller_seller->getSellerStatus($result['seller_status_id']);
 			$result['action'][] = array(
 				'text' => $this->language->get('text_view'),
-				'href' => $this->url->link('sale/customer/update', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['seller_id'], 'SSL')
+				'href' => $this->url->link('module/multiseller/sellerinfo', 'token=' . $this->session->data['token'] . '&seller_id=' . $result['seller_id'], 'SSL')
 			);
+			
+			$result['customer_link'] = $this->url->link('sale/customer/update', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['seller_id'], 'SSL');
 		}
 			
 		$this->data['sellers'] = $results;
@@ -157,7 +219,7 @@ class ControllerModuleMultiseller extends Controller {
 		$pagination->page = $page;
 		$pagination->limit = $this->config->get('config_admin_limit');
 		$pagination->text = $this->language->get('text_pagination');
-		$pagination->url = $this->url->link("module/{$this->name}/sellers", 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+		$pagination->url = $this->url->link("module/{$this->name}/sellers", 'token=' . $this->session->data['token'] . '&page={page}', 'SSL');
 			
 		$this->data['pagination'] = $pagination->render();
 		
@@ -180,12 +242,37 @@ class ControllerModuleMultiseller extends Controller {
 		}
 		*/
 		$this->data['token'] = $this->session->data['token'];		
-		$this->data['heading'] = $this->language->get('ms_seller_heading');
-		$this->document->setTitle($this->language->get('ms_seller_heading'));
-		$this->_setBreadcrumbs('ms_seller_breadcrumbs', __FUNCTION__);
-		$this->_renderTemplate('ms-seller-list');		
+		$this->data['heading'] = $this->language->get('ms_catalog_sellers_heading');
+		$this->document->setTitle($this->language->get('ms_catalog_sellers_heading'));
+		$this->_setBreadcrumbs('ms_catalog_sellers_breadcrumbs', __FUNCTION__);
+		$this->_renderTemplate('ms-catalog-sellers');		
 	}
 	
+	public function sellerInfo() {
+		$this->load->model('module/multiseller/seller');
+		$this->load->model('localisation/country');
+    	$this->data['countries'] = $this->model_localisation_country->getCountries();		
+
+		$seller = $this->model_module_multiseller_seller->getSellerData($this->request->get['seller_id']);
+
+		if (!empty($seller)) {
+			$this->data['seller'] = $seller;
+			$this->data['seller']['status'] = $this->model_module_multiseller_seller->getSellerStatus($seller['seller_status_id']);
+			if (!empty($seller['avatar_path'])) {
+				$image = MsImage::byName($this->registry, $seller['avatar_path']);
+				$this->data['seller']['avatar']['name'] = $seller['avatar_path'];
+				$this->data['seller']['avatar']['thumb'] = $image->resize($seller['avatar_path'], $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'));
+				//$this->session->data['multiseller']['files'][] = $seller['avatar_path'];
+			}
+		}
+
+		$this->data['token'] = $this->session->data['token'];		
+		$this->data['heading'] = $this->language->get('ms_catalog_sellerinfo_heading');
+		$this->document->setTitle($this->language->get('ms_catalog_sellerinfo_heading'));
+		$this->_setBreadcrumbs('ms_catalog_sellerinfo_breadcrumbs', __FUNCTION__);
+		$this->_renderTemplate('ms-catalog-sellerinfo');		
+	}
+
 	public function saveSettings() {
 		$this->request->post['msconf_credit_order_statuses'] = implode(',',$this->request->post['msconf_credit_order_statuses']);
 		$this->request->post['msconf_debit_order_statuses'] = implode(',',$this->request->post['msconf_debit_order_statuses']);		
@@ -221,13 +308,12 @@ class ControllerModuleMultiseller extends Controller {
 		$this->load->model('design/layout');
 		$this->data['layouts'] = $this->model_design_layout->getLayouts();
 		
-		//$this->document->setTitle($this->language->get('ms_seller_heading'));
-		$this->_setBreadcrumbs('ms_seller_breadcrumbs', __FUNCTION__);
+		//$this->document->setTitle($this->language->get('ms_catalog_sellers_heading'));
+		$this->_setBreadcrumbs('ms_catalog_sellers_breadcrumbs', __FUNCTION__);
 		$this->_renderTemplate('multiseller');	
 	}
 	
 	public function withdrawals() {
-		require_once(DIR_SYSTEM . 'library/ms-request.php');
 		//$this->data['approve'] = $this->url->link('sale/customer/approve', 'token=' . $this->session->data['token'] . $url, 'SSL');
 		//$this->data['insert'] = $this->url->link('sale/customer/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
 		//$this->data['delete'] = $this->url->link('sale/customer/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
@@ -263,8 +349,6 @@ class ControllerModuleMultiseller extends Controller {
 			);
 		}
 		*/
-		
-		var_dump($results);
 		
 		foreach ($results as $result) {
 		$this->data['requests'][] = array(
@@ -308,6 +392,135 @@ class ControllerModuleMultiseller extends Controller {
 		$this->_setBreadcrumbs('ms_finances_withdrawals_breadcrumbs', __FUNCTION__);
 		$this->_renderTemplate('ms-finances-withdrawals');
 	}
+	
+	public function transactions() {
+		$msTransaction = new MsTransaction($this->registry);
+		//$this->load->model('module/multiseller/seller');
+		
+		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
+
+		$sort = array(
+			'order_by'  => 'mt.date_created',
+			'order_way' => 'DESC',
+			'page' => $page,
+			'limit' => 5
+		);
+
+		$results = $msTransaction->getTransactions($sort);
+		$total_transactions = $msTransaction->getTotalTransactions();
+
+		foreach ($results as $result) {
+			$this->data['transactions'][] = array(
+				'seller' => $result['sel.nickname'],
+				'description' => $result['trn.description'],
+				'net_amount' => $this->currency->format($result['trn.net_amount'], $this->config->get('config_currency')),			
+				'date_created' => date($this->language->get('date_format_short'), strtotime($result['trn.date_created'])),
+				'date_modified' => date($this->language->get('date_format_short'), strtotime($result['trn.date_modified'])),
+				//'status' => empty($result['req.date_processed']) ? 'Pending' : 'Completed',
+			);
+		}
+		
+		$pagination = new Pagination();
+		$pagination->total = $total_transactions;
+		$pagination->page = $page;
+		$pagination->limit = $this->config->get('config_admin_limit');
+		$pagination->text = $this->language->get('text_pagination');
+		$pagination->url = $this->url->link("module/{$this->name}/transactions", 'token=' . $this->session->data['token'] . '&page={page}', 'SSL');
+		
+		$this->data['pagination'] = $pagination->render();
+		
+		if (isset($this->error['warning'])) {
+			$this->data['error_warning'] = $this->error['warning'];
+		} else {
+			$this->data['error_warning'] = '';
+		}
+
+		if (isset($this->session->data['success'])) {
+			$this->data['success'] = $this->session->data['success'];
+			unset($this->session->data['success']);
+		} else {
+			$this->data['success'] = '';
+		}		
+
+		
+		$this->data['token'] = $this->session->data['token'];		
+		$this->data['heading'] = $this->language->get('ms_finances_transactions_heading');
+		$this->document->setTitle($this->language->get('ms_finances_transactions_heading'));
+		$this->_setBreadcrumbs('ms_finances_transactions_breadcrumbs', __FUNCTION__);
+		$this->_renderTemplate('ms-finances-transactions');
+	}
+	
+	public function products() {
+		$msProduct = new MsProduct($this->registry);
+		$msImage = new MsImage($this->registry);
+		
+		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
+
+		$sort = array(
+			'order_by'  => 'pr.date_modified',
+			'order_way' => 'DESC',
+			'page' => $page,
+			'limit' => 5
+		);
+
+		$results = $msProduct->getProducts($sort, true);
+		$total_products = $msProduct->getTotalProducts(true);
+
+		foreach ($results as $result) {
+			if ($result['prd.image'] && file_exists(DIR_IMAGE . $result['prd.image'])) {
+				$image = $msImage->resize($result['prd.image'], 40, 40);
+			} else {
+				$image = $msImage->resize('no_image.jpg', 40, 40);
+			}		
+			
+			$action = array();
+			$action[] = array(
+				'text' => $this->language->get('ms_edit'),
+				'href' => $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $result['prd.product_id'], 'SSL')
+			);
+			
+			$this->data['products'][] = array(
+				'image' => $image,
+				'name' => $result['prd.name'],
+				'seller' => $result['sel.nickname'],
+				'date_created' => date($this->language->get('date_format_short'), strtotime($result['prd.date_created'])),
+				'date_modified' => date($this->language->get('date_format_short'), strtotime($result['prd.date_modified'])),
+				'status' => $result['prd.status'],
+				'action' => $action,
+				'product_id' => $result['prd.product_id']
+			);
+		}
+		
+		$pagination = new Pagination();
+		$pagination->total = $total_products;
+		$pagination->page = $page;
+		$pagination->limit = $this->config->get('config_admin_limit');
+		$pagination->text = $this->language->get('text_pagination');
+		$pagination->url = $this->url->link("module/{$this->name}/products", 'token=' . $this->session->data['token'] . '&page={page}', 'SSL');
+		
+		$this->data['pagination'] = $pagination->render();
+		
+		if (isset($this->session->data['error'])) {
+			$this->data['error_warning'] = $this->session->data['error'];
+			unset($this->session->data['error']);
+		} else {
+			$this->data['error_warning'] = '';
+		}
+
+		if (isset($this->session->data['success'])) {
+			$this->data['success'] = $this->session->data['success'];
+			unset($this->session->data['success']);
+		} else {
+			$this->data['success'] = '';
+		}		
+
+		
+		$this->data['token'] = $this->session->data['token'];		
+		$this->data['heading'] = $this->language->get('ms_catalog_products_heading');
+		$this->document->setTitle($this->language->get('ms_catalog_products_heading'));
+		$this->_setBreadcrumbs('ms_catalog_products_breadcrumbs', __FUNCTION__);
+		$this->_renderTemplate('ms-catalog-products');
+	}	
 	
 	public function jxConfirmPayment() {
 		require_once(DIR_SYSTEM . 'library/ms-request.php');
@@ -393,6 +606,27 @@ class ControllerModuleMultiseller extends Controller {
 		}
 		$this->_setJsonResponse($json);
 		return;		
+	}
+
+	public function jxProductStatus() {
+		require_once(DIR_SYSTEM . 'library/ms-request.php');
+		require_once(DIR_SYSTEM . 'library/ms-product.php');
+		if (isset($this->request->post['selected'])) {
+			$msProduct = new MsProduct($this->registry);
+			$msRequest = new MsRequest($this->registry);			
+			foreach ($this->request->post['selected'] as $product_id) {
+				if ($this->request->post['ms-action'] == 'ms-enable') {
+					$msProduct->enableProduct($product_id);
+				} else {
+					$msProduct->disableProduct($product_id);
+				}
+				$msRequest->processProductRequests($product_id,$this->user->getId(),$this->request->post['product_message']);
+			}
+			unset($msProduct,$msRequest);
+			$this->session->data['success'] = 'Successfully changed product status.';
+		} else {
+			$this->session->data['error'] = 'Error changing product status.';
+		}
 	}	
 }
 ?>

@@ -5,8 +5,9 @@ class ModelModuleMultisellerSeller extends Model {
 		$this->load->language('module/multiseller');
 		$result = array(
 			MS_SELLER_STATUS_ACTIVE => $this->language->get('ms_seller_status_active'),
-			MS_SELLER_STATUS_TOBEACTIVATED => $this->language->get('ms_seller_status_tobeactivated'),
-			MS_SELLER_STATUS_TOBEAPPROVED => $this->language->get('ms_seller_status_tobeapproved'),
+			MS_SELLER_STATUS_TOBEACTIVATED => $this->language->get('ms_seller_status_activation'),
+			MS_SELLER_STATUS_TOBEAPPROVED => $this->language->get('ms_seller_status_approval'),
+			MS_SELLER_STATUS_DISABLED => $this->language->get('ms_seller_status_disabled'),
 		);		
 		
 		if ($seller_status_id) {
@@ -32,6 +33,16 @@ class ModelModuleMultisellerSeller extends Model {
 				
 		$res = $this->db->query($sql);
 		return $res->row['seller_id'];
+	}
+	
+	public function getSellerData($seller_id) {
+		$sql = "SELECT * 
+				FROM `" . DB_PREFIX . "ms_seller`
+				WHERE seller_id = " . (int)$seller_id;
+		
+		$res = $this->db->query($sql);
+		
+		return $res->row;
 	}
 	
 	public function getSellerDataForProduct($product_id) {
@@ -66,8 +77,6 @@ class ModelModuleMultisellerSeller extends Model {
 					ON c.customer_id = ms.seller_id
         		ORDER BY {$sort['order_by']} {$sort['order_way']}" 
         		. ($sort['limit'] ? " LIMIT ".(int)(($sort['page'] - 1) * $sort['limit']).', '.(int)($sort['limit']) : '');
-
-		var_dump($sql);
 
 		$res = $this->db->query($sql);
 		
@@ -146,4 +155,18 @@ class ModelModuleMultisellerSeller extends Model {
 		
 		return $res->rows;
 	}
+	
+	public function editSeller($data) {
+		$seller_id = (int)$data['seller_id'];
+		
+		$sql = "UPDATE " . DB_PREFIX . "ms_seller
+				SET description = '" . $this->db->escape($data['sellerinfo_description']) . "',
+					company = '" . $this->db->escape($data['sellerinfo_company']) . "',
+					country_id = " . (int)$data['sellerinfo_country'] . ",
+					paypal = '" . $this->db->escape($data['sellerinfo_paypal']) . "',
+					seller_status_id = '" .  (int)$data['seller_status_id'] .  "'
+				WHERE seller_id = " . (int)$seller_id;
+		
+		$this->db->query($sql);	
+	}	
 }

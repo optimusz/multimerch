@@ -36,7 +36,7 @@
           <td>
           	<input type="text" name="languages[<?php echo $langId; ?>][product_name]" value="<?php echo $product['languages'][$langId]['name']; ?>" />
           	<p class="ms-note"><?php echo $ms_account_product_name_note; ?></p>
-          	<p class="error" id="error_product_name"></p>
+          	<p class="error" id="error_product_name_<?php echo $langId; ?>"></p>
           </td>
         </tr>
         <tr>
@@ -44,15 +44,15 @@
           <td>
           	<textarea name="languages[<?php echo $langId; ?>][product_description]"><?php echo $product['languages'][$langId]['description']; ?></textarea>
           	<p class="ms-note"><?php echo $ms_account_product_description_note; ?></p>
-          	<p class="error" id="error_product_description"></p>
+          	<p class="error" id="error_product_description_<?php echo $langId; ?>"></p>
           </td>
         </tr>
         <tr>
-          <td><span class="required"><?php if ($k == $first) { echo '*'; } ?></span> <?php echo $ms_account_product_tags; ?></td>
+          <td><?php echo $ms_account_product_tags; ?></td>
           <td>
           	<input type="text" name="languages[<?php echo $langId; ?>][product_tags]" value="<?php echo $product['languages'][$langId]['tags']; ?>" />
           	<p class="ms-note"><?php echo $ms_account_product_tags_note; ?></p>
-          	<p class="error" id="error_product_tags"></p>
+          	<p class="error" id="error_product_tags_<?php echo $langId; ?>"></p>
           </td>
         </tr>        
       </table>
@@ -95,8 +95,11 @@
           	<p class="error" id="error_product_thumbnail"></p>
           	<div id="product_thumbnail_files">
           		<?php if (!empty($product['thumbnail'])) { ?>
-          		<input type="hidden" name="product_thumbnail_name" value="<?php echo $product['thumbnail']['name']; ?>" />
-          		<img src="<?php echo $product['thumbnail']['thumb']; ?>" />
+          		<div class="ms-image">
+	          		<input type="hidden" name="product_thumbnail_name" value="<?php echo $product['thumbnail']['name']; ?>" />
+	          		<img src="<?php echo $product['thumbnail']['thumb']; ?>" />
+	          		<img class="ms-remove" src="catalog/view/theme/default/image/remove.png" />
+          		</div>
           		<?php } ?>
           	</div>
           </td>
@@ -110,8 +113,11 @@
           	<div id="product_image_files">
           	<?php if (isset($product['images'])) { ?>
 	          	<?php foreach ($product['images'] as $image) { ?>
-	          		<input type="hidden" name="product_images[]" value="<?php echo $image['name']; ?>" />
-	          		<img src="<?php echo $image['thumb']; ?>" />
+          		<div class="ms-image">
+          			<input type="hidden" name="product_images[]" value="<?php echo $image['name']; ?>" />
+          			<img src="<?php echo $image['thumb']; ?>" />
+          			<img class="ms-remove" src="catalog/view/theme/default/image/remove.png" />
+          		</div>
 	          	<?php } ?>
           	<?php } ?>
           	</div>
@@ -133,7 +139,7 @@
           	</div>
           </td>
         </tr>
-        
+        <?php if ($this->config->get('msconf_product_validation') == MsProduct::MS_PRODUCT_VALIDATION_APPROVAL) { ?>
         <tr><td colspan="2"><h3>Message to the reviewer</h3></td></tr>        
         <tr>
           <td><?php echo $ms_account_product_message; ?></td>
@@ -143,6 +149,7 @@
           	<p class="error" id="error_product_message"></p>
           </td>          
         </tr>
+        <?php } ?>
       </table>
     </div>
     <div class="buttons">
@@ -158,9 +165,8 @@
 $(function() {
 	$('#htabs a.lang').tabs();
 
-	$("#product_image_files, #product_thumbnail_files").delegate("img", "click", function() {
-		$(this).prev("input:hidden").remove();
-		$(this).remove();
+	$("#product_image_files, #product_thumbnail_files").delegate(".ms-remove", "click", function() {
+		$(this).parent().remove();
 	});
 
 	$("#product_download_files").delegate("span", "click", function() {
@@ -200,11 +206,19 @@ $(function() {
 					}
 				} else {
 					if (id == 'product_image') {
-						$("#product_image_files").append('<input type="hidden" value="'+jsonData.file.name+'" name="product_images[]" />');
-						$("#product_image_files").append('<img src="'+jsonData.file.thumb+'" />');
+						var imageHtml = [ '<div class="ms-image">',
+										  '<input type="hidden" value="'+jsonData.file.name+'" name="product_images[]" />',
+										  '<img src="'+jsonData.file.thumb+'" />',
+										  '<img class="ms-remove" />',
+										  '</div>' ];
+						$("#product_image_files").append(imageHtml.join('')); 
 					} else if (id == 'product_thumbnail') {
-						$("#product_thumbnail_files").html('<input type="hidden" value="'+jsonData.file.name+'" name="product_thumbnail_name" />');
-						$("#product_thumbnail_files").append('<img src="'+jsonData.file.thumb+'" />');
+						var imageHtml = [ '<div class="ms-image">',
+										  '<input type="hidden" value="'+jsonData.file.name+'" name="product_thumbnail_name" />',
+										  '<img src="'+jsonData.file.thumb+'" />',
+										  '<img class="ms-remove" />',
+										  '</div>' ];
+						$("#product_thumbnail_files").html(imageHtml.join(''));
 					} else {
 						$("#product_download_files").append('<input type="hidden" value="'+jsonData.file.src+'" name="product_downloads[]" />');
 						$("#product_download_files").append('<p><b>'+jsonData.file.name+'</b> <span style="cursor: pointer">[ <?php echo $ms_delete; ?> ]</span></p>');						

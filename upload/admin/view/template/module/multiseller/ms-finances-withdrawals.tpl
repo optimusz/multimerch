@@ -13,7 +13,7 @@
   <?php } ?>
   <div class="box">
     <div class="heading">
-      <h1><img src="view/image/customer.png" alt="" /> <?php echo $ms_seller_heading; ?></h1>
+      <h1><img src="view/image/customer.png" alt="" /> <?php echo $ms_finances_withdrawals_heading; ?></h1>
       <div class="buttons"><a id="ms-pay" class="button"><?php echo $ms_button_pay; ?></a></div>
     </div>
     <div class="content">

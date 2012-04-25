@@ -68,11 +68,15 @@
 			  <h2><?php echo $ms_account_seller_account; ?></h2>
 			  <div class="content">
 			    <ul>
-			      <li><a href="<?php echo $ms_link_sellerinfo; ?>"><?php echo $ms_account_sellerinfo; ?></a></li>
-			      <li><a href="<?php echo $ms_link_newproduct; ?>"><?php echo $ms_account_newproduct; ?></a></li>
-			      <li><a href="<?php echo $ms_link_products; ?>"><?php echo $ms_account_products; ?></a></li>
-			      <li><a href="<?php echo $ms_link_transactions; ?>"><?php echo $ms_account_transactions; ?></a></li>
-			      <li><a href="<?php echo $ms_link_withdraw; ?>"><?php echo $ms_account_withdraw; ?></a></li>
+				  <?php if ($ms_seller_created) { ?>
+				      <li><a href="<?php echo $ms_link_sellerinfo; ?>"><?php echo $ms_account_sellerinfo; ?></a></li>
+				      <li><a href="<?php echo $ms_link_newproduct; ?>"><?php echo $ms_account_newproduct; ?></a></li>
+				      <li><a href="<?php echo $ms_link_products; ?>"><?php echo $ms_account_products; ?></a></li>
+				      <li><a href="<?php echo $ms_link_transactions; ?>"><?php echo $ms_account_transactions; ?></a></li>
+				      <li><a href="<?php echo $ms_link_withdraw; ?>"><?php echo $ms_account_withdraw; ?></a></li>
+				  <?php } else { ?>
+				  	  <li><a href="<?php echo $ms_link_sellerinfo; ?>"><?php echo $ms_account_create; ?></a></li>
+				  <?php } ?>
 			    </ul>
 			  </div>
 			]]></add>
@@ -85,6 +89,9 @@
 				$this->response->setOutput($this->render());
 			]]></search>
 			<add><![CDATA[
+				require_once(DIR_SYSTEM . 'library/ms-seller.php');
+				$msSeller = new MsSeller($this->registry);
+				$this->data['ms_seller_created'] = $msSeller->isSeller($this->customer->getId());
 				$this->data = array_merge($this->data, $this->load->language('module/multiseller'));			
 				$this->data['ms_link_sellerinfo'] = $this->url->link('account/ms-seller/sellerinfo', '', 'SSL');
 				$this->data['ms_link_newproduct'] = $this->url->link('account/ms-seller/newproduct', '', 'SSL');
@@ -104,11 +111,15 @@
 			<add><![CDATA[
 				<br />
 			  <li style="list-style-type: none"><b><?php echo $ms_account_seller_account; ?></b></li>
+			  <?php if ($ms_seller_created) { ?>
 			      <li><a href="<?php echo $ms_link_sellerinfo; ?>"><?php echo $ms_account_sellerinfo; ?></a></li>
 			      <li><a href="<?php echo $ms_link_newproduct; ?>"><?php echo $ms_account_newproduct; ?></a></li>
 			      <li><a href="<?php echo $ms_link_products; ?>"><?php echo $ms_account_products; ?></a></li>
 			      <li><a href="<?php echo $ms_link_transactions; ?>"><?php echo $ms_account_transactions; ?></a></li>
 			      <li><a href="<?php echo $ms_link_withdraw; ?>"><?php echo $ms_account_withdraw; ?></a></li>
+			  <?php } else { ?>
+			  	  <li><a href="<?php echo $ms_link_sellerinfo; ?>"><?php echo $ms_account_create; ?></a></li>
+			  <?php } ?>
 			]]></add>
 		</operation>
 	</file>
@@ -119,6 +130,9 @@
 				$this->render();
 			]]></search>
 			<add><![CDATA[
+				require_once(DIR_SYSTEM . 'library/ms-seller.php');
+				$msSeller = new MsSeller($this->registry);
+				$this->data['ms_seller_created'] = $msSeller->isSeller($this->customer->getId());			
 				$this->data = array_merge($this->data, $this->load->language('module/multiseller'));			
 				$this->data['ms_link_sellerinfo'] = $this->url->link('account/ms-seller/sellerinfo', '', 'SSL');
 				$this->data['ms_link_newproduct'] = $this->url->link('account/ms-seller/newproduct', '', 'SSL');
@@ -180,7 +194,7 @@
 			<add><![CDATA[
 			<?php if ($sellerinfo) { ?>
 			<div class="ms-sellerinfo">
-				<span><?php echo $ms_catalog_product_seller; ?></span> <?php echo $sellerinfo['nickname']; ?><br />
+				<div><span><?php echo $ms_catalog_product_seller; ?></span> <div><span><?php echo $sellerinfo['nickname']; ?></span><br /><img src="<?php echo $sellerinfo['thumbnail']; ?>" /></div></div><br />
 				<span><?php echo $ms_catalog_product_date_added; ?></span> <?php echo $sellerinfo['date_added']; ?><br />
 				<span><?php echo $ms_catalog_product_sales; ?></span> <?php echo $sellerinfo['sales']; ?>
 			</div>
@@ -198,7 +212,10 @@
 			$this->document->addStyle('catalog/view/theme/' . $this->config->get('config_template') . '/stylesheet/multiseller.css');
 			$this->data = array_merge($this->data, $this->load->language('module/multiseller'));
 			$this->load->model('module/multiseller/seller');
+			require_once(DIR_SYSTEM . 'library/ms-image.php');
+			$image = new MsImage($this->registry);
 			$this->data['sellerinfo'] = $this->model_module_multiseller_seller->getStatsForProduct($this->request->get['product_id']);
+			$this->data['sellerinfo']['thumbnail'] = $image->resize($this->data['sellerinfo']['avatar_path'], $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'));
 			]]></add>
 		</operation>
 	</file>
@@ -232,7 +249,7 @@
 			<add><![CDATA[
   				$('#tab-comments').load('index.php?route=module/ms-comments/getComments&product_id=<?php echo $product_id; ?>');
 			]]></add>
-		</operation>				
+		</operation>
 	</file>
 	
 	<file name="catalog/controller/product/product.php">
@@ -298,16 +315,15 @@
 		      <li id="multiseller"><a class="top"><?php echo $ms_menu_multiseller; ?></a>
 		        <ul>
 		          <li><a href="#"><?php echo $ms_menu_dashboard; ?></a></li>
-		          <li><a href="<?php echo $ms_link_sellers; ?>"><?php echo $ms_menu_sellers; ?></a></li>
-		          <li><a href="#"><?php echo $ms_menu_transactions; ?></a></li>
-		          <li><a class="parent"><?php echo $ms_menu_reports; ?></a>
+		          <li><a class="parent"><?php echo $ms_menu_catalog; ?></a>
 		            <ul>
-		              <li><a href="#"><?php echo $ms_menu_reports_sales; ?></a></li>
+		           	  <li><a href="<?php echo $ms_link_catalog_sellers; ?>"><?php echo $ms_menu_catalog_sellers; ?></a></li>
+		           	  <li><a href="<?php echo $ms_link_catalog_products; ?>"><?php echo $ms_menu_catalog_products; ?></a></li>
 		            </ul>
-		          </li>
+		          </li>		          
 		          <li><a class="parent"><?php echo $ms_menu_finances; ?></a>
 		            <ul>
-		              <li><a href="#"><?php echo $ms_menu_finances_transactions ?></a></li>
+		              <li><a href="<?php echo $ms_link_finances_transactions; ?>"><?php echo $ms_menu_finances_transactions; ?></a></li>
 		              <li><a href="<?php echo $ms_link_finances_withdrawals; ?>"><?php echo $ms_menu_finances_withdrawals; ?></a></li>
 		            </ul>
 		          </li>		          
@@ -324,8 +340,10 @@
 			protected function index() {
 			]]></search>
 			<add><![CDATA[
-			$this->data['ms_link_sellers'] = $this->url->link('module/multiseller/sellers', 'token=' . $this->session->data['token'], 'SSL');
-			$this->data['ms_link_finances_withdrawals'] = $this->url->link('module/multiseller/withdrawals', 'token=' . $this->session->data['token'], 'SSL'); 
+			$this->data['ms_link_catalog_sellers'] = $this->url->link('module/multiseller/sellers', 'token=' . $this->session->data['token'], 'SSL');
+			$this->data['ms_link_catalog_products'] = $this->url->link('module/multiseller/products', 'token=' . $this->session->data['token'], 'SSL');
+			$this->data['ms_link_finances_withdrawals'] = $this->url->link('module/multiseller/withdrawals', 'token=' . $this->session->data['token'], 'SSL');
+			$this->data['ms_link_finances_transactions'] = $this->url->link('module/multiseller/transactions', 'token=' . $this->session->data['token'], 'SSL'); 
 			$this->data = array_merge($this->data, $this->load->language('module/multiseller'));
 			]]></add>
 		</operation>
@@ -373,6 +391,30 @@
 			]]></search>
 			<add><![CDATA[
 			<td class="left"><a href="#"><?php echo $product['seller']['nickname']; ?></a>
+			]]></add>
+		</operation>
+	</file>
+
+
+	<!-- customer/seller form -->
+	<file name="admin/controller/sale/customer.php">
+		<operation>
+			<search position="after"><![CDATA[
+			public function update() {
+			]]></search>
+			<add><![CDATA[
+			$this->data = array_merge($this->data, $this->load->language('module/multiseller'));
+			]]></add>
+		</operation>
+	</file>	
+	
+	<file name="admin/view/template/sale/customer_form.tpl">
+		<operation>
+			<search position="replace"><![CDATA[
+			<a href="#tab-ip"><?php echo $tab_ip; ?></a></div>			
+			]]></search>
+			<add><![CDATA[
+			<a href="#tab-ip"><?php echo $tab_ip; ?></a><a href="#tab-seller"><?php echo $ms_sale_customer_sellertab; ?></a></div>
 			]]></add>
 		</operation>
 	</file>

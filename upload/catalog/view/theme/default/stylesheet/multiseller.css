@@ -32,6 +32,22 @@
 	height: 100px;
 }
 
+.ms-product .ms-image {
+	position:relative;
+	display: inline-block;
+	border: 1px solid #EEEEEE;
+}
+
+.ms-product .ms-remove {
+	position: absolute;
+	bottom: 3px;
+	right: 3px;
+	width: 16px;
+	height: 16px;
+	background: url('../image/remove.png');
+	cursor: pointer;
+}
+
 .ms-language-div {
 	border: 1px solid #EEEEEE;
 	border-top: none;
@@ -53,6 +69,10 @@
 
 .product-info .ms-sellerinfo span {
 	color: #38B0E3;
+}
+
+.product-info .ms-sellerinfo div {
+	display: inline;
 }
 
 .ms-pending {

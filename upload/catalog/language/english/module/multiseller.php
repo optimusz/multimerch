@@ -22,8 +22,37 @@ $_['ms_mail_greeting']      = 'Hi %s,';
 $_['ms_mail_regards']      = 'Regards,';
 
 
+// Errors
+$_['ms_error_sellerinfo_nickname_empty'] = 'Username cannot be empty';
+$_['ms_error_sellerinfo_nickname_alphanumeric'] = 'Username can only contain alphanumeric characters';
+$_['ms_error_sellerinfo_nickname_length'] = 'Username should be between 4 and 50 characters';
+$_['ms_error_sellerinfo_nickname_taken'] = 'This username is already taken';
+$_['ms_error_sellerinfo_company_length'] = 'Company name cannot be longer than 50 characters';
+$_['ms_error_sellerinfo_description_length'] = 'Description cannot be longer than 1000 characters';
+$_['ms_error_sellerinfo_paypal'] = 'Invalid PayPal address';
+
+$_['ms_error_file_extension'] = 'Invalid extension';
+$_['ms_error_file_type'] = 'Invalid file type';
+$_['ms_error_file_size'] = 'File too big';
+$_['ms_error_file_upload_error'] = 'File upload error';
+
+$_['ms_error_product_name_empty'] = 'Product name cannot be empty';
+$_['ms_error_product_name_length'] = 'Product name should be between 4 and 50 characters';
+$_['ms_error_product_description_empty'] = 'Product description cannot be empty';
+$_['ms_error_product_description_length'] = 'Product description should be between 25 and 1000 characters';
+$_['ms_error_product_tags_length'] = 'Line too long';
+$_['ms_error_product_price_empty'] = 'Please specify a price for your product';
+$_['ms_error_product_price_invalid'] = 'Invalid price';
+$_['ms_error_product_price_low'] = 'Price too low';
+$_['ms_error_product_category_empty'] = 'Please select a category';
+$_['ms_error_product_thumbnail_empty'] = 'Please upload a thumbnail for your product';
+$_['ms_error_product_download_empty'] = 'Please add a download for your product';
+$_['ms_error_product_image_empty'] = 'Please upload at least one image for your product';
+
+
 // Account - General
 
+$_['ms_account_create']      = 'Create seller account';
 $_['ms_account_seller_account']      = 'Seller Account';
 $_['ms_account_sellerinfo']       = 'Seller information';
 $_['ms_account_newproduct']      = 'New product';
@@ -80,7 +109,7 @@ $_['ms_account_sellerinfo_breadcrumbs']       = 'Seller Information';
 $_['ms_account_sellerinfo_activation_notice'] = 'Please complete the following form to activate your seller account';
 
 $_['ms_account_sellerinfo_nickname']    = 'Nickname';
-$_['ms_account_sellerinfo_nickname_note']    = 'This will be displayed blah.';
+$_['ms_account_sellerinfo_nickname_note']    = 'Your note text goes here.';
 $_['ms_account_sellerinfo_description']    = 'Description';
 $_['ms_account_sellerinfo_description_note']    = 'Your note text goes here.';
 $_['ms_account_sellerinfo_company']     = 'Company';
@@ -104,6 +133,9 @@ $_['ms_account_sellerinfo_mail_account_pleaseactivate_message']    = "Please cli
 
 $_['ms_account_sellerinfo_mail_account_needsapproval_subject']    = '[%s] Seller account approval';
 $_['ms_account_sellerinfo_mail_account_needsapproval_message']    = "As soon as your account is approved, you will receive a confirmation email.";
+
+$_['ms_account_sellerinfo_saved'] = 'Seller account data saved.';
+
 
 
 // Account - Seller account status

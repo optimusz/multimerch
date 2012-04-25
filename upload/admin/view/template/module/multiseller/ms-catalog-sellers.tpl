@@ -13,7 +13,7 @@
   <?php } ?>
   <div class="box">
     <div class="heading">
-      <h1><img src="view/image/customer.png" alt="" /> <?php echo $ms_seller_heading; ?></h1>
+      <h1><img src="view/image/customer.png" alt="" /> <?php echo $ms_catalog_sellers_heading; ?></h1>
       <div class="buttons"><a onclick="$('form').attr('action', '<?php echo $approve; ?>'); $('form').submit();" class="button"><?php echo $button_approve; ?></a><a onclick="$('form').attr('action', '<?php echo $delete; ?>'); $('form').submit();" class="button"><?php echo $button_delete; ?></a></div>
     </div>
     <div class="content">
@@ -23,13 +23,13 @@
             <tr>
               	<td width="1" style="text-align: center;"><input type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);" /></td>
 				<td><?php echo $ms_seller; ?></td>
-				<td><?php echo $ms_seller_email; ?></td>
-				<td><?php echo $ms_seller_total_products; ?></td>
-				<td><?php echo $ms_seller_total_sales; ?></td>
-				<td><?php echo $ms_seller_total_earnings; ?></td>
-				<td><?php echo $ms_seller_current_balance; ?></td>												
-				<td><?php echo $ms_seller_status; ?></td>
-				<td><?php echo $ms_seller_date_created; ?></td>
+				<td><?php echo $ms_catalog_sellers_email; ?></td>
+				<td><?php echo $ms_catalog_sellers_total_products; ?></td>
+				<td><?php echo $ms_catalog_sellers_total_sales; ?></td>
+				<td><?php echo $ms_catalog_sellers_total_earnings; ?></td>
+				<td><?php echo $ms_catalog_sellers_current_balance; ?></td>												
+				<td><?php echo $ms_catalog_sellers_status; ?></td>
+				<td><?php echo $ms_catalog_sellers_date_created; ?></td>
 				<td><?php echo $ms_action; ?></td>
             </tr>
           </thead>
@@ -40,7 +40,7 @@
               <td style="text-align: center;">
                 <input type="checkbox" name="selected[]" value="<?php echo $seller['seller_id']; ?>" />
               </td>
-              <td><?php echo $seller['name'] . ' (' . $seller['nickname'] . ')'; ?></td>
+              <td><a href="<?php echo $seller['customer_link']; ?>"><?php echo $seller['name'] . ' (' . $seller['nickname'] . ')'; ?></a></td>
               <td><?php echo $seller['email']; ?></td>
               <td><?php echo $seller['total_products']; ?></td>
               <td><?php echo $seller['total_sales']; ?></td>
