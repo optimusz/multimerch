@@ -22,13 +22,15 @@
 
 <p><?php echo $ms_account_withdraw_minimum; ?> <b><?php echo $msconf_minimum_withdrawal_amount; ?></b></p>
 
-<?php if (!$withdrawal_minimum_reached) { ?>
+<?php if (!isset($paypal) || empty($paypal)) { ?>
+	<div class="attention"><?php echo $ms_account_withdraw_no_paypal; ?></div>
+<?php } else if (!$withdrawal_minimum_reached) { ?>
 	<div class="attention"><?php echo $ms_account_withdraw_minimum_not_reached; ?></div>
 <?php } ?>
 	
 <form id="ms-sellerinfo">
 	<div class="content">
-		<?php if (!$withdrawal_minimum_reached) { ?>
+		<?php if (!$withdrawal_minimum_reached || !isset($paypal) || empty($paypal)) { ?>
 			<div class="overlay"></div>    
 		<?php } ?>
 		
@@ -102,8 +104,7 @@
 						    
 						}				
 					} else {
-						console.log('success');
-						//location = jsonData['redirect'];
+						location = jsonData['redirect'];
 					}
 		       	}
 			});

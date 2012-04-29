@@ -1,11 +1,5 @@
 <?php
 class ModelModuleMultisellerSeller extends Model {
-	public function getSellerAvatar($seller_id) {
-		$query = $this->db->query("SELECT avatar_path as avatar FROM " . DB_PREFIX . "ms_seller WHERE seller_id = '" . (int)$seller_id . "'");
-		
-		return $query->row;
-	}
-	
 	public function getStatsForProduct($product_id) {
 		$sql = "SELECT 	p.date_added,
 						mp.seller_id,
@@ -32,17 +26,10 @@ class ModelModuleMultisellerSeller extends Model {
 
 		$res = $this->db->query($sql);
 
-		return $res->row['commission'];		
-	}
-	
-	public function getBalanceForSeller($seller_id) {
-		$sql = "SELECT SUM(amount - (amount*commission/100)) as total
-				FROM `" . DB_PREFIX . "ms_transaction`
-				WHERE seller_id = " . (int)$seller_id;
-		
-		$res = $this->db->query($sql);
-		
-		return $res->row['total'];
+		if (isset($res->row['commission']))
+			return $res->row['commission'];
+		else
+			return 0;
 	}
 	
 	public function getReservedAmount($seller_id) {
@@ -62,7 +49,11 @@ class ModelModuleMultisellerSeller extends Model {
 				WHERE product_id = " . (int)$product_id;
 				
 		$res = $this->db->query($sql);
-		return $res->row['seller_id'];
+		
+		if (isset($res->row['seller_id']))
+			return $res->row['seller_id'];
+		else
+			return 0;
 	}
 		
 	public function getProductStatusArray() {
@@ -87,16 +78,6 @@ class ModelModuleMultisellerSeller extends Model {
 		return $result;
 	}
 
-	public function nicknameTaken($nickname) {
-		$sql = "SELECT nickname
-				FROM `" . DB_PREFIX . "ms_seller` p
-				WHERE p.nickname = '" . $this->db->escape($nickname) . "'";
-		
-		$res = $this->db->query($sql);
-		
-		return $res->num_rows;
-	}
-	
 	public function getCategories($parent_id = 0) {
 		//$category_data = $this->cache->get('category.' . (int)$this->config->get('config_language_id') . '.' . (int)$parent_id);
 		$category_data = FALSE;

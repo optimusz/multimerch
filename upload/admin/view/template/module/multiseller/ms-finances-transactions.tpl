@@ -28,7 +28,7 @@
             </tr>
           </thead>
           <tbody>
-            <?php if ($transactions) { ?>
+            <?php if (isset($transactions) && $transactions) { ?>
             <?php foreach ($transactions as $transaction) { ?>
             <tr>
               <td style="text-align: center;">

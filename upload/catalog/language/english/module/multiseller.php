@@ -18,8 +18,108 @@ $_['ms_button_save_draft_unpublish']      = 'This product will be unpublished';
 $_['ms_button_cancel']      = 'Cancel';
 $_['ms_delete']      = 'Delete';
 
-$_['ms_mail_greeting']      = 'Hi %s,';
-$_['ms_mail_regards']      = 'Regards,';
+$_['ms_transaction_sale']      = 'Sale: %s (-%s%% commission)';
+$_['ms_transaction_pending_withdrawal']      = 'Pending withdrawal request: %s';
+$_['ms_request_submitted']      = 'Your request is submitted';
+
+// Mails
+
+   // Seller
+$_['ms_mail_greeting']      = "Hello %s,\n\n";
+$_['ms_mail_ending']      = "\n\nRegards,\n%s";
+
+$_['ms_mail_subject_seller_account_created']      = 'Seller account created';
+$_['ms_mail_seller_account_created'] = <<<'EOT'
+Your seller account at %s has been created!
+
+You can now start adding your products.
+EOT;
+
+$_['ms_mail_subject_seller_account_awaiting_moderation']      = 'Seller account awaiting moderation';
+$_['ms_mail_seller_account_awaiting_moderation'] = <<<'EOT'
+Your seller account at %s has been created and is now awaiting moderation.
+
+You will receive an email as soon as it is approved.
+EOT;
+
+
+$_['ms_mail_subject_product_awaiting_moderation']      = 'Product awaiting moderation';
+$_['ms_mail_product_awaiting_moderation'] = <<<'EOT'
+Your product %s at %s is awaiting moderation.
+
+You will receive an email as soon as it is processed.
+EOT;
+
+$_['ms_mail_subject_product_purchased']      = 'Product purchased';
+$_['ms_mail_product_purchased'] = <<<'EOT'
+Your product %s has been purchased from %s.
+EOT;
+
+$_['ms_mail_subject_withdraw_request_submitted']      = 'Withdrawal request submitted';
+$_['ms_mail_withdraw_request_submitted'] = <<<'EOT'
+We have received your withdrawal request. You will be notified when it is processed.
+EOT;
+
+$_['ms_mail_subject_withdraw_request_completed']      = 'Withdrawal completed';
+$_['ms_mail_withdraw_request_completed'] = <<<'EOT'
+Your withdrawal request has been processed. You should now receive your earnings.
+EOT;
+
+$_['ms_mail_subject_withdraw_request_declined']      = 'Withdrawal request declined';
+$_['ms_mail_withdraw_request_declined'] = <<<'EOT'
+Your withdrawal request has been declined. Your funds have been returned to your balance at %s.
+
+Reason:
+%s
+EOT;
+
+$_['ms_mail_subject_transaction_performed']      = 'New transaction';
+$_['ms_mail_transaction_performed'] = <<<'EOT'
+New transaction has been added to your account at %s.
+EOT;
+
+	//
+	// Admin
+	//
+$_['ms_mail_admin_subject_seller_account_created']      = 'New seller account created';
+$_['ms_mail_admin_seller_account_created'] = <<<'EOT'
+New seller account at %s has been created!
+EOT;
+
+$_['ms_mail_admin_subject_seller_account_awaiting_moderation']      = 'New seller account awaiting moderation';
+$_['ms_mail_admin_seller_account_awaiting_moderation'] = <<<'EOT'
+New seller account at %s has been created and is now awaiting moderation.
+
+You can process it in the Multiseller - Sellers section in back office.
+EOT;
+
+$_['ms_mail_admin_subject_product_created']      = 'New product added';
+$_['ms_mail_admin_product_created'] = <<<'EOT'
+New product %s has been added to %s.
+
+You can view or edit it in back office.
+EOT;
+
+$_['ms_mail_admin_subject_new_product_awaiting_moderation']      = 'New product awaiting moderation';
+$_['ms_mail_admin_new_product_awaiting_moderation'] = <<<'EOT'
+New product %s has been added to %s and is awaiting moderation.
+
+You can process it in the Multiseller - Products section in back office.
+EOT;
+
+$_['ms_mail_admin_subject_edit_product_awaiting_moderation']      = 'Product edited and awaiting moderation';
+$_['ms_mail_admin_edit_product_awaiting_moderation'] = <<<'EOT'
+Product %s at %s has been edited and is awaiting moderation.
+
+You can process it in the Multiseller - Products section in back office.
+EOT;
+
+$_['ms_mail_admin_subject_withdraw_request_submitted']      = 'Withdrawal request awaiting moderation';
+$_['ms_mail_admin_withdraw_request_submitted'] = <<<'EOT'
+New withdrawal request has been submitted.
+
+You can process it in the Multiseller - Finances section in back office.
+EOT;
 
 
 // Errors
@@ -48,6 +148,10 @@ $_['ms_error_product_category_empty'] = 'Please select a category';
 $_['ms_error_product_thumbnail_empty'] = 'Please upload a thumbnail for your product';
 $_['ms_error_product_download_empty'] = 'Please add a download for your product';
 $_['ms_error_product_image_empty'] = 'Please upload at least one image for your product';
+
+$_['ms_error_withdraw_amount'] = 'Invalid amount';
+$_['ms_error_withdraw_balance'] = 'Not enough funds on your balance';
+$_['ms_error_withdraw_minimum'] = 'Cannot withdraw less than minimum limit';
 
 
 // Account - General
@@ -140,12 +244,31 @@ $_['ms_account_sellerinfo_saved'] = 'Seller account data saved.';
 
 // Account - Seller account status
 $_['ms_account_status'] = 'Your seller account status is: ';
-$_['ms_account_status_activation'] = 'Waiting for activation';
-$_['ms_account_status_approval'] = 'Waiting for approval';
-$_['ms_account_status_active'] = 'Active';
-$_['ms_account_status_fullaccess']    = 'You have full access to your seller account.';
-$_['ms_account_status_pleaseactivate'] = 'Please visit the link contained in the email we sent you to complete the activation process.';
-$_['ms_account_status_willbeapproved'] = 'As soon as your account is approved, you will receive a confirmation email.';
+
+$_['ms_account_status_activation'] = <<<'EOT'
+Waiting for activation
+
+Please visit the link contained in the email we sent you to complete the activation process.
+EOT;
+
+$_['ms_account_status_approval'] = <<<'EOT'
+<b>Waiting for approval</b>
+<br />
+As soon as your account is approved, you will receive a confirmation email.
+EOT;
+
+$_['ms_account_status_active'] = <<<'EOT'
+<b>Active</b>
+<br />
+You have full access to your seller account.
+EOT;
+
+$_['ms_account_status_disabled'] = <<<'EOT'
+<b>Disabled</b>
+<br />
+Your seller account has been disabled by the administrator.
+EOT;
+
 $_['ms_account_status_please_fill_in'] = 'Please complete the following form to create a seller account.';
 
 
@@ -196,6 +319,7 @@ $_['ms_account_withdraw_method_paypal']      = 'PayPal';
 $_['ms_account_withdraw_all']      = 'All earnings currently available';
 $_['ms_account_withdraw_minimum_not_reached']      = 'Your total balance is less than the minimum withdrawal amount!';
 $_['ms_account_withdraw_disabled']      = 'We don\'t accept withdrawal requests. You will be paid automatically.';
+$_['ms_account_withdraw_no_paypal']      = 'Please <a href="index.php?route=account/ms-seller/sellerinfo">specify your PayPal address</a> first!';
 
 
 // Product page - Seller information

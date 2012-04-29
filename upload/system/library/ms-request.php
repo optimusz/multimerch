@@ -17,20 +17,16 @@ class MsRequest {
 		$this->errors = array();
 	}
 	
-	public static function byName($registry, $name) {
-		$instance = new self($registry);
-        $instance->fileName = $name;
-        return $instance;
-	}
-	
 	public function createRequest($data) {
 		$created_message = isset($data['created_message']) ? $this->db->escape($data['created_message']) : '';		
-		$seller_id = isset($data['seller_id']) ? (int)$data['seller_id'] : 'NULL';
-		$product_id = isset($data['product_id']) ? (int)$data['product_id'] : 'NULL';
+		$seller_id = isset($data['seller_id']) ? (int)$data['seller_id'] : '0';
+		$product_id = isset($data['product_id']) ? (int)$data['product_id'] : '0';
+		$transaction_id = isset($data['transaction_id']) ? (int)$data['transaction_id'] : '0';
 		
 		$sql = "INSERT INTO " . DB_PREFIX . "ms_request
 				SET seller_id = " . $seller_id  . ",
 					product_id = " . $product_id . ",
+					transaction_id = " . $transaction_id . ",
 					request_type = " . (int)$data['request_type'] . ",
 					created_message = '" . $created_message . "',
 					date_created = NOW()";
@@ -82,7 +78,7 @@ class MsRequest {
 		return $res->rows;
 	}
 	
-	public function getWithdrawalRequests() {
+	public function getWithdrawalRequests($sort) {
 		$sql = "SELECT 	*,
 						mr.request_id as 'req.id',
 						ms.nickname as 'sel.nickname',
@@ -97,10 +93,21 @@ class MsRequest {
 					ON mt.seller_id = ms.seller_id
 				LEFT JOIN	" . DB_PREFIX . "user u
 					ON mr.processed_by_user_id = u.user_id
-				WHERE mr.request_type = " . (int)self::MS_REQUEST_WITHDRAWAL;
+				WHERE mr.request_type = " . (int)self::MS_REQUEST_WITHDRAWAL . "
+    			ORDER BY {$sort['order_by']} {$sort['order_way']}" 
+    			. ($sort['limit'] ? " LIMIT ".(int)(($sort['page'] - 1) * $sort['limit']).', '.(int)($sort['limit']) : '');
 		
 		$res = $this->db->query($sql);
 		return $res->rows;
+	}
+
+	public function getTotalWithdrawalRequests() {
+		$sql = "SELECT 	COUNT(*) as total
+				FROM " . DB_PREFIX . "ms_request mr
+				WHERE mr.request_type = " . (int)self::MS_REQUEST_WITHDRAWAL;
+		
+		$res = $this->db->query($sql);
+		return $res->row['total'];
 	}
 
 	public function getRequestPaymentData($request_id) {
@@ -118,6 +125,17 @@ class MsRequest {
 		
 		$res = $this->db->query($sql);
 		return $res->row;
+	}
+	
+	public function getAssociatedTransaction($request_id) {
+		var_dump($request_id);
+		$sql = "SELECT 	transaction_id
+				FROM " . DB_PREFIX . "ms_request mr
+				WHERE mr.request_id = " . (int)$request_id;
+		
+		$res = $this->db->query($sql);
+		var_dump($res->row['transaction_id']);
+		return $res->row['transaction_id'];
 	}	
 }
 ?>

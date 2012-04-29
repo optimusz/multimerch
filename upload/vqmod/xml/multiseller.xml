@@ -1,5 +1,5 @@
 <modification>
-	<id>Digital Multiseller Extension</id>
+	<id>Digital Multiseller Marketplace</id>
 	<version>1.0</version>
 	<vqmver>1.0.8</vqmver>
 	<author>http://ffct.cc</author>
@@ -10,47 +10,17 @@
 	<!-- ************************ -->	
 	<!-- ************************ -->
 		
-	<!-- loader for catalog models -->
-	<!--
-	<file name="system/engine/loader.php">
+	<file name="system/library/customer.php">
 		<operation>
-			<search position="before"><![CDATA[
-				public function database($driver, $hostname, $username, $password, $database, $prefix = NULL, $charset = 'UTF8') {
+			<search position="after"><![CDATA[
+				public function logout() {
 			]]></search>
 			<add><![CDATA[
-			 	public function catalogModel($model) {
-			 		$file  = DIR_APPLICATION . '../catalog/model/' . $model . '.php';
-			 		$class = 'Model' . preg_replace('/[^a-zA-Z0-9]/', '', $model);
-			 		
-			 		if (file_exists($file)) {
-			 			include_once($file);
-			 			
-			 			$this->registry->set('catalog_model_' . str_replace('/', '_', $model), new $class($this->registry));
-			 		} else {
-			 			trigger_error('Error: Could not load model ' . $model . '!');
-			 			exit();					
-			 		}
-			 	}
+				unset($this->session->data['multiseller']);
 			]]></add>
 		</operation>
 	</file>
-	-->
-	
-	<!--
-	<file name="system/engine/loader.php">
-		<operation>
-			<search position="after"><![CDATA[
-			$file  = DIR_APPLICATION . 'model/' . $model . '.php';
-			]]></search>
-			<add><![CDATA[
-			if (!file_exists($file))
-				$file = 'catalog' . '/' . 'model/' . $model . '.php';
-			]]></add>
-		</operation>
-	</file>	
-	-->
-	
-	
+
 	
 	<!-- ************************ -->
 	<!-- ************************ -->
@@ -91,7 +61,7 @@
 			<add><![CDATA[
 				require_once(DIR_SYSTEM . 'library/ms-seller.php');
 				$msSeller = new MsSeller($this->registry);
-				$this->data['ms_seller_created'] = $msSeller->isSeller($this->customer->getId());
+				$this->data['ms_seller_created'] = $msSeller->isCustomerSeller($this->customer->getId());
 				$this->data = array_merge($this->data, $this->load->language('module/multiseller'));			
 				$this->data['ms_link_sellerinfo'] = $this->url->link('account/ms-seller/sellerinfo', '', 'SSL');
 				$this->data['ms_link_newproduct'] = $this->url->link('account/ms-seller/newproduct', '', 'SSL');
@@ -132,7 +102,7 @@
 			<add><![CDATA[
 				require_once(DIR_SYSTEM . 'library/ms-seller.php');
 				$msSeller = new MsSeller($this->registry);
-				$this->data['ms_seller_created'] = $msSeller->isSeller($this->customer->getId());			
+				$this->data['ms_seller_created'] = $msSeller->isCustomerSeller($this->customer->getId());			
 				$this->data = array_merge($this->data, $this->load->language('module/multiseller'));			
 				$this->data['ms_link_sellerinfo'] = $this->url->link('account/ms-seller/sellerinfo', '', 'SSL');
 				$this->data['ms_link_newproduct'] = $this->url->link('account/ms-seller/newproduct', '', 'SSL');
@@ -314,7 +284,6 @@
 			<add><![CDATA[
 		      <li id="multiseller"><a class="top"><?php echo $ms_menu_multiseller; ?></a>
 		        <ul>
-		          <li><a href="#"><?php echo $ms_menu_dashboard; ?></a></li>
 		          <li><a class="parent"><?php echo $ms_menu_catalog; ?></a>
 		            <ul>
 		           	  <li><a href="<?php echo $ms_link_catalog_sellers; ?>"><?php echo $ms_menu_catalog_sellers; ?></a></li>
@@ -327,7 +296,7 @@
 		              <li><a href="<?php echo $ms_link_finances_withdrawals; ?>"><?php echo $ms_menu_finances_withdrawals; ?></a></li>
 		            </ul>
 		          </li>		          
-		          <li><a href="#"><?php echo $ms_menu_settings; ?></a></li>
+		          <li><a href="<?php echo $ms_link_settings; ?>"><?php echo $ms_menu_settings; ?></a></li>
 		        </ul>
 		      </li>
 			]]></add>
@@ -343,7 +312,8 @@
 			$this->data['ms_link_catalog_sellers'] = $this->url->link('module/multiseller/sellers', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['ms_link_catalog_products'] = $this->url->link('module/multiseller/products', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['ms_link_finances_withdrawals'] = $this->url->link('module/multiseller/withdrawals', 'token=' . $this->session->data['token'], 'SSL');
-			$this->data['ms_link_finances_transactions'] = $this->url->link('module/multiseller/transactions', 'token=' . $this->session->data['token'], 'SSL'); 
+			$this->data['ms_link_finances_transactions'] = $this->url->link('module/multiseller/transactions', 'token=' . $this->session->data['token'], 'SSL');
+			$this->data['ms_link_settings'] = $this->url->link('module/multiseller', 'token=' . $this->session->data['token'], 'SSL'); 
 			$this->data = array_merge($this->data, $this->load->language('module/multiseller'));
 			]]></add>
 		</operation>
@@ -357,7 +327,7 @@
 			<add><![CDATA[
 			$this->load->model('module/multiseller/seller');
 			$this->language->load('module/multiseller');
-			$this->data['column_seller'] = $this->language->get('ms_seller_seller');
+			$this->data['column_seller'] = $this->language->get('ms_seller');
 			$seller = $this->model_module_multiseller_seller->getSellerDataForProduct($product['product_id']);
 			]]></add>
 		</operation>	
@@ -390,31 +360,7 @@
 			<td class="left"><a href="<?php echo $product['href']; ?>"><?php echo $product['name']; ?></a>
 			]]></search>
 			<add><![CDATA[
-			<td class="left"><a href="#"><?php echo $product['seller']['nickname']; ?></a>
-			]]></add>
-		</operation>
-	</file>
-
-
-	<!-- customer/seller form -->
-	<file name="admin/controller/sale/customer.php">
-		<operation>
-			<search position="after"><![CDATA[
-			public function update() {
-			]]></search>
-			<add><![CDATA[
-			$this->data = array_merge($this->data, $this->load->language('module/multiseller'));
-			]]></add>
-		</operation>
-	</file>	
-	
-	<file name="admin/view/template/sale/customer_form.tpl">
-		<operation>
-			<search position="replace"><![CDATA[
-			<a href="#tab-ip"><?php echo $tab_ip; ?></a></div>			
-			]]></search>
-			<add><![CDATA[
-			<a href="#tab-ip"><?php echo $tab_ip; ?></a><a href="#tab-seller"><?php echo $ms_sale_customer_sellertab; ?></a></div>
+			<td class="left"><a href="<?php echo $this->url->link('module/multiseller/sellerinfo', 'token=' . $this->session->data['token'] . '&seller_id=' . $product['seller']['seller_id'], 'SSL');?>"><?php echo $product['seller']['nickname']; ?></a>
 			]]></add>
 		</operation>
 	</file>

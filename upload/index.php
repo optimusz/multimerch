@@ -4,7 +4,7 @@ define('VERSION', '1.5.2');
 
 // Configuration
 require_once('config.php');
-   
+
 // Install 
 if (!defined('DIR_APPLICATION')) {
 	header('Location: install/index.php');

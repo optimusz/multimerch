@@ -10,6 +10,10 @@
   
   <h1><?php echo $ms_account_transactions_heading; ?></h1>
   
+  <?php if (isset($success) && ($success)) { ?>
+  <div class="success"><?php echo $success; ?></div>
+  <?php } ?>  
+  
   <?php if (isset($error_warning) && ($error_warning)) { ?>
   	<div class="warning"><?php echo $error_warning; ?></div>
   <?php } ?>

@@ -5,7 +5,6 @@ class ControllerAccountMsSeller extends Controller {
 	private $msSeller;
 	private $msProduct;
 	
-	
 	public function __construct($registry) {
 		parent::__construct($registry);
 
@@ -14,22 +13,35 @@ class ControllerAccountMsSeller extends Controller {
 		require_once(DIR_SYSTEM . 'library/ms-transaction.php');
 		require_once(DIR_SYSTEM . 'library/ms-product.php');
 		require_once(DIR_SYSTEM . 'library/ms-seller.php');
+		require_once(DIR_SYSTEM . 'library/ms-mail.php');
 		$this->msSeller = new MsSeller($this->registry);
 		$this->msProduct = new MsProduct($this->registry);
+		$this->msMail = new MsMail($this->registry);
 		
 		
 		$parts = explode('/', $this->request->request['route']);
 
     	if (!$this->customer->isLogged()) {
-	  		$this->session->data['redirect'] = $this->url->link('account/ms-seller', '', 'SSL');
+	  		$this->session->data['redirect'] = $this->url->link('account/account', '', 'SSL');
 	  		$this->redirect($this->url->link('account/login', '', 'SSL')); 
-    	} else if (!$this->seller->isSeller()) {
+    	} else if (!$this->msSeller->isSeller()) {
     		if (!in_array($parts[2], array('jxuploadfile','sellerinfo','jxsavesellerinfo'))) {
+    			$this->redirect($this->url->link('account/ms-seller/sellerinfo', '', 'SSL'));
+    		}
+    	} else if ($this->msSeller->getStatus() != MsSeller::MS_SELLER_STATUS_ACTIVE) {
+    		if (!in_array($parts[2], array('sellerinfo'))) {
     			$this->redirect($this->url->link('account/ms-seller/sellerinfo', '', 'SSL'));
     		}
     	}
 
-		//if (!empty($sller) && ($seller['seller_status_id'] != MS_SELLER_STATUS_ACTIVE)) {
+		if (isset($this->session->data['success'])) {
+			$this->data['success'] = $this->session->data['success'];
+    		unset($this->session->data['success']);
+		} else {
+			$this->data['success'] = '';
+		}
+		
+		//if (!empty($sller) && ($seller['seller_status_id'] != MsSeller::MS_SELLER_STATUS_ACTIVE)) {
 		//	$this->_setJsonResponse($json);
 		//	return;
 		//}
@@ -39,6 +51,7 @@ class ControllerAccountMsSeller extends Controller {
 		
 		//$config = $this->registry->get('config');
 		$this->load->config('ms-config');
+		
 		
 		//$parts = explode('/', $this->request->get['route']);
 		//if ($seller_account_status !== 1 && $parts[2] != 'sellerstatus') {
@@ -161,9 +174,13 @@ class ControllerAccountMsSeller extends Controller {
 		$this->load->model('module/multiseller/seller');
 		
 		if (isset($data['product_id']) && !empty($data['product_id'])) {
-			$product = $this->msProduct->getProduct($data['product_id'], $this->customer->getId());
-			$data['product_thumbnail_path'] = $product['thumbnail'];
-			$data['images'] = $this->msProduct->getProductImages($data['product_id']);
+			if  ($this->msProduct->productOwnedBySeller($data['product_id'], $this->customer->getId())) {
+				$product = $this->msProduct->getProduct($data['product_id']);
+				$data['product_thumbnail_path'] = $product['thumbnail'];
+				$data['images'] = $this->msProduct->getProductImages($data['product_id']);
+			} else {
+				return;
+			}
 		}
 
 		$json = array();
@@ -257,9 +274,13 @@ class ControllerAccountMsSeller extends Controller {
 		$this->load->model('module/multiseller/seller');
 
 		if (isset($data['product_id']) && !empty($data['product_id'])) {
-			$product = $this->msProduct->getProduct($data['product_id'], $this->customer->getId());
-			$data['product_thumbnail_path'] = $product['thumbnail'];
-			$data['images'] = $this->msProduct->getProductImages($data['product_id']);
+			if  ($this->msProduct->productOwnedBySeller($data['product_id'], $this->customer->getId())) {
+				$product = $this->msProduct->getProduct($data['product_id']);
+				$data['product_thumbnail_path'] = $product['thumbnail'];
+				$data['images'] = $this->msProduct->getProductImages($data['product_id']);
+			} else {
+				return;
+			}
 		}
 		
 		$json = array();
@@ -344,6 +365,7 @@ class ControllerAccountMsSeller extends Controller {
 		}
 		
 		if (empty($json['errors'])) {
+			$mails = array();
 			// set product status
 			switch ($this->config->get('msconf_product_validation')) {
 				case MsProduct::MS_PRODUCT_VALIDATION_APPROVAL:
@@ -355,12 +377,36 @@ class ControllerAccountMsSeller extends Controller {
 					} else {
 						$request_type = MsRequest::MS_REQUEST_PRODUCT_UPDATED;
 					}
+					
+					if (!isset($data['product_id']) || empty($data['product_id'])) {
+						$mails[] = array(
+							'type' => MsMail::SMT_NEW_PRODUCT_AWAITING_MODERATION
+						);
+						$mails[] = array(
+							'type' => MsMail::AMT_NEW_PRODUCT_AWAITING_MODERATION
+						);
+					} else {
+						$mails[] = array(
+							'type' => MsMail::SMT_EDIT_PRODUCT_AWAITING_MODERATION
+						);
+						$mails[] = array(
+							'type' => MsMail::AMT_EDIT_PRODUCT_AWAITING_MODERATION
+						);						
+					}
 					break;
 					
 				case MsProduct::MS_PRODUCT_VALIDATION_NONE:
 				default:
 					$data['enabled'] = 1;
 					$data['review_status_id'] = MsProduct::MS_PRODUCT_STATUS_APPROVED;
+					
+					if (!isset($data['product_id']) || empty($data['product_id'])) {		
+						$mails[] = array(
+							'type' => MsMail::AMT_PRODUCT_CREATED
+						);
+					} else {
+						// product edited mail if needed
+					}
 					break;
 			}
 
@@ -381,6 +427,12 @@ class ControllerAccountMsSeller extends Controller {
 				unset($r);
 			}
 			
+			foreach ($mails as &$mail) {
+				$mail['data']['product_id'] = $product_id;
+			}
+			
+			$this->msMail->sendMails($mails);
+			
 			$json['redirect'] = $this->url->link('account/ms-seller/products', '', 'SSL');
 		}
 		
@@ -390,59 +442,59 @@ class ControllerAccountMsSeller extends Controller {
 	public function jxRequestMoney() {
 		$this->load->model('module/multiseller/seller');
 		$msTransaction = new MsTransaction($this->registry);
-		//require_once(DIR_APPLICATION . 'model/module/multiseller/validator.php');
 		$data = $this->request->post;
-		/*$data = $this->request->post;
-		
-		var_dump($data);
-		$validator = new MsValidator($data);
-		
-		$validator->isEmpty('sellerinfo_nickname', 'error');
-		
-		$errors = $validator->getErrors();
-		
-		var_dump($data);
-		//var_dump($errors);
 
-		return;*/
-		
 		$seller = $this->msSeller->getSellerData($this->customer->getId());
 		
-		$balance = $this->model_module_multiseller_seller->getBalanceForSeller($this->customer->getId());
+		$balance = $this->msSeller->getBalanceForSeller($this->customer->getId());
 		$json = array();
 		
-		if (preg_match("/[^0-9.]/",$data['withdraw_amount'])) {
-			$json['errors']['withdraw_amount'] = 'Incorrect amount';
-		} else if (round($data['withdraw_amount'],2) < $balance) {
-			$json['errors']['withdraw_amount'] = 'Low balance';
-		} else if (round($data['withdraw_amount'],2) < $this->config->get('msconf_minimum_withdrawal_amount')) {
-			$json['errors']['withdraw_amount'] = 'You cannot withdraw less than minumum amount';
+		if (!$this->msSeller->getPaypal()) {
+			$json['errors']['withdraw_amount'] = $this->language->get('ms_account_withdraw_no_paypal');
+			$this->_setJsonResponse($json);
+			return;
 		}
-		/*
+		
+		if (!isset($data['withdraw_amount'])) {
+			$data['withdraw_amount'] = $balance;
+		}
+		
+		if (preg_match("/[^0-9.]/",$data['withdraw_amount']) || (float)$data['withdraw_amount'] <= 0) {
+			$json['errors']['withdraw_amount'] = $this->language->get('ms_error_withdraw_amount');
+		} else {
+			$data['withdraw_amount'] = (float)$data['withdraw_amount'];
+			if ($data['withdraw_amount'] > $balance) {
+				$json['errors']['withdraw_amount'] = $this->language->get('ms_error_withdraw_balance');
+			} else if ($data['withdraw_amount'] < $this->config->get('msconf_minimum_withdrawal_amount')) {
+				$json['errors']['withdraw_amount'] = $this->language->get('ms_error_withdraw_minimum');
+			}			
+		}
+		
 		if (empty($json['errors'])) {
 			$transaction = array(
 				'parent_transaction_id' => 0,
 				'order_id' => 0,
 				'product_id' => 0,
-				'seller_id' => 0,
-				'amount' => round($data['withdraw_amount'],2),
+				'seller_id' => $this->customer->getId(),
+				'amount' => -1*($data['withdraw_amount']),
 				'currency_id' => '',
 				'currency_code' =>'',
 				'currency_value' =>'',
-				'commission' =>''		
+				'commission' =>'',
+				'description' => sprintf($this->language->get('ms_transaction_pending_withdrawal'),$this->currency->format($data['withdraw_amount'], $this->config->get('config_currency')))
 			);
 			
-			$t = new MsTransaction();
-			$transaction->addTransaction()				
+			$transaction_id = $msTransaction->addTransaction($transaction);				
 			
 			$r = new MsRequest($this->registry);
 			$r->createRequest(array(
 				'seller_id' => $this->customer->getId(),
+				'transaction_id' => $transaction_id,
 				'request_type' => MsRequest::MS_REQUEST_WITHDRAWAL,
 			));
-			$this->session->data['success'] = 'Your request is submitted.';
+			$this->session->data['success'] = $this->language->get('ms_request_submitted');
+			$json['redirect'] = $this->url->link('account/ms-seller/transactions', '', 'SSL');
 		}
-		*/
 		$this->_setJsonResponse($json);
 	}
 	
@@ -452,7 +504,7 @@ class ControllerAccountMsSeller extends Controller {
 		$seller = $this->msSeller->getSellerData($this->customer->getId());
 		$json = array();
 		
-		if (!empty($seller) && ($seller['seller_status_id'] != MS_SELLER_STATUS_ACTIVE)) {
+		if (!empty($seller) && ($seller['seller_status_id'] != MsSeller::MS_SELLER_STATUS_ACTIVE)) {
 			$this->_setJsonResponse($json);
 			return;
 		}
@@ -465,7 +517,7 @@ class ControllerAccountMsSeller extends Controller {
 				$json['errors']['sellerinfo_nickname'] = $this->language->get('ms_error_sellerinfo_nickname_alphanumeric');
 			} else if (mb_strlen($data['sellerinfo_nickname']) < 4 || mb_strlen($data['sellerinfo_nickname']) > 50 ) {
 				$json['errors']['sellerinfo_nickname'] = $this->language->get('ms_error_sellerinfo_nickname_length');			
-			} else if ($this->model_module_multiseller_seller->nicknameTaken($data['sellerinfo_nickname'])) {
+			} else if ($this->msSeller->nicknameTaken($data['sellerinfo_nickname'])) {
 				$json['errors']['sellerinfo_nickname'] = $this->language->get('ms_error_sellerinfo_nickname_taken');
 			}
 		}
@@ -491,33 +543,48 @@ class ControllerAccountMsSeller extends Controller {
 		}
 		
 		if (empty($json['errors'])) {
+			$mails = array();
 			if (empty($seller)) {
 				// create new seller
 				switch ($this->config->get('msconf_seller_validation')) {
+					/*
 					case MS_SELLER_VALIDATION_ACTIVATION:
-						$data['seller_status_id'] = MS_SELLER_STATUS_TOBEACTIVATED;
+						$data['seller_status_id'] = MsSeller::MS_SELLER_STATUS_TOBEACTIVATED;
 						break;
-						
+					*/
+					
 					case MS_SELLER_VALIDATION_APPROVAL:
-						$data['seller_status_id'] = MS_SELLER_STATUS_TOBEAPPROVED;
+						$mails[] = array(
+							'type' => MsMail::SMT_SELLER_ACCOUNT_AWAITING_MODERATION
+						);
+						$mails[] = array(
+							'type' => MsMail::AMT_SELLER_ACCOUNT_AWAITING_MODERATION
+						);
+						$data['seller_status_id'] = MsSeller::MS_SELLER_STATUS_TOBEAPPROVED;
 
 						$r = new MsRequest($this->registry);
 						$r->createRequest(array(
 							'seller_id' => $this->customer->getId(),
 							'request_type' => MsRequest::MS_REQUEST_SELLER_CREATED,
 						));
-						unset($r);						
+						unset($r);
 						break;
 					
 					case MS_SELLER_VALIDATION_NONE:
 					default:
-						$data['seller_status_id'] = MS_SELLER_STATUS_ACTIVE;
+						$mails[] = array(
+							'type' => MsMail::SMT_SELLER_ACCOUNT_CREATED
+						);
+						$mails[] = array(
+							'type' => MsMail::AMT_SELLER_ACCOUNT_CREATED
+						);					
+						$data['seller_status_id'] = MsSeller::MS_SELLER_STATUS_ACTIVE;
 						break;
 				}
 				
 				$data['seller_id'] = $this->customer->getId();
 				$this->msSeller->createSeller($data);
-				
+				$this->msMail->sendMails($mails);
 				$this->session->data['success'] = $this->language->get('ms_account_sellerinfo_saved');
 			} else {
 				// edit seller
@@ -607,7 +674,11 @@ class ControllerAccountMsSeller extends Controller {
 		$product_id = isset($this->request->get['product_id']) ? (int)$this->request->get['product_id'] : 0;
 		$seller_id = $this->customer->getId();
 		
-    	$product = $this->msProduct->getProduct($product_id,$seller_id);		
+		if  ($this->msProduct->productOwnedBySeller($product_id,$seller_id)) {
+    		$product = $this->msProduct->getProduct($product_id);
+		} else {
+			$product = NULL;
+		}
 
 		if (!$product['product_id']) {
 			$this->redirect($this->url->link('account/ms-seller/products', '', 'SSL'));
@@ -683,15 +754,16 @@ class ControllerAccountMsSeller extends Controller {
 			}
 			
 			switch ($seller['seller_status_id']) {
-				case MS_SELLER_STATUS_TOBEACTIVATED:
-					$this->data['statustext'] = $this->language->get('ms_account_status') . '<b>' . $this->language->get('ms_account_status_activation') . '</b>';
-					$this->data['statustext'] .= '<br />' . $this->language->get('ms_account_status_pleaseactivate');
+				case MsSeller::MS_SELLER_STATUS_TOBEACTIVATED:
+					$this->data['statustext'] = $this->language->get('ms_account_status') . $this->language->get('ms_account_status_activation');
 					break;
-				case MS_SELLER_STATUS_TOBEAPPROVED:
-					$this->data['statustext'] = $this->language->get('ms_account_status') . '<b>' . $this->language->get('ms_account_status_approval') . '</b>';
-					$this->data['statustext'] .= '<br />' . $this->language->get('ms_account_status_willbeapproved');
+				case MsSeller::MS_SELLER_STATUS_TOBEAPPROVED:
+					$this->data['statustext'] = $this->language->get('ms_account_status') . $this->language->get('ms_account_status_approval');
 					break;
-				case MS_SELLER_STATUS_ACTIVE:
+				case MsSeller::MS_SELLER_STATUS_DISABLED:
+					$this->data['statustext'] = $this->language->get('ms_account_status') . $this->language->get('ms_account_status_disabled');
+					break;					
+				case MsSeller::MS_SELLER_STATUS_ACTIVE:
 				default:
 					//$this->data['statustext'] = $this->language->get('ms_account_status') . $this->language->get('ms_account_status_active');
 					//$this->data['statustext'] .= '<br />' . $this->language->get('ms_account_status_fullaccess');
@@ -700,13 +772,6 @@ class ControllerAccountMsSeller extends Controller {
 		} else { 		
 			$this->data['seller'] = FALSE;
 			$this->data['statustext'] = $this->language->get('ms_account_status_please_fill_in');			
-		}
-
-		if (isset($this->session->data['success'])) {
-			$this->data['success'] = $this->session->data['success'];
-    		unset($this->session->data['success']);
-		} else {
-			$this->data['success'] = '';
 		}
 
 		$this->data['back'] = $this->url->link('account/account', '', 'SSL');
@@ -741,7 +806,7 @@ class ControllerAccountMsSeller extends Controller {
 		}
 
 		$this->data['transactions'] = $transactions;
-		$this->data['balance'] =  $this->currency->format($this->model_module_multiseller_seller->getBalanceForSeller($seller_id),$this->config->get('config_currency'));
+		$this->data['balance'] =  $this->currency->format($this->msSeller->getBalanceForSeller($seller_id),$this->config->get('config_currency'));
 		$pagination = new Pagination();
 		$pagination->total = $msTransaction->getTotalSellerTransactions($seller_id);
 		$pagination->page = $sort['page'];
@@ -761,13 +826,14 @@ class ControllerAccountMsSeller extends Controller {
 		$this->load->model('module/multiseller/seller');
 		
 		$seller_id = $this->customer->getId();
-		$this->data['balance'] =  $this->currency->format($this->model_module_multiseller_seller->getBalanceForSeller($seller_id),$this->config->get('config_currency'));
+		$this->data['balance'] =  $this->currency->format($this->msSeller->getBalanceForSeller($seller_id),$this->config->get('config_currency'));
+		$this->data['paypal'] =  $this->msSeller->getPaypal();
 		$this->data['msconf_minimum_withdrawal_amount'] =  $this->currency->format($this->config->get('msconf_minimum_withdrawal_amount'),$this->config->get('config_currency'));
 		$this->data['msconf_allow_partial_withdrawal'] = $this->config->get('msconf_allow_partial_withdrawal');
 		$this->data['msconf_allow_withdrawal_requests'] = $this->config->get('msconf_allow_withdrawal_requests');
 		$this->data['currency_code'] = $this->config->get('config_currency');
 		
-		if ($this->model_module_multiseller_seller->getBalanceForSeller($seller_id) - $this->config->get('msconf_minimum_withdrawal_amount') > 0) {
+		if ($this->msSeller->getBalanceForSeller($seller_id) - $this->config->get('msconf_minimum_withdrawal_amount') > 0) {
 			$this->data['withdrawal_minimum_reached'] = TRUE;
 		} else {
 			$this->data['withdrawal_minimum_reached'] = FALSE;
@@ -780,9 +846,8 @@ class ControllerAccountMsSeller extends Controller {
 	}
 	
 	public function test() {
-		unset($this->session->data['multiseller']);
-		$msTransaction = new MsTransaction($this->registry);
-		$msTransaction->addTransactionsForOrder(1);
+		$msMail = new MsMail($this->registry);
+		$msMail->sendMail(MsMail::SMT_PRODUCT_AWAITING_MODERATION, array('product_id' => 76, 'message' => "We don't like it, lol\n Deal with it"));
 	}
 }
 ?>

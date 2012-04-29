@@ -35,7 +35,7 @@
             <?php foreach ($requests as $request) { ?>
             <tr>
               <td style="text-align: center;">
-                <input type="checkbox" name="selected[]" value="<?php echo $request['request_id']; ?>" />
+                <input type="checkbox" name="selected[]" <?php if($request['date_processed'] !== NULL) { ?>  <?php } ?> value="<?php echo $request['request_id']; ?>" />
               </td>
               <td><?php echo $request['seller']; ?></td>
               <td><?php echo $request['amount']; ?></td>
@@ -61,23 +61,20 @@
 $(document).ready(function() {
 	$('#date').datepicker({dateFormat: 'yy-mm-dd'});
 	$("#ms-pay").click(function() {
-		console.log($('#form').serialize());
+		if ($('#form input:checkbox:checked').length == 0)
+			return;
+			
 	    $.ajax({
 			type: "POST",
-			dataType: "html",
+			dataType: "json",
 			url: 'index.php?route=module/multiseller/jxConfirmPayment&token=<?php echo $token; ?>',
 			data: $('#form').serialize(),
 			success: function(jsonData) {
-				if (jsonData.errors) {
-					for (error in jsonData.errors) {
-					    if (!jsonData.errors.hasOwnProperty(error)) {
-					        continue;
-					    }
-					    console.log(error + " -> " + jsonData.errors[error]);
-					}				
+				if (jsonData.error) {
+				    alert(jsonData.error);
 				} else {
 					console.log('success');
-					$('<div />').html(jsonData).dialog({
+					$('<div />').html(jsonData.html).dialog({
 						resizable: false,
 						width: 600,
 						title: 'Payment Confirmation',
@@ -98,7 +95,7 @@ $(document).ready(function() {
 										data: $('#form').serialize(),
 										success: function(jsonData) {
 											$('#button-pay').remove();
-											$('#button-cancel').removeAttr('disabled').find("span").html("Okay");
+											$('#button-cancel').removeAttr('disabled').find("span").html("OK");
 											
 											if (!jQuery.isEmptyObject(jsonData.error)) {
 												dialog.html('<p class="warning">'+jsonData.error+'</p>');

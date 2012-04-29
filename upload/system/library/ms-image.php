@@ -138,6 +138,10 @@ class MsImage {
   	}  	
   	
   	public function resize($filename, $width, $height) {
+  		if (!file_exists(DIR_IMAGE. $this->fileName)) {
+  			return;
+  		}
+  		
 		$info = pathinfo($filename);
 		$extension = $info['extension'];
 		

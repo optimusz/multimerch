@@ -1,5 +1,11 @@
 <?php
 final class MsSeller {
+	const MS_SELLER_STATUS_ACTIVE = 1;
+	const MS_SELLER_STATUS_TOBEACTIVATED = 2;
+	const MS_SELLER_STATUS_TOBEAPPROVED = 3;
+	const MS_SELLER_STATUS_DISABLED = 4;
+	const MS_SELLER_STATUS_INACTIVE = 5;
+		
 	private $isSeller = FALSE; 
 	private $nickname;
 	private $description;
@@ -7,6 +13,7 @@ final class MsSeller {
 	private $country_id;
 	private $avatar_path;
 	private $seller_status_id;
+	private $paypal;
 	
   	public function __construct($registry) {
 		$this->config = $registry->get('config');
@@ -14,7 +21,7 @@ final class MsSeller {
 		$this->request = $registry->get('request');
 		$this->session = $registry->get('session');
 		$this->registry = $registry;
-				
+		$this->language = $registry->get('language');
 		if (isset($this->session->data['customer_id'])) {
 			//TODO 
 			//$seller_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "ms_seller WHERE seller_id = '" . (int)$this->session->data['customer_id'] . "' AND seller_status_id = '1'");
@@ -22,18 +29,18 @@ final class MsSeller {
 			
 			if ($seller_query->num_rows) {
 				$this->isSeller = TRUE;
-				
 				$this->nickname = $seller_query->row['nickname'];
 				$this->description = $seller_query->row['description'];
 				$this->company = $seller_query->row['company'];
 				$this->country_id = $seller_query->row['country_id'];
 				$this->avatar_path = $seller_query->row['avatar_path'];
 				$this->seller_status_id = $seller_query->row['seller_status_id'];
+				$this->paypal = $seller_query->row['paypal'];
 			}
   		}
 	}
 		
-  	public function isSeller($customer_id) {
+  	public function isCustomerSeller($customer_id) {
 		$sql = "SELECT COUNT(*) as 'total'
 				FROM `" . DB_PREFIX . "ms_seller`
 				WHERE seller_id = " . (int)$customer_id;
@@ -54,7 +61,43 @@ final class MsSeller {
 		$res = $this->db->query($sql);
 		
 		return $res->row;
-	}  	
+	}
+	
+	public function getSellerName($seller_id) {
+		$sql = "SELECT firstname as 'firstname'
+				FROM `" . DB_PREFIX . "customer`
+				WHERE customer_id = " . (int)$seller_id;
+		
+		$res = $this->db->query($sql);
+		
+		return $res->row['firstname'];
+	}	
+	
+	public function getSellerEmail($seller_id) {
+		$sql = "SELECT email as 'email' 
+				FROM `" . DB_PREFIX . "customer`
+				WHERE customer_id = " . (int)$seller_id;
+		
+		$res = $this->db->query($sql);
+		
+		return $res->row['email'];
+	}
+		
+	//TODO
+	public function getSellerStatus($seller_status_id = NULL) {
+		$result = array(
+			self::MS_SELLER_STATUS_ACTIVE => $this->language->get('ms_seller_status_active'),
+			self::MS_SELLER_STATUS_TOBEACTIVATED => $this->language->get('ms_seller_status_activation'),
+			self::MS_SELLER_STATUS_TOBEAPPROVED => $this->language->get('ms_seller_status_approval'),
+			self::MS_SELLER_STATUS_DISABLED => $this->language->get('ms_seller_status_disabled'),
+		);		
+		
+		if ($seller_status_id) {
+			return $result[$seller_status_id];
+		} else {
+			return $result;
+		}
+	}		
 		
 	public function createSeller($data) {
 		if (isset($data['sellerinfo_avatar_name'])) {
@@ -143,6 +186,16 @@ final class MsSeller {
 		*/
 	}
 	
+	public function nicknameTaken($nickname) {
+		$sql = "SELECT nickname
+				FROM `" . DB_PREFIX . "ms_seller` p
+				WHERE p.nickname = '" . $this->db->escape($nickname) . "'";
+		
+		$res = $this->db->query($sql);
+		
+		return $res->num_rows;
+	}	
+	
 	public function editSeller($data) {
 		$seller_id = (int)$data['seller_id'];
 
@@ -172,13 +225,23 @@ final class MsSeller {
 		$this->db->query($sql);	
 	}		
 		
+	public function getBalanceForSeller($seller_id) {
+		$sql = "SELECT SUM(amount - (amount*commission/100)) as total
+				FROM `" . DB_PREFIX . "ms_transaction`
+				WHERE seller_id = " . (int)$seller_id . " 
+				AND transaction_status_id != " . MsTransaction::MS_TRANSACTION_STATUS_CLOSED;
+		
+		$res = $this->db->query($sql);
+		
+		return (float)$res->row['total'];
+	}		
 		
 		
+	public function getSellerAvatar($seller_id) {
+		$query = $this->db->query("SELECT avatar_path as avatar FROM " . DB_PREFIX . "ms_seller WHERE seller_id = '" . (int)$seller_id . "'");
 		
-		
-		
-		
-		
+		return $query->row;
+	}		
 		
 		
 		
@@ -294,6 +357,14 @@ final class MsSeller {
   	
   	public function getStatus() {
   		return $this->seller_status_id;
-  	}  	
+  	}
+
+  	public function getPaypal() {
+  		return $this->paypal;
+  	}
+  	
+  	public function isSeller() {
+  		return $this->isSeller;
+  	}
 }
 ?>

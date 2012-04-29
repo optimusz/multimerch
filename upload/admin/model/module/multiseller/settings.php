@@ -48,7 +48,7 @@ class ModelModuleMultisellerSettings extends Model {
              `seller_id` int(11) NOT NULL,
              `order_id` int(11) NOT NULL DEFAULT '0',
              `product_id` int(11) NOT NULL DEFAULT '0',
-             `transaction_status_id` TINYINT UNSIGNED NOT NULL DEFAULT '1',
+             `transaction_status_id` TINYINT UNSIGNED NOT NULL DEFAULT '0',
              `currency_id` int(11) NOT NULL,
              `currency_code` VARCHAR(3) NOT NULL,
              `currency_value` DECIMAL(15,8) NOT NULL,

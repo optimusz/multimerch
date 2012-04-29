@@ -7,7 +7,6 @@
     <?php echo $breadcrumb['separator']; ?><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a>
     <?php } ?>
   </div>
-  
   <h1><?php echo $ms_account_sellerinfo_heading; ?></h1>
   
   <?php if (isset($success) && ($success)) { ?>
@@ -21,7 +20,7 @@
   <form id="ms-sellerinfo">
   	<input type="hidden" name="action" id="ms_action" />
     <div class="content">
-    	<?php if (isset($seller['seller_status_id']) && $seller['seller_status_id'] != MS_SELLER_STATUS_ACTIVE) { ?>
+    	<?php if ( isset($seller['seller_status_id']) && !in_array($seller['seller_status_id'], array(MsSeller::MS_SELLER_STATUS_ACTIVE, MsSeller::MS_SELLER_STATUS_INACTIVE))) { ?>
   	  <div class="overlay"></div>    
   	  	<?php } ?>
       <table class="ms-product" id="ms-sellerinfo">
@@ -105,7 +104,7 @@
     </div>
     <div class="buttons">
       <div class="left"><a href="<?php echo $back; ?>" class="button"><span><?php echo $button_back; ?></span></a></div>
-    	<?php if ($seller['seller_status_id'] == MS_SELLER_STATUS_ACTIVE || !isset($seller['seller_status_id'])) { ?>
+    	<?php if (in_array($seller['seller_status_id'], array(MsSeller::MS_SELLER_STATUS_ACTIVE, MsSeller::MS_SELLER_STATUS_INACTIVE)) || !isset($seller['seller_status_id'])) { ?>
       	<div class="right"><a class="button" id="ms-submit-button"><span><?php echo $ms_button_save; ?></span></a></div>
 		<?php } ?>
     </div>

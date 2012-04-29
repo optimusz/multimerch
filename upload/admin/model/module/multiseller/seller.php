@@ -1,22 +1,5 @@
 <?php
 class ModelModuleMultisellerSeller extends Model {
-	//TODO
-	public function getSellerStatus($seller_status_id = NULL) {
-		$this->load->language('module/multiseller');
-		$result = array(
-			MS_SELLER_STATUS_ACTIVE => $this->language->get('ms_seller_status_active'),
-			MS_SELLER_STATUS_TOBEACTIVATED => $this->language->get('ms_seller_status_activation'),
-			MS_SELLER_STATUS_TOBEAPPROVED => $this->language->get('ms_seller_status_approval'),
-			MS_SELLER_STATUS_DISABLED => $this->language->get('ms_seller_status_disabled'),
-		);		
-		
-		if ($seller_status_id) {
-			return $result[$seller_status_id];
-		} else {
-			return $result;
-		}
-	}
-	
 	public function getCommissionForSeller($seller_id) {
 		$sql = "SELECT 	commission
 				FROM `" . DB_PREFIX . "ms_seller`
@@ -33,16 +16,6 @@ class ModelModuleMultisellerSeller extends Model {
 				
 		$res = $this->db->query($sql);
 		return $res->row['seller_id'];
-	}
-	
-	public function getSellerData($seller_id) {
-		$sql = "SELECT * 
-				FROM `" . DB_PREFIX . "ms_seller`
-				WHERE seller_id = " . (int)$seller_id;
-		
-		$res = $this->db->query($sql);
-		
-		return $res->row;
 	}
 	
 	public function getSellerDataForProduct($product_id) {

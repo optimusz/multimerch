@@ -19,6 +19,13 @@ $_['ms_seller_status_disabled']      = 'Disabled';
 $_['heading_title']    = '[ffct.cc] Digital MultiSeller Extension';
 $_['text_module']         = 'Modules';
 $_['error_permission'] = 'Warning: You do not have permission to modify module!';
+$_['ms_error_withdraw_norequests'] = 'Error: no requests to process';
+$_['ms_error_withdraw_response'] = 'Error: no response';
+$_['ms_error_withdraw_status'] = 'Error: unsuccessful transaction';
+$_['ms_success'] = 'Success';
+$_['ms_success_transactions'] = 'Transactions successfully completed';
+$_['ms_transaction_withdrawal']      = 'Withdrawal: %s';
+
 
 $_['ms_seller'] = 'Seller';
 $_['ms_amount'] = 'Amount';
@@ -171,5 +178,62 @@ $_['ms_finances_transactions_breadcrumbs'] = 'Transactions';
 $_['button_cancel'] = 'Cancel';
 $_['button_save'] = 'Save';
 $_['ms_action'] = 'Action';
+
+
+// Mails
+$_['ms_mail_greeting']      = "Hello %s,\n\n";
+$_['ms_mail_ending']      = "\n\nRegards,\n%s";
+
+$_['ms_mail_subject_seller_account_approved']      = 'Seller account activated';
+$_['ms_mail_seller_account_approved'] = <<<'EOT'
+Your seller account at %s has been activated.
+
+You can now start adding your products.
+EOT;
+
+$_['ms_mail_subject_seller_account_declined']      = 'Seller account creation declined';
+$_['ms_mail_seller_account_declined'] = <<<'EOT'
+Your seller account creation at %s has been declined.
+
+Reason:
+%s
+EOT;
+
+$_['ms_mail_subject_seller_account_disabled']      = 'Seller account disabled';
+$_['ms_mail_seller_account_disabled'] = <<<'EOT'
+Your seller account at %s has been disabled.
+
+Reason:
+%s
+EOT;
+
+$_['ms_mail_subject_product_approved']      = 'Product approved';
+$_['ms_mail_product_approved'] = <<<'EOT'
+Your product %s at %s has been approved and is now active!
+EOT;
+
+$_['ms_mail_subject_product_declined']      = 'Product declined';
+$_['ms_mail_product_declined'] = <<<'EOT'
+Your product %s at %s has been declined.
+
+Reason:
+%s
+EOT;
+
+$_['ms_mail_subject_product_enabled']      = 'Product active';
+$_['ms_mail_product_enabled'] = <<<'EOT'
+Your product %s at %s is now active.
+
+Message:
+%s
+EOT;
+
+$_['ms_mail_subject_product_disabled']      = 'Product disabled';
+$_['ms_mail_product_disabled'] = <<<'EOT'
+Your product %s at %s has been disabled.
+
+Reason:
+%s
+EOT;
 
 ?>
