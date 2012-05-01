@@ -104,6 +104,8 @@ class MsRequest {
 	public function getTotalWithdrawalRequests() {
 		$sql = "SELECT 	COUNT(*) as total
 				FROM " . DB_PREFIX . "ms_request mr
+				INNER JOIN	" . DB_PREFIX . "ms_transaction mt
+					USING(transaction_id)
 				WHERE mr.request_type = " . (int)self::MS_REQUEST_WITHDRAWAL;
 		
 		$res = $this->db->query($sql);
@@ -128,13 +130,11 @@ class MsRequest {
 	}
 	
 	public function getAssociatedTransaction($request_id) {
-		var_dump($request_id);
 		$sql = "SELECT 	transaction_id
 				FROM " . DB_PREFIX . "ms_request mr
 				WHERE mr.request_id = " . (int)$request_id;
 		
 		$res = $this->db->query($sql);
-		var_dump($res->row['transaction_id']);
 		return $res->row['transaction_id'];
 	}	
 }

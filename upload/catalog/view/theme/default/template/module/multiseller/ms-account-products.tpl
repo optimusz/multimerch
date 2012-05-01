@@ -25,7 +25,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		<?php if ($products) { ?>
+		<?php if (isset($products)) { ?>
 		<?php foreach ($products  as $product) { ?>
 		<tr>
 			<td class="left"><?php echo $product['name']; ?></td>

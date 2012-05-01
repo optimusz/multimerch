@@ -38,6 +38,9 @@ final class MsSeller {
 				$this->paypal = $seller_query->row['paypal'];
 			}
   		}
+  		
+		require_once(DIR_SYSTEM . 'library/ms-product.php');
+		$this->msProduct = new MsProduct($registry);  		
 	}
 		
   	public function isCustomerSeller($customer_id) {
@@ -97,6 +100,52 @@ final class MsSeller {
 		} else {
 			return $result;
 		}
+	}		
+		
+	public function getTotalSellerProducts($seller_id) {
+		$sql = "SELECT COUNT(*) as 'total'
+				FROM `" . DB_PREFIX . "ms_product` p
+				WHERE p.seller_id = " . (int)$seller_id;
+		
+		$res = $this->db->query($sql);
+		
+		return $res->row['total'];		
+	}		
+		
+	public function getSellerProducts($seller_id, $sort) {
+		$sql = "SELECT c.product_id, name, date_added, status as status_id, number_sold, review_status_id 
+				FROM `" . DB_PREFIX . "product_description` a
+				INNER JOIN `" . DB_PREFIX . "product` b
+					ON a.product_id = b.product_id 
+				INNER JOIN `" . DB_PREFIX . "ms_product` c
+					ON b.product_id = c.product_id
+				WHERE c.seller_id = " . (int)$seller_id . "
+				AND a.language_id = " . $this->config->get('config_language_id'). "
+        		ORDER BY {$sort['order_by']} {$sort['order_way']}" 
+        		. ($sort['limit'] ? " LIMIT ".(int)(($sort['page'] - 1) * $sort['limit']).', '.(int)($sort['limit']) : '');				
+		
+		$res = $this->db->query($sql);
+		
+		
+		$review_statuses = $this->msProduct->getProductStatusArray();
+		foreach ($res->rows as &$row) {
+			$row['review_status'] = $review_statuses[$row['review_status_id']];
+			$row['status'] = $row['status_id'] ? $this->language->get('text_yes') : $this->language->get('text_no');
+		}
+		
+		return $res->rows;
+	}		
+		
+	public function getReservedAmount($seller_id) {
+		$sql = "SELECT SUM(amount - (amount*commission/100)) as total
+				FROM `" . DB_PREFIX . "ms_transaction`
+				WHERE seller_id = " . (int)$seller_id . "
+				AND type = " . MsTransaction::MS_TRANSACTION_WITHDRAWAL . ";
+				AND transaction_status_id = " . MsTransaction::MS_TRANSACTION_STATUS_PENDING;
+		
+		$res = $this->db->query($sql);
+		
+		return $res->row['total'];
 	}		
 		
 	public function createSeller($data) {
@@ -234,8 +283,20 @@ final class MsSeller {
 		$res = $this->db->query($sql);
 		
 		return (float)$res->row['total'];
-	}		
+	}
 		
+	public function getCommissionForSeller($seller_id) {
+		$sql = "SELECT 	commission
+				FROM `" . DB_PREFIX . "ms_seller`
+				WHERE seller_id = " . (int)$seller_id; 
+
+		$res = $this->db->query($sql);
+
+		if (isset($res->row['commission']))
+			return $res->row['commission'];
+		else
+			return 0;
+	}
 		
 	public function getSellerAvatar($seller_id) {
 		$query = $this->db->query("SELECT avatar_path as avatar FROM " . DB_PREFIX . "ms_seller WHERE seller_id = '" . (int)$seller_id . "'");

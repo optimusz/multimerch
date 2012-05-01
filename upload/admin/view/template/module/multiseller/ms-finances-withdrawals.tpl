@@ -17,6 +17,12 @@
       <div class="buttons"><a id="ms-pay" class="button"><?php echo $ms_button_pay; ?></a></div>
     </div>
     <div class="content">
+      <style type="text/css">
+      	.msBlack .ui-widget-header {
+		    background: url("view/javascript/jquery/ui/themes/ui-lightness/images/ui-bg_gloss-wave_35_000000_500x100.png") repeat-x scroll 50% 50% #F6A828;
+		    border: 1px solid #000000;
+      	}
+      </style>
       <form action="" method="post" enctype="multipart/form-data" id="form">
         <table class="list" style="text-align: center">
           <thead>
@@ -75,6 +81,7 @@ $(document).ready(function() {
 				} else {
 					console.log('success');
 					$('<div />').html(jsonData.html).dialog({
+						dialogClass: "msBlack",
 						resizable: false,
 						width: 600,
 						title: 'Payment Confirmation',

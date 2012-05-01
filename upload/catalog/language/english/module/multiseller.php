@@ -105,6 +105,9 @@ $_['ms_mail_admin_new_product_awaiting_moderation'] = <<<'EOT'
 New product %s has been added to %s and is awaiting moderation.
 
 You can process it in the Multiseller - Products section in back office.
+
+Note from the seller:
+%s
 EOT;
 
 $_['ms_mail_admin_subject_edit_product_awaiting_moderation']      = 'Product edited and awaiting moderation';
@@ -112,6 +115,9 @@ $_['ms_mail_admin_edit_product_awaiting_moderation'] = <<<'EOT'
 Product %s at %s has been edited and is awaiting moderation.
 
 You can process it in the Multiseller - Products section in back office.
+
+Note from the seller:
+%s
 EOT;
 
 $_['ms_mail_admin_subject_withdraw_request_submitted']      = 'Withdrawal request awaiting moderation';
@@ -148,6 +154,7 @@ $_['ms_error_product_category_empty'] = 'Please select a category';
 $_['ms_error_product_thumbnail_empty'] = 'Please upload a thumbnail for your product';
 $_['ms_error_product_download_empty'] = 'Please add a download for your product';
 $_['ms_error_product_image_empty'] = 'Please upload at least one image for your product';
+$_['ms_error_product_message_length'] = 'Message cannot be longer than 1000 characters';
 
 $_['ms_error_withdraw_amount'] = 'Invalid amount';
 $_['ms_error_withdraw_balance'] = 'Not enough funds on your balance';
@@ -318,6 +325,7 @@ $_['ms_account_withdraw_method_paypal']      = 'PayPal';
 
 $_['ms_account_withdraw_all']      = 'All earnings currently available';
 $_['ms_account_withdraw_minimum_not_reached']      = 'Your total balance is less than the minimum withdrawal amount!';
+$_['ms_account_withdraw_no_funds']      = 'No funds to withdraw.';
 $_['ms_account_withdraw_disabled']      = 'We don\'t accept withdrawal requests. You will be paid automatically.';
 $_['ms_account_withdraw_no_paypal']      = 'Please <a href="index.php?route=account/ms-seller/sellerinfo">specify your PayPal address</a> first!';
 

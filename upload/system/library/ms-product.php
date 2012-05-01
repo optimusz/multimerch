@@ -29,6 +29,18 @@ class MsProduct {
 			MsProduct::MS_PRODUCT_STATUS_APPROVED => $this->language->get('ms_product_review_status_approved'),
 			MsProduct::MS_PRODUCT_STATUS_DECLINED => $this->language->get('ms_product_review_status_declined'),
 		);		
+	}	
+	
+	private function _getDepth($a, $eid) {
+		foreach ($a as $key => $val) {
+			if ($val['category_id'] == $eid) {
+				if ($val['parent_id'] == 0) {
+					return 0;
+				} else {
+					return 1+$this->_getDepth($a, $val['parent_id']);
+				}
+			}
+		}
 	}
 	
 	public function getProducts($sort, $nodrafts = false) {
@@ -63,6 +75,99 @@ class MsProduct {
 		}
 		
 		return $res->rows;
+	}
+	
+	public function getCategories($parent_id = 0) {
+		//$category_data = $this->cache->get('category.' . (int)$this->config->get('config_language_id') . '.' . (int)$parent_id);
+		$category_data = FALSE;
+		
+		if (!$category_data) {
+			$category_data = array();
+		
+			$sql = "SELECT
+					c.category_id,
+					c.parent_id,
+					cd.name
+			FROM `" . DB_PREFIX . "category` c
+			LEFT JOIN `" . DB_PREFIX . "category_description` cd
+				ON (c.category_id = cd.category_id)
+			WHERE c.parent_id = " . (int)$parent_id . "
+			AND c.status = 1
+			AND cd.language_id = " . (int)$this->config->get('config_language_id') . "
+			ORDER BY c.sort_order, cd.name ASC";
+			
+			$query = $this->db->query($sql);
+			//"SELECT * FROM " . DB_PREFIX . "category c LEFT JOIN " . DB_PREFIX . "category_description cd ON (c.category_id = cd.category_id) WHERE c.parent_id = '" . (int)$parent_id . "' AND cd.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY c.sort_order, cd.name ASC");
+		
+			foreach ($query->rows as $result) {
+				$category_data[] = array(
+					'category_id' => $result['category_id'],
+					'name'        => str_repeat('&nbsp;&nbsp;',$this->_getDepth($query->rows, $result['category_id'])) . $result['name'],
+					//'status'  	  => $result['status'],
+					//'sort_order'  => $result['sort_order'],
+				);
+			
+				$category_data = array_merge($category_data, $this->getCategories($result['category_id']));
+			}
+	
+			//$this->cache->set('category.' . (int)$this->config->get('config_language_id') . '.' . (int)$parent_id, $category_data);
+		}
+		
+		return $category_data;
+	}	
+	
+	public function getSellerId($product_id) {
+		$sql = "SELECT seller_id FROM " . DB_PREFIX . "ms_product
+				WHERE product_id = " . (int)$product_id;
+				
+		$res = $this->db->query($sql);
+		
+		if (isset($res->row['seller_id']))
+			return $res->row['seller_id'];
+		else
+			return 0;
+	}
+	
+	public function isEnabled($product_id) {
+		$sql = "SELECT	p.status as enabled,
+				FROM `" . DB_PREFIX . "product` p
+				WHERE p.product_id = " . (int)$product_id;
+
+		$res = $this->db->query($sql);
+		
+		if (!$res->row['enabled'])
+			return false;
+		else
+			return true;
+	}	
+	
+	public function getStatsForProduct($product_id) {
+		$sql = "SELECT 	p.date_added,
+						mp.seller_id,
+						mp.number_sold as sales,
+						ms.nickname,
+						ms.country_id,
+						ms.avatar_path
+				FROM `" . DB_PREFIX . "product` p
+				INNER JOIN `" . DB_PREFIX . "ms_product` mp
+					ON p.product_id = mp.product_id
+				INNER JOIN `" . DB_PREFIX . "ms_seller` ms
+					ON mp.seller_id = ms.seller_id
+				WHERE p.product_id = " . (int)$product_id; 
+
+		$res = $this->db->query($sql);
+
+		return $res->row;		
+	}	
+	
+	public function getStatus($product_id) {
+		$sql = "SELECT	review_status_id as 'status'
+				FROM `" . DB_PREFIX . "ms_product`
+				WHERE product_id = " . (int)$product_id;
+
+		$res = $this->db->query($sql);		
+		
+		return ($res->row['status']);
 	}
 	
 	public function getProduct($product_id) {
@@ -238,7 +343,7 @@ class MsProduct {
 			foreach ($data['product_downloads'] as $key => $dl) {
 				$image = MsImage::byName($this->registry, $dl);
 				$image->move('F');
-				$this->db->query("INSERT INTO " . DB_PREFIX . "download SET filename = '" . $this->db->escape($image->getName()) . "', mask = '" . $this->db->escape(substr($image->getName(),0,strrpos($image->getName(),'.'))) . "'");
+				$this->db->query("INSERT INTO " . DB_PREFIX . "download SET remaining = 5, filename = '" . $this->db->escape($image->getName()) . "', mask = '" . $this->db->escape(substr($image->getName(),0,strrpos($image->getName(),'.'))) . "'");
 				$download_id = $this->db->getLastId();
 				$this->db->query("INSERT INTO " . DB_PREFIX . "product_to_download SET product_id = '" . (int)$product_id . "', download_id = '" . (int)$download_id . "'");
 				
@@ -349,7 +454,7 @@ class MsProduct {
 			foreach ($data['product_downloads'] as $key => $dl) {
 				$image = MsImage::byName($this->registry, $dl);
 				$image->move('F');
-				$this->db->query("INSERT INTO " . DB_PREFIX . "download SET filename = '" . $this->db->escape($image->getName()) . "', mask = '" . $this->db->escape(substr($image->getName(),0,strrpos($image->getName(),'.'))) . "'");
+				$this->db->query("INSERT INTO " . DB_PREFIX . "download SET remaining = 5, filename = '" . $this->db->escape($image->getName()) . "', mask = '" . $this->db->escape(substr($image->getName(),0,strrpos($image->getName(),'.'))) . "'");
 				$download_id = $this->db->getLastId();
 				$this->db->query("INSERT INTO " . DB_PREFIX . "product_to_download SET product_id = '" . (int)$product_id . "', download_id = '" . (int)$download_id . "'");
 				

@@ -202,12 +202,12 @@ class MsMail extends Mail {
 				
 			case self::AMT_NEW_PRODUCT_AWAITING_MODERATION:
 				$mail_subject .= $this->language->get('ms_mail_admin_subject_new_product_awaiting_moderation');
-				$mail_text .= sprintf($this->language->get('ms_mail_admin_new_product_awaiting_moderation'), $product['name'], $this->config->get('config_name'));
+				$mail_text .= sprintf($this->language->get('ms_mail_admin_new_product_awaiting_moderation'), $product['name'], $this->config->get('config_name'), $data['message']);
 				break;
 
 			case self::AMT_EDIT_PRODUCT_AWAITING_MODERATION:
 				$mail_subject .= $this->language->get('ms_mail_admin_subject_edit_product_awaiting_moderation');
-				$mail_text .= sprintf($this->language->get('ms_mail_admin_edit_product_awaiting_moderation'), $product['name'], $this->config->get('config_name'));
+				$mail_text .= sprintf($this->language->get('ms_mail_admin_edit_product_awaiting_moderation'), $product['name'], $this->config->get('config_name'), $data['message']);
 				break;
 			
 			case self::AMT_WITHDRAW_REQUEST_SUBMITTED:

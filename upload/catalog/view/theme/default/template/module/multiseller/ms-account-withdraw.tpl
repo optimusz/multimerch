@@ -13,7 +13,7 @@
 	<div class="warning"><?php echo $error_warning; ?></div>
 <?php } ?>
   
-<p><?php echo $ms_account_withdraw_balance; ?> <b><?php echo $balance; ?></b></p>
+<p><?php echo $ms_account_withdraw_balance; ?> <b><?php echo $balance_formatted; ?></b></p>
 
 
 <?php if (!$msconf_allow_withdrawal_requests) { ?>
@@ -22,7 +22,9 @@
 
 <p><?php echo $ms_account_withdraw_minimum; ?> <b><?php echo $msconf_minimum_withdrawal_amount; ?></b></p>
 
-<?php if (!isset($paypal) || empty($paypal)) { ?>
+<?php if ($balance <= 0) { ?>
+	<div class="attention"><?php echo $ms_account_withdraw_no_funds; ?></div>
+<?php } else if (!isset($paypal) || empty($paypal)) { ?>
 	<div class="attention"><?php echo $ms_account_withdraw_no_paypal; ?></div>
 <?php } else if (!$withdrawal_minimum_reached) { ?>
 	<div class="attention"><?php echo $ms_account_withdraw_minimum_not_reached; ?></div>
@@ -48,7 +50,7 @@
 					<?php } ?>
 					<p>
 					<input type="radio" name="withdraw_all" value="1" <?php if (!$msconf_allow_partial_withdrawal) { ?>checked="checked"<?php } ?> />
-					<span><?php echo $ms_account_withdraw_all; ?> (<?php echo $balance; ?>)</span>
+					<span><?php echo $ms_account_withdraw_all; ?> (<?php echo $balance_formatted; ?>)</span>
 					</p>
 					<p class="ms-note"><?php echo $ms_account_withdraw_amount_note; ?></p>
 					<p class="error" id="error_withdraw_amount"></p>

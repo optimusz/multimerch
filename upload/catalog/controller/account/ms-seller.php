@@ -364,6 +364,10 @@ class ControllerAccountMsSeller extends Controller {
 			$json['errors']['product_image'] = $this->language->get('ms_error_product_image_empty');
 		}
 		
+		if (!empty($data['product_message']) && mb_strlen($data['product_message']) > 1000) {
+			$json['errors']['product_message'] = $this->language->get('ms_error_product_message_length');			
+		}		
+		
 		if (empty($json['errors'])) {
 			$mails = array();
 			// set product status
@@ -378,19 +382,25 @@ class ControllerAccountMsSeller extends Controller {
 						$request_type = MsRequest::MS_REQUEST_PRODUCT_UPDATED;
 					}
 					
-					if (!isset($data['product_id']) || empty($data['product_id'])) {
+					if (!isset($data['product_id']) || empty($data['product_id']) || ($product['review_status_id'] == MsProduct::MS_PRODUCT_STATUS_DRAFT)) {
 						$mails[] = array(
-							'type' => MsMail::SMT_NEW_PRODUCT_AWAITING_MODERATION
+							'type' => MsMail::SMT_PRODUCT_AWAITING_MODERATION
 						);
 						$mails[] = array(
-							'type' => MsMail::AMT_NEW_PRODUCT_AWAITING_MODERATION
+							'type' => MsMail::AMT_NEW_PRODUCT_AWAITING_MODERATION,
+							'data' => array(
+								'message' => $data['product_message']
+							)
 						);
 					} else {
 						$mails[] = array(
-							'type' => MsMail::SMT_EDIT_PRODUCT_AWAITING_MODERATION
+							'type' => MsMail::SMT_PRODUCT_AWAITING_MODERATION
 						);
 						$mails[] = array(
-							'type' => MsMail::AMT_EDIT_PRODUCT_AWAITING_MODERATION
+							'type' => MsMail::AMT_EDIT_PRODUCT_AWAITING_MODERATION,
+							'data' => array(
+								'message' => $data['product_message']
+							)
 						);						
 					}
 					break;
@@ -600,9 +610,8 @@ class ControllerAccountMsSeller extends Controller {
 	public function newProduct() {
 		$this->load->model('module/multiseller/seller');
 		$this->document->addScript('catalog/view/javascript/jquery.form.js');
-				
-		$this->data['categories'] = $this->model_module_multiseller_seller->getCategories(0);
 
+		$this->data['categories'] = $this->msProduct->getCategories();
 		$this->load->model('localisation/language');
 		$this->data['languages'] = $this->model_localisation_language->getLanguages();
 
@@ -632,7 +641,7 @@ class ControllerAccountMsSeller extends Controller {
 		$seller_id = $this->customer->getId();
 		
 		
-		$products = $this->model_module_multiseller_seller->getSellerProducts($seller_id, $sort);
+		$products = $this->msSeller->getSellerProducts($seller_id, $sort);
 		
 		foreach ($products as $product) {
 			$this->data['products'][] = Array(
@@ -647,7 +656,7 @@ class ControllerAccountMsSeller extends Controller {
 		}
 		
 		$pagination = new Pagination();
-		$pagination->total = $this->model_module_multiseller_seller->getTotalSellerProducts($seller_id);
+		$pagination->total = $this->msSeller->getTotalSellerProducts($seller_id);
 		$pagination->page = $sort['page'];
 		$pagination->limit = $sort['limit']; 
 		$pagination->text = $this->language->get('text_pagination');
@@ -666,7 +675,7 @@ class ControllerAccountMsSeller extends Controller {
 		$this->load->model('tool/image');
 		$this->document->addScript('catalog/view/javascript/jquery.form.js');
 		
-		$this->data['categories'] = $this->model_module_multiseller_seller->getCategories(0);		
+		$this->data['categories'] = $this->msProduct->getCategories();		
 		
 		$this->load->model('localisation/language');
 		$this->data['languages'] = $this->model_localisation_language->getLanguages();		
@@ -826,7 +835,8 @@ class ControllerAccountMsSeller extends Controller {
 		$this->load->model('module/multiseller/seller');
 		
 		$seller_id = $this->customer->getId();
-		$this->data['balance'] =  $this->currency->format($this->msSeller->getBalanceForSeller($seller_id),$this->config->get('config_currency'));
+		$this->data['balance'] =  $this->msSeller->getBalanceForSeller($seller_id);
+		$this->data['balance_formatted'] =  $this->currency->format($this->msSeller->getBalanceForSeller($seller_id),$this->config->get('config_currency'));
 		$this->data['paypal'] =  $this->msSeller->getPaypal();
 		$this->data['msconf_minimum_withdrawal_amount'] =  $this->currency->format($this->config->get('msconf_minimum_withdrawal_amount'),$this->config->get('config_currency'));
 		$this->data['msconf_allow_partial_withdrawal'] = $this->config->get('msconf_allow_partial_withdrawal');

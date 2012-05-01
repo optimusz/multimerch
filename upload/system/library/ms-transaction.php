@@ -14,9 +14,6 @@ final class MsTransaction extends Model {
 		return file_exists($file);
 	}
 	
-	private function _prepareData(&$data) {
-	}
-	
   	public function __construct($registry) {
   		parent::__construct($registry);
 		$this->config = $registry->get('config');
@@ -26,6 +23,11 @@ final class MsTransaction extends Model {
 		$this->load = $registry->get('load');
 		$this->language = $registry->get('language');
 		$this->load->language('module/multiseller');
+		
+		require_once(DIR_SYSTEM . 'library/ms-seller.php');
+		require_once(DIR_SYSTEM . 'library/ms-product.php');
+		$this->msSeller = new MsSeller($registry);
+		$this->msProduct = new MsProduct($registry);
 	}
 	
 	private function _getOrderProducts($order_id) {
@@ -67,7 +69,7 @@ final class MsTransaction extends Model {
 
 	public function closeTransaction($transaction_id) {
 		$sql = "UPDATE " . DB_PREFIX . "ms_transaction
-				SET transaction_status_id = " . MS_TRANSACTION_STATUS_CLOSED . "
+				SET transaction_status_id = " . (int)self::MS_TRANSACTION_STATUS_CLOSED . ",
 					date_modified = NOW()
 				WHERE transaction_id = " . (int)$transaction_id;
 
@@ -135,13 +137,13 @@ final class MsTransaction extends Model {
 		$parent_transactions = $this->getTransactionsForOrder($order_id);
 		
 		foreach ($order_products as $product) {
-			$seller_id = $this->model_module_multiseller_seller->getSellerIdByProduct($product['product_id']);
+			$seller_id = $this->msProduct->getSellerId($product['product_id']);
 			$parent_tr_id = isset($parent_transactions[$product['product_id']]) ? $parent_transactions[$product['product_id']] : NULL;
 
 			if ($debit)
 				$product['total'] = -1 * abs($product['total']);
 
-			$description = sprintf($this->language->get('ms_transaction_sale'),$product['name'],$this->model_module_multiseller_seller->getCommissionForSeller($seller_id));
+			$description = sprintf($this->language->get('ms_transaction_sale'),$product['name'],$this->msSeller->getCommissionForSeller($seller_id));
 
 			$sql = "INSERT INTO " . DB_PREFIX . "ms_transaction
 					SET parent_transaction_id = " . (int)$parent_tr_id . ",
@@ -152,7 +154,7 @@ final class MsTransaction extends Model {
 						currency_id = ". $order_info['currency_id'] . ",
 						currency_code = '" . $order_info['currency_code'] . "',
 						currency_value = " . $order_info['currency_value'] . ",
-						commission = " . $this->model_module_multiseller_seller->getCommissionForSeller($seller_id) . ",
+						commission = " . $this->msSeller->getCommissionForSeller($seller_id) . ",
 						description = '" . $this->db->escape($description) . "',
 						date_created = NOW(),
 						date_modified = NOW()";

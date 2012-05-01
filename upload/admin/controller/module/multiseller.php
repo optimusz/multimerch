@@ -616,7 +616,7 @@ class ControllerModuleMultiseller extends Controller {
 			$json['error'] = $this->language->get('ms_error_withdraw_norequests');
 			$this->_setJsonResponse($json);
 			return;
-		}		
+		}
 		
 		//$paypal = new PayPal("info_1333054588_biz_api1.ffct.cc","1333054625","AZwf-WRwylXCpuU9ZxNGO6ZebpnvA4AGHxs2QcEZ-dV4yc7LGWwkWxjL");
 		//$response = $paypal->request('MassPay',$requestParams + $paymentParams);
@@ -647,20 +647,39 @@ class ControllerModuleMultiseller extends Controller {
 	}
 
 	public function jxProductStatus() {
-		require_once(DIR_SYSTEM . 'library/ms-request.php');
-		require_once(DIR_SYSTEM . 'library/ms-product.php');
+		$mails = array();
 		if (isset($this->request->post['selected'])) {
 			$msProduct = new MsProduct($this->registry);
 			$msRequest = new MsRequest($this->registry);			
 			foreach ($this->request->post['selected'] as $product_id) {
+				$seller_id = $msProduct->getSellerId($product_id);
 				if ($this->request->post['ms-action'] == 'ms-enable') {
 					$msProduct->enableProduct($product_id);
+					$mails[] = array(
+						'type' => $msProduct->getStatus($product_id) == MsProduct::MS_PRODUCT_STATUS_PENDING ? MsMail::SMT_PRODUCT_APPROVED : MsMail::SMT_PRODUCT_ENABLED,
+						'data' => array(
+							'product_id' => $product_id,
+							'recipients' => $this->msSeller->getSellerEmail($seller_id),
+							'addressee' => $this->msSeller->getSellerName($seller_id),
+							'message' => $this->request->post['product_message']
+						)
+					);
 				} else {
 					$msProduct->disableProduct($product_id);
+					$mails[] = array(
+						'type' => $msProduct->getStatus($product_id) == MsProduct::MS_PRODUCT_STATUS_PENDING ? MsMail::SMT_PRODUCT_DECLINED : MsMail::SMT_PRODUCT_DISABLED,
+						'data' => array(
+							'product_id' => $product_id,
+							'recipients' => $this->msSeller->getSellerEmail($seller_id),
+							'addressee' => $this->msSeller->getSellerName($seller_id),
+							'message' => $this->request->post['product_message']
+						)
+					);					
 				}
 				$msRequest->processProductRequests($product_id,$this->user->getId(),$this->request->post['product_message']);
 			}
 			unset($msProduct,$msRequest);
+			$this->msMail->sendMails($mails);
 			$this->session->data['success'] = 'Successfully changed product status.';
 		} else {
 			$this->session->data['error'] = 'Error changing product status.';

@@ -183,8 +183,10 @@
 			$this->data = array_merge($this->data, $this->load->language('module/multiseller'));
 			$this->load->model('module/multiseller/seller');
 			require_once(DIR_SYSTEM . 'library/ms-image.php');
+			require_once(DIR_SYSTEM . 'library/ms-product.php');
 			$image = new MsImage($this->registry);
-			$this->data['sellerinfo'] = $this->model_module_multiseller_seller->getStatsForProduct($this->request->get['product_id']);
+			$msProduct = new MsProduct($this->registry);
+			$this->data['sellerinfo'] = $msProduct->getStatsForProduct($this->request->get['product_id']);
 			$this->data['sellerinfo']['thumbnail'] = $image->resize($this->data['sellerinfo']['avatar_path'], $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'));
 			]]></add>
 		</operation>
