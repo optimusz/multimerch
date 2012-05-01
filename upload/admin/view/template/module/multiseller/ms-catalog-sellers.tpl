@@ -26,7 +26,7 @@
 				<td><?php echo $ms_catalog_sellers_email; ?></td>
 				<td><?php echo $ms_catalog_sellers_total_products; ?></td>
 				<td><?php echo $ms_catalog_sellers_total_sales; ?></td>
-				<td><?php echo $ms_catalog_sellers_total_earnings; ?></td>
+				<!--<td><?php echo $ms_catalog_sellers_total_earnings; ?></td>-->
 				<td><?php echo $ms_catalog_sellers_current_balance; ?></td>												
 				<td><?php echo $ms_catalog_sellers_status; ?></td>
 				<td><?php echo $ms_catalog_sellers_date_created; ?></td>
@@ -44,7 +44,7 @@
               <td><?php echo $seller['email']; ?></td>
               <td><?php echo $seller['total_products']; ?></td>
               <td><?php echo $seller['total_sales']; ?></td>
-              <td><?php echo $seller['total_earnings']; ?></td>
+              <!--<td><?php echo $seller['total_earnings']; ?></td>-->
               <td><?php echo $seller['current_balance']; ?></td>
               <td><?php echo $seller['status']; ?></td>
               <td><?php echo $seller['date_created']; ?></td>

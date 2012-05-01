@@ -327,10 +327,11 @@
 			$this->data['products'][] = array(
 			]]></search>
 			<add><![CDATA[
-			$this->load->model('module/multiseller/seller');
+			require_once(DIR_SYSTEM . 'library/ms-seller.php');
+			$msSeller = new MsSeller($this->registry);
 			$this->language->load('module/multiseller');
 			$this->data['column_seller'] = $this->language->get('ms_seller');
-			$seller = $this->model_module_multiseller_seller->getSellerDataForProduct($product['product_id']);
+			$seller = $msSeller->getSellerDataForProduct($product['product_id']);
 			]]></add>
 		</operation>	
 	
@@ -365,5 +366,14 @@
 			<td class="left"><a href="<?php echo $this->url->link('module/multiseller/sellerinfo', 'token=' . $this->session->data['token'] . '&seller_id=' . $product['seller']['seller_id'], 'SSL');?>"><?php echo $product['seller']['nickname']; ?></a>
 			]]></add>
 		</operation>
+		
+		<operation>
+			<search position="replace"><![CDATA[
+			<td colspan="4" class="right"><?php echo $totals['title']; ?>:</td>
+			]]></search>
+			<add><![CDATA[
+			<td colspan="5" class="right"><?php echo $totals['title']; ?>:</td>
+			]]></add>
+		</operation>		
 	</file>
 </modification>

@@ -170,54 +170,6 @@ final class MsSeller {
 					date_created = NOW()";
 		
 		$this->db->query($sql);
-		
-		/*
-		$message = sprintf($this->language->get('ms_mail_greeting'), $this->customer->getFirstName()) . "\n\n";
-		$message .= sprintf($this->language->get('ms_account_sellerinfo_mail_account_thankyou'), $this->config->get('config_name')) . "\n\n";		
-		
-		$v = $this->config->get('msconf_seller_validation');
-
-		switch ($v) {
-			// activation link
-			case MS_SELLER_VALIDATION_ACTIVATION:
-				$subject = sprintf($this->language->get('ms_account_sellerinfo_mail_account_pleaseactivate_subject'), $this->config->get('config_name'));
-				$message .= sprintf($this->language->get('ms_account_sellerinfo_mail_account_pleaseactivate_message'), $this->config->get('config_name')) . "\n\n";
-				$message .= 'http://dolboeb.eu/' . "\n\n";
-				break;
-				
-			// manual approval
-			case MS_SELLER_VALIDATION_APPROVAL:
-				$subject = sprintf($this->language->get('ms_account_sellerinfo_mail_account_needsapproval_subject'), $this->config->get('config_name'));
-				$message .= sprintf($this->language->get('ms_account_sellerinfo_mail_account_needsapproval_message'), $this->config->get('config_name')) . "\n\n";			
-				break;
-				
-			// no validation
-			case MS_SELLER_VALIDATION_NONE:
-			default:
-				$subject = sprintf($this->language->get('ms_account_sellerinfo_mail_account_created_subject'), $this->config->get('config_name'));
-				$message .= sprintf($this->language->get('ms_account_sellerinfo_mail_account_created_message'), $this->config->get('config_name')) . "\n\n";
-				break;								
-		}
-		
-		$message .= sprintf($this->language->get('ms_mail_regards'), HTTP_SERVER) . "\n" . $this->config->get('config_name');
-
-		$mail = new Mail();
-		$mail->protocol = $this->config->get('config_mail_protocol');
-		$mail->parameter = $this->config->get('config_mail_parameter');
-		$mail->hostname = $this->config->get('config_smtp_host');
-		$mail->username = $this->config->get('config_smtp_username');
-		$mail->password = $this->config->get('config_smtp_password');
-		$mail->port = $this->config->get('config_smtp_port');
-		$mail->timeout = $this->config->get('config_smtp_timeout');				
-		$mail->setTo($this->customer->getEmail());
-		$mail->setFrom($this->config->get('config_email'));
-		$mail->setSender($this->config->get('config_name'));
-		$mail->setSubject($subject);
-		$mail->setText($message);
-		$mail->send();
-		*/
-		/*
-		// Send to main admin email if new account email is enabled
 		if ($this->config->get('config_account_mail')) {
 			$mail->setTo($this->config->get('config_email'));
 			$mail->send();
@@ -232,7 +184,6 @@ final class MsSeller {
 				}
 			}
 		}
-		*/
 	}
 	
 	public function nicknameTaken($nickname) {
@@ -304,98 +255,6 @@ final class MsSeller {
 		return $query->row;
 	}		
 		
-		
-		
-		
-		
-		
-		
-  	public function login($email, $password, $override = false) {
-  		/*
-		if ($override) {
-			$seller_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer where LOWER(email) = '" . $this->db->escape(strtolower($email)) . "' AND status = '1'");
-		} elseif (!$this->config->get('config_customer_approval')) {
-			$seller_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer WHERE LOWER(email) = '" . $this->db->escape(strtolower($email)) . "' AND password = '" . $this->db->escape(md5($password)) . "' AND status = '1'");
-		} else {
-			$seller_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer WHERE LOWER(email) = '" . $this->db->escape(strtolower($email)) . "' AND password = '" . $this->db->escape(md5($password)) . "' AND status = '1' AND approved = '1'");
-		}
-		
-		if ($seller_query->num_rows) {
-			$this->session->data['customer_id'] = $seller_query->row['customer_id'];	
-		    
-			if ($seller_query->row['cart'] && is_string($seller_query->row['cart'])) {
-				$cart = unserialize($seller_query->row['cart']);
-				
-				foreach ($cart as $key => $value) {
-					if (!array_key_exists($key, $this->session->data['cart'])) {
-						$this->session->data['cart'][$key] = $value;
-					} else {
-						$this->session->data['cart'][$key] += $value;
-					}
-				}			
-			}
-
-			if ($seller_query->row['wishlist'] && is_string($seller_query->row['wishlist'])) {
-				if (!isset($this->session->data['wishlist'])) {
-					$this->session->data['wishlist'] = array();
-				}
-								
-				$wishlist = unserialize($seller_query->row['wishlist']);
-			
-				foreach ($wishlist as $product_id) {
-					if (!in_array($product_id, $this->session->data['wishlist'])) {
-						$this->session->data['wishlist'][] = $product_id;
-					}
-				}			
-			}
-									
-			$this->customer_id = $seller_query->row['customer_id'];
-			$this->firstname = $seller_query->row['firstname'];
-			$this->lastname = $seller_query->row['lastname'];
-			$this->email = $seller_query->row['email'];
-			$this->telephone = $seller_query->row['telephone'];
-			$this->fax = $seller_query->row['fax'];
-			$this->newsletter = $seller_query->row['newsletter'];
-			$this->customer_group_id = $seller_query->row['customer_group_id'];
-			$this->address_id = $seller_query->row['address_id'];
-          	
-			$this->db->query("UPDATE " . DB_PREFIX . "customer SET ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "' WHERE customer_id = '" . (int)$seller_query->row['customer_id'] . "'");
-			
-	  		return true;
-    	} else {
-      		return false;
-    	}
-    	*/
-  	}
-  	
-	public function logout() {
-		/*
-		unset($this->session->data['customer_id']);
-
-		$this->customer_id = '';
-		$this->firstname = '';
-		$this->lastname = '';
-		$this->email = '';
-		$this->telephone = '';
-		$this->fax = '';
-		$this->newsletter = '';
-		$this->customer_group_id = '';
-		$this->address_id = '';
-		*/
-  	}
-  
-  	public function getBalance() {
-		//$query = $this->db->query("SELECT SUM(amount) AS total FROM " . DB_PREFIX . "customer_transaction WHERE customer_id = '" . (int)$this->customer_id . "'");
-	
-		return $query->row['total'];
-  	}	
-		
-  	public function getRewardPoints() {
-		//$query = $this->db->query("SELECT SUM(points) AS total FROM " . DB_PREFIX . "customer_reward WHERE customer_id = '" . (int)$this->customer_id . "'");
-	
-		return $query->row['total'];	
-  	}
-  	
   	public function getNickname() {
   		return $this->nickname;
   	}
@@ -427,5 +286,91 @@ final class MsSeller {
   	public function isSeller() {
   		return $this->isSeller;
   	}
+  	
+	public function getSellerDataForProduct($product_id) {
+		$sql = "SELECT 	p.date_added,
+						mp.seller_id,
+						mp.number_sold as sales,
+						ms.nickname,
+						ms.country_id,
+						ms.avatar_path
+				FROM `" . DB_PREFIX . "product` p
+				INNER JOIN `" . DB_PREFIX . "ms_product` mp
+					ON p.product_id = mp.product_id
+				INNER JOIN `" . DB_PREFIX . "ms_seller` ms
+					ON mp.seller_id = ms.seller_id
+				WHERE p.product_id = " . (int)$product_id; 
+
+		$res = $this->db->query($sql);
+
+		return $res->row;		
+	}
+
+	public function getSellers($sort) {
+		$sql = "SELECT  CONCAT(c.firstname, ' ', c.lastname) as name,
+						c.email as email,
+						ms.seller_id,
+						ms.nickname,
+						ms.seller_status_id,
+						ms.date_created as date_created,
+						ms.commission
+				FROM `" . DB_PREFIX . "customer` c
+				INNER JOIN `" . DB_PREFIX . "ms_seller` ms
+					ON c.customer_id = ms.seller_id
+        		ORDER BY {$sort['order_by']} {$sort['order_way']}" 
+        		. ($sort['limit'] ? " LIMIT ".(int)(($sort['page'] - 1) * $sort['limit']).', '.(int)($sort['limit']) : '');
+
+		$res = $this->db->query($sql);
+		
+		return $res->rows;		
+	}
+
+	public function getTotalSellers() {
+		$sql = "SELECT COUNT(*) as 'total'
+				FROM `" . DB_PREFIX . "ms_seller`";
+		
+		$res = $this->db->query($sql);
+		
+		return $res->row['total'];		
+	}
+	
+	//
+	public function getEarningsForSeller($seller_id) {
+		$sql = "SELECT SUM(amount) as total
+				FROM `" . DB_PREFIX . "ms_transaction`
+				WHERE seller_id = " . (int)$seller_id . "
+				AND	amount > 0
+				AND transaction_status_id != " . MsTransaction::MS_TRANSACTION_STATUS_CLOSED;				
+		
+		$res = $this->db->query($sql);
+		
+		return $res->row['total'];
+	}
+	
+	public function getSalesForSeller($seller_id) {
+		$sql = "SELECT IFNULL(SUM(number_sold),0) as total
+				FROM `" . DB_PREFIX . "ms_product`
+				WHERE seller_id = " . (int)$seller_id;
+		
+		$res = $this->db->query($sql);
+		
+		return $res->row['total'];
+	}
+	
+	
+	public function adminEditSeller($data) {
+		$seller_id = (int)$data['seller_id'];
+		
+		$sql = "UPDATE " . DB_PREFIX . "ms_seller
+				SET description = '" . $this->db->escape($data['sellerinfo_description']) . "',
+					company = '" . $this->db->escape($data['sellerinfo_company']) . "',
+					country_id = " . (int)$data['sellerinfo_country'] . ",
+					paypal = '" . $this->db->escape($data['sellerinfo_paypal']) . "',
+					seller_status_id = '" .  (int)$data['seller_status_id'] .  "'
+				WHERE seller_id = " . (int)$seller_id;
+		
+		$this->db->query($sql);	
+	}
 }
+
 ?>

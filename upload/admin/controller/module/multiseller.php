@@ -209,7 +209,7 @@ class ControllerModuleMultiseller extends Controller {
 			}
 			
 			// edit seller
-			$this->model_module_multiseller_seller->editSeller($data);
+			$this->msSeller->adminEditSeller($data);
 			$this->msMail->sendMails($mails);
 			$this->session->data['success'] = 'Seller account data saved.';
 		}
@@ -246,14 +246,14 @@ class ControllerModuleMultiseller extends Controller {
 			'limit' => $this->config->get('config_admin_limit')
 		);
 				
-		$results = $this->model_module_multiseller_seller->getSellers($sort);
-		$total_sellers = $this->model_module_multiseller_seller->getTotalSellers($sort);
+		$results = $this->msSeller->getSellers($sort);
+		$total_sellers = $this->msSeller->getTotalSellers($sort);
 
     	foreach ($results as &$result) {
-    		$result['total_products'] = $this->model_module_multiseller_seller->getTotalSellerProducts($result['seller_id']);
-			$result['total_earnings'] = $this->currency->format($this->model_module_multiseller_seller->getEarningsForSeller($result['seller_id']), $this->config->get('config_currency'));
-			$result['current_balance'] = $this->currency->format($this->model_module_multiseller_seller->getBalanceForSeller($result['seller_id']), $this->config->get('config_currency'));
-			$result['total_sales'] = $this->model_module_multiseller_seller->getSalesForSeller($result['seller_id']);
+    		$result['total_products'] = $this->msSeller->getTotalSellerProducts($result['seller_id']);
+			//$result['total_earnings'] = $this->currency->format($this->msSeller->getEarningsForSeller($result['seller_id']), $this->config->get('config_currency'));
+			$result['current_balance'] = $this->currency->format($this->msSeller->getBalanceForSeller($result['seller_id']), $this->config->get('config_currency'));
+			$result['total_sales'] = $this->msSeller->getSalesForSeller($result['seller_id']);
 			$result['status'] = $this->msSeller->getSellerStatus($result['seller_status_id']);
 			$result['action'][] = array(
 				'text' => $this->language->get('text_view'),
