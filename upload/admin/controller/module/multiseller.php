@@ -128,14 +128,14 @@ class ControllerModuleMultiseller extends Controller {
 		$this->_validate(__FUNCTION__);		
 		$this->load->model("module/{$this->name}/settings");
 		$this->load->model('setting/setting');
-		$this->model_module_multiseller_multiseller->createTable();
+		$this->model_module_multiseller_settings->createTable();
 		$this->model_setting_setting->editSetting($this->name, $this->settings);
 	}
 
 	public function uninstall() {
 		$this->_validate(__FUNCTION__);
 		$this->load->model("module/{$this->name}/settings");
-		$this->model_module_multiseller_multiseller->dropTable();
+		$this->model_module_multiseller_settings->dropTable();
 	}	
 	
 	public function jxSaveSellerInfo() {
