@@ -16,7 +16,7 @@ $_['ms_seller_status_active'] = 'Active';
 $_['ms_seller_status_disabled']      = 'Disabled';
 
 
-$_['heading_title']    = '[ffct.cc] Digital MultiSeller Extension';
+$_['heading_title']    = '[ffct.cc] Digital Multiseller Marketplace';
 $_['text_module']         = 'Modules';
 $_['error_permission'] = 'Warning: You do not have permission to modify module!';
 $_['ms_error_withdraw_norequests'] = 'Error: no requests to process';
