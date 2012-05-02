@@ -77,6 +77,8 @@
 $(document).ready(function() {
 	$('#date').datepicker({dateFormat: 'yy-mm-dd'});
 	$(".ms-action").click(function() {
+		if ($('#form input:checkbox:checked').length == 0)
+			return;	
 		$('#ms-action').val($(this).attr('id'));
 		$('<div />').html('<p>Message to the sellers:</p><textarea style="width:100%; height:70%" id="product_message" name="product_message"></textarea>').dialog({
 			resizable: false,
