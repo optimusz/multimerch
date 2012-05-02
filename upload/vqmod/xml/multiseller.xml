@@ -94,6 +94,28 @@
 		</operation>
 	</file>
 
+	<file name="catalog/controller/common/footer.php">
+		<operation>
+			<search position="after"><![CDATA[
+				protected function index() {
+			]]></search>
+			<add><![CDATA[
+				$this->data = array_merge($this->data, $this->load->language('module/multiseller'));
+			]]></add>
+		</operation>
+	</file>
+
+	<file name="catalog/view/theme/default/template/common/footer.tpl">
+		<operation error="skip">
+			<search position="replace"><![CDATA[
+			<div id="powered"><?php echo $powered; ?></div>
+			]]></search>
+			<add><![CDATA[
+			<div id="powered"><?php echo $powered; ?><?php echo $ms_footer; ?></div>
+			]]></add>
+		</operation>
+	</file>
+
 	<file name="catalog/controller/module/account.php">
 		<operation>
 			<search position="before"><![CDATA[
@@ -116,18 +138,6 @@
 
 	<!-- transactions for order -->
 	<file name="catalog/model/checkout/order.php">
-		<!--
-		<operation>
-			<search position="before"><![CDATA[
-				return $order_id;
-			]]></search>
-			<add><![CDATA[
-				$this->load->model('module/multiseller/transaction');
-				$msTransaction->addTransactionsForOrder($order_id);
-			]]></add>
-		</operation>
-		-->
-		
 		<operation>
 			<search position="after"><![CDATA[
 				$this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int)$order_status_id . "', date_modified = NOW() WHERE order_id = '" . (int)$order_id . "'");

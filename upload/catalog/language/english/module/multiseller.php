@@ -354,4 +354,6 @@ $_['ms_comments_no_comments_yet'] = 'No comments added yet';
 $_['ms_comments_tab_comments']       = 'Comments (%s)';
 $_['entry_captcha']       = 'Enter the code in the box below:';
 
+$_['ms_footer']       = '<br>Digital Multiseller Marketplace by <a href="http://ffct.cc/">ffct.cc</a>';
+
 ?>
