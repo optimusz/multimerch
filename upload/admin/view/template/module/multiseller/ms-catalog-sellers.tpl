@@ -33,7 +33,7 @@
             </tr>
           </thead>
           <tbody>
-            <?php if ($sellers) { ?>
+            <?php if (isset($sellers) and $sellers) { ?>
             <?php foreach ($sellers as $seller) { ?>
             <tr>
               <!--

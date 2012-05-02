@@ -37,7 +37,7 @@
             </tr>
           </thead>
           <tbody>
-            <?php if ($requests) { ?>
+            <?php if (isset($requests) && $requests) { ?>
             <?php foreach ($requests as $request) { ?>
             <tr>
               <td style="text-align: center;">

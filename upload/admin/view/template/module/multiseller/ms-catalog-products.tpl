@@ -42,7 +42,7 @@
             </tr>
           </thead>
           <tbody>
-            <?php if ($products) { ?>
+            <?php if (isset($products) and $products) { ?>
             <?php foreach ($products as $product) { ?>
             <tr>
               <td style="text-align: center;">
