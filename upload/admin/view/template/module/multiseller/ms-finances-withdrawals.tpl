@@ -67,7 +67,7 @@
 $(document).ready(function() {
 	$('#date').datepicker({dateFormat: 'yy-mm-dd'});
 	$("#ms-pay").click(function() {
-		if ($('#form input:checkbox:checked').length == 0)
+		if ($('#form tbody input:checkbox:checked').length == 0)
 			return;
 			
 	    $.ajax({
