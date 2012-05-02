@@ -44,7 +44,7 @@ class ControllerModuleMultiseller extends Controller {
 			"msconf_allowed_image_types" => "png,jpg",
 			"msconf_allowed_download_types" => "zip,rar",
 			"msconf_minimum_product_price" => 0,
-			"msconf_notification_email" => "afffect@gmail.com"
+			"msconf_notification_email" => ""
 		);
 	}	
 	

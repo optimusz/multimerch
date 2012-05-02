@@ -170,20 +170,6 @@ final class MsSeller {
 					date_created = NOW()";
 		
 		$this->db->query($sql);
-		if ($this->config->get('config_account_mail')) {
-			$mail->setTo($this->config->get('config_email'));
-			$mail->send();
-			
-			// Send to additional alert emails if new account email is enabled
-			$emails = explode(',', $this->config->get('config_alert_emails'));
-			
-			foreach ($emails as $email) {
-				if (strlen($email) > 0 && preg_match('/^[^\@]+@.*\.[a-z]{2,6}$/i', $email)) {
-					$mail->setTo($email);
-					$mail->send();
-				}
-			}
-		}
 	}
 	
 	public function nicknameTaken($nickname) {

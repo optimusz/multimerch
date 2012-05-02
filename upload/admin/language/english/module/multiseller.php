@@ -118,7 +118,7 @@ $_['ms_config_allowed_download_types'] = 'Allowed download extensions';
 $_['ms_config_allowed_download_types_note'] = 'Allowed download extensions';
 
 $_['ms_config_image_preview_size'] = 'Image preview size';
-$_['ms_config_image_preview_size_note'] = 'Image preview size';
+$_['ms_config_image_preview_size_note'] = 'Seller area image preview size';
 
 $_['ms_config_credit_order_statuses'] = 'Credit statuses';
 $_['ms_config_credit_order_statuses_note'] = 'Order statuses to credit seller balance';
@@ -147,6 +147,8 @@ $_['ms_config_paypal_api_signature_note'] = 'PayPal API signature note';
 $_['ms_config_comments_maxlen'] = 'Maximum comment length';
 $_['ms_config_comments_maxlen_note'] = 'Maximum comment length note';
 
+$_['ms_config_notification_email'] = 'Email for admin notifications';
+$_['ms_config_notification_email_note'] = 'Email for admin notifications note';
 
 // Customer-seller form
 $_['ms_catalog_sellerinfo_heading'] = 'Seller';

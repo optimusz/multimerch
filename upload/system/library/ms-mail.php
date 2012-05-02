@@ -55,7 +55,7 @@ class MsMail extends Mail {
 		if ($mail_type < 100)
 			return $this->registry->get('customer')->getEmail();
 		else
-			return $this->config->get('config_email');
+			return $this->config->get('msconf_notification_email');
 	}
 
 	//TODO

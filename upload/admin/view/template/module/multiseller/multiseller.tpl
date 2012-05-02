@@ -20,6 +20,16 @@
 				<table class="form">
 					<tr>
 						<td>
+							<span><?php echo $ms_config_notification_email; ?></span>
+							<span class="help"><?php echo $ms_config_notification_email_note; ?></span>
+						</td>
+						<td>
+							<input size="20" type="text" name="msconf_notification_email" value="<?php echo $msconf_notification_email; ?>" />
+						</td>
+					</tr>				
+				
+					<tr>
+						<td>
 							<span><?php echo $ms_config_seller_validation; ?></span>
 							<span class="help"><?php echo $ms_config_seller_validation_note; ?></span>
 						</td>
