@@ -66,6 +66,40 @@ class MsMail extends Mail {
 			return '';//$this->registry->get('customer')->getFirstname();
 	}
 	
+	private function _getOrderProducts($order_id) {
+		$sql = "SELECT * FROM " . DB_PREFIX . "order_product
+				WHERE order_id = " . (int)$order_id;
+		
+		$res = $this->db->query($sql);
+
+		return $res->rows;
+	}
+
+	public function sendOrderMails($order_id) {
+		$order_products = $this->_getOrderProducts($order_id);
+		
+		if (!$order_products)
+			return false;
+			
+		$mails = array();
+		foreach ($order_products as $product) {
+			$seller_id = $this->msProduct->getSellerId($product['product_id']);
+			
+			if ($seller_id) {
+				$mails[] = array(
+					'type' => MsMail::SMT_PRODUCT_PURCHASED,
+					'data' => array(
+						'recipients' => $this->msSeller->getSellerEmail($seller_id),
+						'addressee' => $this->msSeller->getSellerName($seller_id),
+						'product_id' => $product['product_id']
+					)
+				);
+			}
+		}
+		
+		$this->sendMails($mails);
+	}
+	
 	public function sendMails($mails) {
 		foreach ($mails as $mail) {
 			if (!isset($mail['data'])) {

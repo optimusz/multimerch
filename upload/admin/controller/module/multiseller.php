@@ -8,6 +8,7 @@ class ControllerModuleMultiseller extends Controller {
 	private $error = array();
 
 	public function __construct($registry) {
+		parent::__construct($registry);		
 		require_once(DIR_SYSTEM . 'library/ms-request.php');
 		require_once(DIR_SYSTEM . 'library/ms-product.php');
 		require_once(DIR_SYSTEM . 'library/ms-transaction.php');		
@@ -15,13 +16,11 @@ class ControllerModuleMultiseller extends Controller {
 		require_once(DIR_SYSTEM . 'library/ms-mail.php');
 		require_once(DIR_SYSTEM . 'library/ms-seller.php');
 		
-		parent::__construct($registry);
 		$this->load->config('ms-config');
 
-		
 		$this->msMail = new MsMail($registry);
 		$this->msSeller = new MsSeller($registry);
-		
+
 		$this->data = array_merge($this->data, $this->load->language('module/multiseller'));
 		$this->data['token'] = $this->session->data['token'];
 		
@@ -44,9 +43,17 @@ class ControllerModuleMultiseller extends Controller {
 			
 			"msconf_allowed_image_types" => "png,jpg",
 			"msconf_allowed_download_types" => "zip,rar",
-			"msconf_minimum_product_price" => 0
+			"msconf_minimum_product_price" => 0,
+			"msconf_notification_email" => "afffect@gmail.com"
 		);
 	}	
+	
+	private function _validate($action, $level = 'access') {
+//		if (in_array(strtolower($action), array('sellers', 'install','uninstall','jxsavesellerinfo', 'savesettings', 'jxconfirmpayment', 'jxcompletepayment', 'jxproductstatus'))
+		if (!$this->user->hasPermission($level, 'module/multiseller')) {
+			return $this->forward('error/permission');
+		} 			
+	}
 	
 	private function _editSettings() {
 		$this->load->model("module/{$this->name}/settings");
@@ -54,12 +61,20 @@ class ControllerModuleMultiseller extends Controller {
 		
 		$set = $this->model_setting_setting->getSetting($this->name);
 
+		foreach ($this->settings as $name=>$value) {
+			if (!array_key_exists($name,$set))
+				$set[$name] = $value;
+				
+		}
+
 		foreach($set as $s=>$v) {
 			if (isset($this->request->post[$s])) {
 				$set[$s] = $this->request->post[$s];
 				$this->data[$s] = $this->request->post[$s];
 			} elseif ($this->config->get($s)) {
 				$this->data[$s] = $this->config->get($s);
+			} else {
+				$this->data[$s] = $this->settings[$s];
 			}
 		}
 
@@ -110,6 +125,7 @@ class ControllerModuleMultiseller extends Controller {
 	}	
 	
 	public function install() {
+		$this->_validate(__FUNCTION__);		
 		$this->load->model("module/{$this->name}/settings");
 		$this->load->model('setting/setting');
 		$this->model_module_multiseller_multiseller->createTable();
@@ -117,12 +133,13 @@ class ControllerModuleMultiseller extends Controller {
 	}
 
 	public function uninstall() {
+		$this->_validate(__FUNCTION__);
 		$this->load->model("module/{$this->name}/settings");
 		$this->model_module_multiseller_multiseller->dropTable();
 	}	
 	
 	public function jxSaveSellerInfo() {
-		$this->load->model('module/multiseller/seller');
+		$this->_validate(__FUNCTION__);
 		$data = $this->request->post;
 		
 		$seller = $this->msSeller->getSellerData($data['seller_id']);
@@ -218,6 +235,8 @@ class ControllerModuleMultiseller extends Controller {
 	}	
 	
 	public function sellers() {
+		$this->_validate(__FUNCTION__);
+		
 		/*
 		$columns = array(
 			'name',
@@ -231,7 +250,7 @@ class ControllerModuleMultiseller extends Controller {
 			'date_created',
 		);
 		*/
-		$this->load->model("module/{$this->name}/seller");
+		
 		
 		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
 		
@@ -300,7 +319,8 @@ class ControllerModuleMultiseller extends Controller {
 	}
 	
 	public function sellerInfo() {
-		$this->load->model('module/multiseller/seller');
+		$this->_validate(__FUNCTION__);
+		
 		$this->load->model('localisation/country');
     	$this->data['countries'] = $this->model_localisation_country->getCountries();		
 
@@ -325,6 +345,7 @@ class ControllerModuleMultiseller extends Controller {
 	}
 
 	public function saveSettings() {
+		$this->_validate(__FUNCTION__);
 		$this->request->post['msconf_credit_order_statuses'] = implode(',',$this->request->post['msconf_credit_order_statuses']);
 		$this->request->post['msconf_debit_order_statuses'] = implode(',',$this->request->post['msconf_debit_order_statuses']);		
 		
@@ -340,6 +361,7 @@ class ControllerModuleMultiseller extends Controller {
 	}
 	
 	public function index() {
+		$this->_validate(__FUNCTION__);
 		$this->load->language("module/{$this->name}");
 		$this->load->model("module/{$this->name}/settings");
 		
@@ -349,7 +371,6 @@ class ControllerModuleMultiseller extends Controller {
 
 		$this->load->model("localisation/order_status");	
 		$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
-		//$this->_setBreadcrumbs();
 		$this->data = array_merge($this->data, $this->load->language('module/multiseller'));
 				
         $this->data['action'] = $this->url->link("module/{$this->name}/settings", 'token=' . $this->session->data['token'], 'SSL');
@@ -359,13 +380,13 @@ class ControllerModuleMultiseller extends Controller {
 		$this->load->model('design/layout');
 		$this->data['layouts'] = $this->model_design_layout->getLayouts();
 		
-		//$this->document->setTitle($this->language->get('ms_catalog_sellers_heading'));
-		$this->_setBreadcrumbs('ms_catalog_sellers_breadcrumbs', __FUNCTION__);
+		$this->_setBreadcrumbs('ms_settings_breadcrumbs', __FUNCTION__);
+		$this->document->setTitle($this->language->get('ms_settings_heading'));
 		$this->_renderTemplate('multiseller');	
 	}
 	
 	public function withdrawals() {
-		$this->load->model("module/{$this->name}/seller");
+		$this->_validate(__FUNCTION__);
 		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
 		
 		$sort = array(
@@ -421,6 +442,7 @@ class ControllerModuleMultiseller extends Controller {
 	}
 	
 	public function transactions() {
+		$this->_validate(__FUNCTION__);
 		$msTransaction = new MsTransaction($this->registry);
 		
 		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
@@ -476,6 +498,7 @@ class ControllerModuleMultiseller extends Controller {
 	}
 	
 	public function products() {
+		$this->_validate(__FUNCTION__);
 		$msProduct = new MsProduct($this->registry);
 		$msImage = new MsImage($this->registry);
 		
@@ -539,7 +562,6 @@ class ControllerModuleMultiseller extends Controller {
 			$this->data['success'] = '';
 		}		
 
-		
 		$this->data['token'] = $this->session->data['token'];		
 		$this->data['heading'] = $this->language->get('ms_catalog_products_heading');
 		$this->document->setTitle($this->language->get('ms_catalog_products_heading'));
@@ -548,6 +570,7 @@ class ControllerModuleMultiseller extends Controller {
 	}	
 	
 	public function jxConfirmPayment() {
+		$this->_validate(__FUNCTION__);
 		$json = array();
 		require_once(DIR_SYSTEM . 'library/ms-request.php');
 		if (isset($this->request->post['selected'])) {
@@ -581,6 +604,7 @@ class ControllerModuleMultiseller extends Controller {
 	}
 	
 	public function jxCompletePayment() {
+		$this->_validate(__FUNCTION__);
 		$json = array();
 		
 		if (!isset($this->request->post['selected'])) {
@@ -590,7 +614,6 @@ class ControllerModuleMultiseller extends Controller {
 		}
 		
 		require_once(DIR_SYSTEM . 'library/ms-request.php');
-		require_once(DIR_SYSTEM . 'library/ms-paypal.php');
 		require_once(DIR_SYSTEM . 'library/ms-paypal.php');
 
 		$requestParams = array(
@@ -618,16 +641,9 @@ class ControllerModuleMultiseller extends Controller {
 			return;
 		}
 		
-		//$paypal = new PayPal("info_1333054588_biz_api1.ffct.cc","1333054625","AZwf-WRwylXCpuU9ZxNGO6ZebpnvA4AGHxs2QcEZ-dV4yc7LGWwkWxjL");
-		//$response = $paypal->request('MassPay',$requestParams + $paymentParams);
+		$paypal = new PayPal($this->config->get('msconf_paypal_api_username'), $this->config->get('msconf_paypal_api_password'), $this->config->get('msconf_paypal_api_signature'));
+		$response = $paypal->request('MassPay',$requestParams + $paymentParams);
 		
-			$json['success'] = $this->language->get('ms_success_transactions');
-			//$json['response'] = print_r($response, true);
-			foreach ($this->request->post['selected'] as $request_id) {
-				$r->processRequest($request_id, $this->user->getId());
-				$msTransaction->completeWithdrawal($r->getAssociatedTransaction($request_id));
-			}
-		return;			
 		if (!$response) {
 			$json['error'] = $this->language->get('ms_error_withdraw_response');
 			$json['response'] = print_r($paypal->getErrors(), true);
@@ -637,16 +653,28 @@ class ControllerModuleMultiseller extends Controller {
 		} else {
 			$json['success'] = $this->language->get('ms_success_transactions');
 			$json['response'] = print_r($response, true);
+			//$mails = array();
 			foreach ($this->request->post['selected'] as $request_id) {
 				$r->processRequest($request_id, $this->user->getId());
 				$msTransaction->completeWithdrawal($r->getAssociatedTransaction($request_id));
-			}
+				/*
+				$mails[] = array(
+					'type' => MsProduct::SMT_WITHDRAW_REQUEST_COMPLETED,
+					'data' => array(
+						'product_id' => $product_id,
+						'recipients' => $this->msSeller->getSellerEmail($seller_id),
+						'addressee' => $this->msSeller->getSellerName($seller_id),
+						'message' => $this->request->post['product_message']
+					)
+				);*/
+			}		
 		}
 		$this->_setJsonResponse($json);
 		return;
 	}
 
 	public function jxProductStatus() {
+		$this->_validate(__FUNCTION__);
 		$mails = array();
 		if (isset($this->request->post['selected'])) {
 			$msProduct = new MsProduct($this->registry);

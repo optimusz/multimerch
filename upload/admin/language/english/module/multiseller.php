@@ -89,6 +89,10 @@ $_['ms_catalog_sellers_status_tobeactivated'] = 'Waiting for activation';
 $_['ms_catalog_sellers_status_tobeapproved'] = 'Waiting for approval';
 $_['ms_catalog_sellers_status_active'] = 'Active';
 
+// Settings
+
+$_['ms_settings_heading']      = 'Settings';
+$_['ms_settings_breadcrumbs']       = 'Settings';
 
 $_['ms_config_seller_validation'] = 'Seller validation';
 $_['ms_config_seller_validation_note'] = 'Seller validation';

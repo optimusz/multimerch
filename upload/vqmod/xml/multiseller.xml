@@ -134,9 +134,13 @@
 			]]></search>
 			<add><![CDATA[
 				require_once(DIR_SYSTEM . 'library/ms-transaction.php');
+				require_once(DIR_SYSTEM . 'library/ms-mail.php');
 				$msTransaction = new MsTransaction($this->registry);
+				$msMail = new MsMail($this->registry);
+				
 				if (in_array($order_status_id, explode(',',$this->config->get('msconf_credit_order_statuses')))) {
 					$msTransaction->addTransactionsForOrder($order_id);
+					$msMail->sendOrderMails($order_id);
 				} else if (in_array($order_status_id, explode(',',$this->config->get('msconf_debit_order_statuses')))) {
 					$msTransaction->addTransactionsForOrder($order_id, TRUE);
 				}
@@ -162,7 +166,7 @@
 			<div class="description">
 			]]></search>
 			<add><![CDATA[
-			<?php if ($sellerinfo) { ?>
+			<?php if (isset($sellerinfo) && !empty($sellerinfo)) { ?>
 			<div class="ms-sellerinfo">
 				<div><span><?php echo $ms_catalog_product_seller; ?></span> <div><span><?php echo $sellerinfo['nickname']; ?></span><br /><img src="<?php echo $sellerinfo['thumbnail']; ?>" /></div></div><br />
 				<span><?php echo $ms_catalog_product_date_added; ?></span> <?php echo $sellerinfo['date_added']; ?><br />
@@ -181,13 +185,13 @@
 			<add><![CDATA[
 			$this->document->addStyle('catalog/view/theme/' . $this->config->get('config_template') . '/stylesheet/multiseller.css');
 			$this->data = array_merge($this->data, $this->load->language('module/multiseller'));
-			$this->load->model('module/multiseller/seller');
 			require_once(DIR_SYSTEM . 'library/ms-image.php');
 			require_once(DIR_SYSTEM . 'library/ms-product.php');
 			$image = new MsImage($this->registry);
 			$msProduct = new MsProduct($this->registry);
 			$this->data['sellerinfo'] = $msProduct->getStatsForProduct($this->request->get['product_id']);
-			$this->data['sellerinfo']['thumbnail'] = $image->resize($this->data['sellerinfo']['avatar_path'], $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'));
+			if (!empty($this->data['sellerinfo']))
+				$this->data['sellerinfo']['thumbnail'] = $image->resize($this->data['sellerinfo']['avatar_path'], $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'));
 			]]></add>
 		</operation>
 	</file>
@@ -311,14 +315,22 @@
 			protected function index() {
 			]]></search>
 			<add><![CDATA[
+			$this->data = array_merge($this->data, $this->load->language('module/multiseller'));
+			]]></add>
+		</operation>
+		
+		<operation>
+			<search position="before"><![CDATA[
+			$this->data['stores'] = array();
+			]]></search>
+			<add><![CDATA[
 			$this->data['ms_link_catalog_sellers'] = $this->url->link('module/multiseller/sellers', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['ms_link_catalog_products'] = $this->url->link('module/multiseller/products', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['ms_link_finances_withdrawals'] = $this->url->link('module/multiseller/withdrawals', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['ms_link_finances_transactions'] = $this->url->link('module/multiseller/transactions', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['ms_link_settings'] = $this->url->link('module/multiseller', 'token=' . $this->session->data['token'], 'SSL'); 
-			$this->data = array_merge($this->data, $this->load->language('module/multiseller'));
 			]]></add>
-		</operation>
+		</operation>		
 	</file>
 	
 	<file name="admin/controller/sale/order.php">

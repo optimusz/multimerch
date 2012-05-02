@@ -352,5 +352,6 @@ $_['ms_comments_success']      = 'Thank you for your comment.';
 $_['ms_comments_captcha']     = 'Enter the code in the box below:';
 $_['ms_comments_no_comments_yet'] = 'No comments added yet';
 $_['ms_comments_tab_comments']       = 'Comments (%s)';
+$_['entry_captcha']       = 'Enter the code in the box below:';
 
 ?>

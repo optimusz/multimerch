@@ -190,8 +190,8 @@ $registry->set('document', new Document());
 
 // Customer
 $registry->set('customer', new Customer($registry));
-require_once($vqmod->modCheck(DIR_SYSTEM . 'library/seller.php'));
-$registry->set('seller', new Seller($registry));
+//require_once($vqmod->modCheck(DIR_SYSTEM . 'library/seller.php'));
+//$registry->set('seller', new Seller($registry));
 
 // Affiliate
 $registry->set('affiliate', new Affiliate($registry));

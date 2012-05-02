@@ -6,9 +6,7 @@
 	  <?php echo $breadcrumb['separator']; ?><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a>
 	  <?php } ?>
 	</div>
-	<?php if ($error_warning) { ?>
-	<div class="warning"><?php echo $error_warning; ?></div>
-	<?php } ?>	
+	<div class="error" id="error"></div>
 	<div class="box">
 		<div class="heading">
 	    	<h1><img src="view/image/module.png"/><?php echo $heading_title; ?></h1>
@@ -239,14 +237,15 @@ $(function() {
 			data: $('#settings').serialize(),
 			success: function(jsonData) {
 				if (jsonData.errors) {
+					$("#error").html('');
 					for (error in jsonData.errors) {
 					    if (!jsonData.errors.hasOwnProperty(error)) {
 					        continue;
 					    }
-					    console.log(error + " -> " + jsonData.errors[error]);
+					    $("#error").append(<p>+jsonData.errors[error]+</p>);
 					}				
 				} else {
-					console.log('success');
+					window.location.reload();
 				}
 	       	}
 		});

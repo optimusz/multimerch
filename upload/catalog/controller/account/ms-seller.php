@@ -502,6 +502,16 @@ class ControllerAccountMsSeller extends Controller {
 				'transaction_id' => $transaction_id,
 				'request_type' => MsRequest::MS_REQUEST_WITHDRAWAL,
 			));
+			
+			$mails[] = array(
+				'type' => MsMail::SMT_WITHDRAW_REQUEST_SUBMITTED
+			);
+			$mails[] = array(
+				'type' => MsMail::AMT_WITHDRAW_REQUEST_SUBMITTED,
+			);
+			
+			$this->msMail->sendMails($mails);
+			
 			$this->session->data['success'] = $this->language->get('ms_request_submitted');
 			$json['redirect'] = $this->url->link('account/ms-seller/transactions', '', 'SSL');
 		}

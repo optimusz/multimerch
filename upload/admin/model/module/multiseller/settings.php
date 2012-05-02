@@ -28,6 +28,7 @@ class ModelModuleMultisellerSettings extends Model {
         
         $this->db->query($sql);
         
+        /*
 		$sql = "
 			CREATE TABLE `" . DB_PREFIX . "ms_product_rating` (
              `product_id` int(11) NOT NULL,
@@ -38,6 +39,7 @@ class ModelModuleMultisellerSettings extends Model {
         	PRIMARY KEY (`product_id`,`seller_id`,`customer_id`)) default CHARSET=utf8";
         
         $this->db->query($sql);
+        */
         
 		$sql = "
 			CREATE TABLE `" . DB_PREFIX . "ms_transaction` (
@@ -95,7 +97,6 @@ class ModelModuleMultisellerSettings extends Model {
 		$sql = "DROP TABLE IF EXISTS
 				`" . DB_PREFIX . "ms_product`,
 				`" . DB_PREFIX . "ms_seller`,
-				`" . DB_PREFIX . "ms_product_rating`,
 				`" . DB_PREFIX . "ms_transaction`,
 				`" . DB_PREFIX . "ms_request`,
 				`" . DB_PREFIX . "ms_comments`";

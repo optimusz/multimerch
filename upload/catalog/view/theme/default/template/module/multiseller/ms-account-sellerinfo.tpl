@@ -94,8 +94,11 @@
           	<p class="error" id="error_sellerinfo_avatar"></p>
           	<div id="sellerinfo_avatar_files">
           		<?php if (!empty($seller['avatar'])) { ?>
-          		<input type="hidden" name="sellerinfo_avatar_name" value="<?php echo $seller['avatar']['name']; ?>" />
-          		<img src="<?php echo $seller['avatar']['thumb']; ?>" />
+          		<div class="ms-image">
+	          		<input type="hidden" name="sellerinfo_avatar_name" value="<?php echo $seller['avatar']['name']; ?>" />
+	          		<img src="<?php echo $seller['avatar']['thumb']; ?>" />
+	          		<img class="ms-remove" src="catalog/view/theme/default/image/remove.png" />
+          		</div>
           		<?php } ?>
           	</div>
           </td>
@@ -116,15 +119,17 @@
 $(function() {
 	$("#ms-submit-button").click(function() {
 	var id = $(this).attr('id');
-	//$("#ms-submit-button").after('<span class="wait">&nbsp;<img src="catalog/view/theme/default/image/loading.gif" alt="" /></span>');
-	//$("#ms-submit-button").hide();
 	    $.ajax({
 			type: "POST",
 			dataType: "json",
 			url: 'index.php?route=account/ms-seller/jxsavesellerinfo',
 			data: $(this).parents("form").serialize(),
+		    beforeSend: function() {
+		    	$('#ms-sellerinfo a.button').hide().before('<span class="wait">&nbsp;<img src="catalog/view/theme/default/image/loading.gif" alt="" /></span>');
+		    },			
 			success: function(jsonData) {
 				if (!jQuery.isEmptyObject(jsonData.errors)) {
+					$('#ms-new-product a.button').show().prev('span.wait').remove();				
 					$('#error_'+id).text('');
 					for (error in jsonData.errors) {
 					    if (!jsonData.errors.hasOwnProperty(error)) {
@@ -136,7 +141,7 @@ $(function() {
 					    } else {
 					    	$('#error_'+id).text(jsonData.errors[error]);
 					   	}
-					    console.log(error + " -> " + jsonData.errors[error]);
+					    //console.log(error + " -> " + jsonData.errors[error]);
 					}
 					window.scrollTo(0,0);
 				} else {
@@ -146,15 +151,8 @@ $(function() {
 		});
 	});
 	
-	$("#product_download_files").delegate("span", "click", function() {
-		$(this).parent("p").prev("input:hidden").remove();
-		$(this).parent("p").remove();
-	});
-	
-
-	$("#sellerinfo_avatar_files").delegate("img", "click", function() {
-		$(this).prev("input:hidden").remove();
-		$(this).remove();
+	$("#sellerinfo_avatar_files").delegate(".ms-remove", "click", function() {
+		$(this).parent().remove();
 	});	
 
 	$('#sellerinfo_avatar').live('change', function() {
@@ -185,12 +183,15 @@ $(function() {
 					    } else {
 					    	$('#error_'+id).text(jsonData.errors[error]);
 					   	}
-					    console.log(error + " -> " + jsonData.errors[error]);
 					}
 					window.scrollTo(0,0);
 				} else {
-					$("#sellerinfo_avatar_files").html('<input type="hidden" value="'+jsonData.file.name+'" name="sellerinfo_avatar_name" />');
-					$("#sellerinfo_avatar_files").append('<img src="'+jsonData.file.thumb+'" />');
+					var imageHtml = [ '<div class="ms-image">',
+									  '<input type="hidden" value="'+jsonData.file.name+'" name="sellerinfo_avatar_name" />',
+									  '<img src="'+jsonData.file.thumb+'" />',
+									  '<img class="ms-remove" />',
+									  '</div>' ];
+					$("#sellerinfo_avatar_files").html(imageHtml.join(''));				
 				}			
 			}
 		}).submit();

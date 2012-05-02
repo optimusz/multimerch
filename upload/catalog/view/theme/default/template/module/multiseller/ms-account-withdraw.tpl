@@ -30,7 +30,7 @@
 	<div class="attention"><?php echo $ms_account_withdraw_minimum_not_reached; ?></div>
 <?php } ?>
 	
-<form id="ms-sellerinfo">
+<form id="ms-withdrawal">
 	<div class="content">
 		<?php if (!$withdrawal_minimum_reached || !isset($paypal) || empty($paypal)) { ?>
 			<div class="overlay"></div>    
@@ -93,15 +93,18 @@
 				dataType: "json",
 				url: 'index.php?route=account/ms-seller/jxrequestmoney',
 				data: $(this).parents("form").serialize(),
+			    beforeSend: function() {
+			    	$('#ms-withdrawal a.button').hide().before('<span class="wait">&nbsp;<img src="catalog/view/theme/default/image/loading.gif" alt="" /></span>');
+			    },
 				success: function(jsonData) {
 					$('.error').text('');
 					if (!jQuery.isEmptyObject(jsonData.errors)) {
+						$('#ms-withdrawal a.button').show().prev('span.wait').remove();
 						for (error in jsonData.errors) {
 						    if (!jsonData.errors.hasOwnProperty(error)) {
 						        continue;
 						    }
 						    $('#error_'+error).text(jsonData.errors[error]);
-						    console.log(error + " -> " + jsonData.errors[error]);
 						    window.scrollTo(0,0);
 						    
 						}				

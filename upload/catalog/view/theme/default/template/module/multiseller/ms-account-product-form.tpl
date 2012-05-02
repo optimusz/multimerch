@@ -202,7 +202,7 @@ $(function() {
 					    } else {
 					    	$('#error_'+id).text(jsonData.errors[error]);
 					   	}
-					    console.log(error + " -> " + jsonData.errors[error]);
+					    //console.log(error + " -> " + jsonData.errors[error]);
 					}
 				} else {
 					if (id == 'product_image') {
@@ -229,6 +229,7 @@ $(function() {
 	});
 
 	$("#ms-savedraft-button, #ms-submit-button").click(function() {
+		var button = $(this);
 		if ($(this).attr('id') == 'ms-savedraft-button') {
 			var url = 'jxsaveproductdraft';
 		} else {
@@ -240,15 +241,20 @@ $(function() {
 			dataType: "json",
 			url: 'index.php?route=account/ms-seller/'+url,
 			data: $(this).parents("form").serialize(),
+		    beforeSend: function() {
+		    	$('#ms-new-product a.button').hide();
+		    	button.before('<span class="wait">&nbsp;<img src="catalog/view/theme/default/image/loading.gif" alt="" /></span>');
+		    },			
 			success: function(jsonData) {
 				$('.error').text('');
 				if (!jQuery.isEmptyObject(jsonData.errors)) {
+					$('#ms-new-product a.button').show();
+					button.prev('span.wait').remove();
 					for (error in jsonData.errors) {
 					    if (!jsonData.errors.hasOwnProperty(error)) {
 					        continue;
 					    }
 					    $('#error_'+error).text(jsonData.errors[error]);
-					    console.log(error + " -> " + jsonData.errors[error]);
 					    window.scrollTo(0,0);
 					    
 					}				
