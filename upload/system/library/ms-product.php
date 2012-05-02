@@ -54,9 +54,9 @@ class MsProduct {
 				FROM " . DB_PREFIX . "product pr
 				INNER JOIN " . DB_PREFIX . "product_description pd
 					USING(product_id)
-				LEFT JOIN " . DB_PREFIX . "ms_product mp
+				INNER JOIN " . DB_PREFIX . "ms_product mp
 					USING(product_id)
-				LEFT JOIN " . DB_PREFIX . "ms_seller ms
+				INNER JOIN " . DB_PREFIX . "ms_seller ms
 					ON (mp.seller_id = ms.seller_id)
 				WHERE pd.language_id = " . (int)$this->config->get('config_language_id')
 				. ($nodrafts ? " AND (ISNULL(mp.review_status_id) OR mp.review_status_id != " . (int)self::MS_PRODUCT_STATUS_DRAFT . ")" : '') . "
@@ -237,8 +237,12 @@ class MsProduct {
 	}		
 		
 	public function getTotalProducts($nodrafts = false) {
-		$sql = "SELECT COUNT(*) as total FROM " . DB_PREFIX . "product"
-				. ($nodrafts ? " LEFT JOIN " . DB_PREFIX . "ms_product mp USING (product_id) WHERE ISNULL(mp.review_status_id) OR mp.review_status_id != " . (int)self::MS_PRODUCT_STATUS_DRAFT : '');
+		$sql = "SELECT COUNT(*) as total FROM " . DB_PREFIX . "product
+				INNER JOIN " . DB_PREFIX . "ms_product mp
+					USING(product_id)
+				INNER JOIN " . DB_PREFIX . "ms_seller ms
+					ON (mp.seller_id = ms.seller_id)"
+				. ($nodrafts ? " WHERE (ISNULL(mp.review_status_id) OR mp.review_status_id != " . (int)self::MS_PRODUCT_STATUS_DRAFT . ")" : '');
 
 		$res = $this->db->query($sql);
 		return $res->row['total'];
