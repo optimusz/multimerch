@@ -17,7 +17,7 @@
   <div class="attention"><?php echo $statustext; ?></div>
   <?php } ?>
   
-  <form id="ms-sellerinfo">
+  <form id="ms-sellerinfo" class="ms-form">
   	<input type="hidden" name="action" id="ms_action" />
     <div class="content">
     	<?php if ( isset($seller['seller_status_id']) && !in_array($seller['seller_status_id'], array(MsSeller::MS_SELLER_STATUS_ACTIVE, MsSeller::MS_SELLER_STATUS_INACTIVE))) { ?>

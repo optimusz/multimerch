@@ -30,7 +30,7 @@
 	<div class="attention"><?php echo $ms_account_withdraw_minimum_not_reached; ?></div>
 <?php } ?>
 	
-<form id="ms-withdrawal">
+<form id="ms-withdrawal" class="ms-form">
 	<div class="content">
 		<?php if (!$withdrawal_minimum_reached || !isset($paypal) || empty($paypal) || $balance <= 0) { ?>
 			<div class="ms-overlay"></div>    
