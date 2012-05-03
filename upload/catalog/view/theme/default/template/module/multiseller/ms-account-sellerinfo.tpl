@@ -21,7 +21,7 @@
   	<input type="hidden" name="action" id="ms_action" />
     <div class="content">
     	<?php if ( isset($seller['seller_status_id']) && !in_array($seller['seller_status_id'], array(MsSeller::MS_SELLER_STATUS_ACTIVE, MsSeller::MS_SELLER_STATUS_INACTIVE))) { ?>
-  	  <div class="overlay"></div>    
+  	  <div class="ms-overlay"></div>    
   	  	<?php } ?>
       <table class="ms-product">
         <tr>
