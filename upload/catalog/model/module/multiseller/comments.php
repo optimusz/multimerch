@@ -54,37 +54,8 @@ class ModelModuleMultisellerComments extends Model {
               . '",UNIX_TIMESTAMP(NOW()) ,
               1,'
 			  . (int)($comment["id_product"]) . ')';
-              
-		$this->load->model('catalog/product');
-		$prod = $this->model_catalog_product->getProduct($comment["id_product"]);              
-              
-        /*
-		if ($res = $this->db->query($sql)) {
-        	if ($this->config->get('ms_comments_conf_email') != '') {
-    		    $comment['comment'] = htmlspecialchars_decode($comment['comment']);
-		                		
-				$headers  = 'MIME-Version: 1.0' . "\r\n";
-				$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
-				$headers .= 'From: ' . $this->config->get('config_email') . "\r\n";
-				$headers .= 'Reply-To: ' . $comment["email"];
-				
-				$to = $this->config->get('productcommentsconf_email');
-				$baseurl = $this->config->get('config_url');
-				$subject = "OpenCart: New comment has been added!";
-				$message = "New comment has been submitted through Product Comments module for product <a href='{$baseurl}index.php?route=product/product&product_id={$comment['id_product']}'>{$prod['name']}</a>:";
-				$message .= "<br /><br />Name:<br />";
-				$message .= htmlspecialchars($comment["name"]);
-				$message .= "<br /><br />Email:<br />";
-				$message .= htmlspecialchars($comment["email"]);								
-				$message .= "<br /><br />Comment:<br />";
-				$message .= nl2br(htmlspecialchars($comment["comment"]));
-				$message .= "<br /><br />You can view all comments for this product here: <a href='{$baseurl}index.php?route=product/product&product_id={$comment['id_product']}'>{$baseurl}index.php?route=product/product&product_id={$comment['id_product']}</a>";
-				$message .= "<br /><br />Comments can be edited or deleted through your store's back-end: <a href='" . HTTP_ADMIN . "'>" . HTTP_ADMIN . "</a>";
-
-				return mail($to, $subject, $message,$headers);
-        	}
-        };
-        */
+			  
+		$this->db->query($sql);			  
     }    
     
 
