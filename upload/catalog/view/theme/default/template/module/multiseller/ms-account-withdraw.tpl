@@ -32,7 +32,7 @@
 	
 <form id="ms-withdrawal">
 	<div class="content">
-		<?php if (!$withdrawal_minimum_reached || !isset($paypal) || empty($paypal)) { ?>
+		<?php if (!$withdrawal_minimum_reached || !isset($paypal) || empty($paypal) || $balance <= 0) { ?>
 			<div class="overlay"></div>    
 		<?php } ?>
 		
