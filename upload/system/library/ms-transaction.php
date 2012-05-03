@@ -119,8 +119,6 @@ final class MsTransaction extends Model {
 	}
 	
 	public function addTransactionsForOrder($order_id, $debit = FALSE) {
-		$this->load->model('module/multiseller/seller');
-		
 		if ($this->_modelExists('checkout/order')) {
 			$this->load->model('checkout/order');
 			$order_info = $this->model_checkout_order->getOrder($order_id);			

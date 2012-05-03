@@ -171,7 +171,7 @@ class ControllerAccountMsSeller extends Controller {
 		
 		$data = $this->request->post;
 		
-		$this->load->model('module/multiseller/seller');
+		
 		
 		if (isset($data['product_id']) && !empty($data['product_id'])) {
 			if  ($this->msProduct->productOwnedBySeller($data['product_id'], $this->customer->getId())) {
@@ -271,7 +271,7 @@ class ControllerAccountMsSeller extends Controller {
 	public function jxSubmitProduct() {
 		$data = $this->request->post;
 		
-		$this->load->model('module/multiseller/seller');
+		
 
 		if (isset($data['product_id']) && !empty($data['product_id'])) {
 			if  ($this->msProduct->productOwnedBySeller($data['product_id'], $this->customer->getId())) {
@@ -450,7 +450,7 @@ class ControllerAccountMsSeller extends Controller {
 	}
 
 	public function jxRequestMoney() {
-		$this->load->model('module/multiseller/seller');
+		
 		$msTransaction = new MsTransaction($this->registry);
 		$data = $this->request->post;
 
@@ -519,7 +519,7 @@ class ControllerAccountMsSeller extends Controller {
 	}
 	
 	public function jxSaveSellerInfo() {
-		$this->load->model('module/multiseller/seller');
+		
 		$data = $this->request->post;
 		$seller = $this->msSeller->getSellerData($this->customer->getId());
 		$json = array();
@@ -618,7 +618,7 @@ class ControllerAccountMsSeller extends Controller {
 	}
 
 	public function newProduct() {
-		$this->load->model('module/multiseller/seller');
+		
 		$this->document->addScript('catalog/view/javascript/jquery.form.js');
 
 		$this->data['categories'] = $this->msProduct->getCategories();
@@ -634,7 +634,7 @@ class ControllerAccountMsSeller extends Controller {
 	}
 	
 	public function products() {
-		$this->load->model('module/multiseller/seller');
+		
 
 		$this->load->model('localisation/language');
 		$this->data['languages'] = $this->model_localisation_language->getLanguages();
@@ -681,7 +681,7 @@ class ControllerAccountMsSeller extends Controller {
 	}
 	
 	public function editProduct() {
-		$this->load->model('module/multiseller/seller');
+		
 		$this->load->model('tool/image');
 		$this->document->addScript('catalog/view/javascript/jquery.form.js');
 		
@@ -741,7 +741,7 @@ class ControllerAccountMsSeller extends Controller {
 	}
 	
 	public function deleteProduct() {
-		$this->load->model('module/multiseller/seller');
+		
 		
 		$product_id = (int)$this->request->get['product_id'];
 		$seller_id = (int)$this->customer->getId();
@@ -803,7 +803,7 @@ class ControllerAccountMsSeller extends Controller {
 	
 	public function transactions() {
 		$msTransaction = new MsTransaction($this->registry);
-		$this->load->model('module/multiseller/seller');
+		
 		
 		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
 
@@ -842,7 +842,7 @@ class ControllerAccountMsSeller extends Controller {
 	}
 	
 	public function withdraw() {
-		$this->load->model('module/multiseller/seller');
+		
 		
 		$seller_id = $this->customer->getId();
 		$this->data['balance'] =  $this->msSeller->getBalanceForSeller($seller_id);
