@@ -135,6 +135,9 @@ $_['ms_config_allow_partial_withdrawal_note'] = 'Allow partial withdrawal note';
 $_['ms_config_allow_withdrawal_requests'] = 'Allow withdrawal requests';
 $_['ms_config_allow_withdrawal_requests_note'] = 'Allow withdrawal requests';
 
+$_['ms_config_paypal_sandbox'] = 'PayPal Sandbox mode';
+$_['ms_config_paypal_sandbox_note'] = 'PayPal Sandbox mode note';
+
 $_['ms_config_paypal_api_username'] = 'PayPal API username';
 $_['ms_config_paypal_api_username_note'] = 'PayPal API username note';
 

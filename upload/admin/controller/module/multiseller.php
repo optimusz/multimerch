@@ -34,6 +34,7 @@ class ControllerModuleMultiseller extends Controller {
 			"msconf_debit_order_statuses" => "8",
 			"msconf_minimum_withdrawal_amount" => "50",
 			"msconf_allow_partial_withdrawal" => 1,
+			"msconf_paypal_sandbox" => 1,			
 			"msconf_paypal_api_username" => "",
 			"msconf_paypal_api_password" => "",
 			"msconf_paypal_api_signature" => "",
@@ -346,8 +347,16 @@ class ControllerModuleMultiseller extends Controller {
 
 	public function saveSettings() {
 		$this->_validate(__FUNCTION__);
-		$this->request->post['msconf_credit_order_statuses'] = implode(',',$this->request->post['msconf_credit_order_statuses']);
-		$this->request->post['msconf_debit_order_statuses'] = implode(',',$this->request->post['msconf_debit_order_statuses']);		
+		
+		if (isset($this->request->post['msconf_credit_order_statuses'])) 
+			$this->request->post['msconf_credit_order_statuses'] = implode(',',$this->request->post['msconf_credit_order_statuses']);
+		else
+			$this->request->post['msconf_credit_order_statuses'] = '';
+
+		if (isset($this->request->post['msconf_debit_order_statuses'])) 
+			$this->request->post['msconf_debit_order_statuses'] = implode(',',$this->request->post['msconf_debit_order_statuses']);
+		else
+			$this->request->post['msconf_debit_order_statuses'] = '';			
 		
 		$this->_editSettings();
 		
@@ -641,7 +650,8 @@ class ControllerModuleMultiseller extends Controller {
 			return;
 		}
 		
-		$paypal = new PayPal($this->config->get('msconf_paypal_api_username'), $this->config->get('msconf_paypal_api_password'), $this->config->get('msconf_paypal_api_signature'));
+		$paypal = new PayPal($this->config->get('msconf_paypal_api_username'), $this->config->get('msconf_paypal_api_password'), $this->config->get('msconf_paypal_api_signature'), $this->config->get('msconf_paypal_sandbox'));
+		return;
 		$response = $paypal->request('MassPay',$requestParams + $paymentParams);
 		
 		if (!$response) {

@@ -24,7 +24,7 @@ class Paypal {
     * Sandbox - https://api-3t.sandbox.paypal.com/nvp
     * @var string
     */
-   protected $_endPoint = 'https://api-3t.sandbox.paypal.com/nvp';
+   protected $_endPoint = '';
 
    /**
     * API Version
@@ -34,10 +34,19 @@ class Paypal {
 
 
    
-   public function __construct($apiUsername, $apiPassword, $apiSignature) {
+   public function __construct($apiUsername, $apiPassword, $apiSignature, $sandboxMode = TRUE) {
    		$this->_credentials['USER'] = $apiUsername;
    		$this->_credentials['PWD'] = $apiPassword;
    		$this->_credentials['SIGNATURE'] = $apiSignature;
+   		
+   		if ($sandboxMode) {
+   			$this->_endPoint = 'https://api-3t.sandbox.paypal.com/nvp';
+   		} else {
+   			$this->_endPoint = 'https://api-3t.paypal.com/nvp';
+   		}
+   		
+   		var_dump($this->_endPoint);
+   		return;
    }
 
    /**
