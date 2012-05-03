@@ -44,9 +44,6 @@ class Paypal {
    		} else {
    			$this->_endPoint = 'https://api-3t.paypal.com/nvp';
    		}
-   		
-   		var_dump($this->_endPoint);
-   		return;
    }
 
    /**

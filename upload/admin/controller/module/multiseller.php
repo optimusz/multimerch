@@ -651,7 +651,6 @@ class ControllerModuleMultiseller extends Controller {
 		}
 		
 		$paypal = new PayPal($this->config->get('msconf_paypal_api_username'), $this->config->get('msconf_paypal_api_password'), $this->config->get('msconf_paypal_api_signature'), $this->config->get('msconf_paypal_sandbox'));
-		return;
 		$response = $paypal->request('MassPay',$requestParams + $paymentParams);
 		
 		if (!$response) {
