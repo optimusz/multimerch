@@ -33,10 +33,10 @@
 <form id="ms-withdrawal">
 	<div class="content">
 		<?php if (!$withdrawal_minimum_reached || !isset($paypal) || empty($paypal) || $balance <= 0) { ?>
-			<div class="overlay"></div>    
+			<div class="ms-overlay"></div>    
 		<?php } ?>
 		
-		<table class="ms-product" id="ms-withdrawal">
+		<table class="ms-product">
 			<tr>
 				<td><?php echo $ms_account_withdraw_amount; ?></td>
 				

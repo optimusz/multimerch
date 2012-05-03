@@ -23,7 +23,7 @@
     	<?php if ( isset($seller['seller_status_id']) && !in_array($seller['seller_status_id'], array(MsSeller::MS_SELLER_STATUS_ACTIVE, MsSeller::MS_SELLER_STATUS_INACTIVE))) { ?>
   	  <div class="overlay"></div>    
   	  	<?php } ?>
-      <table class="ms-product" id="ms-sellerinfo">
+      <table class="ms-product">
         <tr>
 			<?php if (!empty($seller['nickname'])) { ?>
 	          <td><?php echo $ms_account_sellerinfo_nickname; ?></td>
