@@ -1,0 +1,62 @@
+ffct.cc software license for Digital Multiseller Marketplace OpenCart Extension
+
+This is a legal agreement between you and ffct.cc software.
+
+
+1. Definitions
+
+1.1. 'ffct.cc software' means ffct.cc software and its licensors, if any. 
+
+1.2. 'Software' means the Digital Multiseller Marketplace OpenCart Extension
+software program and any third party software programs contained therein, in each
+case supplied by ffct.cc software herewith, and corresponding documentation
+and all updates or upgrades of the above that are provided to you. 
+
+
+2. Permissions
+
+2.1. You may use the Software in both freeware and commercial
+projects.
+
+2.2. You may alter, merge, modify, adapt or translate the Software.
+
+2.3. You may modify the Software or create derivative works based 
+upon the Software to adapt it for your needs.
+
+2.4. You may use the Software in an unlimited number of your projects.
+
+
+3. Restrictions
+
+3.1. You may not distribute copies or derivative works of the Software.
+
+3.2. You may not sell, rent, lease, or sublicense the Software or any
+derivative works or modifications of the Software to another person,
+company or other entity.
+
+
+4. Ownership
+
+The foregoing license gives you limited rights to use the Software.
+ffct.cc software and its partners retain all right, title and interest
+to the Software and all copies thereof. All rights not specifically
+granted in this license are reserved by ffct.cc software and its partners.
+
+
+5. Warranty disclaimer
+
+5.1. ffct.cc software and its partners disclaim all warranties and
+representations, whether express, implied, or otherwise, including
+the warranties of merchantability or fitness for a particular purpose.
+ffct.cc software does not warrant that the software is error-free
+or will operate without interruption.
+
+5.2. ffct.cc software shall have no responsibility if the Software
+has been altered in any way, or for any failure that arises out of 
+use of the Software that has been altered in any way.
+
+
+--------------------------------
+e4505c41635d620dff0e3b7bd5c8f4cf
+1035f6e3fc4062dd8c3f84bf255b5b45
+
