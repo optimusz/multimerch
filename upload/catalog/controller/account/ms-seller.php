@@ -287,9 +287,12 @@ class ControllerAccountMsSeller extends Controller {
 
 		// only check default language for errors
 		$i = 0;
+		$default = 0;		
 		foreach ($data['languages'] as $language_id => $language) {
 			// main language inputs are mandatory
 			if ($i == 0) {
+				$default = $language_id;
+				
 				if (empty($language['product_name'])) {
 					$json['errors']['product_name_' . $language_id] = $this->language->get('ms_error_product_name_empty'); 
 				} else if (mb_strlen($language['product_name']) < 4 || mb_strlen($language['product_name']) > 50 ) {
@@ -304,10 +307,14 @@ class ControllerAccountMsSeller extends Controller {
 			} else {
 				if (!empty($language['product_name']) && (mb_strlen($language['product_name']) < 4 || mb_strlen($language['product_name']) > 50)) {
 					$json['errors']['product_name_' . $language_id] = $this->language->get('ms_error_product_name_length');			
+				} else if (empty($language['product_name'])) {
+					$data['languages'][$language_id]['product_name'] = $data['languages'][$default]['product_name'];
 				}
 
 				if (!empty($language['product_description']) && (mb_strlen($language['product_description']) < 25 || mb_strlen($language['product_description']) > 1000)) {
 					$json['errors']['product_description_' . $language_id] = $this->language->get('ms_error_product_description_length');			
+				} else if (empty($language['product_description'])) {
+					$data['languages'][$language_id]['product_description'] = $data['languages'][$default]['product_description'];
 				}
 			}
 			

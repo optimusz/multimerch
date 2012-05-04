@@ -1,3 +1,8 @@
+<?xml version="1.0" ?>
+<!DOCTYPE modification [
+<!ENTITY adminFolder "admin">
+<!ENTITY themeFolder "default">
+]>
 <modification>
 	<id>Digital Multiseller Marketplace</id>
 	<version>1.0</version>
@@ -29,7 +34,7 @@
 	<!-- ************************ -->	
 
 	<!-- seller account area links -->
-	<file name="catalog/view/theme/default/template/account/account.tpl">
+	<file name="catalog/view/theme/&themeFolder;/template/account/account.tpl">
 		<operation>
 			<search position="before"><![CDATA[
 				<h2><?php echo $text_my_newsletter; ?></h2>
@@ -73,7 +78,7 @@
 	</file>
 
 	<!-- seller account SIDEBAR area links -->
-	<file name="catalog/view/theme/default/template/module/account.tpl">
+	<file name="catalog/view/theme/&themeFolder;/template/module/account.tpl">
 		<operation>
 			<search position="before"><![CDATA[
 			</ul>
@@ -105,7 +110,7 @@
 		</operation>
 	</file>
 
-	<file name="catalog/view/theme/default/template/common/footer.tpl">
+	<file name="catalog/view/theme/&themeFolder;/template/common/footer.tpl">
 		<operation error="skip">
 			<search position="replace"><![CDATA[
 			<div id="powered"><?php echo $powered; ?></div>
@@ -170,7 +175,7 @@
 	</file>
 	
 	<!-- seller information on product page -->
-	<file name="catalog/view/theme/default/template/product/product.tpl">
+	<file name="catalog/view/theme/&themeFolder;/template/product/product.tpl">
 		<operation>
 			<search position="before"><![CDATA[
 			<div class="description">
@@ -178,7 +183,7 @@
 			<add><![CDATA[
 			<?php if (isset($sellerinfo) && !empty($sellerinfo)) { ?>
 			<div class="ms-sellerinfo">
-				<div><span><?php echo $ms_catalog_product_seller; ?></span> <div><span><?php echo $sellerinfo['nickname']; ?></span><br /><img src="<?php echo $sellerinfo['thumbnail']; ?>" /></div></div><br />
+				<div><span><?php echo $ms_catalog_product_seller; ?></span> <div><span><?php echo $sellerinfo['nickname']; ?></span><?php if (isset($sellerinfo['thumbnail'])) { ?><br /><img src="<?php echo $sellerinfo['thumbnail']; ?>" /><?php } ?></div></div><br />
 				<span><?php echo $ms_catalog_product_date_added; ?></span> <?php echo $sellerinfo['date_added']; ?><br />
 				<span><?php echo $ms_catalog_product_sales; ?></span> <?php echo $sellerinfo['sales']; ?>
 			</div>
@@ -200,7 +205,7 @@
 			$image = new MsImage($this->registry);
 			$msProduct = new MsProduct($this->registry);
 			$this->data['sellerinfo'] = $msProduct->getStatsForProduct($this->request->get['product_id']);
-			if (!empty($this->data['sellerinfo']))
+			if (!empty($this->data['sellerinfo']) && (!empty($this->data['sellerinfo']['avatar_path'])))
 				$this->data['sellerinfo']['thumbnail'] = $image->resize($this->data['sellerinfo']['avatar_path'], $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'));
 			]]></add>
 		</operation>
@@ -209,7 +214,7 @@
 	<!-- ************************ -->
 	<!--     product comments     -->
 	<!-- ************************ -->	
-	<file name="catalog/view/theme/default/template/product/product.tpl">
+	<file name="catalog/view/theme/&themeFolder;/template/product/product.tpl">
 		<operation>
 			<search position="before" offset="1"><![CDATA[
 				<div id="tab-description" class="tab-content"><?php echo $description; ?></div>
@@ -259,7 +264,7 @@
 	<!-- ************************ -->	
 	<!-- ************************ -->
 
-	<file name="admin/model/sale/order.php">
+	<file name="&adminFolder;/model/sale/order.php">
 		<operation>
 			<search position="after"><![CDATA[
 				$this->db->query("UPDATE `" . DB_PREFIX . "order` SET total = '" . (float)$total . "' WHERE order_id = '" . (int)$order_id . "'");
@@ -292,7 +297,7 @@
 	</file>	
 
 	<!-- navigation menu -->
-	<file name="admin/view/template/common/header.tpl">
+	<file name="&adminFolder;/view/template/common/header.tpl">
 		<operation>
 			<search position="before" offset="1"><![CDATA[
 			<ul class="right">
@@ -319,7 +324,7 @@
 		</operation>
 	</file>
 	
-	<file name="admin/controller/common/header.php">
+	<file name="&adminFolder;/controller/common/header.php">
 		<operation>
 			<search position="after"><![CDATA[
 			protected function index() {
@@ -343,7 +348,7 @@
 		</operation>		
 	</file>
 	
-	<file name="admin/controller/sale/order.php">
+	<file name="&adminFolder;/controller/sale/order.php">
 		<operation>
 			<search position="before"><![CDATA[
 			$this->data['products'][] = array(
@@ -370,7 +375,7 @@
 		</operation>
 	</file>
 	
-	<file name="admin/view/template/sale/order_info.tpl">
+	<file name="&adminFolder;/view/template/sale/order_info.tpl">
 		<operation>
 			<search position="before"><![CDATA[
 			<td class="left"><?php echo $column_product; ?></td>
