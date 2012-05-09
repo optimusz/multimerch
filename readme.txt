@@ -106,6 +106,7 @@ Changelog:
 	1.0.1 (2012-05-09)
 		- Fixed seller account approval bug
 		- Fixed duplicate administrative seller account actions
+		- Added a possibility to choose whether to notify seller about account modification or not
 		- Split general mails and administrator messages
 		
 	1.0.0 (2012-05-04)
