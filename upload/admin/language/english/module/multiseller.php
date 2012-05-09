@@ -166,6 +166,8 @@ $_['ms_catalog_sellerinfo_website']    = 'Website';
 $_['ms_catalog_sellerinfo_avatar']    = 'Avatar';
 $_['ms_catalog_sellerinfo_paypal']    = 'Paypal';
 $_['ms_catalog_sellerinfo_message'] = 'Message';
+$_['ms_catalog_sellerinfo_message_note'] = 'Will be appended to the default email text';
+$_['ms_catalog_sellerinfo_notify'] = 'Notify seller via email';
 
 // Catalog - Products
 
@@ -192,29 +194,35 @@ $_['ms_action'] = 'Action';
 // Mails
 $_['ms_mail_greeting']      = "Hello %s,\n\n";
 $_['ms_mail_ending']      = "\n\nRegards,\n%s";
+$_['ms_mail_message']      = "\n\nMessage:\n%s";
 
-$_['ms_mail_subject_seller_account_approved']      = 'Seller account activated';
+$_['ms_mail_subject_seller_account_approved']      = 'Seller account approved';
 $_['ms_mail_seller_account_approved'] = <<<'EOT'
-Your seller account at %s has been activated.
+Your seller account at %s has been approved and activated.
 
 You can now start adding your products.
 EOT;
 
-$_['ms_mail_subject_seller_account_declined']      = 'Seller account creation declined';
+$_['ms_mail_subject_seller_account_declined']      = 'Seller account declined';
 $_['ms_mail_seller_account_declined'] = <<<'EOT'
-Your seller account creation at %s has been declined.
-
-Reason:
-%s
+Your seller account at %s has been declined.
 EOT;
 
 $_['ms_mail_subject_seller_account_disabled']      = 'Seller account disabled';
 $_['ms_mail_seller_account_disabled'] = <<<'EOT'
 Your seller account at %s has been disabled.
-
-Reason:
-%s
 EOT;
+
+$_['ms_mail_subject_seller_account_enabled']      = 'Seller account enabled';
+$_['ms_mail_seller_account_enabled'] = <<<'EOT'
+Your seller account at %s has been enabled.
+EOT;
+
+$_['ms_mail_subject_seller_account_modified']      = 'Seller account modified';
+$_['ms_mail_seller_account_modified'] = <<<'EOT'
+Your seller account at %s has been modified by the administrator.
+EOT;
+
 
 $_['ms_mail_subject_product_approved']      = 'Product approved';
 $_['ms_mail_product_approved'] = <<<'EOT'
@@ -224,25 +232,16 @@ EOT;
 $_['ms_mail_subject_product_declined']      = 'Product declined';
 $_['ms_mail_product_declined'] = <<<'EOT'
 Your product %s at %s has been declined.
-
-Reason:
-%s
 EOT;
 
 $_['ms_mail_subject_product_enabled']      = 'Product active';
 $_['ms_mail_product_enabled'] = <<<'EOT'
 Your product %s at %s is now active.
-
-Message:
-%s
 EOT;
 
 $_['ms_mail_subject_product_disabled']      = 'Product disabled';
 $_['ms_mail_product_disabled'] = <<<'EOT'
 Your product %s at %s has been disabled.
-
-Reason:
-%s
 EOT;
 
 ?>

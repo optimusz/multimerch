@@ -95,21 +95,37 @@
           <td><?php echo $ms_action; ?></td>
           <td>
           	<select name="sellerinfo_action">
-			  <option value="0" selected="selected"></option>          	
-              <option value="1"><?php echo $ms_enable; ?></option>
-              <option value="2"><?php echo $ms_disable; ?></option>
+			  <option value="0" selected="selected"></option>
+			  <?php foreach ($actions as $action) { ?>          	
+              <option value="<?php echo $action['value']; ?>"><?php echo $action['text']; ?></option>
+              <?php } ?>
             </select>
           	<p class="error" id="error_sellerinfo_country"></p>
           </td>
         </tr>
+
+        <tr>
+          <td>
+          	<span><?php echo $ms_catalog_sellerinfo_notify; ?></span>
+          </td>
+          <td>
+	        <input type="radio" name="sellerinfo_notify" value="1" />
+	        <?php echo $text_yes; ?>
+	        <input type="radio" name="sellerinfo_notify" value="0" checked="checked" />
+	        <?php echo $text_no; ?>
+          </td>
+        </tr>
         
         <tr>
-          <td><?php echo $ms_catalog_sellerinfo_message; ?></td>
           <td>
-          	<textarea name="sellerinfo_message"></textarea>
+          	<span><?php echo $ms_catalog_sellerinfo_message; ?></span>
+          	<span class="help"><?php echo $ms_catalog_sellerinfo_message_note; ?></span>
+          </td>
+          <td>
+          	<textarea name="sellerinfo_message" disabled="disabled"></textarea>
           	<p class="error" id="error_sellerinfo_message"></p>
           </td>
-        </tr>     
+        </tr>
       </table>
     </div>
   </form>
@@ -117,10 +133,17 @@
   </div>
 <script>
 $(function() {
+	$('input[name="sellerinfo_notify"]').change(function() {
+		if ($(this).val() == 0) {
+			$('textarea[name="sellerinfo_message"]').val('').attr('disabled','disabled');
+		} else {
+			$('textarea[name="sellerinfo_message"]').removeAttr('disabled');
+		}
+	});
+
 	$("#ms-submit-button").click(function() {
-	var id = $(this).attr('id');
-	//$("#ms-submit-button").after('<span class="wait">&nbsp;<img src="catalog/view/theme/default/image/loading.gif" alt="" /></span>');
-	//$("#ms-submit-button").hide();
+		$("#ms-submit-button").after('<span class="wait">&nbsp;<img src="view/image/loading.gif" alt="" /></span>').hide();
+		var id = $(this).attr('id');
 	    $.ajax({
 			type: "POST",
 			dataType: "json",
@@ -142,6 +165,7 @@ $(function() {
 					    console.log(error + " -> " + jsonData.errors[error]);
 					}
 					window.scrollTo(0,0);
+					$("#ms-submit-button").show();
 				} else {
 					window.location = 'index.php?route=module/multiseller/sellers&token=<?php echo $token; ?>';
 				}

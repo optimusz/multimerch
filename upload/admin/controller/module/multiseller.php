@@ -140,9 +140,9 @@ class ControllerModuleMultiseller extends Controller {
 	}	
 	
 	public function jxSaveSellerInfo() {
+		
 		$this->_validate(__FUNCTION__);
 		$data = $this->request->post;
-		
 		$seller = $this->msSeller->getSellerData($data['seller_id']);
 		$json = array();
 		
@@ -166,56 +166,57 @@ class ControllerModuleMultiseller extends Controller {
 			$mails = array();
 			if ($data['sellerinfo_action'] != 0) {
 				switch ($data['sellerinfo_action']) {
+					// enable
+					case 1:
+						$data['seller_status_id'] = MsSeller::MS_SELLER_STATUS_ACTIVE;
+						$mails[] = array(
+							'type' => MsMail::SMT_SELLER_ACCOUNT_ENABLED,
+							'data' => array(
+								'recipients' => $this->msSeller->getSellerEmail($data['seller_id']),
+								'addressee' => $this->msSeller->getSellerName($data['seller_id']),
+								'message' => $data['sellerinfo_message']
+							)
+						);
+						break;
+					
+					// disable
 					case 2:
-						switch ($seller['seller_status_id']) {
-							case MsSeller::MS_SELLER_STATUS_ACTIVE:
-								$data['seller_status_id'] = MsSeller::MS_SELLER_STATUS_DISABLED;
-								$mails[] = array(
-									'type' => MsMail::SMT_SELLER_ACCOUNT_DISABLED,
-									'data' => array(
-										'recipients' => $this->msSeller->getSellerEmail($data['seller_id']),
-										'addressee' => $this->msSeller->getSellerName($data['seller_id']),
-										'message' => $data['sellerinfo_message']
-									)
-								);
-								break;
-								
-							case MsSeller::MS_SELLER_STATUS_TOBEAPPROVED:
-								$data['seller_status_id'] = MsSeller::MS_SELLER_STATUS_INACTIVE;
-								$mails[] = array(
-									'type' => MsMail::SMT_SELLER_ACCOUNT_DECLINED,
-									'data' => array(
-										'recipients' => $this->msSeller->getSellerEmail($data['seller_id']),
-										'addressee' => $this->msSeller->getSellerName($data['seller_id']),
-										'message' => $data['sellerinfo_message']
-									)
-								);
-								break;
-								
-							default:
-								break;								
-						}
+						$data['seller_status_id'] = MsSeller::MS_SELLER_STATUS_DISABLED;
+						$mails[] = array(
+							'type' => MsMail::SMT_SELLER_ACCOUNT_DISABLED,
+							'data' => array(
+								'recipients' => $this->msSeller->getSellerEmail($data['seller_id']),
+								'addressee' => $this->msSeller->getSellerName($data['seller_id']),
+								'message' => $data['sellerinfo_message']
+							)
+						);
 						break;
 						
-					case 1:
-						switch ($seller['seller_status_id']) {
-							case MsSeller::MS_SELLER_STATUS_TOBEAPPROVED:
-							case MsSeller::MS_SELLER_STATUS_DISABLED:	
-							case MsSeller::MS_SELLER_STATUS_INACTIVE:							
-								$data['seller_status_id'] = MsSeller::MS_SELLER_STATUS_ACTIVE;
-								$mails[] = array(
-									'type' => MsMail::SMT_SELLER_ACCOUNT_APPROVED,
-									'data' => array(
-										'recipients' => $this->msSeller->getSellerEmail($data['seller_id']),
-										'addressee' => $this->msSeller->getSellerName($data['seller_id']),
-										'message' => $data['sellerinfo_message']
-									)
-								);
-								break;
-							default:
-								break;
-						}
-						break;					
+					// approve
+					case 3:
+						$data['seller_status_id'] = MsSeller::MS_SELLER_STATUS_ACTIVE;
+						$mails[] = array(
+							'type' => MsMail::SMT_SELLER_ACCOUNT_APPROVED,
+							'data' => array(
+								'recipients' => $this->msSeller->getSellerEmail($data['seller_id']),
+								'addressee' => $this->msSeller->getSellerName($data['seller_id']),
+								'message' => $data['sellerinfo_message']
+							)
+						);
+						break;
+						
+					// decline
+					case 4:
+						$data['seller_status_id'] = MsSeller::MS_SELLER_STATUS_INACTIVE;
+						$mails[] = array(
+							'type' => MsMail::SMT_SELLER_ACCOUNT_DECLINED,
+							'data' => array(
+								'recipients' => $this->msSeller->getSellerEmail($data['seller_id']),
+								'addressee' => $this->msSeller->getSellerName($data['seller_id']),
+								'message' => $data['sellerinfo_message']
+							)
+						);
+						break;
 				}
 				
 				//process requests
@@ -224,11 +225,23 @@ class ControllerModuleMultiseller extends Controller {
 				unset($r);
 			} else {
 				$data['seller_status_id'] = $seller['seller_status_id'];
+				$mails[] = array(
+					'type' => MsMail::SMT_SELLER_ACCOUNT_MODIFIED,
+					'data' => array(
+						'recipients' => $this->msSeller->getSellerEmail($data['seller_id']),
+						'addressee' => $this->msSeller->getSellerName($data['seller_id']),
+						'message' => $data['sellerinfo_message']
+					)
+				);				
 			}
 			
 			// edit seller
 			$this->msSeller->adminEditSeller($data);
-			$this->msMail->sendMails($mails);
+			
+			if ($data['sellerinfo_notify']) {
+				$this->msMail->sendMails($mails);
+			}
+			
 			$this->session->data['success'] = 'Seller account data saved.';
 		}
 		
@@ -336,6 +349,40 @@ class ControllerModuleMultiseller extends Controller {
 				$this->data['seller']['avatar']['thumb'] = $image->resize($seller['avatar_path'], $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'));
 				//$this->session->data['multiseller']['files'][] = $seller['avatar_path'];
 			}
+			
+			// seller status action selector
+			if (in_array($seller['seller_status_id'], array(
+					MsSeller::MS_SELLER_STATUS_INACTIVE,
+					MsSeller::MS_SELLER_STATUS_DISABLED,
+					MsSeller::MS_SELLER_STATUS_TOBEACTIVATED
+			))) {			
+				$this->data['actions'][] = array(
+					'text' => $this->language->get('ms_enable'),
+					'value' => 1
+				);
+			}
+			
+			if (in_array($seller['seller_status_id'], array(
+					MsSeller::MS_SELLER_STATUS_ACTIVE,
+					MsSeller::MS_SELLER_STATUS_TOBEACTIVATED
+			))) {			
+				$this->data['actions'][] = array(
+					'text' => $this->language->get('ms_disable'),
+					'value' => 2
+				);
+			}
+			
+			if ($seller['seller_status_id'] == MsSeller::MS_SELLER_STATUS_TOBEAPPROVED) {
+				$this->data['actions'][] = array(
+					'text' => $this->language->get('ms_approve'),
+					'value' => 3
+				);
+				$this->data['actions'][] = array(
+					'text' => $this->language->get('ms_decline'),
+					'value' => 4
+				);
+			}
+			//
 		}
 
 		$this->data['token'] = $this->session->data['token'];		

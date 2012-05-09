@@ -10,6 +10,8 @@ Installation:
 	2. Copy the files and folders from the upload/ directory to your OpenCart installation.
 
 	3. Create a folder named tmp/ within your images/ directory and grant write permissions to your web server.
+	   Prevent file and directory indexing for this new folder either by configuring your web server accordingly
+	   or by creating an empty index.html file within this directory.
 
 	4. Install the module via Backend -> Extensions -> Modules -> [ffct.cc] Digital Multiseller Marketplace
 	
@@ -101,6 +103,11 @@ Usage:
 
 Changelog:
 ---------------------------------
-	1.0 (2012-05-04)
+	1.0.1 (2012-05-09)
+		- Fixed seller account approval bug
+		- Fixed duplicate administrative seller account actions
+		- Split general mails and administrator messages
+		
+	1.0.0 (2012-05-04)
 		- Initial release
 

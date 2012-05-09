@@ -27,6 +27,7 @@ $_['ms_request_submitted']      = 'Your request is submitted';
    // Seller
 $_['ms_mail_greeting']      = "Hello %s,\n\n";
 $_['ms_mail_ending']      = "\n\nRegards,\n%s";
+$_['ms_mail_message']      = "\n\nMessage:\n%s";
 
 $_['ms_mail_subject_seller_account_created']      = 'Seller account created';
 $_['ms_mail_seller_account_created'] = <<<'EOT'
@@ -68,9 +69,6 @@ EOT;
 $_['ms_mail_subject_withdraw_request_declined']      = 'Withdrawal request declined';
 $_['ms_mail_withdraw_request_declined'] = <<<'EOT'
 Your withdrawal request has been declined. Your funds have been returned to your balance at %s.
-
-Reason:
-%s
 EOT;
 
 $_['ms_mail_subject_transaction_performed']      = 'New transaction';
@@ -105,9 +103,6 @@ $_['ms_mail_admin_new_product_awaiting_moderation'] = <<<'EOT'
 New product %s has been added to %s and is awaiting moderation.
 
 You can process it in the Multiseller - Products section in back office.
-
-Note from the seller:
-%s
 EOT;
 
 $_['ms_mail_admin_subject_edit_product_awaiting_moderation']      = 'Product edited and awaiting moderation';
@@ -115,9 +110,6 @@ $_['ms_mail_admin_edit_product_awaiting_moderation'] = <<<'EOT'
 Product %s at %s has been edited and is awaiting moderation.
 
 You can process it in the Multiseller - Products section in back office.
-
-Note from the seller:
-%s
 EOT;
 
 $_['ms_mail_admin_subject_withdraw_request_submitted']      = 'Withdrawal request awaiting moderation';
