@@ -1,6 +1,13 @@
 Digital Multiseller Marketplace extension for OpenCart
 http://ffct.cc
 
+Usage in multiple projects:
+----------------------------------
+	If you intend to use the extension on multiple OpenCart installations, please
+	do purchase	additional copies of the extension for your other installations.
+	This additional funding will allow us to spend more time upgrading the extension
+	and making it better and it will let you receive your free updates more promptly.
+
 Installation:
 ----------------------------------
 	1. If you don't have vQmod installed, install it first. vQmod is 
@@ -9,7 +16,7 @@ Installation:
  
 	2. Copy the files and folders from the upload/ directory to your OpenCart installation.
 
-	3. Create a folder named tmp/ within your images/ directory and grant write permissions to your web server.
+	3. Create a folder named tmp/ within your image/ directory and grant write permissions to your web server.
 	   Prevent file and directory indexing for this new folder either by configuring your web server accordingly
 	   or by creating an empty index.html file within this directory.
 
@@ -89,6 +96,8 @@ Usage:
 
 	Make sure your payment modules are configured to set order statuses to the ones you specify as "credit".
 
+	Note, that "Product Sold" emails will only be sent for orders having one of the "credit order statuses", e.g.
+	only if the seller receives a positive transaction to his balance.
 
 	Withdrawals
 	---------------
@@ -103,6 +112,15 @@ Usage:
 
 Changelog:
 ---------------------------------
+	1.1 (2012-05-20)
+		- Added a hookable sellers carousel module	
+		- Added a page to list seller's products
+		- Added a page to list sellers
+		- Added seller profile page
+		- Changed nowdoc strings to heredoc for PHP < 5.3.0 compatibility	
+		- Modified seller information on product page		
+
+
 	1.0.1 (2012-05-09)
 		- Fixed seller account approval bug
 		- Fixed duplicate administrative seller account actions

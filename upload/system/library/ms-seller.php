@@ -102,23 +102,73 @@ final class MsSeller {
 		}
 	}		
 		
-	public function getTotalSellerProducts($seller_id) {
+	public function getTotalSellerProducts($seller_id, $onlyActive = FALSE) {
 		$sql = "SELECT COUNT(*) as 'total'
-				FROM `" . DB_PREFIX . "ms_product` p
-				WHERE p.seller_id = " . (int)$seller_id;
+				FROM `" . DB_PREFIX . "ms_product` mp"
+        		. ($onlyActive ? " INNER JOIN `" . DB_PREFIX . "product` p USING(product_id)" : '') . "
+				WHERE mp.seller_id = " . (int)$seller_id
+        		. ($onlyActive ? " AND p.status = 1" : '');				
 		
 		$res = $this->db->query($sql);
 		
 		return $res->row['total'];		
 	}		
 		
-	public function getSellerProducts($seller_id, $sort) {
-		$sql = "SELECT c.product_id, name, date_added, status as status_id, number_sold, review_status_id 
-				FROM `" . DB_PREFIX . "product_description` a
-				INNER JOIN `" . DB_PREFIX . "product` b
-					ON a.product_id = b.product_id 
+	public function getSellerProducts($seller_id, $sort, $onlyActive = FALSE) {
+		$orders = array(
+			'pd.name'
+		);
+		
+		$order_sql = '';
+		if (isset($sort['order_by']) && in_array($sort['order_by'], $orders)) {
+			if ($sort['order_by'] == 'pd.name' || $sort['order_by'] == 'p.model') {
+				$order_sql .= " ORDER BY LCASE(" . $sort['order_by'] . ")";
+			} else {
+				$order_sql .= " ORDER BY " . $sort['order_by'];
+			}
+		} else {
+			$order_sql .= " ORDER BY LCASE(pd.name)";	
+		}
+		
+		if (isset($sort['order_way']) && ($sort['order_way'] == 'DESC')) {
+			$order_sql .= " DESC, LCASE(pd.name) DESC";
+		} else {
+			$order_sql .= " ASC, LCASE(pd.name) ASC";
+		}
+		
+		$sql = "SELECT mp.product_id, name, date_added, status as status_id, number_sold, review_status_id 
+				FROM `" . DB_PREFIX . "product_description` pd
+				INNER JOIN `" . DB_PREFIX . "product` p
+					ON pd.product_id = p.product_id 
+				INNER JOIN `" . DB_PREFIX . "ms_product` mp
+					ON p.product_id = mp.product_id
+				WHERE mp.seller_id = " . (int)$seller_id . "
+				AND pd.language_id = " . $this->config->get('config_language_id') 
+        		. ($onlyActive ? " AND p.status = 1" : '')
+        		. $order_sql 
+        		. ($sort['limit'] ? " LIMIT ".(int)(($sort['page'] - 1) * $sort['limit']).', '.(int)($sort['limit']) : '');				
+
+		$res = $this->db->query($sql);
+		
+		$review_statuses = $this->msProduct->getProductStatusArray();
+		foreach ($res->rows as &$row) {
+			$row['review_status'] = $review_statuses[$row['review_status_id']];
+			$row['status'] = $row['status_id'] ? $this->language->get('text_yes') : $this->language->get('text_no');
+		}
+		
+		return $res->rows;
+	}
+	
+	/*public function getSellerProductsFull($seller_id, $sort) {
+		
+		$sql = "SELECT p.product_id,
+				(SELECT AVG(rating) AS total FROM " . DB_PREFIX . "review r1 WHERE r1.product_id = p.product_id AND r1.status = '1' GROUP BY r1.product_id) AS rating,		
+					   p.price, name, date_added, status as status_id, number_sold, review_status_id
+			    FROM `" . DB_PREFIX . "product` p 
+				LEFT JOIN `" . DB_PREFIX . "product_description` pd
+					ON p.product_id = pd.product_id 
 				INNER JOIN `" . DB_PREFIX . "ms_product` c
-					ON b.product_id = c.product_id
+					ON p.product_id = c.product_id
 				WHERE c.seller_id = " . (int)$seller_id . "
 				AND a.language_id = " . $this->config->get('config_language_id'). "
         		ORDER BY {$sort['order_by']} {$sort['order_way']}" 
@@ -134,7 +184,7 @@ final class MsSeller {
 		}
 		
 		return $res->rows;
-	}		
+	}	*/
 		
 	public function getReservedAmount($seller_id) {
 		$sql = "SELECT SUM(amount - (amount*commission/100)) as total
@@ -299,15 +349,16 @@ final class MsSeller {
 						ms.nickname,
 						ms.seller_status_id,
 						ms.date_created as date_created,
-						ms.commission
+						ms.commission,
+						ms.avatar_path,
+						ms.country_id,
+						ms.description
 				FROM `" . DB_PREFIX . "customer` c
 				INNER JOIN `" . DB_PREFIX . "ms_seller` ms
 					ON c.customer_id = ms.seller_id
         		ORDER BY {$sort['order_by']} {$sort['order_way']}" 
         		. ($sort['limit'] ? " LIMIT ".(int)(($sort['page'] - 1) * $sort['limit']).', '.(int)($sort['limit']) : '');
-
 		$res = $this->db->query($sql);
-		
 		return $res->rows;		
 	}
 

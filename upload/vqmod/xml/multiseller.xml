@@ -5,7 +5,7 @@
 ]>
 <modification>
 	<id>Digital Multiseller Marketplace</id>
-	<version>1.0</version>
+	<version>1.1</version>
 	<vqmver>1.0.8</vqmver>
 	<author>http://ffct.cc</author>
 	
@@ -22,6 +22,19 @@
 			]]></search>
 			<add><![CDATA[
 				unset($this->session->data['multiseller']);
+			]]></add>
+		</operation>
+	</file>
+
+	<file name="&adminFolder;/controller/extension/module.php">
+		<operation>
+			<search position="replace"><![CDATA[
+				$this->model_setting_extension->uninstall('module', $value);
+			]]></search>
+			<add><![CDATA[
+				if (!in_array($value,array('ms_carousel'))) {
+					$this->model_setting_extension->uninstall('module', $value);
+				}
 			]]></add>
 		</operation>
 	</file>
@@ -152,7 +165,7 @@
 				require_once(DIR_SYSTEM . 'library/ms-mail.php');
 				$msTransaction = new MsTransaction($this->registry);
 				$msMail = new MsMail($this->registry);
-				
+
 				if (in_array($order_status_id, explode(',',$this->config->get('msconf_credit_order_statuses')))) {
 					$msTransaction->addTransactionsForOrder($order_id);
 					$msMail->sendOrderMails($order_id);
@@ -181,12 +194,32 @@
 			<div class="description">
 			]]></search>
 			<add><![CDATA[
-			<?php if (isset($sellerinfo) && !empty($sellerinfo)) { ?>
-			<div class="ms-sellerinfo">
-				<div><span><?php echo $ms_catalog_product_seller; ?></span> <div><span><?php echo $sellerinfo['nickname']; ?></span><?php if (isset($sellerinfo['thumbnail'])) { ?><br /><img src="<?php echo $sellerinfo['thumbnail']; ?>" /><?php } ?></div></div><br />
-				<span><?php echo $ms_catalog_product_date_added; ?></span> <?php echo $sellerinfo['date_added']; ?><br />
-				<span><?php echo $ms_catalog_product_sales; ?></span> <?php echo $sellerinfo['sales']; ?>
-			</div>
+			<?php if (isset($seller) && !empty($seller)) { ?>
+		    <div class="ms-sellerprofile description">
+				<span><?php echo $ms_catalog_product_sellerinfo; ?></span>		    
+		    	<div class="seller-data">
+		    		<div class="avatar-box">
+		    			<a style="text-decoration: none" href="<?php echo $seller['href']; ?>"><h2><?php echo $seller['nickname']; ?></h2></a>
+		    			<a href="<?php echo $seller['href']; ?>"><img src="<?php echo $seller['thumb']; ?>" /></a>
+		    		</div>
+		    		<div class="info-box">
+		    			<?php if ($seller['country']) { ?>
+			    			<p><b><?php echo $ms_catalog_seller_profile_country; ?></b> <?php echo $seller['country']; ?></p>
+			    		<?php } ?>
+		
+			    		<?php if ($seller['company']) { ?>
+			    			<p><b><?php echo $ms_catalog_seller_profile_company; ?></b> <?php echo $seller['company']; ?></p>
+			    		<?php } ?>
+			    		
+			    		<?php if ($seller['website']) { ?>
+			    			<p><b><?php echo $ms_catalog_seller_profile_website; ?></b> <?php echo $seller['website']; ?></p>
+			    		<?php } ?>
+			    		
+			    		<p><b><?php echo $ms_catalog_seller_profile_totalsales; ?></b> <?php echo $seller['total_sales']; ?></p>
+			    		<p><b><?php echo $ms_catalog_seller_profile_totalproducts; ?></b> <?php echo $seller['total_products']; ?></p>
+		    		</div>
+		    	</div>
+		    </div>
 			<?php } ?>
 			]]></add>
 		</operation>
@@ -202,11 +235,45 @@
 			$this->data = array_merge($this->data, $this->load->language('module/multiseller'));
 			require_once(DIR_SYSTEM . 'library/ms-image.php');
 			require_once(DIR_SYSTEM . 'library/ms-product.php');
+			require_once(DIR_SYSTEM . 'library/ms-seller.php');
+			$this->load->model('localisation/country');
 			$image = new MsImage($this->registry);
 			$msProduct = new MsProduct($this->registry);
-			$this->data['sellerinfo'] = $msProduct->getStatsForProduct($this->request->get['product_id']);
-			if (!empty($this->data['sellerinfo']) && (!empty($this->data['sellerinfo']['avatar_path'])))
-				$this->data['sellerinfo']['thumbnail'] = $image->resize($this->data['sellerinfo']['avatar_path'], $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'));
+			$msSeller = new MsSeller($this->registry);
+			
+			$seller_id = $msProduct->getSellerId($this->request->get['product_id']);
+			$seller = $msSeller->getSellerData($seller_id);
+			
+			if (!empty($seller) && (!empty($seller['avatar_path'])))
+				$this->data['seller']['thumb'] = $image->resize($seller['avatar_path'], $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'));
+				
+			$country = $this->model_localisation_country->getCountry($seller['country_id']);
+			
+			if (!empty($country)) {			
+				$this->data['seller']['country'] = $country['name'];
+			} else {
+				$this->data['seller']['country'] = NULL;
+			}
+			
+			if (!empty($seller['company'])) {
+				$this->data['seller']['company'] = $seller['company'];
+			} else {
+				$this->data['seller']['company'] = NULL;
+			}
+			
+			if (!empty($seller['website'])) {
+				$this->data['seller']['website'] = $seller['website'];
+			} else {
+				$this->data['seller']['website'] = NULL;
+			}
+			
+			$this->data['seller']['nickname'] = $seller['nickname'];
+			
+			$this->data['seller']['href'] = $this->url->link('product/seller/profile', 'seller_id=' . $seller['seller_id']);
+			
+			$this->data['seller']['total_sales'] = $msSeller->getSalesForSeller($seller['seller_id']);
+			$this->data['seller']['total_products'] = $msSeller->getTotalSellerProducts($seller['seller_id'], TRUE);
+				
 			]]></add>
 		</operation>
 	</file>

@@ -1,6 +1,9 @@
 <?php
 
 // General
+$_['ms_enabled']      = 'Enabled';
+$_['ms_disabled']      = 'Disabled';
+
 
 $_['ms_product_status_enabled']      = 'Enabled';
 $_['ms_product_status_disabled']      = 'Disabled';
@@ -153,6 +156,28 @@ $_['ms_config_comments_maxlen_note'] = 'Maximum comment length note';
 $_['ms_config_notification_email'] = 'Email for admin notifications';
 $_['ms_config_notification_email_note'] = 'Email for admin notifications note';
 
+
+$_['ms_config_carousel']       = 'Carousel';
+$_['ms_config_carousel_success']        = 'Success: You have modified module carousel!';
+
+$_['ms_config_module']         = 'Modules';
+$_['ms_config_status']         = 'Status';
+$_['ms_config_top']    = 'Content Top';
+$_['ms_config_bottom'] = 'Content Bottom';
+$_['ms_config_column_left']    = 'Column Left';
+$_['ms_config_column_right']   = 'Column Right';
+$_['ms_config_banner']        = 'Banner:';
+$_['ms_config_limit']         = 'Limit:';
+$_['ms_config_scroll']        = 'Scroll:';
+$_['ms_config_image']         = 'Image (W x H):';
+$_['ms_config_layout']        = 'Layout:';
+$_['ms_config_position']      = 'Position:';
+$_['ms_config_sort_order']    = 'Sort Order:';
+$_['ms_config_carousel_image']        = 'Image width &amp; height dimensions required!';
+
+
+
+
 // Customer-seller form
 $_['ms_catalog_sellerinfo_heading'] = 'Seller';
 $_['ms_catalog_sellerinfo_breadcrumbs'] = 'Seller';
@@ -197,50 +222,50 @@ $_['ms_mail_ending']      = "\n\nRegards,\n%s";
 $_['ms_mail_message']      = "\n\nMessage:\n%s";
 
 $_['ms_mail_subject_seller_account_approved']      = 'Seller account approved';
-$_['ms_mail_seller_account_approved'] = <<<'EOT'
+$_['ms_mail_seller_account_approved'] = <<<EOT
 Your seller account at %s has been approved and activated.
 
 You can now start adding your products.
 EOT;
 
 $_['ms_mail_subject_seller_account_declined']      = 'Seller account declined';
-$_['ms_mail_seller_account_declined'] = <<<'EOT'
+$_['ms_mail_seller_account_declined'] = <<<EOT
 Your seller account at %s has been declined.
 EOT;
 
 $_['ms_mail_subject_seller_account_disabled']      = 'Seller account disabled';
-$_['ms_mail_seller_account_disabled'] = <<<'EOT'
+$_['ms_mail_seller_account_disabled'] = <<<EOT
 Your seller account at %s has been disabled.
 EOT;
 
 $_['ms_mail_subject_seller_account_enabled']      = 'Seller account enabled';
-$_['ms_mail_seller_account_enabled'] = <<<'EOT'
+$_['ms_mail_seller_account_enabled'] = <<<EOT
 Your seller account at %s has been enabled.
 EOT;
 
 $_['ms_mail_subject_seller_account_modified']      = 'Seller account modified';
-$_['ms_mail_seller_account_modified'] = <<<'EOT'
+$_['ms_mail_seller_account_modified'] = <<<EOT
 Your seller account at %s has been modified by the administrator.
 EOT;
 
 
 $_['ms_mail_subject_product_approved']      = 'Product approved';
-$_['ms_mail_product_approved'] = <<<'EOT'
+$_['ms_mail_product_approved'] = <<<EOT
 Your product %s at %s has been approved and is now active!
 EOT;
 
 $_['ms_mail_subject_product_declined']      = 'Product declined';
-$_['ms_mail_product_declined'] = <<<'EOT'
+$_['ms_mail_product_declined'] = <<<EOT
 Your product %s at %s has been declined.
 EOT;
 
 $_['ms_mail_subject_product_enabled']      = 'Product active';
-$_['ms_mail_product_enabled'] = <<<'EOT'
+$_['ms_mail_product_enabled'] = <<<EOT
 Your product %s at %s is now active.
 EOT;
 
 $_['ms_mail_subject_product_disabled']      = 'Product disabled';
-$_['ms_mail_product_disabled'] = <<<'EOT'
+$_['ms_mail_product_disabled'] = <<<EOT
 Your product %s at %s has been disabled.
 EOT;
 

@@ -45,7 +45,8 @@ class ControllerModuleMultiseller extends Controller {
 			"msconf_allowed_image_types" => "png,jpg",
 			"msconf_allowed_download_types" => "zip,rar",
 			"msconf_minimum_product_price" => 0,
-			"msconf_notification_email" => ""
+			"msconf_notification_email" => "",
+			"ms_carousel_module" => ""			
 		);
 	}	
 	
@@ -59,13 +60,19 @@ class ControllerModuleMultiseller extends Controller {
 	private function _editSettings() {
 		$this->load->model("module/{$this->name}/settings");
 		$this->load->model('setting/setting');
+		$this->load->model('setting/extension');
 		
 		$set = $this->model_setting_setting->getSetting($this->name);
+		$installed_extensions = $this->model_setting_extension->getInstalled('module');
 
+		$extensions_to_be_installed = array();
 		foreach ($this->settings as $name=>$value) {
 			if (!array_key_exists($name,$set))
 				$set[$name] = $value;
 				
+			if ((strpos($name,'_module') !== FALSE) && (!in_array(str_replace('_module','',$name),$installed_extensions))) {
+				$extensions_to_be_installed[] = str_replace('_module','',$name);
+			}
 		}
 
 		foreach($set as $s=>$v) {
@@ -80,6 +87,10 @@ class ControllerModuleMultiseller extends Controller {
 		}
 
 		$this->model_setting_setting->editSetting($this->name, $set);
+
+		foreach ($extensions_to_be_installed as $ext) {
+			$this->model_setting_extension->install('module',$ext);	
+		}
 	}
 	
 	private function _setBreadcrumbs($textVar, $function) {
@@ -444,14 +455,29 @@ class ControllerModuleMultiseller extends Controller {
 				
         $this->data['action'] = $this->url->link("module/{$this->name}/settings", 'token=' . $this->session->data['token'], 'SSL');
 		$this->data['cancel'] = $this->url->link('extension/module', 'token=' . $this->session->data['token'], 'SSL');
-		
 		$this->data['token'] = $this->session->data['token'];
+		
 		$this->load->model('design/layout');
 		$this->data['layouts'] = $this->model_design_layout->getLayouts();
 		
+		
+		/* ************* */
+		/* carousel part */
+		/* ************* */
+		//$this->load->language('module/carousel');
+
+		$this->data['button_add_module'] = $this->language->get('button_add_module');
+		$this->data['button_remove'] = $this->language->get('button_remove');
+		
+		if (isset($this->error['image'])) {
+			$this->data['error_image'] = $this->error['image'];
+		} else {
+			$this->data['error_image'] = array();
+		}
+
 		$this->_setBreadcrumbs('ms_settings_breadcrumbs', __FUNCTION__);
 		$this->document->setTitle($this->language->get('ms_settings_heading'));
-		$this->_renderTemplate('multiseller');	
+		$this->_renderTemplate('multiseller');
 	}
 	
 	public function withdrawals() {

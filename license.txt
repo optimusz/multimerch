@@ -23,7 +23,9 @@ projects.
 2.3. You may modify the Software or create derivative works based 
 upon the Software to adapt it for your needs.
 
-2.4. You may use the Software in an unlimited number of your projects.
+2.4. You may use the Software with one OpenCart installation. If you intend to
+use the Software in multiple projects, you must purchase additional copies of 
+the Software for every project you use the Software in.
 
 
 3. Restrictions
