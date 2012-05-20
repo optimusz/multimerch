@@ -146,7 +146,7 @@ final class MsSeller {
 				AND pd.language_id = " . $this->config->get('config_language_id') 
         		. ($onlyActive ? " AND p.status = 1" : '')
         		. $order_sql 
-        		. ($sort['limit'] ? " LIMIT ".(int)(($sort['page'] - 1) * $sort['limit']).', '.(int)($sort['limit']) : '');				
+        		. (isset($sort['limit']) ? " LIMIT ".(int)(($sort['page'] - 1) * $sort['limit']).', '.(int)($sort['limit']) : '');				
 
 		$res = $this->db->query($sql);
 		
@@ -172,7 +172,7 @@ final class MsSeller {
 				WHERE c.seller_id = " . (int)$seller_id . "
 				AND a.language_id = " . $this->config->get('config_language_id'). "
         		ORDER BY {$sort['order_by']} {$sort['order_way']}" 
-        		. ($sort['limit'] ? " LIMIT ".(int)(($sort['page'] - 1) * $sort['limit']).', '.(int)($sort['limit']) : '');				
+        		. (isset($sort['limit']) ? " LIMIT ".(int)(($sort['page'] - 1) * $sort['limit']).', '.(int)($sort['limit']) : '');				
 		
 		$res = $this->db->query($sql);
 		
@@ -358,7 +358,7 @@ final class MsSeller {
 					ON c.customer_id = ms.seller_id "
         		. ($onlyActive ? " WHERE ms.seller_status_id = " . self::MS_SELLER_STATUS_ACTIVE : '') . "
         		ORDER BY {$sort['order_by']} {$sort['order_way']}" 
-        		. ($sort['limit'] ? " LIMIT ".(int)(($sort['page'] - 1) * $sort['limit']).', '.(int)($sort['limit']) : '');
+        		. (isset($sort['limit']) ? " LIMIT ".(int)(($sort['page'] - 1) * $sort['limit']).', '.(int)($sort['limit']) : '');
 		$res = $this->db->query($sql);
 		return $res->rows;		
 	}

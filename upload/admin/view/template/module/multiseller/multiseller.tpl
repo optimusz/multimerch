@@ -267,6 +267,8 @@
 		          </tr>
 		        </thead>
 		        <?php $module_row = 0; ?>
+		        
+		        <?php if (isset($ms_carousel_module)) { ?>
 		        <?php foreach ($ms_carousel_module as $module) { ?>
 		        <tbody id="module-row<?php echo $module_row; ?>">
 		          <tr>
@@ -323,6 +325,7 @@
 		        </tbody>
 		        <?php $module_row++; ?>
 		        <?php } ?>
+		        <?php } ?>		        
 		        <tfoot>
 		          <tr>
 		            <td colspan="7"></td>

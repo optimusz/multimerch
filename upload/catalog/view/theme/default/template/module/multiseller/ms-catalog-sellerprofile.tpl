@@ -5,7 +5,6 @@
     <?php echo $breadcrumb['separator']; ?><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a>
     <?php } ?>
   </div>
-  <h1><?php echo $text_heading; ?></h1>
   <?php if ($seller) { ?>
     <div class="ms-sellerprofile">
     	<div class="seller-data">

@@ -46,7 +46,7 @@ class ControllerModuleMultiseller extends Controller {
 			"msconf_allowed_download_types" => "zip,rar",
 			"msconf_minimum_product_price" => 0,
 			"msconf_notification_email" => "",
-			"ms_carousel_module" => ""			
+			"ms_carousel_module" => ""
 		);
 	}	
 	
@@ -76,6 +76,15 @@ class ControllerModuleMultiseller extends Controller {
 		}
 
 		foreach($set as $s=>$v) {
+			if ((strpos($name,'_module') !== FALSE)) {
+				if (!isset($this->request->post[$s])) {
+					$set[$s] = '';
+				} else {
+					$set[$s] = $this->request->post[$s];
+				}
+				continue;
+			}
+			
 			if (isset($this->request->post[$s])) {
 				$set[$s] = $this->request->post[$s];
 				$this->data[$s] = $this->request->post[$s];
@@ -85,7 +94,7 @@ class ControllerModuleMultiseller extends Controller {
 				$this->data[$s] = $this->settings[$s];
 			}
 		}
-
+		
 		$this->model_setting_setting->editSetting($this->name, $set);
 
 		foreach ($extensions_to_be_installed as $ext) {

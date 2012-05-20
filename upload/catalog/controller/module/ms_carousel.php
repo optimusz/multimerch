@@ -19,8 +19,16 @@ class ControllerModuleMsCarousel extends Controller {
 		$this->document->addStyle('catalog/view/theme/' . $this->config->get('config_template') . '/stylesheet/multiseller.css');
 		$this->data = array_merge($this->data, $this->load->language('module/multiseller'));
 		
-		$this->data['limit'] = $setting['limit'];
-		$this->data['scroll'] = $setting['scroll'];
+		if (isset($setting['limit']))
+			$this->data['limit'] = $setting['limit'];
+		else
+			$this->data['limit'] = 3;		
+
+		if (isset($setting['scroll']))		
+			$this->data['scroll'] = $setting['scroll'];
+		else
+			$this->data['scroll'] = 1;		
+		
 		$this->data['sellers_href'] = $this->url->link('product/seller');
 				
 				
@@ -33,11 +41,12 @@ class ControllerModuleMsCarousel extends Controller {
 		);
 		
 		$results = $this->msSeller->getSellers($data, TRUE);
+
 		foreach ($results as $result) {
-			if (file_exists(DIR_IMAGE . $result['image'])) {
+			if (!empty($result['avatar_path']) && file_exists(DIR_IMAGE . $result['avatar_path'])) {
 				$this->data['sellers'][] = array(
 					'nickname'        => $result['nickname'],
-					'href'        => $this->url->link('product/seller/profile', 'path=' . $this->request->get['path'] . '&seller_id=' . $result['seller_id']),
+					'href'        => $this->url->link('product/seller/profile','seller_id=' . $result['seller_id']),
 					'image' => $this->msImage->resize($result['avatar_path'], $setting['width'], $setting['height'])
 				);
 			}
