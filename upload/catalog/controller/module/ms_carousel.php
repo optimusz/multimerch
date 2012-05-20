@@ -30,8 +30,9 @@ class ControllerModuleMsCarousel extends Controller {
 			'order_way'              => 'ASC',
 			//'page'              => $page,
 			//'limit'              => $limit
-		);				
-		$results = $this->msSeller->getSellers($data);
+		);
+		
+		$results = $this->msSeller->getSellers($data, TRUE);
 		foreach ($results as $result) {
 			if (file_exists(DIR_IMAGE . $result['image'])) {
 				$this->data['sellers'][] = array(

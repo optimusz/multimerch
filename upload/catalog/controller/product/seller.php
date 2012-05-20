@@ -101,8 +101,8 @@ class ControllerProductSeller extends Controller {
 			'limit'              => $limit
 		);
 		
-		$total_sellers = $this->msSeller->getTotalSellers();
-		$results = $this->msSeller->getSellers($data);
+		$total_sellers = $this->msSeller->getTotalSellers(TRUE);
+		$results = $this->msSeller->getSellers($data, TRUE);
 		
 		foreach ($results as $result) {
 			if ($result['avatar_path'] && file_exists(DIR_IMAGE . $result['avatar_path'])) {
@@ -254,7 +254,7 @@ class ControllerProductSeller extends Controller {
     	
 		$seller = $this->msSeller->getSellerData($this->request->get['seller_id']);
 
-		if (empty($seller)) {
+		if (empty($seller) || $seller['seller_status_id'] != MsSeller::MS_SELLER_STATUS_ACTIVE) {
 			$this->redirect($this->url->link('product/seller', '', 'SSL'));
 			return;
 		}
@@ -301,6 +301,7 @@ class ControllerProductSeller extends Controller {
 		);
 		
 		$products = $this->msSeller->getSellerProducts($seller['seller_id'], $sort, TRUE);
+
 		if (!empty($products)) {
 			foreach ($products as $product) {
 				$product_data = $this->model_catalog_product->getProduct($product['product_id']);
@@ -340,7 +341,7 @@ class ControllerProductSeller extends Controller {
 				);				
 			}
 		} else {
-			$this->data['seller']['products'][] = NULL;
+			$this->data['seller']['products'] = NULL;
 		}
 
 
@@ -358,7 +359,7 @@ class ControllerProductSeller extends Controller {
     	
 		$seller = $this->msSeller->getSellerData($this->request->get['seller_id']);
 
-		if (empty($seller)) {
+		if (empty($seller) || $seller['seller_status_id'] != MsSeller::MS_SELLER_STATUS_ACTIVE) {
 			$this->redirect($this->url->link('product/seller', '', 'SSL'));
 			return;
 		}
@@ -478,7 +479,7 @@ class ControllerProductSeller extends Controller {
 				);				
 			}
 		} else {
-			$this->data['seller']['products'][] = NULL;
+			$this->data['seller']['products'] = NULL;
 		}
 		
 		

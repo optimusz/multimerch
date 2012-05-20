@@ -342,7 +342,7 @@ final class MsSeller {
 		return $res->row;		
 	}
 
-	public function getSellers($sort) {
+	public function getSellers($sort, $onlyActive = FALSE) {
 		$sql = "SELECT  CONCAT(c.firstname, ' ', c.lastname) as name,
 						c.email as email,
 						ms.seller_id,
@@ -355,16 +355,18 @@ final class MsSeller {
 						ms.description
 				FROM `" . DB_PREFIX . "customer` c
 				INNER JOIN `" . DB_PREFIX . "ms_seller` ms
-					ON c.customer_id = ms.seller_id
+					ON c.customer_id = ms.seller_id "
+        		. ($onlyActive ? " WHERE ms.seller_status_id = " . self::MS_SELLER_STATUS_ACTIVE : '') . "
         		ORDER BY {$sort['order_by']} {$sort['order_way']}" 
         		. ($sort['limit'] ? " LIMIT ".(int)(($sort['page'] - 1) * $sort['limit']).', '.(int)($sort['limit']) : '');
 		$res = $this->db->query($sql);
 		return $res->rows;		
 	}
 
-	public function getTotalSellers() {
+	public function getTotalSellers($onlyActive = FALSE) {
 		$sql = "SELECT COUNT(*) as 'total'
-				FROM `" . DB_PREFIX . "ms_seller`";
+				FROM `" . DB_PREFIX . "ms_seller` "
+        		. ($onlyActive ? " WHERE seller_status_id = " . self::MS_SELLER_STATUS_ACTIVE : '');				
 		
 		$res = $this->db->query($sql);
 		
