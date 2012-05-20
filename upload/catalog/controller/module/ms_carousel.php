@@ -42,7 +42,7 @@ class ControllerModuleMsCarousel extends Controller {
 				);
 			}
 		}
-		
+		shuffle($this->data['sellers']);		
 		$this->data['module'] = $module++; 
 		
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/multiseller/module/ms-carousel.tpl')) {
