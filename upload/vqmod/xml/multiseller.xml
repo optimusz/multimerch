@@ -245,7 +245,7 @@
 			$seller = $msSeller->getSellerData($seller_id);
 			
 			if (!empty($seller) && (!empty($seller['avatar_path'])))
-				$this->data['seller']['thumb'] = $image->resize($seller['avatar_path'], $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'));
+				$this->data['seller']['thumb'] = $image->resize($seller['avatar_path'], $this->config->get('config_image_category_width'), $this->config->get('config_image_category_height'));
 				
 			$country = $this->model_localisation_country->getCountry($seller['country_id']);
 			

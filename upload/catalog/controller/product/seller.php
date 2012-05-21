@@ -14,7 +14,7 @@ class ControllerProductSeller extends Controller {
 		$this->msImage = new MsImage($this->registry);
 		
 		$this->document->addStyle('catalog/view/theme/' . $this->config->get('config_template') . '/stylesheet/multiseller.css');
-		$this->data = array_merge($this->data, $this->load->language('module/multiseller'),$this->load->language('account/account'));
+		$this->data = array_merge($this->data, $this->load->language('module/multiseller'),$this->load->language('account/account'),$this->language->load('product/product'));
 		
 		$this->load->config('ms-config');
 	}
@@ -465,12 +465,19 @@ class ControllerProductSeller extends Controller {
 				} else {
 					$rating = false;
 				}
+				
+				if ($this->config->get('config_tax')) {
+					$tax = $this->currency->format((float)$product_data['special'] ? $product_data['special'] : $product_data['price']);
+				} else {
+					$tax = false;
+				}
 							
 				$this->data['seller']['products'][] = array(
 					'product_id' => $product['product_id'],
 					'thumb' => $image,
 					'name' => $product_data['name'],
 					'price' => $price,
+					'tax' => $tax,
 					'special' => $special,
 					'rating' => $rating,
 					'description' => utf8_substr(strip_tags(html_entity_decode($product_data['description'], ENT_QUOTES, 'UTF-8')), 0, 100) . '..',					

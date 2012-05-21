@@ -118,7 +118,8 @@
 <script>
 $(function() {
 	$("#ms-submit-button").click(function() {
-	var id = $(this).attr('id');
+		$('.success').remove();	
+		var id = $(this).attr('id');
 	    $.ajax({
 			type: "POST",
 			dataType: "json",
@@ -160,6 +161,7 @@ $(function() {
 		var id = $(this).attr('id');
 		$('#ms_action').val(id);
 		$('#error_'+id).text('');
+		$('.success').remove();
 		$("#ms-sellerinfo").ajaxForm({
 			url:  "index.php?route=account/ms-seller/jxuploadfile",
 			dataType: 'json', 
