@@ -42,6 +42,7 @@ class ControllerModuleMsCarousel extends Controller {
 		
 		$results = $this->msSeller->getSellers($data, TRUE);
 
+		$this->data['sellers'] = array();
 		foreach ($results as $result) {
 			if (!empty($result['avatar_path']) && file_exists(DIR_IMAGE . $result['avatar_path'])) {
 				$this->data['sellers'][] = array(

@@ -1,0 +1,33 @@
+General upgrade guide
+----------------------------------
+	1. Make a backup of your data in case something goes wrong. 
+ 
+	2. Copy the files and folders from the upload/ directory to your OpenCart installation.
+	   
+	   NOTE: if you have made changes to translations, do not copy catalog/language and admin/language folders
+	   since it will overwrite your translations. You need to compare new language files with the old ones and
+	   merge them accordingly.
+	   
+	   Same applies to templates or any other files.
+
+	3. Go to Multiseller - Settings menu in back office, configure any new options that may have been added and
+	   save the settings.
+
+
+Upgrading to version 1.2
+----------------------------------
+	1. Perform steps 1 & 2 from the general upgrade guide.
+	
+	2. Run the following SQL queries against your database:
+		NOTE:
+		- replace prefix_ with your OpenCart table prefix if necessary
+		- replace DEFAULT '1' in the _SECOND_ query with DEFAULT '3' if you wish to enable manual product validation
+		  for all sellers (this can be changed per seller later)
+		- replace DEFAULT '0' in the _FIRST_ query with DEFAULT '0.5' (or any other decimal value), if you wish
+		  to set flat commission fee for all sellers (can be changed per seller later)
+		
+		ALTER TABLE prefix_ms_seller ADD COLUMN `commission_flat` decimal(15,4) NOT NULL DEFAULT '0';
+		ALTER TABLE prefix_ms_seller ADD COLUMN `product_validation` tinyint(4) NOT NULL DEFAULT '1';
+		ALTER TABLE prefix_ms_commission ADD COLUMN `commission_flat` decimal(15,4) NOT NULL DEFAULT '0';
+
+	3. Perform step 3 from the general upgrade guide.

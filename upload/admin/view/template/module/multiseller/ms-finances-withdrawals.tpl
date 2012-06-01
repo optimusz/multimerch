@@ -14,7 +14,10 @@
   <div class="box">
     <div class="heading">
       <h1><img src="view/image/customer.png" alt="" /> <?php echo $ms_finances_withdrawals_heading; ?></h1>
-      <div class="buttons"><a id="ms-pay" class="button"><?php echo $ms_button_pay; ?></a></div>
+      <div class="buttons">
+      	<a id="ms-pay" class="button"><?php echo $ms_button_pay; ?></a>
+      	<a id="ms-mark-paid" class="button"><?php echo $ms_button_mark_paid; ?></a>
+      </div>
     </div>
     <div class="content">
       <style type="text/css">
@@ -134,6 +137,75 @@ $(document).ready(function() {
 	       	}
 		});
 	});
+	
+	$("#ms-mark-paid").click(function() {
+		if ($('#form tbody input:checkbox:checked').length == 0)
+			return;
+			
+	    $.ajax({
+			type: "POST",
+			dataType: "json",
+			url: 'index.php?route=module/multiseller/jxConfirmWithdrawalPaid&token=<?php echo $token; ?>',
+			data: $('#form').serialize(),
+			success: function(jsonData) {
+				if (jsonData.error) {
+				    alert(jsonData.error);
+				} else {
+					console.log('success');
+					$('<div />').html(jsonData.html).dialog({
+						dialogClass: "msBlack",
+						resizable: false,
+						width: 600,
+						title: 'Confirm mark requests as paid',
+						modal: true,
+						buttons: [
+							{
+	            				id: "button-pay",
+	            				text: "Mark as paid",
+								click: function() {
+									var dialog = $(this);
+									$('#button-pay').remove();
+									$('#button-cancel').attr('disabled','disabled');									
+									dialog.html('<p style="text-align: center"><img src="view/image/loading.gif" alt="" /></p>');
+								    $.ajax({
+										type: "POST",
+										dataType: "json",
+										url: 'index.php?route=module/multiseller/jxCompleteWithdrawalPaid&token=<?php echo $token; ?>',
+										data: $('#form').serialize(),
+										success: function(jsonData) {
+											$('#button-pay').remove();
+											$('#button-cancel').removeAttr('disabled').find("span").html("OK");
+											
+											if (!jQuery.isEmptyObject(jsonData.error)) {
+												dialog.html('<p class="warning">'+jsonData.error+'</p>');
+												if (!jQuery.isEmptyObject(jsonData.response)) {
+													dialog.append('<p class="warning">'+jsonData.response+'</p>');											
+												}
+												dialog.children('.ui-dialog-buttonset button:first').remove();
+											} else {
+												dialog.html('<p class="success">'+jsonData.success+'</p>');
+												$('#button-cancel').unbind('click').click(function() {
+													dialog.dialog("close");
+													window.location.reload();
+												});												
+											}
+										}
+									});
+								}
+							},
+							{
+	            				id: "button-cancel",
+	            				text: "Cancel",
+								click: function() {
+									$(this).dialog("close");
+								}
+							}
+						]
+					});
+				}
+	       	}
+		});
+	});	
 });
 //--></script>
 <?php echo $footer; ?> 

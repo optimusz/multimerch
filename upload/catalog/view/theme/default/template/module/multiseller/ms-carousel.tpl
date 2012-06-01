@@ -1,6 +1,7 @@
 <div class="box">
 	<div class="box-heading"><?php echo $ms_carousel_sellers; ?></div>
 	<div class="box-content">
+		<?php if (isset($sellers) && !empty($sellers)) { ?>
 		<div id="carousel<?php echo $module; ?>" class="ms-carousel">
 		  <ul class="jcarousel-skin-opencart">
 		    <?php foreach ($sellers as $seller) { ?>
@@ -12,6 +13,9 @@
 		  </ul>
 	      <p style="text-align: right; margin: 0"><a href="<?php echo $sellers_href ?>"><?php echo $ms_carousel_view; ?></a></p>		  
 		</div>
+		<?php } else { ?>
+			<p style="text-align: center; margin: 0"><?php echo $ms_catalog_sellers_empty; ?></p>
+		<?php } ?>	      
 	</div>
 </div>
 <script type="text/javascript"><!--

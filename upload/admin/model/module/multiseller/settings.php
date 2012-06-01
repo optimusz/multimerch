@@ -24,6 +24,8 @@ class ModelModuleMultisellerSettings extends Model {
 			 `date_created` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
 			 `seller_status_id` TINYINT UNSIGNED NOT NULL DEFAULT '1',
 			 `commission` DECIMAL(4,2) NOT NULL DEFAULT '0',
+			 `commission_flat` decimal(15,4) NOT NULL DEFAULT '0.0000',
+			 `product_validation` tinyint(4) NOT NULL DEFAULT '1',
         	PRIMARY KEY (`seller_id`)) default CHARSET=utf8";
         
         $this->db->query($sql);
@@ -54,7 +56,8 @@ class ModelModuleMultisellerSettings extends Model {
              `currency_id` int(11) NOT NULL,
              `currency_code` VARCHAR(3) NOT NULL,
              `currency_value` DECIMAL(15,8) NOT NULL,
-             `commission` DECIMAL(4,2) NOT NULL DEFAULT '0',				
+             `commission` DECIMAL(4,2) NOT NULL DEFAULT '0',
+			 `commission_flat` DECIMAL(15,4) NOT NULL DEFAULT '0.0000',
              `description` TEXT NOT NULL DEFAULT '',			              
 			 `date_created` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
 			 `date_modified` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',

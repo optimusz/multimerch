@@ -139,7 +139,7 @@
           	</div>
           </td>
         </tr>
-        <?php if ($this->config->get('msconf_product_validation') == MsProduct::MS_PRODUCT_VALIDATION_APPROVAL) { ?>
+        <?php if ($seller['product_validation'] == MsProduct::MS_PRODUCT_VALIDATION_APPROVAL) { ?>
         <tr><td colspan="2"><h3>Message to the reviewer</h3></td></tr>        
         <tr>
           <td><?php echo $ms_account_product_message; ?></td>

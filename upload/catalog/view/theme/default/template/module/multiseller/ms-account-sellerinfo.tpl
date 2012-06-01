@@ -102,7 +102,17 @@
           		<?php } ?>
           	</div>
           </td>
-        </tr>        
+        </tr>
+        <?php if (!isset($seller['seller_id']) &&  $seller_validation != MS_SELLER_VALIDATION_NONE) { ?>
+        <tr>
+          <td><?php echo $ms_account_sellerinfo_reviewer_message; ?></td>
+          <td>
+          	<textarea name="sellerinfo_reviewer_message"></textarea>
+          	<p class="ms-note"><?php echo $ms_account_sellerinfo_reviewer_message_note; ?></p>
+          	<p class="error" id="error_sellerinfo_review_message"></p>
+          </td>          
+        </tr>
+        <?php } ?>
       </table>
     </div>
     <div class="buttons">

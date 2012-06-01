@@ -27,6 +27,7 @@ $_['ms_error_withdraw_response'] = 'Error: no response';
 $_['ms_error_withdraw_status'] = 'Error: unsuccessful transaction';
 $_['ms_success'] = 'Success';
 $_['ms_success_transactions'] = 'Transactions successfully completed';
+$_['ms_success_withdrawals_marked'] = 'Withdrawal requests marked as paid';
 $_['ms_transaction_withdrawal']      = 'Withdrawal: %s';
 
 
@@ -56,6 +57,7 @@ $_['ms_disable_decline'] = 'Disable/Decline';
 
 $_['ms_edit_process'] = 'Edit/Process';
 $_['ms_button_pay'] = 'Pay';
+$_['ms_button_mark_paid'] = 'Mark as paid';
 
 // Menu
 
@@ -108,8 +110,8 @@ $_['ms_config_product_validation_note'] = 'Product validation';
 $_['ms_config_product_validation_none'] = 'No validation';
 $_['ms_config_product_validation_approval'] = 'Manual approval';
 
-$_['ms_config_seller_commission'] = 'Default seller commission (%)';
-$_['ms_config_seller_commission_note'] = 'Default seller commission';
+$_['ms_config_seller_commission'] = 'Default seller commission';
+$_['ms_config_seller_commission_note'] = 'Default seller commission (flat fee + %)';
 
 $_['ms_config_minimum_product_price'] = 'Minimum product price';
 $_['ms_config_minimum_product_price_note'] = 'Minimum product price';
@@ -156,6 +158,9 @@ $_['ms_config_comments_maxlen_note'] = 'Maximum comment length note';
 $_['ms_config_notification_email'] = 'Email for admin notifications';
 $_['ms_config_notification_email_note'] = 'Email for admin notifications note';
 
+$_['ms_config_allow_free_products'] = 'Allow free products';
+$_['ms_config_allow_free_products_note'] = 'Allow sellers to add free products';
+
 
 $_['ms_config_carousel']       = 'Carousel';
 $_['ms_config_carousel_success']        = 'Success: You have modified module carousel!';
@@ -186,6 +191,7 @@ $_['ms_catalog_sellerinfo_nickname']    = 'Nickname';
 $_['ms_catalog_sellerinfo_description']    = 'Description';
 $_['ms_catalog_sellerinfo_company']     = 'Company';
 $_['ms_catalog_sellerinfo_country']    = 'Country';
+$_['ms_catalog_sellerinfo_commission']    = 'Commission (flat fee + %)';
 $_['ms_catalog_sellerinfo_country_dont_display']    = 'Do not display country';
 $_['ms_catalog_sellerinfo_website']    = 'Website';
 $_['ms_catalog_sellerinfo_avatar']    = 'Avatar';
@@ -193,6 +199,10 @@ $_['ms_catalog_sellerinfo_paypal']    = 'Paypal';
 $_['ms_catalog_sellerinfo_message'] = 'Message';
 $_['ms_catalog_sellerinfo_message_note'] = 'Will be appended to the default email text';
 $_['ms_catalog_sellerinfo_notify'] = 'Notify seller via email';
+$_['ms_catalog_sellerinfo_product_validation'] = 'Product validation';
+$_['ms_catalog_sellerinfo_product_validation_note'] = 'Product validation for this seller';
+
+
 
 // Catalog - Products
 

@@ -112,6 +112,17 @@ Usage:
 
 Changelog:
 ---------------------------------
+	1.2 (2012-06-01)
+		- Added product validation setting per seller
+		- Added commission per seller
+		- Added flat fee commissions
+		- Added possibility to upload free products
+		- Added possibility to mark withdrawal requests as paid		
+		- Added "Message to the reviewer" field when creating seller account
+		- Fixed installer bug	
+		- Fixed minor bugs when no sellers have been added yet
+		- Fixed Chrome back office syntax error in JavaScript
+		
 	1.1 (2012-05-20)
 		- Added a hookable sellers carousel module	
 		- Added a page to list seller's products
@@ -130,3 +141,11 @@ Changelog:
 	1.0.0 (2012-05-04)
 		- Initial release
 
+
+
+
+
+
+ALTER TABLE oc152_ms_seller ADD COLUMN `commission_flat` decimal(15,4) NOT NULL DEFAULT '0';
+ALTER TABLE oc152_ms_seller ADD COLUMN `product_validation` tinyint(4) NOT NULL DEFAULT '1';
+ALTER TABLE oc152_ms_commission ADD COLUMN `commission_flat` decimal(15,4) NOT NULL DEFAULT '0';

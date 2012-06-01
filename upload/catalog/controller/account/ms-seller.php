@@ -168,10 +168,7 @@ class ControllerAccountMsSeller extends Controller {
 	}	
 	
 	public function jxSaveProductDraft() {
-		
 		$data = $this->request->post;
-		
-		
 		
 		if (isset($data['product_id']) && !empty($data['product_id'])) {
 			if  ($this->msProduct->productOwnedBySeller($data['product_id'], $this->customer->getId())) {
@@ -270,8 +267,7 @@ class ControllerAccountMsSeller extends Controller {
 	
 	public function jxSubmitProduct() {
 		$data = $this->request->post;
-		
-		
+		$seller = $this->msSeller->getSellerData($this->customer->getId());
 
 		if (isset($data['product_id']) && !empty($data['product_id'])) {
 			if  ($this->msProduct->productOwnedBySeller($data['product_id'], $this->customer->getId())) {
@@ -326,7 +322,9 @@ class ControllerAccountMsSeller extends Controller {
 		}
 		
 		if (empty($data['product_price'])) {
-			$json['errors']['product_price'] = $this->language->get('ms_error_product_price_empty'); 
+			if ($data['product_price'] !== "0" || $this->config->get('msconf_allow_free_products') == 0) {
+				$json['errors']['product_price'] = $this->language->get('ms_error_product_price_empty');
+			}
 		} else if (!is_numeric($data['product_price'])) {
 			$json['errors']['product_price'] = $this->language->get('ms_error_product_price_invalid');
 		} else if ($data['product_price'] < $this->config->get('msconf_minimum_product_price')) {
@@ -378,7 +376,7 @@ class ControllerAccountMsSeller extends Controller {
 		if (empty($json['errors'])) {
 			$mails = array();
 			// set product status
-			switch ($this->config->get('msconf_product_validation')) {
+			switch ($seller['product_validation']) {
 				case MsProduct::MS_PRODUCT_VALIDATION_APPROVAL:
 					$data['enabled'] = 0;
 					$data['review_status_id'] = MsProduct::MS_PRODUCT_STATUS_PENDING;
@@ -457,7 +455,6 @@ class ControllerAccountMsSeller extends Controller {
 	}
 
 	public function jxRequestMoney() {
-		
 		$msTransaction = new MsTransaction($this->registry);
 		$data = $this->request->post;
 
@@ -526,7 +523,6 @@ class ControllerAccountMsSeller extends Controller {
 	}
 	
 	public function jxSaveSellerInfo() {
-		
 		$data = $this->request->post;
 		$seller = $this->msSeller->getSellerData($this->customer->getId());
 		$json = array();
@@ -585,7 +581,10 @@ class ControllerAccountMsSeller extends Controller {
 							'type' => MsMail::SMT_SELLER_ACCOUNT_AWAITING_MODERATION
 						);
 						$mails[] = array(
-							'type' => MsMail::AMT_SELLER_ACCOUNT_AWAITING_MODERATION
+							'type' => MsMail::AMT_SELLER_ACCOUNT_AWAITING_MODERATION,
+							'data' => array(
+								'message' => $data['sellerinfo_reviewer_message']
+							)
 						);
 						$data['seller_status_id'] = MsSeller::MS_SELLER_STATUS_TOBEAPPROVED;
 
@@ -610,6 +609,7 @@ class ControllerAccountMsSeller extends Controller {
 				}
 				
 				$data['seller_id'] = $this->customer->getId();
+				$data['product_validation'] = $this->config->get('msconf_product_validation');
 				$this->msSeller->createSeller($data);
 				$this->msMail->sendMails($mails);
 				$this->session->data['success'] = $this->language->get('ms_account_sellerinfo_saved');
@@ -625,9 +625,8 @@ class ControllerAccountMsSeller extends Controller {
 	}
 
 	public function newProduct() {
-		
 		$this->document->addScript('catalog/view/javascript/jquery.form.js');
-
+		$this->data['seller'] = $this->msSeller->getSellerData($this->customer->getId());
 		$this->data['categories'] = $this->msProduct->getCategories();
 		$this->load->model('localisation/language');
 		$this->data['languages'] = $this->model_localisation_language->getLanguages();
@@ -641,8 +640,6 @@ class ControllerAccountMsSeller extends Controller {
 	}
 	
 	public function products() {
-		
-
 		$this->load->model('localisation/language');
 		$this->data['languages'] = $this->model_localisation_language->getLanguages();
 
@@ -688,10 +685,9 @@ class ControllerAccountMsSeller extends Controller {
 	}
 	
 	public function editProduct() {
-		
 		$this->load->model('tool/image');
 		$this->document->addScript('catalog/view/javascript/jquery.form.js');
-		
+		$this->data['seller'] = $this->msSeller->getSellerData($this->customer->getId());
 		$this->data['categories'] = $this->msProduct->getCategories();		
 		
 		$this->load->model('localisation/language');
@@ -748,8 +744,6 @@ class ControllerAccountMsSeller extends Controller {
 	}
 	
 	public function deleteProduct() {
-		
-		
 		$product_id = (int)$this->request->get['product_id'];
 		$seller_id = (int)$this->customer->getId();
 		
@@ -800,6 +794,7 @@ class ControllerAccountMsSeller extends Controller {
 			$this->data['statustext'] = $this->language->get('ms_account_status_please_fill_in');			
 		}
 
+		$this->data['seller_validation'] = $this->config->get('msconf_seller_validation');
 		$this->data['back'] = $this->url->link('account/account', '', 'SSL');
 		$this->document->setTitle($this->language->get('ms_account_sellerinfo_heading'));
 		$this->_setBreadcrumbs('ms_account_sellerinfo_breadcrumbs', __FUNCTION__);		
@@ -810,7 +805,6 @@ class ControllerAccountMsSeller extends Controller {
 	
 	public function transactions() {
 		$msTransaction = new MsTransaction($this->registry);
-		
 		
 		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
 
@@ -849,8 +843,6 @@ class ControllerAccountMsSeller extends Controller {
 	}
 	
 	public function withdraw() {
-		
-		
 		$seller_id = $this->customer->getId();
 		$this->data['balance'] =  $this->msSeller->getBalanceForSeller($seller_id);
 		$this->data['balance_formatted'] =  $this->currency->format($this->msSeller->getBalanceForSeller($seller_id),$this->config->get('config_currency'));

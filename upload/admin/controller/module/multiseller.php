@@ -17,10 +17,13 @@ class ControllerModuleMultiseller extends Controller {
 		require_once(DIR_SYSTEM . 'library/ms-seller.php');
 		
 		$this->load->config('ms-config');
-
-		$this->msMail = new MsMail($registry);
-		$this->msSeller = new MsSeller($registry);
-
+		
+		$parts = explode('/', $this->request->request['route']);
+		if (!isset($parts[2]) || !in_array($parts[2], array('install','uninstall'))) {
+			$this->msMail = new MsMail($registry);
+			$this->msSeller = new MsSeller($registry);
+		}
+		
 		$this->data = array_merge($this->data, $this->load->language('module/multiseller'));
 		$this->data['token'] = $this->session->data['token'];
 		
@@ -46,7 +49,9 @@ class ControllerModuleMultiseller extends Controller {
 			"msconf_allowed_download_types" => "zip,rar",
 			"msconf_minimum_product_price" => 0,
 			"msconf_notification_email" => "",
-			"ms_carousel_module" => ""
+			"ms_carousel_module" => "",
+			"msconf_allow_free_products" => 0,
+			"msconf_seller_commission_flat" => 0.5
 		);
 	}	
 	
@@ -254,7 +259,6 @@ class ControllerModuleMultiseller extends Controller {
 					)
 				);				
 			}
-			
 			// edit seller
 			$this->msSeller->adminEditSeller($data);
 			
@@ -303,6 +307,7 @@ class ControllerModuleMultiseller extends Controller {
 		$total_sellers = $this->msSeller->getTotalSellers($sort);
 
     	foreach ($results as &$result) {
+    		$result['date_created'] = date($this->language->get('date_format_short'), strtotime($result['date_created']));
     		$result['total_products'] = $this->msSeller->getTotalSellerProducts($result['seller_id']);
 			//$result['total_earnings'] = $this->currency->format($this->msSeller->getEarningsForSeller($result['seller_id']), $this->config->get('config_currency'));
 			$result['current_balance'] = $this->currency->format($this->msSeller->getBalanceForSeller($result['seller_id']), $this->config->get('config_currency'));
@@ -405,6 +410,7 @@ class ControllerModuleMultiseller extends Controller {
 			//
 		}
 
+		$this->data['currency_code'] = $this->config->get('config_currency');
 		$this->data['token'] = $this->session->data['token'];		
 		$this->data['heading'] = $this->language->get('ms_catalog_sellerinfo_heading');
 		$this->document->setTitle($this->language->get('ms_catalog_sellerinfo_heading'));
@@ -468,7 +474,7 @@ class ControllerModuleMultiseller extends Controller {
 		
 		$this->load->model('design/layout');
 		$this->data['layouts'] = $this->model_design_layout->getLayouts();
-		
+		$this->data['currency_code'] = $this->config->get('config_currency');
 		
 		/* ************* */
 		/* carousel part */
@@ -510,10 +516,10 @@ class ControllerModuleMultiseller extends Controller {
 			'request_id' => $result['req.id'],
 			'seller' => $result['sel.nickname'],
 			'amount' => $this->currency->format(abs($result['trn.amount']),$this->config->get('config_currency')),
-			'date_created' => $result['req.date_created'],
+			'date_created' => date($this->language->get('date_format_short'), strtotime($result['req.date_created'])),
 			'status' => empty($result['req.date_processed']) ? 'Pending' : 'Completed',
 			'processed_by' => $result['u.username'],
-			'date_processed' => $result['req.date_processed'],
+			'date_processed' => date($this->language->get('date_format_short'), strtotime($result['req.date_processed']))
 		);
 		}
 		
@@ -707,6 +713,38 @@ class ControllerModuleMultiseller extends Controller {
 		return;		
 	}
 	
+	public function jxConfirmWithdrawalPaid() {
+		$this->_validate(__FUNCTION__);
+		$json = array();
+		require_once(DIR_SYSTEM . 'library/ms-request.php');
+		if (isset($this->request->post['selected'])) {
+			$r = new MsRequest($this->registry);
+			$payments = array();
+			$total = 0;
+			foreach ($this->request->post['selected'] as $request_id) {
+				$result = $r->getRequestPaymentData($request_id);
+				if (!empty($result) && ($result['date_processed'] == NULL)) {
+					$payments[] = array (
+						'nickname' => $result['sel.nickname'],
+						'amount' => $this->currency->format(abs($result['trn.amount']),$this->config->get('config_currency'))
+					);
+				}
+			}
+			
+			if (!empty($payments)) {
+				$this->data['total_amount'] = $this->currency->format($total, $this->config->get('config_currency'));
+				$this->data['payments'] = $payments;
+				$json['html'] = $this->_renderTemplate('ms-withdrawals-confirmation');
+			} else {
+				$json['error'] = $this->language->get('ms_error_withdraw_norequests');
+			}
+		} else {
+			$json['error'] = $this->language->get('ms_error_withdraw_norequests');
+		}
+		$this->_setJsonResponse($json);
+		return;		
+	}	
+	
 	public function jxCompletePayment() {
 		$this->_validate(__FUNCTION__);
 		$json = array();
@@ -773,6 +811,30 @@ class ControllerModuleMultiseller extends Controller {
 				);*/
 			}		
 		}
+		$this->_setJsonResponse($json);
+		return;
+	}
+
+	public function jxCompleteWithdrawalPaid() {
+		$this->_validate(__FUNCTION__);
+		$json = array();
+		
+		if (!isset($this->request->post['selected'])) {
+			$json['error'] = $this->language->get('ms_error_withdraw_norequests');
+			$this->_setJsonResponse($json);
+			return;
+		}
+		
+		require_once(DIR_SYSTEM . 'library/ms-request.php');
+
+		$r = new MsRequest($this->registry);
+		$msTransaction = new MsTransaction($this->registry);
+		$i = 0;		
+		foreach ($this->request->post['selected'] as $request_id) {
+			$r->processRequest($request_id, $this->user->getId());
+			$msTransaction->completeWithdrawal($r->getAssociatedTransaction($request_id));
+		}
+		$json['success'] = $this->language->get('ms_success_withdrawals_marked');
 		$this->_setJsonResponse($json);
 		return;
 	}

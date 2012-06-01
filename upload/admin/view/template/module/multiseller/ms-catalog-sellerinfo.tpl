@@ -29,6 +29,28 @@
           	<?php } ?>
         </tr>
         <tr>
+          <td><?php echo $ms_catalog_sellerinfo_commission; ?></td>
+          <td>
+          	<input size="3" type="text" name="sellerinfo_commission_flat" value="<?php echo $this->currency->format($seller['commission_flat'], $this->config->get('config_currency'), '', FALSE); ?>" /><?php echo $currency_code; ?>
+			+<input size="3" type="text" name="sellerinfo_commission" value="<?php echo $seller['commission']; ?>" size="3"/>%          	
+          	<p class="error" id="error_sellerinfo_commission"></p>
+          </td>
+        </tr>
+        
+		<tr>
+			<td>
+				<span><?php echo $ms_catalog_sellerinfo_product_validation; ?></span>
+				<span class="help"><?php echo $ms_catalog_sellerinfo_product_validation_note; ?></span>
+			</td>
+			<td>
+              	<select name="sellerinfo_product_validation">
+              	  <option value="1" <?php if($seller['product_validation'] == 1) { ?> selected="selected" <?php } ?>><?php echo $ms_config_product_validation_none; ?></option>
+                  <option value="2" <?php if($seller['product_validation'] == 2) { ?> selected="selected" <?php } ?>><?php echo $ms_config_product_validation_approval; ?></option>
+                </select>
+			</td>
+		</tr>        
+        
+        <tr>
           <td><?php echo $ms_catalog_sellerinfo_description; ?></td>
           <td>
           	<textarea name="sellerinfo_description"><?php echo $seller['description']; ?></textarea>

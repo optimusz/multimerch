@@ -18,7 +18,7 @@ $_['ms_button_save_draft_unpublish']      = 'This product will be unpublished';
 $_['ms_button_cancel']      = 'Cancel';
 $_['ms_delete']      = 'Delete';
 
-$_['ms_transaction_sale']      = 'Sale: %s (-%s%% commission)';
+$_['ms_transaction_sale']      = 'Sale: %s (-%s commission)';
 $_['ms_transaction_pending_withdrawal']      = 'Pending withdrawal request: %s';
 $_['ms_request_submitted']      = 'Your request is submitted';
 
@@ -226,6 +226,9 @@ $_['ms_account_sellerinfo_avatar']    = 'Avatar';
 $_['ms_account_sellerinfo_avatar_note']    = 'Your note text goes here';
 $_['ms_account_sellerinfo_paypal']    = 'Paypal';
 $_['ms_account_sellerinfo_paypal_note']    = 'Your note text goes here';
+$_['ms_account_sellerinfo_reviewer_message']    = 'Message to the reviewer';
+$_['ms_account_sellerinfo_reviewer_message_note']    = 'Your note text goes here';
+
 
 $_['ms_account_sellerinfo_mail_account_thankyou']	= 'Thank you for signing up as a seller at %s!';
 $_['ms_account_sellerinfo_mail_account_created_subject']    = '[%s] Seller account created';
@@ -368,6 +371,7 @@ $_['ms_sort_nickname_asc']      = 'Name (A - Z)';
 
 // Catalog - Seller profile page
 $_['ms_catalog_sellers']      = 'Sellers';
+$_['ms_catalog_sellers_empty']      = 'There are no sellers yet.';
 $_['ms_catalog_seller_profile_heading']      = '%s\'s profile';
 $_['ms_catalog_seller_profile_breadcrumbs']      = '%s\'s profile';
 $_['ms_catalog_seller_profile_products']      = 'Some of seller\'s products';

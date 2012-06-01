@@ -187,7 +187,7 @@ final class MsSeller {
 	}	*/
 		
 	public function getReservedAmount($seller_id) {
-		$sql = "SELECT SUM(amount - (amount*commission/100)) as total
+		$sql = "SELECT SUM(amount - (amount*commission/100) - commission_flat) as total
 				FROM `" . DB_PREFIX . "ms_transaction`
 				WHERE seller_id = " . (int)$seller_id . "
 				AND type = " . MsTransaction::MS_TRANSACTION_WITHDRAWAL . ";
@@ -205,16 +205,17 @@ final class MsSeller {
 			$avatar = $image->getName();
 		} else {
 			$avatar = '';
-		}		
-		
+		}
 		$sql = "INSERT INTO " . DB_PREFIX . "ms_seller
 				SET seller_id = " . (int)$data['seller_id'] . ",
 					seller_status_id = " . (int)$data['seller_status_id'] . ",
 					commission = " . (float)$this->config->get('msconf_seller_commission') . ",
+					commission_flat = " . (float)$this->config->get('msconf_seller_commission_flat') . ",
 					nickname = '" . $this->db->escape($data['sellerinfo_nickname']) . "',
 					description = '" . $this->db->escape($data['sellerinfo_description']) . "',
 					company = '" . $this->db->escape($data['sellerinfo_company']) . "',
 					country_id = " . (int)$data['sellerinfo_country'] . ",
+					product_validation = " . (int)$data['sellerinfo_product_validation'] . ",
 					paypal = '" . $this->db->escape($data['sellerinfo_paypal']) . "',
 					avatar_path = '" . $this->db->escape($avatar) . "',
 					date_created = NOW()";
@@ -230,7 +231,7 @@ final class MsSeller {
 		$res = $this->db->query($sql);
 		
 		return $res->num_rows;
-	}	
+	}
 	
 	public function editSeller($data) {
 		$seller_id = (int)$data['seller_id'];
@@ -262,7 +263,7 @@ final class MsSeller {
 	}		
 		
 	public function getBalanceForSeller($seller_id) {
-		$sql = "SELECT SUM(amount - (amount*commission/100)) as total
+		$sql = "SELECT SUM(amount - (amount*commission/100) - commission_flat) as total
 				FROM `" . DB_PREFIX . "ms_transaction`
 				WHERE seller_id = " . (int)$seller_id . " 
 				AND transaction_status_id != " . MsTransaction::MS_TRANSACTION_STATUS_CLOSED;
@@ -272,7 +273,7 @@ final class MsSeller {
 		return (float)$res->row['total'];
 	}
 		
-	public function getCommissionForSeller($seller_id) {
+	public function getCommissionPercentForSeller($seller_id) {
 		$sql = "SELECT 	commission
 				FROM `" . DB_PREFIX . "ms_seller`
 				WHERE seller_id = " . (int)$seller_id; 
@@ -284,7 +285,20 @@ final class MsSeller {
 		else
 			return 0;
 	}
-		
+
+	public function getCommissionFlatForSeller($seller_id) {
+		$sql = "SELECT 	commission_flat
+				FROM `" . DB_PREFIX . "ms_seller`
+				WHERE seller_id = " . (int)$seller_id; 
+
+		$res = $this->db->query($sql);
+
+		if (isset($res->row['commission_flat']))
+			return $res->row['commission_flat'];
+		else
+			return 0;
+	}
+
 	public function getSellerAvatar($seller_id) {
 		$query = $this->db->query("SELECT avatar_path as avatar FROM " . DB_PREFIX . "ms_seller WHERE seller_id = '" . (int)$seller_id . "'");
 		
@@ -360,7 +374,7 @@ final class MsSeller {
         		ORDER BY {$sort['order_by']} {$sort['order_way']}" 
         		. (isset($sort['limit']) ? " LIMIT ".(int)(($sort['page'] - 1) * $sort['limit']).', '.(int)($sort['limit']) : '');
 		$res = $this->db->query($sql);
-		return $res->rows;		
+		return $res->rows;
 	}
 
 	public function getTotalSellers($onlyActive = FALSE) {
@@ -405,7 +419,10 @@ final class MsSeller {
 					company = '" . $this->db->escape($data['sellerinfo_company']) . "',
 					country_id = " . (int)$data['sellerinfo_country'] . ",
 					paypal = '" . $this->db->escape($data['sellerinfo_paypal']) . "',
-					seller_status_id = '" .  (int)$data['seller_status_id'] .  "'
+					seller_status_id = '" .  (int)$data['seller_status_id'] .  "',
+					product_validation = '" .  (int)$data['sellerinfo_product_validation'] .  "',
+					commission = '" .  (float)$data['sellerinfo_commission'] .  "',
+					commission_flat = '" .  (float)$data['sellerinfo_commission_flat'] .  "'
 				WHERE seller_id = " . (int)$seller_id;
 		
 		$this->db->query($sql);	

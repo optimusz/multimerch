@@ -59,7 +59,7 @@
 			                  <option value="2" <?php if($msconf_product_validation == 2) { ?> selected="selected" <?php } ?>><?php echo $ms_config_product_validation_approval; ?></option>
 			                </select>
 						</td>
-					</tr>					
+					</tr>
 					
 					<tr>
 						<td>
@@ -67,7 +67,8 @@
 							<span class="help"><?php echo $ms_config_seller_commission_note; ?></span>
 						</td>
 						<td>
-							<input type="text" name="msconf_seller_commission" value="<?php echo $msconf_seller_commission; ?>" size="3"/>
+							<input type="text" name="msconf_seller_commission_flat" value="<?php echo $this->currency->format($msconf_seller_commission_flat, $this->config->get('config_currency'), '', FALSE); ?>" size="3"/><?php echo $currency_code; ?>
+							+<input type="text" name="msconf_seller_commission" value="<?php echo $msconf_seller_commission; ?>" size="3"/>%
 						</td>
 					</tr>
 		            
@@ -80,6 +81,19 @@
 							<input type="text" name="msconf_minimum_product_price" value="<?php echo $msconf_minimum_product_price; ?>" size="3"/>
 						</td>
 					</tr>		            
+		            
+		   			<tr>
+						<td>
+							<span><?php echo $ms_config_allow_free_products; ?></span>
+							<span class="help"><?php echo $ms_config_allow_free_products_note; ?></span>
+						</td>
+		            	<td>
+			                <input type="radio" name="msconf_allow_free_products" value="1" <?php if($msconf_allow_free_products == 1) { ?> checked="checked" <?php } ?>  />
+			                <?php echo $text_yes; ?>
+			                <input type="radio" name="msconf_allow_free_products" value="0" <?php if($msconf_allow_free_products == 0) { ?> checked="checked" <?php } ?>  />
+			                <?php echo $text_no; ?>
+		              	</td>
+					</tr>	         
 		            
 		            <tr>
 			              <td>
@@ -268,7 +282,7 @@
 		        </thead>
 		        <?php $module_row = 0; ?>
 		        
-		        <?php if (isset($ms_carousel_module)) { ?>
+		        <?php if (isset($ms_carousel_module) && is_array($ms_carousel_module)) { ?>
 		        <?php foreach ($ms_carousel_module as $module) { ?>
 		        <tbody id="module-row<?php echo $module_row; ?>">
 		          <tr>
@@ -391,7 +405,7 @@ $(function() {
 					    if (!jsonData.errors.hasOwnProperty(error)) {
 					        continue;
 					    }
-					    $("#error").append(<p>+jsonData.errors[error]+</p>);
+					    $("#error").append('<p>'+jsonData.errors[error]+'</p>');
 					}				
 				} else {
 					window.location.reload();

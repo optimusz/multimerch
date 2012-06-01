@@ -47,7 +47,7 @@ final class MsTransaction extends Model {
 		$res = $this->db->query($sql);
 		return $res->row['total'];
 		
-	}	
+	}
 	
 	public function getTransactionData($transaction_id) {
 		$sql = "SELECT * FROM " . DB_PREFIX . "ms_transaction
@@ -59,8 +59,8 @@ final class MsTransaction extends Model {
 	
 	public function copyTransaction($transaction_id) {
 		$sql = "INSERT INTO " . DB_PREFIX . "ms_transaction
-					(parent_transaction_id, amount, seller_id, order_id, product_id, transaction_status_id, currency_id, currency_code, currency_value, commission, description, date_created, date_modified, type)
-				SELECT parent_transaction_id, amount, seller_id, order_id, product_id, transaction_status_id, currency_id, currency_code, currency_value, commission, description, date_created, date_modified, type 
+					(parent_transaction_id, amount, seller_id, order_id, product_id, transaction_status_id, currency_id, currency_code, currency_value, commission, commission_flat, description, date_created, date_modified, type)
+				SELECT parent_transaction_id, amount, seller_id, order_id, product_id, transaction_status_id, currency_id, currency_code, currency_value, commission, commission_flat, description, date_created, date_modified, type 
 				FROM " . DB_PREFIX . "ms_transaction WHERE transaction_id = " . (int)$transaction_id;
 		$this->db->query($sql);
 		
@@ -103,6 +103,7 @@ final class MsTransaction extends Model {
 						currency_code = '" . $this->db->escape($data['currency_code']) . "',
 						currency_value = " . (float)$data['currency_value'] . ",
 						commission = " . (float)$data['commission'] . ",
+						commission_flat = " . (float)$data['commission_flat'] . ",
 						description = '" . $this->db->escape($data['description']) . "',
 						date_created = NOW(),
 						date_modified = NOW()";
@@ -141,7 +142,7 @@ final class MsTransaction extends Model {
 			if ($debit)
 				$product['total'] = -1 * abs($product['total']);
 
-			$description = sprintf($this->language->get('ms_transaction_sale'),$product['name'],$this->msSeller->getCommissionForSeller($seller_id));
+			$description = sprintf($this->language->get('ms_transaction_sale'),$product['name'],$this->currency->format($product['total'] * $this->msSeller->getCommissionPercentForSeller($seller_id) / 100 + $this->msSeller->getCommissionFlatForSeller($seller_id), $this->config->get('config_currency')));
 
 			$sql = "INSERT INTO " . DB_PREFIX . "ms_transaction
 					SET parent_transaction_id = " . (int)$parent_tr_id . ",
@@ -152,7 +153,8 @@ final class MsTransaction extends Model {
 						currency_id = ". $order_info['currency_id'] . ",
 						currency_code = '" . $order_info['currency_code'] . "',
 						currency_value = " . $order_info['currency_value'] . ",
-						commission = " . $this->msSeller->getCommissionForSeller($seller_id) . ",
+						commission = " . $this->msSeller->getCommissionPercentForSeller($seller_id) . ",
+						commission_flat = " . $this->msSeller->getCommissionFlatForSeller($seller_id) . ",
 						description = '" . $this->db->escape($description) . "',
 						date_created = NOW(),
 						date_modified = NOW()";
@@ -168,7 +170,7 @@ final class MsTransaction extends Model {
 	}	
 	
 	public function getSellerTransactions($seller_id, $sort, $includingClosed = FALSE) {
-		$sql = "SELECT *, (amount-(amount*commission/100)) as net_amount FROM " . DB_PREFIX . "ms_transaction
+		$sql = "SELECT *, (amount - (amount*commission/100) - commission_flat) as net_amount FROM " . DB_PREFIX . "ms_transaction
 				WHERE seller_id = " . (int)$seller_id
         		. (!$includingClosed ? " AND (transaction_status_id != " . (int)self::MS_TRANSACTION_STATUS_CLOSED . ")" : '') . " 
     			ORDER BY {$sort['order_by']} {$sort['order_way']}" 
@@ -188,7 +190,7 @@ final class MsTransaction extends Model {
 	}
 	
 	public function getTransactions($sort, $includingClosed = FALSE) {
-		$sql = "SELECT  (mt.amount-(mt.amount*mt.commission/100)) as 'trn.net_amount',
+		$sql = "SELECT  (mt.amount - (mt.amount*mt.commission/100) - mt.commission_flat) as 'trn.net_amount',
 						mt.date_created as 'trn.date_created',
 						mt.date_modified as 'trn.date_modified',
 						mt.description as 'trn.description',

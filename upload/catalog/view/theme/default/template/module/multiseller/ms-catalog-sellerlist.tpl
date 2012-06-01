@@ -6,7 +6,7 @@
     <?php } ?>
   </div>
   <h1><?php echo $ms_catalog_sellers_heading; ?></h1>
-  <?php if ($sellers) { ?>
+  <?php if (isset($sellers) && $sellers) { ?>
   <div class="product-filter seller-filter">
     <div class="display"><b><?php echo $text_display; ?></b> <?php echo $text_list; ?> <b>/</b> <a onclick="display('grid');"><?php echo $text_grid; ?></a></div>
     <div class="limit"><b><?php echo $text_limit; ?></b>
@@ -65,8 +65,8 @@
   </div>
   <div class="pagination"><?php echo $pagination; ?></div>
   <?php } ?>
-  <?php if (!$sellers) { ?>
-  <div class="content"><?php echo $text_empty; ?></div>
+  <?php if (!isset($sellers) || !$sellers) { ?>
+  <div class="content"><?php echo $ms_catalog_sellers_empty; ?></div>
   <div class="buttons">
     <div class="right"><a href="<?php echo $continue; ?>" class="button"><?php echo $button_continue; ?></a></div>
   </div>
