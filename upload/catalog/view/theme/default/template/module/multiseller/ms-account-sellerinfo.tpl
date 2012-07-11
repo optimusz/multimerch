@@ -140,7 +140,7 @@ $(function() {
 		    },			
 			success: function(jsonData) {
 				if (!jQuery.isEmptyObject(jsonData.errors)) {
-					$('#ms-new-product a.button').show().prev('span.wait').remove();				
+					$('#ms-sellerinfo a.button').show().prev('span.wait').remove();				
 					$('#error_'+id).text('');
 					for (error in jsonData.errors) {
 					    if (!jsonData.errors.hasOwnProperty(error)) {

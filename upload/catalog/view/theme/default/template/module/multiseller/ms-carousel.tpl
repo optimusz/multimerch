@@ -6,8 +6,8 @@
 		  <ul class="jcarousel-skin-opencart">
 		    <?php foreach ($sellers as $seller) { ?>
 		    <li>
-		    	<a href="<?php echo $seller['href']; ?>"><img src="<?php echo $seller['image']; ?>" title="<?php echo $seller['nickname']; ?>" /></a>
-		    	<a href="<?php echo $seller['href']; ?>"><?php echo $seller['nickname']; ?></a>
+		    	<div class="image"><a href="<?php echo $seller['href']; ?>"><img src="<?php echo $seller['image']; ?>" title="<?php echo $seller['nickname']; ?>" /></a></div>
+		    	<div class="name"><a href="<?php echo $seller['href']; ?>"><?php echo $seller['nickname']; ?></a></div>
 	    	</li>
 		    <?php } ?>
 		  </ul>

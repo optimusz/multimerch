@@ -22,6 +22,10 @@ $_['ms_transaction_sale']      = 'Sale: %s (-%s commission)';
 $_['ms_transaction_pending_withdrawal']      = 'Pending withdrawal request: %s';
 $_['ms_request_submitted']      = 'Your request is submitted';
 
+$_['ms_totals_line']      = 'Currently %s sellers and %s products for sale!';
+
+#38B0E3
+
 // Mails
 
    // Seller
@@ -145,7 +149,7 @@ $_['ms_error_product_price_low'] = 'Price too low';
 $_['ms_error_product_category_empty'] = 'Please select a category';
 $_['ms_error_product_thumbnail_empty'] = 'Please upload a thumbnail for your product';
 $_['ms_error_product_download_empty'] = 'Please add a download for your product';
-$_['ms_error_product_image_empty'] = 'Please upload at least one image for your product';
+$_['ms_error_product_image_count'] = 'Please upload at least %s image(s) for your product';
 $_['ms_error_product_message_length'] = 'Message cannot be longer than 1000 characters';
 
 $_['ms_error_withdraw_amount'] = 'Invalid amount';
@@ -396,4 +400,16 @@ $_['ms_catalog_seller_products_totalproducts']      = 'Total products:';
 // Catalog - Carousel
 $_['ms_carousel_sellers']      = 'Our sellers';
 $_['ms_carousel_view']      = 'View all sellers';
+
+// Catalog - Top sellers
+$_['ms_topsellers_sellers']      = 'Top sellers';
+$_['ms_topsellers_view']      = 'View all sellers';
+
+// Catalog - New sellers
+$_['ms_newsellers_sellers']      = 'New sellers';
+$_['ms_newsellers_view']      = 'View all sellers';
+
+// Catalog - Seller dropdown
+$_['ms_sellerdropdown_sellers']      = 'Our sellers';
+$_['ms_sellerdropdown_select']      = '-- Select a seller --';
 ?>

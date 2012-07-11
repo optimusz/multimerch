@@ -71,16 +71,37 @@
         <tr>
           <td><span class="required">*</span> <?php echo $ms_account_product_category; ?></td>
           <td>
+          	<?php if (!$msconf_allow_multiple_categories) { ?> 
 			<select name="product_category">
             	<option value=""><?php echo ''; ?></option>
                   <?php foreach ($categories as $category) { ?>
-                    <?php if (in_array($category['category_id'], array($product['category_id']))) { ?>
+                    <?php if (in_array($category['category_id'], explode(',',$product['category_id']))) { ?>
                     <option value="<?php echo $category['category_id']; ?>" selected="selected"><?php echo $category['name']; ?></option>
                     <?php } else { ?>
                     <option value="<?php echo $category['category_id']; ?>"><?php echo $category['name']; ?></option>
                     <?php } ?>
                   <?php } ?>
             </select>
+            
+            <?php } else { ?>
+            
+			<div class="scrollbox">
+				<?php $class = 'odd'; ?>
+				<?php foreach ($categories as $category) { ?>
+					<?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+					<div class="<?php echo $class; ?>">
+					<?php if (in_array($category['category_id'], explode(',',$product['category_id']))) { ?>
+						<input type="checkbox" name="product_category[]" value="<?php echo $category['category_id']; ?>" checked="checked" />
+						<?php echo $category['name']; ?>
+					<?php } else { ?>
+						<input type="checkbox" name="product_category[]" value="<?php echo $category['category_id']; ?>" />
+						<?php echo $category['name']; ?>
+					<?php } ?>
+					</div>
+				<?php } ?>
+			</div>
+            <?php } ?>
+            
           	<p class="ms-note"><?php echo $ms_account_product_category_note; ?></p>
           	<p class="error" id="error_product_category"></p>
           </td>
@@ -105,7 +126,7 @@
           </td>
         </tr>
         <tr>
-          <td><span class="required">*</span> <?php echo $ms_account_product_image; ?></td>
+          <td><?php if ($msconf_required_images > 0) { ?><span class="required">*</span><?php } ?> <?php echo $ms_account_product_image; ?></td>
           <td>
           	<input type="file" name="product_image" id="product_image" />
           	<p class="ms-note"><?php echo $ms_account_product_image_note; ?></p>
@@ -209,14 +230,14 @@ $(function() {
 						var imageHtml = [ '<div class="ms-image">',
 										  '<input type="hidden" value="'+jsonData.file.name+'" name="product_images[]" />',
 										  '<img src="'+jsonData.file.thumb+'" />',
-										  '<img class="ms-remove" />',
+										  '<span class="ms-remove"></span>',
 										  '</div>' ];
 						$("#product_image_files").append(imageHtml.join('')); 
 					} else if (id == 'product_thumbnail') {
 						var imageHtml = [ '<div class="ms-image">',
 										  '<input type="hidden" value="'+jsonData.file.name+'" name="product_thumbnail_name" />',
 										  '<img src="'+jsonData.file.thumb+'" />',
-										  '<img class="ms-remove" />',
+										  '<span class="ms-remove"></span>',
 										  '</div>' ];
 						$("#product_thumbnail_files").html(imageHtml.join(''));
 					} else {

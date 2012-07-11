@@ -373,10 +373,38 @@ final class MsSeller {
         		. ($onlyActive ? " WHERE ms.seller_status_id = " . self::MS_SELLER_STATUS_ACTIVE : '') . "
         		ORDER BY {$sort['order_by']} {$sort['order_way']}" 
         		. (isset($sort['limit']) ? " LIMIT ".(int)(($sort['page'] - 1) * $sort['limit']).', '.(int)($sort['limit']) : '');
+
 		$res = $this->db->query($sql);
 		return $res->rows;
 	}
 
+	public function getTopSellers($sort, $onlyActive = FALSE) {
+		$sql = "SELECT  CONCAT(c.firstname, ' ', c.lastname) as name,
+						c.email as email,
+						ms.seller_id,
+						ms.nickname,
+						ms.seller_status_id,
+						ms.date_created as date_created,
+						ms.commission,
+						ms.avatar_path,
+						ms.country_id,
+						ms.description,
+						mp.*,
+						IFNULL(SUM(mp.number_sold), 0) as total_sales
+				FROM `" . DB_PREFIX . "customer` c
+				INNER JOIN `" . DB_PREFIX . "ms_seller` ms
+					ON c.customer_id = ms.seller_id
+				LEFT JOIN `" . DB_PREFIX . "ms_product` mp
+					ON c.customer_id = mp.seller_id "
+        		. ($onlyActive ? " WHERE ms.seller_status_id = " . self::MS_SELLER_STATUS_ACTIVE : '') . "
+				GROUP BY ms.seller_id        		
+				ORDER BY {$sort['order_by']} {$sort['order_way']} "
+        		. (isset($sort['limit']) ? " LIMIT ".(int)(($sort['page'] - 1) * $sort['limit']).', '.(int)($sort['limit']) : '');
+		
+		$res = $this->db->query($sql);
+		return $res->rows;
+	}
+	
 	public function getTotalSellers($onlyActive = FALSE) {
 		$sql = "SELECT COUNT(*) as 'total'
 				FROM `" . DB_PREFIX . "ms_seller` "

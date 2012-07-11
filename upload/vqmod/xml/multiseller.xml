@@ -5,7 +5,7 @@
 ]>
 <modification>
 	<id>Digital Multiseller Marketplace</id>
-	<version>1.1</version>
+	<version>1.3</version>
 	<vqmver>1.0.8</vqmver>
 	<author>http://ffct.cc</author>
 	
@@ -45,7 +45,36 @@
 	<!--       FRONT OFFICE       -->
 	<!-- ************************ -->	
 	<!-- ************************ -->	
+	
+	<!-- number of sellers/products line -->
+	<file name="catalog/view/theme/&themeFolder;/template/common/header.tpl">
+		<operation error="log">
+			<search position="after"><![CDATA[
+				<div class="links"><a href="<?php echo $home; ?>"><?php echo $text_home; ?></a><a href="<?php echo $wishlist; ?>" id="wishlist-total"><?php echo $text_wishlist; ?></a><a href="<?php echo $account; ?>"><?php echo $text_account; ?></a><a href="<?php echo $shopping_cart; ?>"><?php echo $text_shopping_cart; ?></a><a href="<?php echo $checkout; ?>"><?php echo $text_checkout; ?></a></div>
+			]]></search>
+			<add><![CDATA[
+				<div style="position: absolute; bottom: 3px; left: 0; font-weight: bold; color: #38B0E3"><?php echo sprintf($ms_totals_line, $ms_total_sellers, $ms_total_products); ?></div>
+			]]></add>
+		</operation>	
+	</file>
 
+	<file name="catalog/controller/common/header.php">
+		<operation error="log">
+			<search position="after"><![CDATA[
+				protected function index() {
+			]]></search>
+			<add><![CDATA[
+				$this->data = array_merge($this->data, $this->load->language('module/multiseller'));
+				require_once(DIR_SYSTEM . 'library/ms-seller.php');
+				$msSeller = new MsSeller($this->registry);
+				require_once(DIR_SYSTEM . 'library/ms-product.php');
+				$msProduct = new MsProduct($this->registry);				
+
+				$this->data['ms_total_products'] = $msProduct->getTotalProducts(TRUE, FALSE);
+				$this->data['ms_total_sellers'] = $msSeller->getTotalSellers(TRUE);
+			]]></add>
+		</operation>	
+	</file>
 	<!-- seller account area links -->
 	<file name="catalog/view/theme/&themeFolder;/template/account/account.tpl">
 		<operation>
@@ -244,36 +273,39 @@
 			$seller_id = $msProduct->getSellerId($this->request->get['product_id']);
 			$seller = $msSeller->getSellerData($seller_id);
 			
-			if (!empty($seller) && (!empty($seller['avatar_path'])))
-				$this->data['seller']['thumb'] = $image->resize($seller['avatar_path'], $this->config->get('config_image_category_width'), $this->config->get('config_image_category_height'));
+			if (empty($seller)) {
+				$this->data['seller'] = NULL;
+			} else {
+				if (!empty($seller['avatar_path']))
+					$this->data['seller']['thumb'] = $image->resize($seller['avatar_path'], $this->config->get('config_image_category_width'), $this->config->get('config_image_category_height'));
+					
+				$country = $this->model_localisation_country->getCountry($seller['country_id']);
 				
-			$country = $this->model_localisation_country->getCountry($seller['country_id']);
-			
-			if (!empty($country)) {			
-				$this->data['seller']['country'] = $country['name'];
-			} else {
-				$this->data['seller']['country'] = NULL;
-			}
-			
-			if (!empty($seller['company'])) {
-				$this->data['seller']['company'] = $seller['company'];
-			} else {
-				$this->data['seller']['company'] = NULL;
-			}
-			
-			if (!empty($seller['website'])) {
-				$this->data['seller']['website'] = $seller['website'];
-			} else {
-				$this->data['seller']['website'] = NULL;
-			}
-			
-			$this->data['seller']['nickname'] = $seller['nickname'];
-			
-			$this->data['seller']['href'] = $this->url->link('product/seller/profile', 'seller_id=' . $seller['seller_id']);
-			
-			$this->data['seller']['total_sales'] = $msSeller->getSalesForSeller($seller['seller_id']);
-			$this->data['seller']['total_products'] = $msSeller->getTotalSellerProducts($seller['seller_id'], TRUE);
+				if (!empty($country)) {			
+					$this->data['seller']['country'] = $country['name'];
+				} else {
+					$this->data['seller']['country'] = NULL;
+				}
 				
+				if (!empty($seller['company'])) {
+					$this->data['seller']['company'] = $seller['company'];
+				} else {
+					$this->data['seller']['company'] = NULL;
+				}
+				
+				if (!empty($seller['website'])) {
+					$this->data['seller']['website'] = $seller['website'];
+				} else {
+					$this->data['seller']['website'] = NULL;
+				}
+				
+				$this->data['seller']['nickname'] = $seller['nickname'];
+				
+				$this->data['seller']['href'] = $this->url->link('product/seller/profile', 'seller_id=' . $seller['seller_id']);
+				
+				$this->data['seller']['total_sales'] = $msSeller->getSalesForSeller($seller['seller_id']);
+				$this->data['seller']['total_products'] = $msSeller->getTotalSellerProducts($seller['seller_id'], TRUE);
+			}
 			]]></add>
 		</operation>
 	</file>

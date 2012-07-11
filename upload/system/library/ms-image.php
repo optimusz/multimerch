@@ -10,6 +10,8 @@ class MsImage {
 	}
 		
   	public function __construct($registry) {
+  		$this->registry = $registry;
+  		
 		$this->config = $registry->get('config');
 		$this->db = $registry->get('db');
 		$this->request = $registry->get('request');
@@ -19,6 +21,9 @@ class MsImage {
 		$this->tmpPath = 'tmp/';
 		
 		$this->errors = array();
+		
+		require_once(DIR_SYSTEM . 'library/ms-seller.php');
+		$this->msSeller = new MsSeller($registry);				
 	}
 	
 	public static function byName($registry, $name) {
@@ -31,17 +36,14 @@ class MsImage {
   		if ($type == 'I' || $type == 'T') {
   			// images, thumbnails
 			$allowed_filetypes = $this->config->get('msconf_allowed_image_types');
-			$ms_config_max_filesize = 500000;
   		} else {
   			// downloads
 			$allowed_filetypes = $this->config->get('msconf_allowed_download_types');
-			$ms_config_max_filesize = 500000;  			
   		}
   		
 		$filetypes = explode(',', $allowed_filetypes);
 		$filetypes = array_map('strtolower', $filetypes);
 		$filetypes = array_map('trim', $filetypes);
-		
 		
 		if ($type == 'I' || $type == 'T') {
 			// images, thumbnails
@@ -57,18 +59,24 @@ class MsImage {
 		if (!in_array(strtolower($ext),$filetypes)) {
 			 $this->errors[] = $this->language->get('ms_error_file_extension');
 		}
-			
-		if ($file["size"] > $ms_config_max_filesize
-		 || $file["error"] === UPLOAD_ERR_INI_SIZE
-		 || $file["error"] === UPLOAD_ERR_FORM_SIZE) {
-		 	$this->errors[] = $this->language->get('ms_error_file_size');
+		
+		if ($file["error"] != UPLOAD_ERR_OK) {
+			if ($file["error"] == UPLOAD_ERR_INI_SIZE || $file["error"] == UPLOAD_ERR_FORM_SIZE) {
+		 		$this->errors[] = $this->language->get('ms_error_file_size');
+			} else {
+				$this->errors[] = $this->language->get('ms_error_file_upload_error');
+			}
 		}
 		
 		return empty($this->errors);
   	}
 
 	public function upload($file, $type) {
-		$filename =   time() . '_' . md5(rand()) . '.' . $file["name"];
+		if ($type == 'F') {
+			$filename =   time() . '_' . md5(rand()) . '.' . $this->msSeller->getNickname() . '_' . $file["name"];	  		
+		} else {
+			$filename =   time() . '_' . md5(rand()) . '.' . $file["name"];
+		}
 		move_uploaded_file($file["tmp_name"], DIR_IMAGE . $this->tmpPath .  $filename);
 		$this->session->data['multiseller']['files'][] = $filename;
 	

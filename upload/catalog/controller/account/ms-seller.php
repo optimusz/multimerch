@@ -230,7 +230,9 @@ class ControllerAccountMsSeller extends Controller {
 		}
 
 		if (isset($data['product_downloads'])) {
-			foreach ($data['product_downloads'] as $download) {
+			foreach ($data['product_downloads'] as &$download) {
+				//str_replace($this->msSeller->getNickname() . '_', '', $download);
+				//$download = substr_replace($download, '.' . $this->msSeller->getNickname() . '_', strpos($download,'.'), strlen('.'));				
 				$dl = MsImage::byName($this->registry, $download);
 				if (!$dl->checkFileAgainstSession()) {
 					$json['errors']['product_download'] = $dl->getErrors();
@@ -249,10 +251,22 @@ class ControllerAccountMsSeller extends Controller {
 			}
 		}
 
+		if (isset($data['product_category'])) {
+			if (is_array($data['product_category'])) {
+				if (!$this->config->get('msconf_allow_multiple_categories')) {
+					$data['product_category'] = $data['product_category'][0];
+				}
+			} else {
+				$data['product_category'] = array($data['product_category']);
+			}
+		} else {
+			$data['product_category'] = array();			
+		}
+		
 		if (empty($json['errors'])) {
 			$data['enabled'] = 0;
 			$data['review_status_id'] = MsProduct::MS_PRODUCT_STATUS_DRAFT;
-			
+
 			if (isset($data['product_id']) && !empty($data['product_id'])) {
 				$this->msProduct->editProduct($data);
 			} else {
@@ -331,10 +345,6 @@ class ControllerAccountMsSeller extends Controller {
 			$json['errors']['product_price'] = $this->language->get('ms_error_product_price_low');
 		}		
 
-		if (empty($data['product_category'])) {
-			$json['errors']['product_category'] = $this->language->get('ms_error_product_category_empty'); 
-		}
-		
 		if (isset($data['product_thumbnail_name']) && !empty($data['product_thumbnail_name'])) {
 			$thumbnail = MsImage::byName($this->registry, $data['product_thumbnail_name']);
 			if (!$thumbnail->checkFileAgainstSession()) {
@@ -346,7 +356,9 @@ class ControllerAccountMsSeller extends Controller {
 		}
 
 		if (isset($data['product_downloads'])) {
-			foreach ($data['product_downloads'] as $download) {
+			foreach ($data['product_downloads'] as &$download) {
+				//str_replace($this->msSeller->getNickname() . '_', '', $download);
+				//$download = substr_replace($download, '.' . $this->msSeller->getNickname() . '_', strpos($download,'.'), strlen('.'));
 				$dl = MsImage::byName($this->registry, $download);
 				if (!$dl->checkFileAgainstSession()) {
 					$json['errors']['product_download'] = $dl->getErrors();
@@ -365,13 +377,29 @@ class ControllerAccountMsSeller extends Controller {
 				}
 				unset($img);
 			}
-		} else {
-			$json['errors']['product_image'] = $this->language->get('ms_error_product_image_empty');
+		}
+		
+		if (!isset($json['errors']['product_image']) && $this->config->get('msconf_required_images') > 0) {
+			if (!isset($data['product_images']) || count($data['product_images']) < $this->config->get('msconf_required_images')) {
+				$json['errors']['product_image'] = sprintf($this->language->get('ms_error_product_image_count'), $this->config->get('msconf_required_images'));
+			}
 		}
 		
 		if (!empty($data['product_message']) && mb_strlen($data['product_message']) > 1000) {
 			$json['errors']['product_message'] = $this->language->get('ms_error_product_message_length');			
 		}		
+		
+		if (isset($data['product_category'])) {
+			if (is_array($data['product_category'])) {
+				if (!$this->config->get('msconf_allow_multiple_categories')) {
+					$data['product_category'] = $data['product_category'][0];
+				}
+			} else {
+				$data['product_category'] = array($data['product_category']);
+			}
+		} else {
+			$json['errors']['product_category'] = $this->language->get('ms_error_product_category_empty'); 		
+		}			
 		
 		if (empty($json['errors'])) {
 			$mails = array();
@@ -450,7 +478,7 @@ class ControllerAccountMsSeller extends Controller {
 			
 			$json['redirect'] = $this->url->link('account/ms-seller/products', '', 'SSL');
 		}
-		
+
 		$this->_setJsonResponse($json);
 	}
 
@@ -609,7 +637,7 @@ class ControllerAccountMsSeller extends Controller {
 				}
 				
 				$data['seller_id'] = $this->customer->getId();
-				$data['product_validation'] = $this->config->get('msconf_product_validation');
+				$data['sellerinfo_product_validation'] = $this->config->get('msconf_product_validation'); 
 				$this->msSeller->createSeller($data);
 				$this->msMail->sendMails($mails);
 				$this->session->data['success'] = $this->language->get('ms_account_sellerinfo_saved');
@@ -625,13 +653,21 @@ class ControllerAccountMsSeller extends Controller {
 	}
 
 	public function newProduct() {
+		$this->load->model('catalog/category');
 		$this->document->addScript('catalog/view/javascript/jquery.form.js');
 		$this->data['seller'] = $this->msSeller->getSellerData($this->customer->getId());
-		$this->data['categories'] = $this->msProduct->getCategories();
+		
+		if (!$this->config->get('msconf_allow_multiple_categories'))
+			$this->data['categories'] = $this->msProduct->getCategories();		
+		else
+			$this->data['categories'] = $this->msProduct->getMultipleCategories(0);
+			
 		$this->load->model('localisation/language');
 		$this->data['languages'] = $this->model_localisation_language->getLanguages();
 
 		$this->data['product'] = FALSE;
+		$this->data['msconf_allow_multiple_categories'] = $this->config->get('msconf_allow_multiple_categories');
+		$this->data['msconf_required_images'] = $this->config->get('msconf_required_images');
 
 		$this->data['heading'] = $this->language->get('ms_account_newproduct_heading');
 		$this->document->setTitle($this->language->get('ms_account_newproduct_heading'));
@@ -653,7 +689,6 @@ class ControllerAccountMsSeller extends Controller {
 		);
 
 		$seller_id = $this->customer->getId();
-		
 		
 		$products = $this->msSeller->getSellerProducts($seller_id, $sort);
 		
@@ -686,10 +721,15 @@ class ControllerAccountMsSeller extends Controller {
 	
 	public function editProduct() {
 		$this->load->model('tool/image');
+		$this->load->model('catalog/category');
 		$this->document->addScript('catalog/view/javascript/jquery.form.js');
 		$this->data['seller'] = $this->msSeller->getSellerData($this->customer->getId());
-		$this->data['categories'] = $this->msProduct->getCategories();		
 		
+		if (!$this->config->get('msconf_allow_multiple_categories'))
+			$this->data['categories'] = $this->msProduct->getCategories();		
+		else
+			$this->data['categories'] = $this->msProduct->getMultipleCategories(0);
+			
 		$this->load->model('localisation/language');
 		$this->data['languages'] = $this->model_localisation_language->getLanguages();		
 		
@@ -735,7 +775,8 @@ class ControllerAccountMsSeller extends Controller {
 			}
 
 			$this->data['product'] = $product;
-			
+			$this->data['msconf_allow_multiple_categories'] = $this->config->get('msconf_allow_multiple_categories');
+			$this->data['msconf_required_images'] = $this->config->get('msconf_required_images');			
 			$this->data['heading'] = $this->language->get('ms_account_editproduct_heading');
 			$this->document->setTitle($this->language->get('ms_account_editproduct_heading'));		
 			$this->_setBreadcrumbs('ms_account_editproduct_breadcrumbs', __FUNCTION__);		

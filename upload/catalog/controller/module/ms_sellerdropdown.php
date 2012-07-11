@@ -1,5 +1,5 @@
 <?php  
-class ControllerModuleMsCarousel extends Controller {
+class ControllerModuleMsSellerdropdown extends Controller {
 	protected function index($setting) {
 		require_once(DIR_SYSTEM . 'library/ms-seller.php');
 		require_once(DIR_SYSTEM . 'library/ms-image.php');
@@ -8,13 +8,6 @@ class ControllerModuleMsCarousel extends Controller {
 		
 		static $module = 0;
 		$this->load->model('tool/image');
-		$this->document->addScript('catalog/view/javascript/jquery/jquery.jcarousel.min.js');
-		
-		if (file_exists('catalog/view/theme/' . $this->config->get('config_template') . '/stylesheet/carousel.css')) {
-			$this->document->addStyle('catalog/view/theme/' . $this->config->get('config_template') . '/stylesheet/carousel.css');
-		} else {
-			$this->document->addStyle('catalog/view/theme/default/stylesheet/carousel.css');
-		}
 		
 		$this->document->addStyle('catalog/view/theme/' . $this->config->get('config_template') . '/stylesheet/multiseller.css');
 		$this->data = array_merge($this->data, $this->load->language('module/multiseller'));
@@ -24,22 +17,19 @@ class ControllerModuleMsCarousel extends Controller {
 		else
 			$this->data['limit'] = 3;		
 
-		if (isset($setting['scroll']))
-			$this->data['scroll'] = (int)$setting['scroll'];
-		else
-			$this->data['scroll'] = 1;		
-		
 		if (!isset($setting['width']) || (int)$setting['width'] <= 0)
 			$setting['width'] = $this->config->get('config_image_category_width');
 		
 		if (!isset($setting['height']) || (int)$setting['height'] <= 0)
-			$setting['height'] = $this->config->get('config_image_category_height');		
-		
+			$setting['height'] = $this->config->get('config_image_category_height');
+			
 		$this->data['sellers_href'] = $this->url->link('product/seller');
 				
 		$data = array(
-			'order_by'               => 'ms.nickname',
-			'order_way'              => 'ASC',
+			'order_by'               => 'date_added',
+			'order_way'              => 'DESC',
+			'page'              => 1,
+			'limit'              => $this->data['limit']
 		);
 		
 		$results = $this->msSeller->getSellers($data, TRUE);
@@ -49,17 +39,14 @@ class ControllerModuleMsCarousel extends Controller {
 			$this->data['sellers'][] = array(
 				'nickname'        => $result['nickname'],
 				'href'        => $this->url->link('product/seller/profile','seller_id=' . $result['seller_id']),
-				'image' => !empty($result['avatar_path']) && file_exists(DIR_IMAGE . $result['avatar_path']) ? $this->msImage->resize($result['avatar_path'], $setting['width'], $setting['height']) : $this->msImage->resize('ms_no_image.jpg', $setting['width'], $setting['height'])
 			);
 		}
-		
-		shuffle($this->data['sellers']);
 		$this->data['module'] = $module++; 
 		
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/multiseller/module/ms-carousel.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/multiseller/module/ms-carousel.tpl';
+		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/multiseller/module/ms-sellerdropdown.tpl')) {
+			$this->template = $this->config->get('config_template') . '/template/multiseller/module/ms-sellerdropdown.tpl';
 		} else {
-			$this->template = 'default/template/module/multiseller/ms-carousel.tpl';
+			$this->template = 'default/template/module/multiseller/ms-sellerdropdown.tpl';
 		}
 		
 		$this->render(); 

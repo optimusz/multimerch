@@ -119,6 +119,9 @@ $_['ms_config_minimum_product_price_note'] = 'Minimum product price';
 $_['ms_config_allowed_image_types'] = 'Allowed image extensions';
 $_['ms_config_allowed_image_types_note'] = 'Allowed image extensions';
 
+$_['ms_config_required_images'] = 'Additional images required';
+$_['ms_config_required_images_note'] = 'Minimum number of additional images required when submitting a product';
+
 $_['ms_config_allowed_download_types'] = 'Allowed download extensions';
 $_['ms_config_allowed_download_types_note'] = 'Allowed download extensions';
 
@@ -161,9 +164,14 @@ $_['ms_config_notification_email_note'] = 'Email for admin notifications note';
 $_['ms_config_allow_free_products'] = 'Allow free products';
 $_['ms_config_allow_free_products_note'] = 'Allow sellers to add free products';
 
+$_['ms_config_allow_multiple_categories'] = 'Allow multiple categories';
+$_['ms_config_allow_multiple_categories_note'] = 'Allow sellers to add products to multiple categories';
 
-$_['ms_config_carousel']       = 'Carousel';
-$_['ms_config_carousel_success']        = 'Success: You have modified module carousel!';
+$_['ms_config_carousel']       = 'Seller carousel';
+$_['ms_config_topsellers']       = 'Top sellers';
+$_['ms_config_modules']       = 'Modules';
+$_['ms_config_newsellers']       = 'New sellers';
+$_['ms_config_sellerdropdown']       = 'Seller dropdown';
 
 $_['ms_config_module']         = 'Modules';
 $_['ms_config_status']         = 'Status';

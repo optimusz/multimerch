@@ -17,6 +17,7 @@ class MsProduct {
 		$this->session = $registry->get('session');
 		$this->load = $registry->get('load');
 		$this->language = $registry->get('language');
+		$this->cache = $registry->get('cache');		
 		$this->errors = array();
 		$this->registry = $registry;
 	}
@@ -116,6 +117,41 @@ class MsProduct {
 		return $category_data;
 	}	
 	
+	private function _getPath($category_id) {
+		$query = $this->db->query("SELECT name, parent_id FROM " . DB_PREFIX . "category c LEFT JOIN " . DB_PREFIX . "category_description cd ON (c.category_id = cd.category_id) WHERE c.category_id = '" . (int)$category_id . "' AND cd.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY c.sort_order, cd.name ASC");
+		
+		if ($query->row['parent_id']) {
+			return $this->getPath($query->row['parent_id'], $this->config->get('config_language_id')) . $this->language->get('text_separator') . $query->row['name'];
+		} else {
+			return $query->row['name'];
+		}
+	}	
+	
+	public function getMultipleCategories($parent_id = 0) {
+		$category_data = $this->cache->get('category.' . (int)$this->config->get('config_language_id') . '.' . (int)$parent_id);
+	
+		if (!$category_data) {
+			$category_data = array();
+		
+			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "category c LEFT JOIN " . DB_PREFIX . "category_description cd ON (c.category_id = cd.category_id) WHERE c.parent_id = '" . (int)$parent_id . "' AND cd.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY c.sort_order, cd.name ASC");
+		
+			foreach ($query->rows as $result) {
+				$category_data[] = array(
+					'category_id' => $result['category_id'],
+					'name'        => $this->_getPath($result['category_id'], $this->config->get('config_language_id')),
+					'status'  	  => $result['status'],
+					'sort_order'  => $result['sort_order']
+				);
+			
+				$category_data = array_merge($category_data, $this->getCategories($result['category_id']));
+			}	
+	
+			$this->cache->set('category.' . (int)$this->config->get('config_language_id') . '.' . (int)$parent_id, $category_data);
+		}
+		
+		return $category_data;
+	}	
+	
 	public function getSellerId($product_id) {
 		$sql = "SELECT seller_id FROM " . DB_PREFIX . "ms_product
 				WHERE product_id = " . (int)$product_id;
@@ -175,7 +211,7 @@ class MsProduct {
 						p.product_id,
 						p.status as enabled,
 						p.image as thumbnail,
-						ptc.category_id,
+						group_concat(ptc.category_id separator ',') as category_id,
 						mp.review_status_id
 				FROM `" . DB_PREFIX . "product` p
 				INNER JOIN `" . DB_PREFIX . "product_to_category` ptc
@@ -185,7 +221,6 @@ class MsProduct {
 				WHERE p.product_id = " . (int)$product_id;
 
 		$res = $this->db->query($sql);
-
 		
 		$sql = "SELECT pd.*,
 					   group_concat(pt.tag separator ', ') as tags
@@ -236,11 +271,11 @@ class MsProduct {
 		return $query->row;
 	}		
 		
-	public function getTotalProducts($nodrafts = false) {
-		$sql = "SELECT COUNT(*) as total FROM " . DB_PREFIX . "product
-				INNER JOIN " . DB_PREFIX . "ms_product mp
-					USING(product_id)
-				INNER JOIN " . DB_PREFIX . "ms_seller ms
+	public function getTotalProducts($nodrafts = false, $hasSeller = true) {
+		$sql = "SELECT COUNT(*) as total FROM " . DB_PREFIX . "product "
+				. ($hasSeller ? "INNER JOIN " : "LEFT JOIN ") . DB_PREFIX . "ms_product mp
+					USING(product_id) "
+				. ($hasSeller ? "INNER JOIN " : "LEFT JOIN ") . DB_PREFIX . "ms_seller ms
 					ON (mp.seller_id = ms.seller_id)"
 				. ($nodrafts ? " WHERE (ISNULL(mp.review_status_id) OR mp.review_status_id != " . (int)self::MS_PRODUCT_STATUS_DRAFT . ")" : '');
 
@@ -322,12 +357,12 @@ class MsProduct {
 					review_status_id = " . (int)$data['review_status_id'];
 		$this->db->query($sql);
 		
-		
-		$sql = "INSERT INTO " . DB_PREFIX . "product_to_category
-				SET product_id = " . (int)$product_id . ",
-					category_id = " . (int)$data['product_category'];
-		$this->db->query($sql);		
-
+		foreach ($data['product_category'] as $id => $category_id) {
+			$sql = "INSERT INTO " . DB_PREFIX . "product_to_category
+					SET product_id = " . (int)$product_id . ",
+						category_id = " . (int)$category_id;
+			$this->db->query($sql);		
+		}
 
 		$sql = "INSERT INTO " . DB_PREFIX . "product_to_store
 				SET product_id = " . (int)$product_id . ",
@@ -419,12 +454,18 @@ class MsProduct {
 		
 		$this->db->query($sql);
 		
-		$sql = "UPDATE " . DB_PREFIX . "product_to_category
-				SET category_id = " . (int)$data['product_category'] . "
-				WHERE product_id = " . (int)$product_id;
 		
-		$this->db->query($sql);		
+		$sql = "DELETE FROM " . DB_PREFIX . "product_to_category
+				WHERE product_id = " . (int)$product_id;
+		$this->db->query($sql);
 
+		foreach ($data['product_category'] as $id => $category_id) {
+			$sql = "INSERT INTO " . DB_PREFIX . "product_to_category
+					SET product_id = " . (int)$product_id . ",
+						category_id = " . (int)$category_id;
+			$this->db->query($sql);		
+		}
+		
 		// delete old images		
 		$old_images = $this->getProductImages($product_id);
 		foreach($old_images as $old_image) {

@@ -28,6 +28,6 @@ Upgrading to version 1.2
 		
 		ALTER TABLE prefix_ms_seller ADD COLUMN `commission_flat` decimal(15,4) NOT NULL DEFAULT '0';
 		ALTER TABLE prefix_ms_seller ADD COLUMN `product_validation` tinyint(4) NOT NULL DEFAULT '1';
-		ALTER TABLE prefix_ms_commission ADD COLUMN `commission_flat` decimal(15,4) NOT NULL DEFAULT '0';
+		ALTER TABLE prefix_ms_transaction ADD COLUMN `commission_flat` decimal(15,4) NOT NULL DEFAULT '0';
 
 	3. Perform step 3 from the general upgrade guide.

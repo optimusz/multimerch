@@ -13,6 +13,33 @@
 	position: absolute;
 }
 
+.ms-product .scrollbox {
+	border: 1px solid #CCCCCC;
+	width: 350px;
+	height: 100px;
+	background: #FFFFFF;
+	overflow-y: scroll;
+}
+.ms-product .scrollbox img {
+	float: right;
+	cursor: pointer;
+}
+
+.ms-product .scrollbox div {
+	padding: 3px;
+}
+.ms-product .scrollbox div input {
+	margin: 0px;
+	padding: 0px;
+	margin-right: 3px;
+}
+.ms-product .scrollbox div.even {
+	background: #FFFFFF;
+}
+.ms-product .scrollbox div.odd {
+	background: #E4EEF7;
+}
+
 .ms-product tr > td {
 	padding-bottom: 10px;
 	vertical-align: top;
@@ -137,6 +164,11 @@
 
 .ms-sellerprofile .seller-data div.avatar-box {
 	text-align: center
+}
+
+.ms-sellerprofile .seller-data div.avatar-box img {
+	padding: 3px;
+	border: 1px solid #E7E7E7;
 }
 
 .ms-sellerprofile .seller-data div.info-box {
@@ -279,4 +311,9 @@
 
 .ms-carousel .jcarousel-container {
     margin-bottom: 0;
+}
+
+.ms-carousel .image img {
+	padding: 3px;
+	border: 1px solid #E7E7E7;
 }

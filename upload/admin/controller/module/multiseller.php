@@ -26,6 +26,7 @@ class ControllerModuleMultiseller extends Controller {
 		
 		$this->data = array_merge($this->data, $this->load->language('module/multiseller'));
 		$this->data['token'] = $this->session->data['token'];
+		$this->document->addStyle('view/stylesheet/multiseller.css');
 		
 		$this->settings = Array(
 			"msconf_seller_validation" => MS_SELLER_VALIDATION_NONE,
@@ -50,8 +51,13 @@ class ControllerModuleMultiseller extends Controller {
 			"msconf_minimum_product_price" => 0,
 			"msconf_notification_email" => "",
 			"ms_carousel_module" => "",
+			"ms_topsellers_module" => "",
+			"ms_newsellers_module" => "",	
+			"ms_sellerdropdown_module" => "",	
 			"msconf_allow_free_products" => 0,
-			"msconf_seller_commission_flat" => 0.5
+			"msconf_seller_commission_flat" => 0.5,
+			"msconf_allow_multiple_categories" => 0,
+			"msconf_required_images" => 3			
 		);
 	}	
 	
@@ -81,10 +87,11 @@ class ControllerModuleMultiseller extends Controller {
 		}
 
 		foreach($set as $s=>$v) {
-			if ((strpos($name,'_module') !== FALSE)) {
+			if ((strpos($s,'_module') !== FALSE)) {
 				if (!isset($this->request->post[$s])) {
 					$set[$s] = '';
 				} else {
+					unset($this->request->post[$s][0]);
 					$set[$s] = $this->request->post[$s];
 				}
 				continue;
@@ -188,6 +195,8 @@ class ControllerModuleMultiseller extends Controller {
 		}
 		
 		if (empty($json['errors'])) {
+			if (!isset($data['sellerinfo_message'])) $data['sellerinfo_message'] = '';
+				
 			$mails = array();
 			if ($data['sellerinfo_action'] != 0) {
 				switch ($data['sellerinfo_action']) {
@@ -512,6 +521,7 @@ class ControllerModuleMultiseller extends Controller {
 		$total_withdrawals = $r->getTotalWithdrawalRequests();
 
 		foreach ($results as $result) {
+
 		$this->data['requests'][] = array(
 			'request_id' => $result['req.id'],
 			'seller' => $result['sel.nickname'],
@@ -519,7 +529,7 @@ class ControllerModuleMultiseller extends Controller {
 			'date_created' => date($this->language->get('date_format_short'), strtotime($result['req.date_created'])),
 			'status' => empty($result['req.date_processed']) ? 'Pending' : 'Completed',
 			'processed_by' => $result['u.username'],
-			'date_processed' => date($this->language->get('date_format_short'), strtotime($result['req.date_processed']))
+			'date_processed' => $result['req.date_processed'] ? date($this->language->get('date_format_short'), strtotime($result['req.date_processed'])) : ''
 		);
 		}
 		

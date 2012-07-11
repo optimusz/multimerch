@@ -56,8 +56,12 @@ class MsMail extends Mail {
 	private function _getRecipients($mail_type) {
 		if ($mail_type < 100)
 			return $this->registry->get('customer')->getEmail();
-		else
-			return $this->config->get('msconf_notification_email');
+		else {
+			if (!$this->config->get('msconf_notification_email'))
+				return $this->config->get('config_email');
+			else
+				return $this->config->get('msconf_notification_email');
+		}
 	}
 
 	//TODO
@@ -135,6 +139,7 @@ class MsMail extends Mail {
 		} else {
 			$mail->setTo($data['recipients']);
 		}
+		
 		$mail->setFrom($this->config->get('config_email'));
 		$mail->setSender($this->config->get('config_name'));
 		

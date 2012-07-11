@@ -16,15 +16,16 @@ Installation:
  
 	2. Copy the files and folders from the upload/ directory to your OpenCart installation.
 
-	3. Create a folder named tmp/ within your image/ directory and grant write permissions to your web server.
+	3. Grant write permissions on the newly created image/tmp/ folder to your web server.
 	   Prevent file and directory indexing for this new folder either by configuring your web server accordingly
 	   or by creating an empty index.html file within this directory.
 
-	4. Install the module via Backend -> Extensions -> Modules -> [ffct.cc] Digital Multiseller Marketplace
+	4. Install the module via Backend -> Extensions -> Modules -> [ffct.cc] Digital Multiseller Marketplace.
 	
 	   NOTE: This step is mandatory since it creates the tables needed for the extension to work.
 	   If you don't do this you'll get a MySQL error in frontend. 
 
+	5. Configure the module via Multiseller -> Settings.
 
 If you are using a custom theme:
 ----------------------------------
@@ -40,7 +41,7 @@ If you are using a custom theme:
 	   for modifications.
 
 	3. This extension may not work with heavily modified custom themes out of the box 
-	   since it relies on specific lines of code found in the default theme. Contact us if that's the case.
+	   since it relies on specific lines of code found in the default theme.
 
 
 If you are using a renamed admin folder:
@@ -112,6 +113,20 @@ Usage:
 
 Changelog:
 ---------------------------------
+        1.3 (2012-07-11)
+		- Added a setting to allow submitting products to multiple categories
+                - Added new sellers sidebox
+		- Added top sellers sidebox
+		- Added seller dropdown sidebox
+		- Added default image for sellers with no avatars
+		- Added a setting for the number of required images for a product
+		- Added total sellers/products line
+		- Added seller nickname to downloads for easier recognition
+		- Fixed carousel deletion bug
+		- Fixed undefined index notices for products with no sellers
+		- Fixed empty admin notification email issue
+		
+
 	1.2 (2012-06-01)
 		- Added product validation setting per seller
 		- Added commission per seller
@@ -141,11 +156,3 @@ Changelog:
 	1.0.0 (2012-05-04)
 		- Initial release
 
-
-
-
-
-
-ALTER TABLE oc152_ms_seller ADD COLUMN `commission_flat` decimal(15,4) NOT NULL DEFAULT '0';
-ALTER TABLE oc152_ms_seller ADD COLUMN `product_validation` tinyint(4) NOT NULL DEFAULT '1';
-ALTER TABLE oc152_ms_commission ADD COLUMN `commission_flat` decimal(15,4) NOT NULL DEFAULT '0';
