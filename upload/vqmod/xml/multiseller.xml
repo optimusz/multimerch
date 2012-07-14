@@ -364,9 +364,26 @@
 	<!-- ************************ -->
 
 	<file name="&adminFolder;/model/sale/order.php">
-		<operation>
+		<!-- 1.5.2 -->
+		<operation error="log">
 			<search position="after"><![CDATA[
 				$this->db->query("UPDATE `" . DB_PREFIX . "order` SET total = '" . (float)$total . "' WHERE order_id = '" . (int)$order_id . "'");
+			]]></search>
+			<add><![CDATA[
+				require_once(DIR_SYSTEM . 'library/ms-transaction.php');
+				$msTransaction = new MsTransaction($this->registry);
+				if (in_array($data['order_status_id'], explode(',',$this->config->get('msconf_credit_order_statuses')))) {
+					$msTransaction->addTransactionsForOrder($order_id);
+				} else if (in_array($data['order_status_id'], explode(',',$this->config->get('msconf_debit_order_statuses')))) {
+					$msTransaction->addTransactionsForOrder($order_id, TRUE);
+				}
+			]]></add>
+		</operation>
+
+		<!-- 1.5.3 -->
+		<operation error="log">
+			<search position="after"><![CDATA[
+				$this->db->query("UPDATE `" . DB_PREFIX . "order` SET total = '" . (float)$total . "', affiliate_id = '" . (int)$affiliate_id . "', commission = '" . (float)$commission . "' WHERE order_id = '" . (int)$order_id . "'");
 			]]></search>
 			<add><![CDATA[
 				require_once(DIR_SYSTEM . 'library/ms-transaction.php');

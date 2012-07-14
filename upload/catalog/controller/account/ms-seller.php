@@ -523,6 +523,7 @@ class ControllerAccountMsSeller extends Controller {
 				'currency_code' =>'',
 				'currency_value' =>'',
 				'commission' =>'',
+				'commission_flat' =>'',
 				'description' => sprintf($this->language->get('ms_transaction_pending_withdrawal'),$this->currency->format($data['withdraw_amount'], $this->config->get('config_currency')))
 			);
 			
