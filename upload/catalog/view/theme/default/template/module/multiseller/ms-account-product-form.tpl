@@ -42,7 +42,7 @@
         <tr>
           <td><span class="required"><?php if ($k == $first) { echo '*'; } ?></span> <?php echo $ms_account_product_description; ?></td>
           <td>
-          	<textarea name="languages[<?php echo $langId; ?>][product_description]"><?php echo $product['languages'][$langId]['description']; ?></textarea>
+          	<textarea name="languages[<?php echo $langId; ?>][product_description]"><?php echo strip_tags(htmlspecialchars_decode($product['languages'][$langId]['description'])); ?></textarea>
           	<p class="ms-note"><?php echo $ms_account_product_description_note; ?></p>
           	<p class="error" id="error_product_description_<?php echo $langId; ?>"></p>
           </td>
@@ -160,6 +160,7 @@
           	</div>
           </td>
         </tr>
+
         <?php if ($seller['product_validation'] == MsProduct::MS_PRODUCT_VALIDATION_APPROVAL) { ?>
         <tr><td colspan="2"><h3>Message to the reviewer</h3></td></tr>        
         <tr>
@@ -190,9 +191,8 @@ $(function() {
 		$(this).parent().remove();
 	});
 
-	$("#product_download_files").delegate("span", "click", function() {
-		$(this).parent("p").prev("input:hidden").remove();
-		$(this).parent("p").remove();
+	$("#product_download_files").delegate("span.remove", "click", function() {
+		$(this).parent().remove();
 	});
 
 	$('#ms-new-product input[type="file"]').live('change', function() {
@@ -241,14 +241,72 @@ $(function() {
 										  '</div>' ];
 						$("#product_thumbnail_files").html(imageHtml.join(''));
 					} else {
-						$("#product_download_files").append('<input type="hidden" value="'+jsonData.file.src+'" name="product_downloads[]" />');
-						$("#product_download_files").append('<p><b>'+jsonData.file.name+'</b> <span style="cursor: pointer">[ <?php echo $ms_delete; ?> ]</span></p>');						
+						var imageHtml = [ '<div class="ms-download">',
+										  '<input type="hidden" value="'+jsonData.file.src+'" name="product_downloads[]" />',
+										  '<b>'+jsonData.file.name+'</b>' ];
+
+						if (jsonData.file.pages > 0) {
+							imageHtml.push('<input value="0-'+ jsonData.file.pages +'" name="pages" type="text" style="width:30px; margin-left: 50px" /> <a class="button ms-generate-images"><span><?php echo $ms_button_generate; ?></span></a>');
+						}
+						
+						imageHtml.push('<span style="cursor: pointer" class="remove">[ <?php echo $ms_delete; ?> ]</span></div>');
+										  
+						$("#product_download_files").append(imageHtml.join(''));
+						
+
 					}
-				}			
+				}
 			}
 		}).submit();
 	});
 
+	$("#product_download_files").delegate(".ms-generate-images", "click", function() {
+		var generateButton = $(this);
+		$('#error_product_download').text('');
+    	generateButton.hide();
+    	generateButton.before('<span class="wait">&nbsp;<img src="catalog/view/theme/default/image/loading.gif" alt="" /></span>');
+    	
+	    $.ajax({
+			type: "POST",
+			dataType: "json",
+			url: 'index.php?route=account/ms-seller/jxgenerateimages',
+			data: $(this).parent().find('input').serialize(),
+		    beforeSend: function() {
+		    	//$('#ms-new-product a.button').hide();
+		    	//button.before('<span class="wait">&nbsp;<img src="catalog/view/theme/default/image/loading.gif" alt="" /></span>');
+		    },			
+			success: function(jsonData) {
+				generateButton.find('span').text('<?php echo $ms_button_regenerate; ?>');
+				generateButton.show().prev('span.wait').remove();
+				console.log(jsonData);
+				if (!jQuery.isEmptyObject(jsonData.errors)) {
+					for (error in jsonData.errors) {
+					    if (!jsonData.errors.hasOwnProperty(error)) {
+					        continue;
+					    }
+					    $('#error_'+error).text(jsonData.errors[error]);
+					}				
+				} else {
+					var imageHtml = [];
+					for(var i=0; i<jsonData.previews.length; i++) {
+						imageHtml.push(
+							'<div class="ms-image ms-pdf">',
+							  '<input type="hidden" value="'+jsonData.previews[i].name+'" name="product_images[]" />',
+							  '<img src="'+jsonData.previews[i].thumb+'" />',
+							  '<span class="ms-remove"></span>',
+							'</div>'
+						);
+					}
+					console.log(jsonData.token);
+					console.log();
+					$('#product_image_files input[value^="'+jsonData.token+'"]').parent().remove();
+					//$('#product_image_files .ms-image[value^="'+jsonData.token+'"]').remove();
+					$("#product_image_files").append(imageHtml.join(''));
+				}
+	       	}
+		});
+	});
+	
 	$("#ms-savedraft-button, #ms-submit-button").click(function() {
 		var button = $(this);
 		if ($(this).attr('id') == 'ms-savedraft-button') {

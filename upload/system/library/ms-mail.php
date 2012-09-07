@@ -45,6 +45,7 @@ class MsMail extends Mail {
 		$this->request = $registry->get('request');
 		$this->session = $registry->get('session');
 		$this->language = $registry->get('language');
+		$this->load = $registry->get('load');
 		$this->errors = array();
 		
 		require_once(DIR_SYSTEM . 'library/ms-product.php');
@@ -97,7 +98,8 @@ class MsMail extends Mail {
 					'data' => array(
 						'recipients' => $this->msSeller->getSellerEmail($seller_id),
 						'addressee' => $this->msSeller->getSellerName($seller_id),
-						'product_id' => $product['product_id']
+						'product_id' => $product['product_id'],
+						'order_id' => $order_id
 					)
 				);
 			}
@@ -122,6 +124,12 @@ class MsMail extends Mail {
 			$n = reset($product['languages']);
 			$product['name'] = $n['name'];
 		}
+
+		if (isset($data['order_id'])) {
+			$this->load->model('checkout/order');
+			$model_checkout_order = $this->registry->get('model_checkout_order'); 
+			$order_info = $model_checkout_order->getOrder($data['order_id']);
+		}		
 		
 		//$message .= sprintf($this->language->get('ms_mail_regards'), HTTP_SERVER) . "\n" . $this->config->get('config_name');
 
@@ -209,6 +217,15 @@ class MsMail extends Mail {
 			case self::SMT_PRODUCT_PURCHASED:
 				$mail_subject .= $this->language->get('ms_mail_subject_product_purchased');
 				$mail_text .= sprintf($this->language->get('ms_mail_product_purchased'), $product['name'], $this->config->get('config_name'));
+				
+				if ($this->config->get('msconf_provide_buyerinfo')) {
+					$mail_text .= sprintf($this->language->get('ms_mail_product_purchased_info'), $order_info['shipping_firstname'], $order_info['shipping_lastname'], $order_info['shipping_company'], $order_info['shipping_address_1'], $order_info['shipping_address_2'], $order_info['shipping_city'], $order_info['shipping_postcode'], $order_info['shipping_zone'], $order_info['shipping_country']);
+					
+					if ($order_info['comment']) {
+						$mail_text .= sprintf($this->language->get('ms_mail_product_purchased_comment'), $order_info['comment']);
+					}
+				}
+				
 				break;				
 			
 			case self::SMT_WITHDRAW_REQUEST_SUBMITTED:

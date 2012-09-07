@@ -150,6 +150,16 @@
 			              	<input type="text" name="msconf_required_images" value="<?php echo $msconf_required_images; ?>" size="3" />
 			              </td>
 		            </tr>
+
+		            <tr>
+			              <td>
+			              		<span><?php echo $ms_config_max_images; ?></span>
+								<span class="help"><?php echo $ms_config_max_images_note; ?></span>
+			              </td>
+			              <td>
+			              	<input type="text" name="msconf_max_images" value="<?php echo $msconf_max_images; ?>" size="3" />
+			              </td>
+		            </tr>
 		            
 		            <tr>
 			              <td>
@@ -286,7 +296,20 @@
 						<td>
 							<input type="text" name="msconf_comments_maxlen" value="<?php echo $msconf_comments_maxlen; ?>" size="3"/>
 						</td>
-					</tr>		            
+					</tr>
+					
+		            <tr>
+		            	<td>
+							<span><?php echo $ms_config_provide_buyerinfo; ?></span>
+							<span class="help"><?php echo $ms_config_provide_buyerinfo_note; ?></span>
+						</td>
+		            	<td>
+			                <input type="radio" name="msconf_provide_buyerinfo" value="1" <?php if($msconf_provide_buyerinfo == 1) { ?> checked="checked" <?php } ?>  />
+			                <?php echo $text_yes; ?>
+			                <input type="radio" name="msconf_provide_buyerinfo" value="0" <?php if($msconf_provide_buyerinfo == 0) { ?> checked="checked" <?php } ?>  />
+			                <?php echo $text_no; ?>
+		              	</td>
+		            </tr>
 				</table>
 				</div>
 				<!-- END GENERAL TAB -->

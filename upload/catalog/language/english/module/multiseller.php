@@ -11,6 +11,8 @@ $_['ms_product_review_status_approved']       = 'Approved';
 $_['ms_product_review_status_declined']       = 'Declined';
 
 $_['ms_button_submit']      = 'Submit';
+$_['ms_button_generate']      = 'Generate images';
+$_['ms_button_regenerate']      = 'Regenerate images';
 $_['ms_button_submit_request']      = 'Submit request';
 $_['ms_button_save']      = 'Save';
 $_['ms_button_save_draft']      = 'Save draft';
@@ -58,6 +60,26 @@ EOT;
 $_['ms_mail_subject_product_purchased']      = 'Product purchased';
 $_['ms_mail_product_purchased'] = <<<EOT
 Your product %s has been purchased from %s.
+EOT;
+
+$_['ms_mail_product_purchased_info'] = <<<EOT
+
+
+Delivery address:
+
+%s %s
+%s
+%s
+%s
+%s %s
+%s
+%s
+EOT;
+
+$_['ms_mail_product_purchased_comments'] = <<<EOT
+
+Comments:
+%s
 EOT;
 
 $_['ms_mail_subject_withdraw_request_submitted']      = 'Withdrawal request submitted';
@@ -150,7 +172,9 @@ $_['ms_error_product_category_empty'] = 'Please select a category';
 $_['ms_error_product_thumbnail_empty'] = 'Please upload a thumbnail for your product';
 $_['ms_error_product_download_empty'] = 'Please add a download for your product';
 $_['ms_error_product_image_count'] = 'Please upload at least %s image(s) for your product';
+$_['ms_error_product_image_maximum'] = 'No more than %s image(s) allowed';
 $_['ms_error_product_message_length'] = 'Message cannot be longer than 1000 characters';
+$_['ms_error_product_invalid_pdf_range'] = 'Please specify comma delimited (,) pages or page ranges using hyphens (-)';
 
 $_['ms_error_withdraw_amount'] = 'Invalid amount';
 $_['ms_error_withdraw_balance'] = 'Not enough funds on your balance';

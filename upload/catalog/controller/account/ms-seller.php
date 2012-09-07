@@ -115,23 +115,27 @@ class ControllerAccountMsSeller extends Controller {
 				
 		if (!empty($this->request->post) && !empty($_FILES)) {
 	
-			if  (isset($_FILES[$this->request->post['action']]))
+			if  (isset($_FILES[$this->request->post['action']])) {
 				//$file[$this->request->post['action']] = $_FILES[$this->request->post['action']]; 
 				$file = $_FILES[$this->request->post['action']];
+			}
 	
 			// allow a maximum of N images
-			if ($this->request->post['action'] == 'product_image' && isset($this->request->post['product_images']) && count($this->request->post['product_images']) >= 3) {
-				$json['errors'][] = 'No more images allowed';
-
+			if ($this->request->post['action'] == 'product_image' && isset($this->request->post['product_images']) && count($this->request->post['product_images']) >= $this->config->get('msconf_max_images')) {
+				$json['errors'][] = sprintf($this->language->get('ms_error_product_image_maximum'),$this->config->get('msconf_max_images'));
+				$this->_setJsonResponse($json);
+				return;
 			}
 		} else {
 			$POST_MAX_SIZE = ini_get('post_max_size');
 			$mul = substr($POST_MAX_SIZE, -1);
 			$mul = ($mul == 'M' ? 1048576 : ($mul == 'K' ? 1024 : ($mul == 'G' ? 1073741824 : 1)));
 	 		if ($_SERVER['CONTENT_LENGTH'] > $mul * (int)$POST_MAX_SIZE && $POST_MAX_SIZE) {
-				$json['errors'][] = 'File too big';	 			
+				$json['errors'][] = $this->language->get('ms_error_file_size');
 	 		} else {
-	 			$json['errors'][] = 'Unknown upload error';
+	 			$json['errors'][] = $this->language->get('ms_error_file_upload_error');
+	 			
+	 			
 	 		}
 			$this->_setJsonResponse($json);
 			return;
@@ -149,7 +153,7 @@ class ControllerAccountMsSeller extends Controller {
 				$json['file'] = array(
 					'name' => $name,
 					'thumb' => $thumb
-				);				
+				);
 			}
 		} else {
 			if (!$image->validate($file,'F')) {
@@ -157,15 +161,99 @@ class ControllerAccountMsSeller extends Controller {
 				$json['errors'][key($_FILES)] = $errors[0];
 			} else {
 				$name = $image->upload($file,'F');
+				
+				
+				if ($file['type'] == 'application/pdf') {
+					$im = new imagick(DIR_IMAGE . $image->getTmpPath() . $name);
+					$pages = $im->getNumberImages() - 1;		
+				} else {
+					$pages = 0;
+				}
+				
 				$json['file'] = array(
 					'name' => $file['name'],
-					'src' => $name
-				);				
+					'src' => $name,
+					'pages' => $pages
+				);
+								
 			}			
 		}
 		
 		$this->_setJsonResponse($json);
-	}	
+	}
+	
+	public function jxGenerateImages() {
+		$data = $this->request->post;
+		$json = array();
+		if (isset($data['product_downloads'][0])) {
+			$dl = MsImage::byName($this->registry, $data['product_downloads'][0]);
+			if (!$dl->checkFileAgainstSession()) {
+				$json['errors']['product_download'] = $dl->getErrors();
+			} else {
+				if (preg_match('/[^-0-9,]/', $data['pages'])) {
+					$json['errors']['product_download'] = $this->language->get('ms_error_product_invalid_pdf_range');
+				} else {
+					$offsets = explode(',',$data['pages']);
+					foreach ($offsets as $offset) {
+						//var_dump($offset, preg_match('/^[0-9]+(-[0-9]+)?$/',$offset));
+						
+						if (!preg_match('/^[0-9]+(-[0-9]+)?$/', $offset)) {
+							$json['errors']['product_download'] = $this->language->get('ms_error_product_invalid_pdf_range');
+							break;
+						}
+					}
+				}
+
+				if (!empty($json['errors'])) {
+					$this->_setJsonResponse($json);
+					return;
+				}
+				
+				$pathinfo = pathinfo(DIR_IMAGE . $dl->getTmpPath() . $data['product_downloads'][0]);
+				$list = glob(DIR_IMAGE . $dl->getTmpPath() . $pathinfo['filename'] . '*\.png');
+				//var_dump($list);
+				foreach ($list as $pagePreview) {
+					//var_dump('unlinking ' . $pagePreview);
+					@unlink($pagePreview);
+				}
+				//return;
+				$name = DIR_IMAGE . $dl->getTmpPath() . $data['product_downloads'][0] . "[" . $data['pages'] . "]";
+				$im = new imagick($name);
+				$pages = $im->getNumberImages();
+
+				$im->setImageFormat( "png" );
+				$im->setImageCompressionQuality(100);
+
+				$pathinfo = pathinfo(DIR_IMAGE . $dl->getTmpPath() . $data['product_downloads'][0]);
+				$json['token'] = substr($pathinfo['basename'], 0, strrpos($pathinfo['basename'], '.'));
+				
+				if ($im->writeImages(DIR_IMAGE . $dl->getTmpPath() . $pathinfo['filename'] . '.png', false)) {
+					$list = glob(DIR_IMAGE . $dl->getTmpPath() . $pathinfo['filename'] . '*\.png');
+					foreach ($list as $pagePreview) {
+						/*
+						var_dump($pagePreview,preg_match('/[0-9]+x[0-9]+\.png$/',$pagePreview));
+						if (preg_match('/[0-9]+x[0-9]+\.png$/',$pagePreview)) {
+							
+							echo 'next ' . $pagePreview;
+							continue;
+						}
+						*/
+						$pathinfo = pathinfo($pagePreview);
+						$this->session->data['multiseller']['files'][] = $pathinfo['basename'];
+						$image = new MsImage($this->registry);
+						$thumb = $image->resize($image->getTmpPath() . $pathinfo['basename'], $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'));
+						$json['previews'][] = array(
+							'name' => $pathinfo['basename'],
+							'thumb' => $thumb
+						);
+					}
+					//var_dump($this->session->data['multiseller']['files']);
+					$this->_setJsonResponse($json);
+				}
+			}
+			unset($dl);
+		}
+	}
 	
 	public function jxSaveProductDraft() {
 		$data = $this->request->post;
@@ -370,12 +458,17 @@ class ControllerAccountMsSeller extends Controller {
 		}
 		
 		if (isset($data['product_images'])) {
-			foreach ($data['product_images'] as $image) {
-				$img = MsImage::byName($this->registry, $image);
-				if (!$img->checkFileAgainstSession()) {
-					$json['errors']['product_image'] = $img->getErrors();
+			
+			if (count($data['product_images']) > $this->config->get('msconf_max_images')) {
+				$json['errors']['product_image'] = sprintf($this->language->get('ms_error_product_image_maximum'),$this->config->get('msconf_max_images'));
+			} else {
+				foreach ($data['product_images'] as $image) {
+					$img = MsImage::byName($this->registry, $image);
+					if (!$img->checkFileAgainstSession()) {
+						$json['errors']['product_image'] = $img->getErrors();
+					}
+					unset($img);
 				}
-				unset($img);
 			}
 		}
 		
@@ -670,6 +763,7 @@ class ControllerAccountMsSeller extends Controller {
 		$this->data['msconf_allow_multiple_categories'] = $this->config->get('msconf_allow_multiple_categories');
 		$this->data['msconf_required_images'] = $this->config->get('msconf_required_images');
 
+		$this->data['back'] = $this->url->link('account/ms-seller/products', '', 'SSL');
 		$this->data['heading'] = $this->language->get('ms_account_newproduct_heading');
 		$this->document->setTitle($this->language->get('ms_account_newproduct_heading'));
 		$this->_setBreadcrumbs('ms_account_newproduct_breadcrumbs', __FUNCTION__);
@@ -777,7 +871,9 @@ class ControllerAccountMsSeller extends Controller {
 
 			$this->data['product'] = $product;
 			$this->data['msconf_allow_multiple_categories'] = $this->config->get('msconf_allow_multiple_categories');
-			$this->data['msconf_required_images'] = $this->config->get('msconf_required_images');			
+			$this->data['msconf_required_images'] = $this->config->get('msconf_required_images');
+			
+		$this->data['back'] = $this->url->link('account/ms-seller/products', '', 'SSL');						
 			$this->data['heading'] = $this->language->get('ms_account_editproduct_heading');
 			$this->document->setTitle($this->language->get('ms_account_editproduct_heading'));		
 			$this->_setBreadcrumbs('ms_account_editproduct_breadcrumbs', __FUNCTION__);		

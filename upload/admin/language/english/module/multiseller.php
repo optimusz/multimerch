@@ -119,8 +119,12 @@ $_['ms_config_minimum_product_price_note'] = 'Minimum product price';
 $_['ms_config_allowed_image_types'] = 'Allowed image extensions';
 $_['ms_config_allowed_image_types_note'] = 'Allowed image extensions';
 
-$_['ms_config_required_images'] = 'Additional images required';
-$_['ms_config_required_images_note'] = 'Minimum number of additional images required when submitting a product';
+$_['ms_config_required_images'] = 'Product images required';
+$_['ms_config_required_images_note'] = 'Minimum number of product images required when submitting a product';
+
+$_['ms_config_max_images'] = 'Maximum images allowed';
+$_['ms_config_max_images_note'] = 'Maximum number of product images allowed when submitting a product';
+
 
 $_['ms_config_allowed_download_types'] = 'Allowed download extensions';
 $_['ms_config_allowed_download_types_note'] = 'Allowed download extensions';
@@ -166,6 +170,9 @@ $_['ms_config_allow_free_products_note'] = 'Allow sellers to add free products';
 
 $_['ms_config_allow_multiple_categories'] = 'Allow multiple categories';
 $_['ms_config_allow_multiple_categories_note'] = 'Allow sellers to add products to multiple categories';
+
+$_['ms_config_provide_buyerinfo'] = 'Mail buyer information';
+$_['ms_config_provide_buyerinfo_note'] = 'Include buyer address in the "Product purchased" email';
 
 $_['ms_config_carousel']       = 'Seller carousel';
 $_['ms_config_topsellers']       = 'Top sellers';

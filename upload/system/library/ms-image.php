@@ -153,11 +153,12 @@ class MsImage {
 		$info = pathinfo($filename);
 		$extension = $info['extension'];
 		
-		$new_image = substr($info['basename'], 0, strpos($info['basename'], '.')) . '-' . $width . 'x' . $height . '.' . $extension;
-
+		$new_image = substr($info['basename'], 0, strrpos($info['basename'], '.')) . '-' . $width . 'x' . $height . '.' . $extension;
 		$image = new Image(DIR_IMAGE . $filename);
 		$image->resize($width, $height);
 		$image->save(DIR_IMAGE . $this->tmpPath . $new_image);
+		
+		
 		
 		if (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) {
 			return HTTPS_IMAGE . $this->tmpPath . $new_image;

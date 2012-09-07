@@ -113,7 +113,11 @@ Usage:
 
 Changelog:
 ---------------------------------
-        1.3 (2012-07-11)
+        1.3.1 (2012-07-15)
+		- Fixed compatibility with OC 1.5.3.x
+		- Fixed withdrawal requests issue
+        
+	1.3 (2012-07-11)
 		- Added a setting to allow submitting products to multiple categories
                 - Added new sellers sidebox
 		- Added top sellers sidebox

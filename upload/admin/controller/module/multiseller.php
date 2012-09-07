@@ -57,7 +57,9 @@ class ControllerModuleMultiseller extends Controller {
 			"msconf_allow_free_products" => 0,
 			"msconf_seller_commission_flat" => 0.5,
 			"msconf_allow_multiple_categories" => 0,
-			"msconf_required_images" => 3			
+			"msconf_required_images" => 1,
+			"msconf_max_images" => 10,
+			"msconf_provide_buyerinfo" => 0
 		);
 	}	
 	
