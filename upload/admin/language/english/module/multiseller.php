@@ -21,6 +21,8 @@ $_['ms_seller_status_disabled']      = 'Disabled';
 
 $_['heading_title']    = '[ffct.cc] Digital Multiseller Marketplace';
 $_['text_module']         = 'Modules';
+$_['text_seller_select']         = 'Seller select';
+$_['text_shipping_dependent']         = 'Shipping dependent';
 $_['error_permission'] = 'Warning: You do not have permission to modify module!';
 $_['ms_error_withdraw_norequests'] = 'Error: no requests to process';
 $_['ms_error_withdraw_response'] = 'Error: no response';
@@ -173,6 +175,12 @@ $_['ms_config_allow_multiple_categories_note'] = 'Allow sellers to add products 
 
 $_['ms_config_provide_buyerinfo'] = 'Mail buyer information';
 $_['ms_config_provide_buyerinfo_note'] = 'Include buyer address in the "Product purchased" email';
+
+$_['ms_config_enable_shipping'] = 'Enable shipping';
+$_['ms_config_enable_shipping_note'] = 'New products will be created to require shipping';
+
+$_['ms_config_enable_quantities'] = 'Enable quantities';
+$_['ms_config_enable_quantities_note'] = 'Allow sellers to specify quantities for products';
 
 $_['ms_config_product_options'] = 'Product options';
 $_['ms_config_product_options_note'] = 'Enable product options on new product page';

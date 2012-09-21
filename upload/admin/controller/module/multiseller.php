@@ -59,7 +59,9 @@ class ControllerModuleMultiseller extends Controller {
 			"msconf_allow_multiple_categories" => 0,
 			"msconf_required_images" => 1,
 			"msconf_max_images" => 10,
-			"msconf_provide_buyerinfo" => 0,
+			"msconf_enable_shipping" => 0, // 0 - no, 1 - yes, 2 - seller select
+			"msconf_provide_buyerinfo" => 0, // 0 - no, 1 - yes, 2 - shipping dependent
+			"msconf_enable_quantities" => 0, // 0 - no, 1 - yes, 2 - shipping dependent
 			"msconf_product_options" => ""
 		);
 	}	

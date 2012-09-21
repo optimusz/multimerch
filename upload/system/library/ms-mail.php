@@ -218,7 +218,7 @@ class MsMail extends Mail {
 				$mail_subject .= $this->language->get('ms_mail_subject_product_purchased');
 				$mail_text .= sprintf($this->language->get('ms_mail_product_purchased'), $product['name'], $this->config->get('config_name'));
 				
-				if ($this->config->get('msconf_provide_buyerinfo')) {
+				if ($this->config->get('msconf_provide_buyerinfo') == 1 || ($this->config->get('msconf_provide_buyerinfo') == 2 && $product['shipping'] == 1)) {
 					$mail_text .= sprintf($this->language->get('ms_mail_product_purchased_info'), $order_info['shipping_firstname'], $order_info['shipping_lastname'], $order_info['shipping_company'], $order_info['shipping_address_1'], $order_info['shipping_address_2'], $order_info['shipping_city'], $order_info['shipping_postcode'], $order_info['shipping_zone'], $order_info['shipping_country']);
 					
 					if ($order_info['comment']) {

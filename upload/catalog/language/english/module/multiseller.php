@@ -213,6 +213,10 @@ $_['ms_account_product_price']     = 'Price';
 $_['ms_account_product_price_note']    = 'Your note text goes here';
 $_['ms_account_product_category']     = 'Category';
 $_['ms_account_product_category_note']    = 'Your note text goes here';
+$_['ms_account_product_enable_shipping']     = 'Enable shipping';
+$_['ms_account_product_enable_shipping_note']    = 'Enable shipping for this product';
+$_['ms_account_product_quantity']     = 'Quantity';
+$_['ms_account_product_quantity_note']    = 'Quantity of this product';
 
 $_['ms_account_product_files']    = 'Files';
 $_['ms_account_product_thumbnail']     = 'Thumbnail';

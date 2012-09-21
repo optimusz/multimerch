@@ -336,6 +336,42 @@ class ControllerAccountMsSeller extends Controller {
 			$data['product_category'] = array();			
 		}
 		
+		$data['product_subtract'] = 0;
+		if ($this->config->get('msconf_enable_shipping') == 1) { // enable shipping
+			$data['product_enable_shipping'] = 1;
+		} else if ($this->config->get('msconf_enable_shipping') == 2) { // seller select
+		 	if  (!isset($data['product_enable_shipping']) || $data['product_enable_shipping'] != 1) {
+		 		$data['product_enable_shipping'] = 0;
+		 	} else {
+		 		$data['product_enable_shipping'] = 1;
+		 	}
+		} else { // disable shipping
+			$data['product_enable_shipping'] = 0;
+		}
+		
+		if ($this->config->get('msconf_enable_quantities') == 1) { // enable quantities
+			$data['product_quantity'] = (int)$data['product_quantity'];
+			$data['product_subtract'] = 1;
+		} else if ($this->config->get('msconf_enable_quantities') == 2) { // shipping dependent
+			if ($this->config->get('msconf_enable_shipping') == 1) {
+				$data['product_subtract'] = 1;
+				if (!isset($data['product_quantity']))
+					$data['product_quantity'] = 0;						
+			} else if ($this->config->get('msconf_enable_shipping') == 2) {
+				if (!$data['product_enable_shipping']) {
+					$data['product_quantity'] = 999;
+				} else {
+					$data['product_subtract'] = 1;
+					if (!isset($data['product_quantity']))
+						$data['product_quantity'] = 0;
+				}
+			} else { // shipping disabled
+				$data['product_quantity'] = 999;
+			}
+		} else { // disable quantities
+			$data['product_quantity'] = 999;
+		}		
+		
 		if (empty($json['errors'])) {
 			$data['enabled'] = 0;
 			$data['review_status_id'] = MsProduct::MS_PRODUCT_STATUS_DRAFT;
@@ -504,11 +540,43 @@ class ControllerAccountMsSeller extends Controller {
 		}		
 		
 		
-		//var_dump($data['product_attributes']);
-		//die();
+		$data['product_subtract'] = 0;
+		if ($this->config->get('msconf_enable_shipping') == 1) { // enable shipping
+			$data['product_enable_shipping'] = 1;
+		} else if ($this->config->get('msconf_enable_shipping') == 2) { // seller select
+		 	if  (!isset($data['product_enable_shipping']) || $data['product_enable_shipping'] != 1) {
+		 		$data['product_enable_shipping'] = 0;
+		 	} else {
+		 		$data['product_enable_shipping'] = 1;
+		 	}
+		} else { // disable shipping
+			$data['product_enable_shipping'] = 0;
+		}
 		
-		
-		
+
+		if ($this->config->get('msconf_enable_quantities') == 1) { // enable quantities
+			$data['product_quantity'] = (int)$data['product_quantity'];
+			$data['product_subtract'] = 1;
+		} else if ($this->config->get('msconf_enable_quantities') == 2) { // shipping dependent
+			if ($this->config->get('msconf_enable_shipping') == 1) {
+				$data['product_subtract'] = 1;
+				if (!isset($data['product_quantity']))
+					$data['product_quantity'] = 0;						
+			} else if ($this->config->get('msconf_enable_shipping') == 2) {
+				if (!$data['product_enable_shipping']) {
+					$data['product_quantity'] = 999;
+				} else {
+					$data['product_subtract'] = 1;
+					if (!isset($data['product_quantity']))
+						$data['product_quantity'] = 0;
+				}
+			} else { // shipping disabled
+				$data['product_quantity'] = 999;
+			}
+		} else { // disable quantities
+			$data['product_quantity'] = 999;
+		}
+
 		if (empty($json['errors'])) {
 			$mails = array();
 			// set product status
@@ -787,8 +855,10 @@ class ControllerAccountMsSeller extends Controller {
 
 		$this->data['product'] = FALSE;
 		$this->data['msconf_allow_multiple_categories'] = $this->config->get('msconf_allow_multiple_categories');
+		$this->data['msconf_enable_shipping'] = $this->config->get('msconf_enable_shipping');
 		$this->data['msconf_required_images'] = $this->config->get('msconf_required_images');
-
+		$this->data['msconf_enable_quantities'] = $this->config->get('msconf_enable_quantities');
+		
 		$this->data['back'] = $this->url->link('account/ms-seller/products', '', 'SSL');
 		$this->data['heading'] = $this->language->get('ms_account_newproduct_heading');
 		$this->document->setTitle($this->language->get('ms_account_newproduct_heading'));
@@ -845,6 +915,8 @@ class ControllerAccountMsSeller extends Controller {
 		$this->load->model('catalog/category');
 		$this->document->addScript('catalog/view/javascript/jquery.form.js');
 		$this->data['seller'] = $this->msSeller->getSellerData($this->customer->getId());
+		
+		
 		
 		if (!$this->config->get('msconf_allow_multiple_categories'))
 			$this->data['categories'] = $this->msProduct->getCategories();		
@@ -907,6 +979,9 @@ class ControllerAccountMsSeller extends Controller {
 
 			$this->data['product'] = $product;
 			$this->data['msconf_allow_multiple_categories'] = $this->config->get('msconf_allow_multiple_categories');
+			$this->data['msconf_enable_shipping'] = $this->config->get('msconf_enable_shipping');
+			$this->data['msconf_enable_quantities'] = $this->config->get('msconf_enable_quantities');
+			
 			$this->data['msconf_required_images'] = $this->config->get('msconf_required_images');
 			
 		$this->data['back'] = $this->url->link('account/ms-seller/products', '', 'SSL');						

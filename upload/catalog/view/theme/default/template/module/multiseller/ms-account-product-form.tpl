@@ -107,7 +107,30 @@
           </td>
       </tr>
 
-		<?php var_dump ($product_attributes); ?>      
+<?php var_dump($msconf_enable_shipping); ?>
+		<?php if ($msconf_enable_shipping == 2) { ?>
+		    <tr>
+		      <td><?php echo $ms_account_product_enable_shipping; ?></td>
+		      <td>
+		        <input type="radio" name="product_enable_shipping" value="1" <?php if($product['shipping'] == 1) { ?> checked="checked" <?php } ?>  />
+		        <?php echo $text_yes; ?>
+		        <input type="radio" name="product_enable_shipping" value="0" <?php if($product['shipping'] == 0) { ?> checked="checked" <?php } ?>  />
+		        <?php echo $text_no; ?>
+		      	<p class="ms-note"><?php echo $ms_account_product_enable_shipping_note; ?></p>
+		      	<p class="error" id="error_product_enable_shipping"></p>
+		      </td>
+		    </tr>
+		<?php } ?>
+
+        <tr <?php if ($msconf_enable_quantities == 0 || ($msconf_enable_shipping != 1 && $msconf_enable_quantities == 2 && $product['shipping'] == 0)) { ?>style="display: none"<?php } ?>>
+          <td><?php echo $ms_account_product_quantity; ?></td>
+          <td>
+          	<input type="text" name="product_quantity" value="<?php echo $product['quantity']; ?>" <?php if ($msconf_enable_quantities < 2) { ?>class="ffUnchangeable"<?php } ?> />
+          	<p class="ms-note"><?php echo $ms_account_product_quantity_note; ?></p>
+          	<p class="error" id="error_product_tags_<?php echo $langId; ?>"></p>
+          </td>
+        </tr>   
+
 		<?php if ($options) { ?>
 		<?php foreach ($options as $option) { ?>
 			<tr>
@@ -229,6 +252,18 @@
 <script>
 $(function() {
 	$('#htabs a.lang').tabs();
+
+	$("input[name='product_enable_shipping']").live('change', function() {
+		if ($(this).val() == 1) {
+			if (!$("input[name='product_quantity']").hasClass("ffUnchangeable")) {
+				$("input[name='product_quantity']").parents("tr").show();
+			}
+		} else {
+			if (!$("input[name='product_quantity']").hasClass("ffUnchangeable")) {
+				$("input[name='product_quantity']").parents("tr").hide();
+			}
+		}
+	});
 
 	$("#product_image_files, #product_thumbnail_files").delegate(".ms-remove", "click", function() {
 		$(this).parent().remove();

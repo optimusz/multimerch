@@ -211,6 +211,8 @@ class MsProduct {
 						p.product_id,
 						p.status as enabled,
 						p.image as thumbnail,
+						p.shipping as shipping,
+						p.quantity as quantity,
 						group_concat(ptc.category_id separator ',') as category_id,
 						mp.review_status_id
 				FROM `" . DB_PREFIX . "product` p
@@ -373,9 +375,9 @@ class MsProduct {
 				SET price = " . (float)$data['product_price'] . ",
 					model = '".$this->db->escape($data['languages'][$first]['product_name']) ."',
 					image = '" .  $this->db->escape($thumbnail)  . "',
-					subtract = 0,
-					quantity = 1,
-					shipping = 0,
+					subtract = " . (int)$data['product_subtract'] . ",
+					quantity = " . (int)$data['product_quantity'] . ",
+					shipping = " . (int)$data['product_enable_shipping'] . ",
 					status = " . (int)$data['enabled'] . ",
 					date_available = NOW(),				
 					date_added = NOW(),
@@ -493,6 +495,9 @@ class MsProduct {
 				SET price = " . (float)$data['product_price'] . ",
 					status = " . (int)$data['enabled'] . ",
 					image = '" . $this->db->escape($thumbnail) . "',
+					subtract = " . (int)$data['product_subtract'] . ",
+					quantity = " . (int)$data['product_quantity'] . ",
+					shipping = " . (int)$data['product_enable_shipping'] . ",
 					date_modified = NOW()
 				WHERE product_id = " . (int)$product_id;
 		

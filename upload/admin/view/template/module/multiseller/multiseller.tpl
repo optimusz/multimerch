@@ -222,19 +222,6 @@
 							<input type="text" name="msconf_comments_maxlen" value="<?php echo $msconf_comments_maxlen; ?>" size="3"/>
 						</td>
 					</tr>
-					
-		            <tr>
-		            	<td>
-							<span><?php echo $ms_config_provide_buyerinfo; ?></span>
-							<span class="help"><?php echo $ms_config_provide_buyerinfo_note; ?></span>
-						</td>
-		            	<td>
-			                <input type="radio" name="msconf_provide_buyerinfo" value="1" <?php if($msconf_provide_buyerinfo == 1) { ?> checked="checked" <?php } ?>  />
-			                <?php echo $text_yes; ?>
-			                <input type="radio" name="msconf_provide_buyerinfo" value="0" <?php if($msconf_provide_buyerinfo == 0) { ?> checked="checked" <?php } ?>  />
-			                <?php echo $text_no; ?>
-		              	</td>
-		            </tr>
 				</table>
 				</div>
 				<!-- END GENERAL TAB -->
@@ -316,6 +303,51 @@
 			              <td>
 			              	<input type="text" name="msconf_max_images" value="<?php echo $msconf_max_images; ?>" size="3" />
 			              </td>
+		            </tr>
+		            
+		            <tr>
+		            	<td>
+							<span><?php echo $ms_config_enable_shipping; ?></span>
+							<span class="help"><?php echo $ms_config_enable_shipping_note; ?></span>
+						</td>
+		            	<td>
+			                <input type="radio" name="msconf_enable_shipping" value="1" <?php if($msconf_enable_shipping == 1) { ?> checked="checked" <?php } ?>  />
+			                <?php echo $text_yes; ?>
+			                <input type="radio" name="msconf_enable_shipping" value="0" <?php if($msconf_enable_shipping == 0) { ?> checked="checked" <?php } ?>  />
+			                <?php echo $text_no; ?>
+			                <input type="radio" name="msconf_enable_shipping" value="2" <?php if($msconf_enable_shipping == 2) { ?> checked="checked" <?php } ?>  />
+			                <?php echo $text_seller_select; ?>			                
+		              	</td>
+		            </tr>
+					
+		            <tr>
+		            	<td>
+							<span><?php echo $ms_config_enable_quantities; ?></span>
+							<span class="help"><?php echo $ms_config_enable_quantities_note; ?></span>
+						</td>
+		            	<td>
+			                <input type="radio" name="msconf_enable_quantities" value="1" <?php if($msconf_enable_quantities == 1) { ?> checked="checked" <?php } ?>  />
+			                <?php echo $text_yes; ?>
+			                <input type="radio" name="msconf_enable_quantities" value="0" <?php if($msconf_enable_quantities == 0) { ?> checked="checked" <?php } ?>  />
+			                <?php echo $text_no; ?>
+			                <input type="radio" name="msconf_enable_quantities" value="2" <?php if($msconf_enable_quantities == 2) { ?> checked="checked" <?php } ?>  />
+			                <?php echo $text_shipping_dependent; ?>			                
+		              	</td>
+		            </tr>
+					
+		            <tr>
+		            	<td>
+							<span><?php echo $ms_config_provide_buyerinfo; ?></span>
+							<span class="help"><?php echo $ms_config_provide_buyerinfo_note; ?></span>
+						</td>
+		            	<td>
+			                <input type="radio" name="msconf_provide_buyerinfo" value="1" <?php if($msconf_provide_buyerinfo == 1) { ?> checked="checked" <?php } ?>  />
+			                <?php echo $text_yes; ?>
+			                <input type="radio" name="msconf_provide_buyerinfo" value="0" <?php if($msconf_provide_buyerinfo == 0) { ?> checked="checked" <?php } ?>  />
+			                <?php echo $text_no; ?>
+			                <input type="radio" name="msconf_provide_buyerinfo" value="2" <?php if($msconf_provide_buyerinfo == 2) { ?> checked="checked" <?php } ?>  />
+			                <?php echo $text_shipping_dependent; ?>			                
+		              	</td>
 		            </tr>
 		            
 		            <tr>
