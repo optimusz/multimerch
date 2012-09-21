@@ -19,6 +19,7 @@
 			<form id="settings" action="<?php echo $action; ?>" method="post" enctype="multipart/form-data">
 		     	<div id="tabs" class="htabs">
 		     		<a href="#tab-general"><?php echo $tab_general; ?></a>
+		     		<a href="#tab-productform"><?php echo $ms_config_productform; ?></a>
 		     		<a href="#tab-modules"><?php echo $ms_config_modules; ?></a>
 		     	</div>
 		     	
@@ -73,62 +74,6 @@
 						</td>
 					</tr>
 		            
-					<tr>
-						<td>
-							<span><?php echo $ms_config_minimum_product_price; ?></span>
-							<span class="help"><?php echo $ms_config_minimum_product_price_note; ?></span>
-						</td>
-						<td>
-							<input type="text" name="msconf_minimum_product_price" value="<?php echo $msconf_minimum_product_price; ?>" size="3"/>
-						</td>
-					</tr>		            
-		            
-		   			<tr>
-						<td>
-							<span><?php echo $ms_config_allow_free_products; ?></span>
-							<span class="help"><?php echo $ms_config_allow_free_products_note; ?></span>
-						</td>
-		            	<td>
-			                <input type="radio" name="msconf_allow_free_products" value="1" <?php if($msconf_allow_free_products == 1) { ?> checked="checked" <?php } ?>  />
-			                <?php echo $text_yes; ?>
-			                <input type="radio" name="msconf_allow_free_products" value="0" <?php if($msconf_allow_free_products == 0) { ?> checked="checked" <?php } ?>  />
-			                <?php echo $text_no; ?>
-		              	</td>
-					</tr>	         
-
-		   			<tr>
-						<td>
-							<span><?php echo $ms_config_allow_multiple_categories; ?></span>
-							<span class="help"><?php echo $ms_config_allow_multiple_categories_note; ?></span>
-						</td>
-		            	<td>
-			                <input type="radio" name="msconf_allow_multiple_categories" value="1" <?php if($msconf_allow_multiple_categories == 1) { ?> checked="checked" <?php } ?>  />
-			                <?php echo $text_yes; ?>
-			                <input type="radio" name="msconf_allow_multiple_categories" value="0" <?php if($msconf_allow_multiple_categories == 0) { ?> checked="checked" <?php } ?>  />
-			                <?php echo $text_no; ?>
-		              	</td>
-					</tr>	
-		            
-		            <tr>
-			              <td>
-			              		<span><?php echo $ms_config_allowed_image_types; ?></span>
-								<span class="help"><?php echo $ms_config_allowed_image_types_note; ?></span>
-			              </td>
-			              <td>
-			              	<input type="text" name="msconf_allowed_image_types" value="<?php echo $msconf_allowed_image_types; ?>" />
-			              </td>
-		            </tr>
-		            
-		            <tr>
-			              <td>
-			              		<span><?php echo $ms_config_allowed_download_types; ?></span>
-								<span class="help"><?php echo $ms_config_allowed_download_types_note; ?></span>
-			              </td>
-			              <td>
-			              	<input type="text" name="msconf_allowed_download_types" value="<?php echo $msconf_allowed_download_types; ?>" />
-			              </td>
-		            </tr>
-		            
 		            <tr>
 			              <td>
 			              		<span><?php echo $ms_config_image_preview_size; ?></span>
@@ -141,26 +86,6 @@
 			              </td>
 		            </tr>
 
-		            <tr>
-			              <td>
-			              		<span><?php echo $ms_config_required_images; ?></span>
-								<span class="help"><?php echo $ms_config_required_images_note; ?></span>
-			              </td>
-			              <td>
-			              	<input type="text" name="msconf_required_images" value="<?php echo $msconf_required_images; ?>" size="3" />
-			              </td>
-		            </tr>
-
-		            <tr>
-			              <td>
-			              		<span><?php echo $ms_config_max_images; ?></span>
-								<span class="help"><?php echo $ms_config_max_images_note; ?></span>
-			              </td>
-			              <td>
-			              	<input type="text" name="msconf_max_images" value="<?php echo $msconf_max_images; ?>" size="3" />
-			              </td>
-		            </tr>
-		            
 		            <tr>
 			              <td>
 			              		<span><?php echo $ms_config_credit_order_statuses; ?></span>
@@ -313,6 +238,112 @@
 				</table>
 				</div>
 				<!-- END GENERAL TAB -->
+				
+		     	<!-- BEGIN PRODUCT FORM TAB -->
+		     	<div id="tab-productform">
+				<table class="form">
+					<tr>
+						<td>
+							<span><?php echo $ms_config_minimum_product_price; ?></span>
+							<span class="help"><?php echo $ms_config_minimum_product_price_note; ?></span>
+						</td>
+						<td>
+							<input type="text" name="msconf_minimum_product_price" value="<?php echo $msconf_minimum_product_price; ?>" size="3"/>
+						</td>
+					</tr>		            
+		            
+		   			<tr>
+						<td>
+							<span><?php echo $ms_config_allow_free_products; ?></span>
+							<span class="help"><?php echo $ms_config_allow_free_products_note; ?></span>
+						</td>
+		            	<td>
+			                <input type="radio" name="msconf_allow_free_products" value="1" <?php if($msconf_allow_free_products == 1) { ?> checked="checked" <?php } ?>  />
+			                <?php echo $text_yes; ?>
+			                <input type="radio" name="msconf_allow_free_products" value="0" <?php if($msconf_allow_free_products == 0) { ?> checked="checked" <?php } ?>  />
+			                <?php echo $text_no; ?>
+		              	</td>
+					</tr>	         
+
+		   			<tr>
+						<td>
+							<span><?php echo $ms_config_allow_multiple_categories; ?></span>
+							<span class="help"><?php echo $ms_config_allow_multiple_categories_note; ?></span>
+						</td>
+		            	<td>
+			                <input type="radio" name="msconf_allow_multiple_categories" value="1" <?php if($msconf_allow_multiple_categories == 1) { ?> checked="checked" <?php } ?>  />
+			                <?php echo $text_yes; ?>
+			                <input type="radio" name="msconf_allow_multiple_categories" value="0" <?php if($msconf_allow_multiple_categories == 0) { ?> checked="checked" <?php } ?>  />
+			                <?php echo $text_no; ?>
+		              	</td>
+					</tr>	
+		            
+		            <tr>
+			              <td>
+			              		<span><?php echo $ms_config_allowed_image_types; ?></span>
+								<span class="help"><?php echo $ms_config_allowed_image_types_note; ?></span>
+			              </td>
+			              <td>
+			              	<input type="text" name="msconf_allowed_image_types" value="<?php echo $msconf_allowed_image_types; ?>" />
+			              </td>
+		            </tr>
+		            
+		            <tr>
+			              <td>
+			              		<span><?php echo $ms_config_allowed_download_types; ?></span>
+								<span class="help"><?php echo $ms_config_allowed_download_types_note; ?></span>
+			              </td>
+			              <td>
+			              	<input type="text" name="msconf_allowed_download_types" value="<?php echo $msconf_allowed_download_types; ?>" />
+			              </td>
+		            </tr>
+		            
+		            <tr>
+			              <td>
+			              		<span><?php echo $ms_config_required_images; ?></span>
+								<span class="help"><?php echo $ms_config_required_images_note; ?></span>
+			              </td>
+			              <td>
+			              	<input type="text" name="msconf_required_images" value="<?php echo $msconf_required_images; ?>" size="3" />
+			              </td>
+		            </tr>
+
+		            <tr>
+			              <td>
+			              		<span><?php echo $ms_config_max_images; ?></span>
+								<span class="help"><?php echo $ms_config_max_images_note; ?></span>
+			              </td>
+			              <td>
+			              	<input type="text" name="msconf_max_images" value="<?php echo $msconf_max_images; ?>" size="3" />
+			              </td>
+		            </tr>
+		            
+		            <tr>
+			              <td>
+			              		<span><?php echo $ms_config_product_options; ?></span>
+								<span class="help"><?php echo $ms_config_product_options_note; ?></span>
+			              </td>
+			              <td>
+			              	<div class="scrollbox">
+			                  <?php $class = 'odd'; ?>
+			                  <?php foreach ($options as $option) { ?>
+			                  <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+			                  <div class="<?php echo $class; ?>">
+			                    <?php if (in_array($option['option_id'], explode(',',$msconf_product_options))) { ?>
+			                    <input type="checkbox" name="msconf_product_options[]" value="<?php echo $option['option_id']; ?>" checked="checked" />
+			                    <?php echo $option['name']; ?>
+			                    <?php } else { ?>
+			                    <input type="checkbox" name="msconf_product_options[]" value="<?php echo $option['option_id']; ?>" />
+			                    <?php echo $option['name']; ?>
+			                    <?php } ?>
+			                  </div>
+			                  <?php } ?>
+			                </div>
+			              </td>
+		            </tr>		            
+				</table>
+				</div>
+				<!-- END PRODUCT FORM TAB -->
 				
 				<!-- BEGIN MODULES TAB -->
 				<div id="tab-modules">	

@@ -174,9 +174,13 @@ $_['ms_config_allow_multiple_categories_note'] = 'Allow sellers to add products 
 $_['ms_config_provide_buyerinfo'] = 'Mail buyer information';
 $_['ms_config_provide_buyerinfo_note'] = 'Include buyer address in the "Product purchased" email';
 
+$_['ms_config_product_options'] = 'Product options';
+$_['ms_config_product_options_note'] = 'Enable product options on new product page';
+
 $_['ms_config_carousel']       = 'Seller carousel';
 $_['ms_config_topsellers']       = 'Top sellers';
 $_['ms_config_modules']       = 'Modules';
+$_['ms_config_productform']       = 'Product form';
 $_['ms_config_newsellers']       = 'New sellers';
 $_['ms_config_sellerdropdown']       = 'Seller dropdown';
 

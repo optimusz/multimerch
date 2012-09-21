@@ -59,7 +59,8 @@ class ControllerModuleMultiseller extends Controller {
 			"msconf_allow_multiple_categories" => 0,
 			"msconf_required_images" => 1,
 			"msconf_max_images" => 10,
-			"msconf_provide_buyerinfo" => 0
+			"msconf_provide_buyerinfo" => 0,
+			"msconf_product_options" => ""
 		);
 	}	
 	
@@ -454,6 +455,11 @@ class ControllerModuleMultiseller extends Controller {
 			$this->request->post['msconf_debit_order_statuses'] = implode(',',$this->request->post['msconf_debit_order_statuses']);
 		else
 			$this->request->post['msconf_debit_order_statuses'] = '';			
+
+		if (isset($this->request->post['msconf_product_options'])) 
+			$this->request->post['msconf_product_options'] = implode(',',$this->request->post['msconf_product_options']);
+		else
+			$this->request->post['msconf_product_options'] = '';	
 		
 		$this->_editSettings();
 		
@@ -477,6 +483,10 @@ class ControllerModuleMultiseller extends Controller {
 
 		$this->load->model("localisation/order_status");	
 		$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
+
+		$this->load->model("catalog/option");	
+		$this->data['options'] = $this->model_catalog_option->getOptions();
+
 		$this->data = array_merge($this->data, $this->load->language('module/multiseller'));
 				
         $this->data['action'] = $this->url->link("module/{$this->name}/settings", 'token=' . $this->session->data['token'], 'SSL');

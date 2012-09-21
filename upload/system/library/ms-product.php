@@ -219,17 +219,26 @@ class MsProduct {
 				INNER JOIN `" . DB_PREFIX . "ms_product` mp
 					ON ptc.product_id = mp.product_id
 				WHERE p.product_id = " . (int)$product_id;
-
 		$res = $this->db->query($sql);
+
+		if (strcmp(VERSION,'1.5.4') >= 0) {
+			$sql = "SELECT pd.*
+					FROM " . DB_PREFIX . "product_description pd
+					WHERE pd.product_id = " . (int)$product_id . "
+					GROUP BY language_id";
+
+		} else {
+			$sql = "SELECT pd.*,
+						   group_concat(pt.tag separator ', ') as tag
+					FROM " . DB_PREFIX . "product_description pd
+					LEFT JOIN `" . DB_PREFIX . "product_tag` pt
+						ON pd.product_id = pt.product_id
+						AND pd.language_id = pt.language_id
+					WHERE pd.product_id = " . (int)$product_id . "
+					GROUP BY language_id";
+		}
 		
-		$sql = "SELECT pd.*,
-					   group_concat(pt.tag separator ', ') as tags
-				FROM " . DB_PREFIX . "product_description pd
-				LEFT JOIN `" . DB_PREFIX . "product_tag` pt
-					ON pd.product_id = pt.product_id
-					AND pd.language_id = pt.language_id
-				WHERE pd.product_id = " . (int)$product_id . "
-				GROUP BY language_id";
+
 
 		$descriptions = $this->db->query($sql);
 		$product_description_data = array();
@@ -237,7 +246,7 @@ class MsProduct {
 			$product_description_data[$result['language_id']] = array(
 				'name'             => $result['name'],
 				'description'      => $result['description'],
-				'tags'      => $result['tags'],
+				'tags'      => $result['tag']
 				//'meta_keyword'     => $result['meta_keyword'],
 				//'meta_description' => $result['meta_description']
 			);
@@ -264,6 +273,48 @@ class MsProduct {
 		return $res->rows;
 	}
 
+	public function getOptions($data = array()) {
+		$sql = "SELECT * FROM `" . DB_PREFIX . "option` o LEFT JOIN " . DB_PREFIX . "option_description od ON (o.option_id = od.option_id) WHERE od.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+		
+		if (isset($data['option_ids'])) {
+			$sql .= " AND o.option_id IN (" . $data['option_ids'] . ")";
+		}
+		
+		$query = $this->db->query($sql);
+
+		return $query->rows;
+	}
+	
+	public function getOptionValues($option_id) {
+		$option_value_data = array();
+		
+		$option_value_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "option_value ov LEFT JOIN " . DB_PREFIX . "option_value_description ovd ON (ov.option_value_id = ovd.option_value_id) WHERE ov.option_id = '" . (int)$option_id . "' AND ovd.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY ov.sort_order ASC");
+				
+		foreach ($option_value_query->rows as $option_value) {
+			$option_value_data[] = array(
+				'option_value_id' => $option_value['option_value_id'],
+				'name'            => $option_value['name'],
+				'image'           => $option_value['image'],
+				'sort_order'      => $option_value['sort_order']
+			);
+		}
+		
+		return $option_value_data;
+	}
+	
+	public function getProductAttributes($product_id) {
+		$attribute_data = array();
+		
+		$attributes = $this->db->query("SELECT *,od.name as option_name, ovd.name as option_value_name FROM " . DB_PREFIX . "ms_product_attribute mpa LEFT JOIN " . DB_PREFIX . "option o ON (mpa.option_id = o.option_id) LEFT JOIN " . DB_PREFIX . "option_description od ON (mpa.option_id = od.option_id) LEFT JOIN " . DB_PREFIX . "option_value_description ovd ON (mpa.option_value_id = ovd.option_value_id) WHERE mpa.product_id = '".(int)$product_id."' AND od.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY o.sort_order ASC");
+
+		foreach ($attributes->rows as $attribute) {
+			$attribute_data[$attribute['option_id']]['name'] = $attribute['option_name'];
+			$attribute_data[$attribute['option_id']]['values'][$attribute['option_value_id']] = $attribute['option_value_name'];
+		}
+		
+		return $attribute_data;
+	}	
+	
 	public function getProductThumbnail($product_id) {
 		$query = $this->db->query("SELECT image FROM " . DB_PREFIX . "product WHERE product_id = '" . (int)$product_id . "'");
 		
@@ -310,8 +361,8 @@ class MsProduct {
 		reset($data['languages']); $first = key($data['languages']);
 		$store_id = $this->config->get('config_store_id');
 
-		if (isset($data['product_thumbnail_name'])) {
-			$image = MsImage::byName($this->registry, $data['product_thumbnail_name']);
+		if (isset($data['product_thumbnail'])) {
+			$image = MsImage::byName($this->registry, $data['product_thumbnail']);
 			$image->move('I');
 			$thumbnail = $image->getName();
 		} else {
@@ -334,18 +385,28 @@ class MsProduct {
 		$product_id = $this->db->getLastId();
 
 		foreach ($data['languages'] as $language_id => $language) {
-			$sql = "INSERT INTO " . DB_PREFIX . "product_description
-					SET product_id = " . (int)$product_id . ",
-						name = '". $this->db->escape($language['product_name']) ."',
-						description = '". $this->db->escape(htmlspecialchars(nl2br($language['product_description']), ENT_COMPAT)) ."',
-						language_id = " . (int)$language_id;
-			$this->db->query($sql);
-			
-			if ($language['product_tags']) {
-				$tags = explode(',', $language['product_tags']);
-					
-				foreach ($tags as $tag) {
-					$this->db->query("INSERT INTO " . DB_PREFIX . "product_tag SET product_id = '" . (int)$product_id . "', language_id = '" . (int)$language_id . "', tag = '" . $this->db->escape(trim($tag)) . "'");
+			if (strcmp(VERSION,'1.5.4') >= 0) {
+				$sql = "INSERT INTO " . DB_PREFIX . "product_description
+						SET product_id = " . (int)$product_id . ",
+							name = '". $this->db->escape($language['product_name']) ."',
+							description = '". $this->db->escape(htmlspecialchars(nl2br($language['product_description']), ENT_COMPAT)) ."',
+							tag = '" . $this->db->escape($language['product_tags']) . "',
+							language_id = " . (int)$language_id;
+				$this->db->query($sql);
+			} else {
+				$sql = "INSERT INTO " . DB_PREFIX . "product_description
+						SET product_id = " . (int)$product_id . ",
+							name = '". $this->db->escape($language['product_name']) ."',
+							description = '". $this->db->escape(htmlspecialchars(nl2br($language['product_description']), ENT_COMPAT)) ."',
+							language_id = " . (int)$language_id;
+				$this->db->query($sql);
+				
+				if ($language['product_tags']) {
+					$tags = explode(',', $language['product_tags']);
+						
+					foreach ($tags as $tag) {
+						$this->db->query("INSERT INTO " . DB_PREFIX . "product_tag SET product_id = '" . (int)$product_id . "', language_id = '" . (int)$language_id . "', tag = '" . $this->db->escape(trim($tag)) . "'");
+					}
 				}
 			}
 		}
@@ -390,7 +451,19 @@ class MsProduct {
 				}
 			}
 		}
-		
+
+		if (isset($data['product_attributes'])) {
+			foreach ($data['product_attributes'] as $option_id => $attr) {
+				if ($attr['type'] == 'select' || $attr['type'] == 'radio') {
+					$this->db->query("INSERT INTO " . DB_PREFIX . "ms_product_attribute SET product_id = '" . (int)$product_id . "', option_id = '" . (int)$option_id . "', option_value_id = '" . (int)$attr['value'] . "'");
+				} else if ($attr['type'] == 'checkbox') {
+					foreach ($attr['values'] as $option_value_id) {
+						$this->db->query("INSERT INTO " . DB_PREFIX . "ms_product_attribute SET product_id = '" . (int)$product_id . "', option_id = '" . (int)$option_id . "', option_value_id = '" . (int)$option_value_id . "'");
+					}
+				} 
+			}
+		}
+
 		$this->registry->get('cache')->delete('product');
 		
 		return $product_id;
@@ -403,13 +476,13 @@ class MsProduct {
 
 		$old_thumbnail = $this->getProductThumbnail($product_id);
 		
-		if (!isset($data['product_thumbnail_name']) || ($old_thumbnail['image'] != $data['product_thumbnail_name'])) {
+		if (!isset($data['product_thumbnail']) || ($old_thumbnail['image'] != $data['product_thumbnail'])) {
 			$image = MsImage::byName($this->registry, $old_thumbnail['image']);
 			$image->delete('I');				
 		}
 		
-		if (isset($data['product_thumbnail_name'])) {
-			$image = MsImage::byName($this->registry, $data['product_thumbnail_name']);
+		if (isset($data['product_thumbnail'])) {
+			$image = MsImage::byName($this->registry, $data['product_thumbnail']);
 			$image->move('I');
 			$thumbnail = $image->getName();
 		} else {
@@ -425,24 +498,34 @@ class MsProduct {
 		
 		$this->db->query($sql);
 
-
-		$sql = "DELETE FROM " . DB_PREFIX . "product_tag
-				WHERE product_id = " . (int)$product_id;
-		$this->db->query($sql);
-
 		foreach ($data['languages'] as $language_id => $language) {
-			$sql = "UPDATE " . DB_PREFIX . "product_description
-					SET name = '". $this->db->escape($language['product_name']) ."',
-						description = '". $this->db->escape(htmlspecialchars(nl2br($language['product_description']), ENT_COMPAT)) ."'
-					WHERE product_id = " . (int)$product_id . "
-					AND language_id = " . (int)$language_id;
-					
-			$this->db->query($sql);
-			
-			if ($language['product_tags']) {
-				$tags = explode(',', $language['product_tags']);
-				foreach ($tags as $tag) {
-					$this->db->query("INSERT INTO " . DB_PREFIX . "product_tag SET product_id = '" . (int)$product_id . "', language_id = '" . (int)$language_id . "', tag = '" . $this->db->escape(trim($tag)) . "'");
+			if (strcmp(VERSION,'1.5.4') >= 0) {
+				$sql = "UPDATE " . DB_PREFIX . "product_description
+						SET name = '". $this->db->escape($language['product_name']) ."',
+							description = '". $this->db->escape(htmlspecialchars(nl2br($language['product_description']), ENT_COMPAT)) ."',
+							tag = '". $this->db->escape($language['product_tags']) ."'
+						WHERE product_id = " . (int)$product_id . "
+						AND language_id = " . (int)$language_id;
+						
+				$this->db->query($sql);				
+			} else {			
+				$sql = "UPDATE " . DB_PREFIX . "product_description
+						SET name = '". $this->db->escape($language['product_name']) ."',
+							description = '". $this->db->escape(htmlspecialchars(nl2br($language['product_description']), ENT_COMPAT)) ."'
+						WHERE product_id = " . (int)$product_id . "
+						AND language_id = " . (int)$language_id;
+						
+				$this->db->query($sql);
+				
+				$sql = "DELETE FROM " . DB_PREFIX . "product_tag
+						WHERE product_id = " . (int)$product_id;
+				$this->db->query($sql);				
+				
+				if ($language['product_tags']) {
+					$tags = explode(',', $language['product_tags']);
+					foreach ($tags as $tag) {
+						$this->db->query("INSERT INTO " . DB_PREFIX . "product_tag SET product_id = '" . (int)$product_id . "', language_id = '" . (int)$language_id . "', tag = '" . $this->db->escape(trim($tag)) . "'");
+					}
 				}
 			}
 		}		
@@ -468,7 +551,7 @@ class MsProduct {
 		// delete old images		
 		$old_images = $this->getProductImages($product_id);
 		foreach($old_images as $old_image) {
-			if (!isset($data['product_images']) || array_search($old_image['image'], $data['product_images']) === FALSE) {
+			if (!isset($data['product_images']) || (array_search($old_image['image'], $data['product_images']) === FALSE && $old_image['image'] != $data['product_thumbnail'])) {
 				$image = MsImage::byName($this->registry, $old_image['image']);
 				$image->delete('I');				
 			}
@@ -505,6 +588,20 @@ class MsProduct {
 				foreach ($data['languages'] as $language_id => $language) {
 					$this->db->query("INSERT INTO " . DB_PREFIX . "download_description SET download_id = '" . (int)$download_id . "', name = '" . $this->db->escape($image->getName()) . "', language_id = '" . (int)$language_id . "'");
 				}
+			}
+		}
+
+
+		$this->db->query("DELETE FROM " . DB_PREFIX . "ms_product_attribute WHERE product_id = '" . (int)$product_id . "'");
+		if (isset($data['product_attributes'])) {
+			foreach ($data['product_attributes'] as $option_id => $attr) {
+				if ($attr['type'] == 'select' || $attr['type'] == 'radio') {
+					$this->db->query("INSERT INTO " . DB_PREFIX . "ms_product_attribute SET product_id = '" . (int)$product_id . "', option_id = '" . (int)$option_id . "', option_value_id = '" . (int)$attr['value'] . "'");
+				} else if ($attr['type'] == 'checkbox') {
+					foreach ($attr['values'] as $option_value_id) {
+						$this->db->query("INSERT INTO " . DB_PREFIX . "ms_product_attribute SET product_id = '" . (int)$product_id . "', option_id = '" . (int)$option_id . "', option_value_id = '" . (int)$option_value_id . "'");
+					}
+				} 
 			}
 		}
 		

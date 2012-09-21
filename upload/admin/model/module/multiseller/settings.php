@@ -94,6 +94,16 @@ class ModelModuleMultisellerSettings extends Model {
         	PRIMARY KEY (`id`)) default CHARSET=utf8";
         
         $this->db->query($createTable);        
+	
+	
+		$createTable = "
+			CREATE TABLE " . DB_PREFIX . "ms_product_attribute (
+			 `product_id` int(11) NOT NULL,
+			 `option_id` int(11) NOT NULL,
+			 `option_value_id` int(11) NOT NULL,
+        	PRIMARY KEY (`product_id`,`option_id`,`option_value_id`)) default CHARSET=utf8";
+        
+        $this->db->query($createTable);
 	}
 	
 	public function dropTable() {
@@ -102,6 +112,7 @@ class ModelModuleMultisellerSettings extends Model {
 				`" . DB_PREFIX . "ms_seller`,
 				`" . DB_PREFIX . "ms_transaction`,
 				`" . DB_PREFIX . "ms_request`,
+				`" . DB_PREFIX . "ms_product_attribute`,
 				`" . DB_PREFIX . "ms_comments`";
 								
 		$this->db->query($sql);

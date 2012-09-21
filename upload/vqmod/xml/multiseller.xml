@@ -306,6 +306,9 @@
 				$this->data['seller']['total_sales'] = $msSeller->getSalesForSeller($seller['seller_id']);
 				$this->data['seller']['total_products'] = $msSeller->getTotalSellerProducts($seller['seller_id'], TRUE);
 			}
+
+			$this->data['ms_product_attributes'] = $msProduct->getProductAttributes($this->request->get['product_id']);
+
 			]]></add>
 		</operation>
 	</file>
@@ -329,6 +332,19 @@
 			]]></search>
 			<add><![CDATA[
   				<div id="tab-comments" class="tab-content"></div>
+			]]></add>
+		</operation>
+	
+		<operation>
+			<search position="replace"><![CDATA[
+				<span><?php echo $text_stock; ?></span> <?php echo $stock; ?></div>
+			]]></search>
+			<add><![CDATA[
+  				<span><?php echo $text_stock; ?></span> <?php echo $stock; ?><br />
+  				<?php foreach ($ms_product_attributes as $attribute) { ?>
+	  				<span><?php echo $attribute['name']; ?></span> <?php echo implode(',',$attribute['values']); ?> <br />
+  				<?php } ?>
+  				</div>
 			]]></add>
 		</operation>
 		

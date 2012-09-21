@@ -105,26 +105,69 @@
           	<p class="ms-note"><?php echo $ms_account_product_category_note; ?></p>
           	<p class="error" id="error_product_category"></p>
           </td>
-        </tr>
-        
+      </tr>
+
+		<?php var_dump ($product_attributes); ?>      
+		<?php if ($options) { ?>
+		<?php foreach ($options as $option) { ?>
+			<tr>
+			<td>
+				<?php /* if ($option['required']) { ?> <span class="required">*</span> <?php } */ ?>
+				<?php echo $option['name']; ?>
+			</td>
+
+			<td>
+
+			<?php if ($option['type'] == 'select') { ?>
+				<select name="product_attributes[<?php echo $option['option_id']; ?>]">
+					<option value=""><?php echo $text_select; ?></option>
+					<?php foreach ($option['values'] as $option_value) { ?>
+					<option value="<?php echo $option_value['option_value_id']; ?>" <?php if (array_key_exists($option_value['option_value_id'], $product_attributes[$option['option_id']]['values'])) { ?>selected="selected"<?php } ?>><?php echo $option_value['name']; ?></option>
+					<?php } ?>
+				</select>
+			<?php } ?>
+			
+			<?php if ($option['type'] == 'radio') { ?>
+				<?php foreach ($option['values'] as $option_value) { ?>
+				<input type="radio" name="product_attributes[<?php echo $option['option_id']; ?>]" value="<?php echo $option_value['option_value_id']; ?>" <?php if (array_key_exists($option_value['option_value_id'], $product_attributes[$option['option_id']]['values'])) { ?>checked="checked"<?php } ?> />
+				<label><?php echo $option_value['name']; ?></label>
+				<br />
+				<?php } ?>
+			<?php } ?>
+			
+			<?php if ($option['type'] == 'checkbox') { ?>
+				<?php foreach ($option['values'] as $option_value) { ?>
+				<input type="checkbox" name="product_attributes[<?php echo $option['option_id']; ?>][]" value="<?php echo $option_value['option_value_id']; ?>" <?php if (array_key_exists($option_value['option_value_id'], $product_attributes[$option['option_id']]['values'])) { ?>checked="checked"<?php } ?> />
+				<label><?php echo $option_value['name']; ?></label>
+				<br />
+				<?php } ?>
+			<?php } ?>
+			
+			<?php if ($option['type'] == 'text') { ?>
+				<input type="text" name="product_attributes[<?php echo $option['option_id']; ?>]" value="<?php echo $option['option_value']; ?>" />
+			<?php } ?>
+			
+			<?php if ($option['type'] == 'textarea') { ?>
+				<textarea name="product_attributes[<?php echo $option['option_id']; ?>]" cols="40" rows="5"><?php echo $option['option_value']; ?></textarea>
+			<?php } ?>
+			
+			<?php if ($option['type'] == 'date') { ?>
+				<input type="text" name="product_attributes[<?php echo $option['option_id']; ?>]" value="<?php echo $option['option_value']; ?>" class="date" />
+			<?php } ?>
+			
+			<?php if ($option['type'] == 'datetime') { ?>
+				<input type="text" name="product_attributes[<?php echo $option['option_id']; ?>]" value="<?php echo $option['option_value']; ?>" class="datetime" />
+			<?php } ?>
+			
+			<?php if ($option['type'] == 'time') { ?>
+				<input type="text" name="product_attributes[<?php echo $option['option_id']; ?>]" value="<?php echo $option['option_value']; ?>" class="time" />
+			<?php } ?>
+		</td>
+		</tr>
+		<?php } ?>
+		<?php } ?>
+      
         <tr><td colspan="2"><h3><?php echo $ms_account_product_files; ?></h3></td></tr>
-        <tr>
-          <td><span class="required">*</span> <?php echo $ms_account_product_thumbnail; ?></td>
-          <td>
-          	<input type="file" name="product_thumbnail" id="product_thumbnail" />
-          	<p class="ms-note"><?php echo $ms_account_product_thumbnail_note; ?></p>
-          	<p class="error" id="error_product_thumbnail"></p>
-          	<div id="product_thumbnail_files">
-          		<?php if (!empty($product['thumbnail'])) { ?>
-          		<div class="ms-image">
-	          		<input type="hidden" name="product_thumbnail_name" value="<?php echo $product['thumbnail']['name']; ?>" />
-	          		<img src="<?php echo $product['thumbnail']['thumb']; ?>" />
-	          		<img class="ms-remove" src="catalog/view/theme/default/image/remove.png" />
-          		</div>
-          		<?php } ?>
-          	</div>
-          </td>
-        </tr>
         <tr>
           <td><?php if ($msconf_required_images > 0) { ?><span class="required">*</span><?php } ?> <?php echo $ms_account_product_image; ?></td>
           <td>
@@ -233,13 +276,6 @@ $(function() {
 										  '<span class="ms-remove"></span>',
 										  '</div>' ];
 						$("#product_image_files").append(imageHtml.join('')); 
-					} else if (id == 'product_thumbnail') {
-						var imageHtml = [ '<div class="ms-image">',
-										  '<input type="hidden" value="'+jsonData.file.name+'" name="product_thumbnail_name" />',
-										  '<img src="'+jsonData.file.thumb+'" />',
-										  '<span class="ms-remove"></span>',
-										  '</div>' ];
-						$("#product_thumbnail_files").html(imageHtml.join(''));
 					} else {
 						var imageHtml = [ '<div class="ms-download">',
 										  '<input type="hidden" value="'+jsonData.file.src+'" name="product_downloads[]" />',
