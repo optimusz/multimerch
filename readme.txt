@@ -91,7 +91,7 @@ Usage:
 	---------------
 	It is possible to configure order statuses that will correspond to positive or negative seller transactions.
 	When the order status gets set to one of credit (or positive) order statuses, sellers will receive a positive
-	transaction to their earnings balance. If the store status gets set to one of debig (negative) statuses, 
+	transaction to their earnings balance. If the store status gets set to one of debit (negative) statuses, 
 	corresponding amount will be deducted from sellers' balance. This also happens when order status gets changed
 	in the back office either directly or via order history.
 
