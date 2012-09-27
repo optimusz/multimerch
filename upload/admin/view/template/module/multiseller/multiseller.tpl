@@ -287,24 +287,15 @@
 		            
 		            <tr>
 			              <td>
-			              		<span><?php echo $ms_config_required_images; ?></span>
-								<span class="help"><?php echo $ms_config_required_images_note; ?></span>
+			              		<span><?php echo $ms_config_images_limits; ?></span>
+								<span class="help"><?php echo $ms_config_images_limits_note; ?></span>
 			              </td>
 			              <td>
-			              	<input type="text" name="msconf_required_images" value="<?php echo $msconf_required_images; ?>" size="3" />
+			              	Min. <input type="text" name="msconf_images_limits[]" value="<?php echo $msconf_images_limits[0]; ?>" size="3" /> 
+			              	Max. <input type="text" name="msconf_images_limits[]" value="<?php echo $msconf_images_limits[1]; ?>" size="3" />
 			              </td>
 		            </tr>
 
-		            <tr>
-			              <td>
-			              		<span><?php echo $ms_config_max_images; ?></span>
-								<span class="help"><?php echo $ms_config_max_images_note; ?></span>
-			              </td>
-			              <td>
-			              	<input type="text" name="msconf_max_images" value="<?php echo $msconf_max_images; ?>" size="3" />
-			              </td>
-		            </tr>
-		            
 		            <tr>
 		            	<td>
 							<span><?php echo $ms_config_enable_shipping; ?></span>
@@ -359,6 +350,7 @@
 			              	<div class="scrollbox">
 			                  <?php $class = 'odd'; ?>
 			                  <?php foreach ($options as $option) { ?>
+			                  <?php if (!in_array($option['type'], array('checkbox','radio','select'))) continue; ?>
 			                  <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
 			                  <div class="<?php echo $class; ?>">
 			                    <?php if (in_array($option['option_id'], explode(',',$msconf_product_options))) { ?>

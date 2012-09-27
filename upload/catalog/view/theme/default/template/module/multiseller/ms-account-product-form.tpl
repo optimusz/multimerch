@@ -107,7 +107,6 @@
           </td>
       </tr>
 
-<?php var_dump($msconf_enable_shipping); ?>
 		<?php if ($msconf_enable_shipping == 2) { ?>
 		    <tr>
 		      <td><?php echo $ms_account_product_enable_shipping; ?></td>

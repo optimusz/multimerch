@@ -11,7 +11,7 @@ class ControllerModuleMultiseller extends Controller {
 		parent::__construct($registry);		
 		require_once(DIR_SYSTEM . 'library/ms-request.php');
 		require_once(DIR_SYSTEM . 'library/ms-product.php');
-		require_once(DIR_SYSTEM . 'library/ms-transaction.php');		
+		require_once(DIR_SYSTEM . 'library/ms-transaction.php');
 		require_once(DIR_SYSTEM . 'library/ms-image.php');
 		require_once(DIR_SYSTEM . 'library/ms-mail.php');
 		require_once(DIR_SYSTEM . 'library/ms-seller.php');
@@ -57,12 +57,12 @@ class ControllerModuleMultiseller extends Controller {
 			"msconf_allow_free_products" => 0,
 			"msconf_seller_commission_flat" => 0.5,
 			"msconf_allow_multiple_categories" => 0,
-			"msconf_required_images" => 1,
-			"msconf_max_images" => 10,
+			"msconf_images_limits" => "0,0",
 			"msconf_enable_shipping" => 0, // 0 - no, 1 - yes, 2 - seller select
 			"msconf_provide_buyerinfo" => 0, // 0 - no, 1 - yes, 2 - shipping dependent
 			"msconf_enable_quantities" => 0, // 0 - no, 1 - yes, 2 - shipping dependent
-			"msconf_product_options" => ""
+			"msconf_product_options" => "",
+			"msconf_enable_pdf" => 0
 		);
 	}	
 	
@@ -456,12 +456,17 @@ class ControllerModuleMultiseller extends Controller {
 		if (isset($this->request->post['msconf_debit_order_statuses'])) 
 			$this->request->post['msconf_debit_order_statuses'] = implode(',',$this->request->post['msconf_debit_order_statuses']);
 		else
-			$this->request->post['msconf_debit_order_statuses'] = '';			
+			$this->request->post['msconf_debit_order_statuses'] = '';
 
 		if (isset($this->request->post['msconf_product_options'])) 
 			$this->request->post['msconf_product_options'] = implode(',',$this->request->post['msconf_product_options']);
 		else
 			$this->request->post['msconf_product_options'] = '';	
+		
+		foreach($this->request->post['msconf_images_limits'] as &$limit)
+			$limit = (int)$limit;
+			
+		$this->request->post['msconf_images_limits'] = implode(',',$this->request->post['msconf_images_limits']);
 		
 		$this->_editSettings();
 		
@@ -485,7 +490,7 @@ class ControllerModuleMultiseller extends Controller {
 
 		$this->load->model("localisation/order_status");	
 		$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
-
+		$this->data['msconf_images_limits'] = explode(',',$this->data['msconf_images_limits']);
 		$this->load->model("catalog/option");	
 		$this->data['options'] = $this->model_catalog_option->getOptions();
 
@@ -499,11 +504,6 @@ class ControllerModuleMultiseller extends Controller {
 		$this->data['layouts'] = $this->model_design_layout->getLayouts();
 		$this->data['currency_code'] = $this->config->get('config_currency');
 		
-		/* ************* */
-		/* carousel part */
-		/* ************* */
-		//$this->load->language('module/carousel');
-
 		$this->data['button_add_module'] = $this->language->get('button_add_module');
 		$this->data['button_remove'] = $this->language->get('button_remove');
 		

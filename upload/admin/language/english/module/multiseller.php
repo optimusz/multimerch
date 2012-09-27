@@ -121,12 +121,11 @@ $_['ms_config_minimum_product_price_note'] = 'Minimum product price';
 $_['ms_config_allowed_image_types'] = 'Allowed image extensions';
 $_['ms_config_allowed_image_types_note'] = 'Allowed image extensions';
 
-$_['ms_config_required_images'] = 'Product images required';
-$_['ms_config_required_images_note'] = 'Minimum number of product images required when submitting a product';
+$_['ms_config_images_limits'] = 'Product image limits';
+$_['ms_config_images_limits_note'] = 'Minimum and maximum number of images (incl. thumbnail) required/allowed for products (0 = no limit)';
 
 $_['ms_config_max_images'] = 'Maximum images allowed';
 $_['ms_config_max_images_note'] = 'Maximum number of product images allowed when submitting a product';
-
 
 $_['ms_config_allowed_download_types'] = 'Allowed download extensions';
 $_['ms_config_allowed_download_types_note'] = 'Allowed download extensions';

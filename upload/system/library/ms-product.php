@@ -279,7 +279,10 @@ class MsProduct {
 		$sql = "SELECT * FROM `" . DB_PREFIX . "option` o LEFT JOIN " . DB_PREFIX . "option_description od ON (o.option_id = od.option_id) WHERE od.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 		
 		if (isset($data['option_ids'])) {
-			$sql .= " AND o.option_id IN (" . $data['option_ids'] . ")";
+			if (!empty($data['option_ids']))
+				$sql .= " AND o.option_id IN (" . $data['option_ids'] . ")";
+			else
+				$sql .= " AND o.option_id IN (NULL)";
 		}
 		
 		$query = $this->db->query($sql);

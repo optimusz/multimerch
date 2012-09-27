@@ -116,8 +116,10 @@ class ControllerAccountMsSeller extends Controller {
 			}
 	
 			// allow a maximum of N images
-			if ($this->request->post['action'] == 'product_image' && isset($this->request->post['product_images']) && count($this->request->post['product_images']) >= $this->config->get('msconf_max_images')) {
-				$json['errors'][] = sprintf($this->language->get('ms_error_product_image_maximum'),$this->config->get('msconf_max_images'));
+			$msconf_images_limits = explode(',',$this->config->get('msconf_images_limits'));
+
+			if ($this->request->post['action'] == 'product_image' && isset($this->request->post['product_images']) && $msconf_images_limits[1] > 0 && count($this->request->post['product_images']) >= $msconf_images_limits[1]) {
+				$json['errors'][] = sprintf($this->language->get('ms_error_product_image_maximum'),$msconf_images_limits[1]);
 				$this->_setJsonResponse($json);
 				return;
 			}
@@ -468,15 +470,16 @@ class ControllerAccountMsSeller extends Controller {
 			$json['errors']['product_download'] = $this->language->get('ms_error_product_download_empty');
 		}
 		
+		$msconf_images_limits = explode(',',$this->config->get('msconf_images_limits'));
 		if (!isset($data['product_images'])) {
-			if ($this->config->get('msconf_required_images') > 0) {
-				$json['errors']['product_image'] = sprintf($this->language->get('ms_error_product_image_count'),$this->config->get('msconf_required_images'));
+			if ($msconf_images_limits[0] > 0) {
+				$json['errors']['product_image'] = sprintf($this->language->get('ms_error_product_image_count'),$msconf_images_limits[0]);
 			}			
 		} else {
-			if (count($data['product_images']) > $this->config->get('msconf_max_images')) {
-				$json['errors']['product_image'] = sprintf($this->language->get('ms_error_product_image_maximum'),$this->config->get('msconf_max_images'));
-			} else if ($this->config->get('msconf_required_images') > 0 && count($data['product_images']) < $this->config->get('msconf_required_images')) {
-				$json['errors']['product_image'] = sprintf($this->language->get('ms_error_product_image_count'), $this->config->get('msconf_required_images'));
+			if (count($data['product_images']) > $msconf_images_limits[1]) {
+				$json['errors']['product_image'] = sprintf($this->language->get('ms_error_product_image_maximum'),$msconf_images_limits[1]);
+			} else if ($msconf_images_limits[0] > 0 && count($data['product_images']) < $msconf_images_limits[0]) {
+				$json['errors']['product_image'] = sprintf($this->language->get('ms_error_product_image_count'), $msconf_images_limits[0]);
 			} else {
 				foreach ($data['product_images'] as $image) {
 					$img = MsImage::byName($this->registry, $image);
