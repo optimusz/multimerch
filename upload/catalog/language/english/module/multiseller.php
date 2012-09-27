@@ -200,19 +200,19 @@ $_['ms_account_newproduct_breadcrumbs']       = 'New Product';
 
 $_['ms_account_product_name_description']    = 'Name & Description';
 $_['ms_account_product_name']    = 'Name';
-$_['ms_account_product_name_note']    = 'Your note text goes here';
+$_['ms_account_product_name_note']    = 'Name of the product';
 $_['ms_account_product_description']     = 'Description';
-$_['ms_account_product_description_note']    = 'Your note text goes here';
+$_['ms_account_product_description_note']    = 'Description of the product';
 $_['ms_account_product_short_description']     = 'Short description';
 $_['ms_account_product_tags']    = 'Tags';
-$_['ms_account_product_tags_note']    = 'Your note text goes here';
+$_['ms_account_product_tags_note']    = 'Tags to be attached to your product. Used for easier search';
 
 
 $_['ms_account_product_price_attributes']    = 'Price & Attributes';
 $_['ms_account_product_price']     = 'Price';
-$_['ms_account_product_price_note']    = 'Your note text goes here';
+$_['ms_account_product_price_note']    = 'The price of the product';
 $_['ms_account_product_category']     = 'Category';
-$_['ms_account_product_category_note']    = 'Your note text goes here';
+$_['ms_account_product_category_note']    = 'Select category of the product';
 $_['ms_account_product_enable_shipping']     = 'Enable shipping';
 $_['ms_account_product_enable_shipping_note']    = 'Enable shipping for this product';
 $_['ms_account_product_quantity']     = 'Quantity';
@@ -220,14 +220,14 @@ $_['ms_account_product_quantity_note']    = 'Quantity of this product';
 
 $_['ms_account_product_files']    = 'Files';
 $_['ms_account_product_thumbnail']     = 'Thumbnail';
-$_['ms_account_product_thumbnail_note']    = 'Your note text goes here';
+$_['ms_account_product_thumbnail_note']    = 'Select thumbnail image for the product';
 $_['ms_account_product_download']     = 'Downloads';
-$_['ms_account_product_download_note']     = 'Your note text goes here';
+$_['ms_account_product_download_note']     = 'Upload the product itself';
 $_['ms_account_product_image']     = 'Images';
-$_['ms_account_product_image_note']     = 'Your note text goes here';
+$_['ms_account_product_image_note']     = 'Images for the product';
 
 $_['ms_account_product_message']     = 'Message';
-$_['ms_account_product_message_note']    = 'Your note text goes here';
+$_['ms_account_product_message_note']    = 'Your message to the reviewer of the product';
 
 // Account - Edit product
 
@@ -244,22 +244,22 @@ $_['ms_account_sellerinfo_breadcrumbs']       = 'Seller Information';
 $_['ms_account_sellerinfo_activation_notice'] = 'Please complete the following form to activate your seller account';
 
 $_['ms_account_sellerinfo_nickname']    = 'Nickname';
-$_['ms_account_sellerinfo_nickname_note']    = 'Your note text goes here.';
+$_['ms_account_sellerinfo_nickname_note']    = 'Your nickname. Will be displayed in your store';
 $_['ms_account_sellerinfo_description']    = 'Description';
-$_['ms_account_sellerinfo_description_note']    = 'Your note text goes here.';
+$_['ms_account_sellerinfo_description_note']    = 'Description of your store';
 $_['ms_account_sellerinfo_company']     = 'Company';
-$_['ms_account_sellerinfo_company_note']    = 'Your note text goes here';
+$_['ms_account_sellerinfo_company_note']    = 'Company you are working for (optional)';
 $_['ms_account_sellerinfo_country']    = 'Country';
 $_['ms_account_sellerinfo_country_dont_display']    = 'Do not display my country';
-$_['ms_account_sellerinfo_country_note']    = 'Your note text goes here';
+$_['ms_account_sellerinfo_country_note']    = 'Select the country your store is located in';
 $_['ms_account_sellerinfo_website']    = 'Website';
-$_['ms_account_sellerinfo_website_note']    = 'Your note text goes here';
+$_['ms_account_sellerinfo_website_note']    = 'Website of your store';
 $_['ms_account_sellerinfo_avatar']    = 'Avatar';
-$_['ms_account_sellerinfo_avatar_note']    = 'Your note text goes here';
+$_['ms_account_sellerinfo_avatar_note']    = 'Select avatar for your store';
 $_['ms_account_sellerinfo_paypal']    = 'Paypal';
-$_['ms_account_sellerinfo_paypal_note']    = 'Your note text goes here';
+$_['ms_account_sellerinfo_paypal_note']    = 'Enter the paypal address';
 $_['ms_account_sellerinfo_reviewer_message']    = 'Message to the reviewer';
-$_['ms_account_sellerinfo_reviewer_message_note']    = 'Your note text goes here';
+$_['ms_account_sellerinfo_reviewer_message_note']    = 'Your message to the reviewer of your store';
 
 
 $_['ms_account_sellerinfo_mail_account_thankyou']	= 'Thank you for signing up as a seller at %s!';
