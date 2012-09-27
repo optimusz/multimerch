@@ -364,6 +364,19 @@
 			                  <?php } ?>
 			                </div>
 			              </td>
+		            </tr>
+		            
+		            <tr>
+		            	<td>
+							<span><?php echo $ms_config_enable_pdf_generator; ?></span>
+							<span class="help"><?php echo $ms_config_enable_pdf_generator_note; ?></span>
+						</td>
+		            	<td>
+			                <input type="radio" name="msconf_enable_pdf_generator" value="1" <?php if($msconf_enable_pdf_generator == 1) { ?> checked="checked" <?php } ?>  />
+			                <?php echo $text_yes; ?>
+			                <input type="radio" name="msconf_enable_pdf_generator" value="0" <?php if($msconf_enable_pdf_generator == 0) { ?> checked="checked" <?php } ?>  />
+			                <?php echo $text_no; ?>
+		              	</td>
 		            </tr>		            
 				</table>
 				</div>

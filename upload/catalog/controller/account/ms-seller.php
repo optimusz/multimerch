@@ -159,8 +159,7 @@ class ControllerAccountMsSeller extends Controller {
 			} else {
 				$name = $image->upload($file,'F');
 				
-				
-				if ($file['type'] == 'application/pdf') {
+				if ($file['type'] == 'application/pdf' && $this->config->get('msconf_enable_pdf_generator') && extension_loaded('imagick')) {
 					$im = new imagick(DIR_IMAGE . $image->getTmpPath() . $name);
 					$pages = $im->getNumberImages() - 1;		
 				} else {
@@ -172,7 +171,6 @@ class ControllerAccountMsSeller extends Controller {
 					'src' => $name,
 					'pages' => $pages
 				);
-								
 			}			
 		}
 		
@@ -180,6 +178,9 @@ class ControllerAccountMsSeller extends Controller {
 	}
 	
 	public function jxGenerateImages() {
+		if (!$this->config->get('msconf_enable_pdf_generator') || !extension_loaded('imagick'))
+			return;
+			
 		$data = $this->request->post;
 		$json = array();
 		if (isset($data['product_downloads'][0])) {
@@ -553,7 +554,6 @@ class ControllerAccountMsSeller extends Controller {
 			$data['product_enable_shipping'] = 0;
 		}
 		
-
 		if ($this->config->get('msconf_enable_quantities') == 1) { // enable quantities
 			$data['product_quantity'] = (int)$data['product_quantity'];
 			$data['product_subtract'] = 1;

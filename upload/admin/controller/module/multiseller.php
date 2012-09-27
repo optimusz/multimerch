@@ -43,9 +43,7 @@ class ControllerModuleMultiseller extends Controller {
 			"msconf_paypal_api_password" => "",
 			"msconf_paypal_api_signature" => "",
 			"msconf_allow_withdrawal_requests" => 1,
-			
 			"msconf_comments_maxlen" => 500,
-			
 			"msconf_allowed_image_types" => "png,jpg",
 			"msconf_allowed_download_types" => "zip,rar",
 			"msconf_minimum_product_price" => 0,
@@ -62,7 +60,7 @@ class ControllerModuleMultiseller extends Controller {
 			"msconf_provide_buyerinfo" => 0, // 0 - no, 1 - yes, 2 - shipping dependent
 			"msconf_enable_quantities" => 0, // 0 - no, 1 - yes, 2 - shipping dependent
 			"msconf_product_options" => "",
-			"msconf_enable_pdf" => 0
+			"msconf_enable_pdf_generator" => 0
 		);
 	}	
 	
