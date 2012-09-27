@@ -840,7 +840,6 @@ class ControllerAccountMsSeller extends Controller {
 			$this->data['categories'] = $this->msProduct->getMultipleCategories(0);
 
 //
-
 		$this->data['options'] = array();
 		$options = $this->msProduct->getOptions(array('option_ids' => $this->config->get('msconf_product_options')));
 		foreach ($options as $option) {
@@ -852,7 +851,8 @@ class ControllerAccountMsSeller extends Controller {
 
 		$this->load->model('localisation/language');
 		$this->data['languages'] = $this->model_localisation_language->getLanguages();
-
+		
+		$this->data['product_attributes'] = FALSE;
 		$this->data['product'] = FALSE;
 		$this->data['msconf_allow_multiple_categories'] = $this->config->get('msconf_allow_multiple_categories');
 		$this->data['msconf_enable_shipping'] = $this->config->get('msconf_enable_shipping');
@@ -915,8 +915,6 @@ class ControllerAccountMsSeller extends Controller {
 		$this->load->model('catalog/category');
 		$this->document->addScript('catalog/view/javascript/jquery.form.js');
 		$this->data['seller'] = $this->msSeller->getSellerData($this->customer->getId());
-		
-		
 		
 		if (!$this->config->get('msconf_allow_multiple_categories'))
 			$this->data['categories'] = $this->msProduct->getCategories();		

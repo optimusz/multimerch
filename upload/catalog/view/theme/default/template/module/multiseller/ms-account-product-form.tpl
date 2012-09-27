@@ -144,14 +144,14 @@
 				<select name="product_attributes[<?php echo $option['option_id']; ?>]">
 					<option value=""><?php echo $text_select; ?></option>
 					<?php foreach ($option['values'] as $option_value) { ?>
-					<option value="<?php echo $option_value['option_value_id']; ?>" <?php if (array_key_exists($option_value['option_value_id'], $product_attributes[$option['option_id']]['values'])) { ?>selected="selected"<?php } ?>><?php echo $option_value['name']; ?></option>
+					<option value="<?php echo $option_value['option_value_id']; ?>" <?php if ($product_attributes && array_key_exists($option_value['option_value_id'], $product_attributes[$option['option_id']]['values'])) { ?>selected="selected"<?php } ?>><?php echo $option_value['name']; ?></option>
 					<?php } ?>
 				</select>
 			<?php } ?>
 			
 			<?php if ($option['type'] == 'radio') { ?>
 				<?php foreach ($option['values'] as $option_value) { ?>
-				<input type="radio" name="product_attributes[<?php echo $option['option_id']; ?>]" value="<?php echo $option_value['option_value_id']; ?>" <?php if (array_key_exists($option_value['option_value_id'], $product_attributes[$option['option_id']]['values'])) { ?>checked="checked"<?php } ?> />
+				<input type="radio" name="product_attributes[<?php echo $option['option_id']; ?>]" value="<?php echo $option_value['option_value_id']; ?>" <?php if ($product_attributes && array_key_exists($option_value['option_value_id'], $product_attributes[$option['option_id']]['values'])) { ?>checked="checked"<?php } ?> />
 				<label><?php echo $option_value['name']; ?></label>
 				<br />
 				<?php } ?>
@@ -159,7 +159,7 @@
 			
 			<?php if ($option['type'] == 'checkbox') { ?>
 				<?php foreach ($option['values'] as $option_value) { ?>
-				<input type="checkbox" name="product_attributes[<?php echo $option['option_id']; ?>][]" value="<?php echo $option_value['option_value_id']; ?>" <?php if (array_key_exists($option_value['option_value_id'], $product_attributes[$option['option_id']]['values'])) { ?>checked="checked"<?php } ?> />
+				<input type="checkbox" name="product_attributes[<?php echo $option['option_id']; ?>][]" value="<?php echo $option_value['option_value_id']; ?>" <?php if ($product_attributes && array_key_exists($option_value['option_value_id'], $product_attributes[$option['option_id']]['values'])) { ?>checked="checked"<?php } ?> />
 				<label><?php echo $option_value['name']; ?></label>
 				<br />
 				<?php } ?>
