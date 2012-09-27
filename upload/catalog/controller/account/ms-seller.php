@@ -476,7 +476,7 @@ class ControllerAccountMsSeller extends Controller {
 				$json['errors']['product_image'] = sprintf($this->language->get('ms_error_product_image_count'),$msconf_images_limits[0]);
 			}			
 		} else {
-			if (count($data['product_images']) > $msconf_images_limits[1]) {
+			if ($msconf_images_limits[1] > 0 && count($data['product_images']) > $msconf_images_limits[1]) {
 				$json['errors']['product_image'] = sprintf($this->language->get('ms_error_product_image_maximum'),$msconf_images_limits[1]);
 			} else if ($msconf_images_limits[0] > 0 && count($data['product_images']) < $msconf_images_limits[0]) {
 				$json['errors']['product_image'] = sprintf($this->language->get('ms_error_product_image_count'), $msconf_images_limits[0]);
@@ -538,10 +538,7 @@ class ControllerAccountMsSeller extends Controller {
 					} 
 				}
 			}
-		} else {
-			$json['errors']['product_download'] = $this->language->get('ms_error_product_download_empty');
-		}		
-		
+		}	
 		
 		$data['product_subtract'] = 0;
 		if ($this->config->get('msconf_enable_shipping') == 1) { // enable shipping
