@@ -310,7 +310,7 @@ class MsProduct {
 	public function getProductAttributes($product_id) {
 		$attribute_data = array();
 		
-		$attributes = $this->db->query("SELECT *,od.name as option_name, ovd.name as option_value_name FROM " . DB_PREFIX . "ms_product_attribute mpa LEFT JOIN " . DB_PREFIX . "option o ON (mpa.option_id = o.option_id) LEFT JOIN " . DB_PREFIX . "option_description od ON (mpa.option_id = od.option_id) LEFT JOIN " . DB_PREFIX . "option_value_description ovd ON (mpa.option_value_id = ovd.option_value_id) WHERE mpa.product_id = '".(int)$product_id."' AND od.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY o.sort_order ASC");
+		$attributes = $this->db->query("SELECT *,od.name as option_name, ovd.name as option_value_name FROM " . DB_PREFIX . "ms_product_attribute mpa LEFT JOIN `" . DB_PREFIX . "option` o ON (mpa.option_id = o.option_id) LEFT JOIN " . DB_PREFIX . "option_description od ON (mpa.option_id = od.option_id) LEFT JOIN " . DB_PREFIX . "option_value_description ovd ON (mpa.option_value_id = ovd.option_value_id) WHERE mpa.product_id = '".(int)$product_id."' AND od.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY o.sort_order ASC");
 
 		foreach ($attributes->rows as $attribute) {
 			$attribute_data[$attribute['option_id']]['name'] = $attribute['option_name'];
