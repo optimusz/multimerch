@@ -297,6 +297,17 @@
 		            </tr>
 
 		            <tr>
+			              <td>
+			              		<span><?php echo $ms_config_downloads_limits; ?></span>
+								<span class="help"><?php echo $ms_config_downloads_limits_note; ?></span>
+			              </td>
+			              <td>
+			              	Min. <input type="text" name="msconf_downloads_limits[]" value="<?php echo $msconf_downloads_limits[0]; ?>" size="3" /> 
+			              	Max. <input type="text" name="msconf_downloads_limits[]" value="<?php echo $msconf_downloads_limits[1]; ?>" size="3" />
+			              </td>
+		            </tr>
+
+		            <tr>
 		            	<td>
 							<span><?php echo $ms_config_enable_shipping; ?></span>
 							<span class="help"><?php echo $ms_config_enable_shipping_note; ?></span>

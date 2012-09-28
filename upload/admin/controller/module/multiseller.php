@@ -56,6 +56,7 @@ class ControllerModuleMultiseller extends Controller {
 			"msconf_seller_commission_flat" => 0.5,
 			"msconf_allow_multiple_categories" => 0,
 			"msconf_images_limits" => "0,0",
+			"msconf_downloads_limits" => "0,0",			
 			"msconf_enable_shipping" => 0, // 0 - no, 1 - yes, 2 - seller select
 			"msconf_provide_buyerinfo" => 0, // 0 - no, 1 - yes, 2 - shipping dependent
 			"msconf_enable_quantities" => 0, // 0 - no, 1 - yes, 2 - shipping dependent
@@ -463,8 +464,11 @@ class ControllerModuleMultiseller extends Controller {
 		
 		foreach($this->request->post['msconf_images_limits'] as &$limit)
 			$limit = (int)$limit;
-			
 		$this->request->post['msconf_images_limits'] = implode(',',$this->request->post['msconf_images_limits']);
+
+		foreach($this->request->post['msconf_downloads_limits'] as &$limit)
+			$limit = (int)$limit;
+		$this->request->post['msconf_downloads_limits'] = implode(',',$this->request->post['msconf_downloads_limits']);
 		
 		$this->_editSettings();
 		
@@ -489,6 +493,7 @@ class ControllerModuleMultiseller extends Controller {
 		$this->load->model("localisation/order_status");	
 		$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
 		$this->data['msconf_images_limits'] = explode(',',$this->data['msconf_images_limits']);
+		$this->data['msconf_downloads_limits'] = explode(',',$this->data['msconf_downloads_limits']);
 		$this->load->model("catalog/option");	
 		$this->data['options'] = $this->model_catalog_option->getOptions();
 

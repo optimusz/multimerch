@@ -188,10 +188,9 @@
 		</tr>
 		<?php } ?>
 		<?php } ?>
-      
         <tr><td colspan="2"><h3><?php echo $ms_account_product_files; ?></h3></td></tr>
         <tr>
-          <td><?php if ($msconf_required_images > 0) { ?><span class="required">*</span><?php } ?> <?php echo $ms_account_product_image; ?></td>
+          <td><?php if ($msconf_images_limits[0] > 0) { ?><span class="required">*</span><?php } ?> <?php echo $ms_account_product_image; ?></td>
           <td>
           	<input type="file" name="product_image" id="product_image" />
           	<p class="ms-note"><?php echo $ms_account_product_image_note; ?></p>
@@ -210,7 +209,7 @@
           </td>
         </tr>
         <tr>
-          <td><span class="required">*</span> <?php echo $ms_account_product_download; ?></td>
+          <td><?php if ($msconf_downloads_limits[0] > 0) { ?><span class="required">*</span><?php } ?> <?php echo $ms_account_product_download; ?></td>
           <td>
           	<input type="file" name="product_download" id="product_download" />
           	<p class="ms-note"><?php echo $ms_account_product_download_note; ?></p>
@@ -313,14 +312,13 @@ $(function() {
 					} else {
 						var imageHtml = [ '<div class="ms-download">',
 										  '<input type="hidden" value="'+jsonData.file.src+'" name="product_downloads[]" />',
-										  '<b>'+jsonData.file.name+'</b>' ];
+										  '<b>'+jsonData.file.name+'</b>',
+										  '<span style="cursor: pointer" class="remove">[ <?php echo $ms_delete; ?> ]</span>' ];
 
 						if (jsonData.file.pages > 0) {
-							imageHtml.push('<input value="0-'+ jsonData.file.pages +'" name="pages" type="text" style="width:30px; margin-left: 50px" /> <a class="button ms-generate-images"><span><?php echo $ms_button_generate; ?></span></a>');
+							imageHtml.push('<br/ ><?php echo $ms_account_product_download_pages; ?> <input value="0-'+ jsonData.file.pages +'" name="pages" type="text" style="width:30px; margin-left: 50px" /> <a class="button ms-generate-images"><span><?php echo $ms_button_generate; ?></span></a>');
 						}
-						
-						imageHtml.push('<span style="cursor: pointer" class="remove">[ <?php echo $ms_delete; ?> ]</span></div>');
-										  
+						imageHtml.push('</div>');
 						$("#product_download_files").append(imageHtml.join(''));
 						
 

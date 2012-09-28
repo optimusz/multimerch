@@ -117,12 +117,19 @@ class ControllerAccountMsSeller extends Controller {
 	
 			// allow a maximum of N images
 			$msconf_images_limits = explode(',',$this->config->get('msconf_images_limits'));
-
 			if ($this->request->post['action'] == 'product_image' && isset($this->request->post['product_images']) && $msconf_images_limits[1] > 0 && count($this->request->post['product_images']) >= $msconf_images_limits[1]) {
 				$json['errors'][] = sprintf($this->language->get('ms_error_product_image_maximum'),$msconf_images_limits[1]);
 				$this->_setJsonResponse($json);
 				return;
 			}
+			
+			// allow a maximum of N downloads
+			$msconf_downloads_limits = explode(',',$this->config->get('msconf_downloads_limits'));
+			if ($this->request->post['action'] == 'product_download' && isset($this->request->post['product_downloads']) && $msconf_downloads_limits[1] > 0 && count($this->request->post['product_downloads']) >= $msconf_downloads_limits[1]) {
+				$json['errors'][] = sprintf($this->language->get('ms_error_product_download_maximum'),$msconf_downloads_limits[1]);
+				$this->_setJsonResponse($json);
+				return;
+			}			
 		} else {
 			$POST_MAX_SIZE = ini_get('post_max_size');
 			$mul = substr($POST_MAX_SIZE, -1);
@@ -457,18 +464,28 @@ class ControllerAccountMsSeller extends Controller {
 			$json['errors']['product_price'] = $this->language->get('ms_error_product_price_low');
 		}		
 
-		if (isset($data['product_downloads'])) {
-			foreach ($data['product_downloads'] as &$download) {
-				//str_replace($this->msSeller->getNickname() . '_', '', $download);
-				//$download = substr_replace($download, '.' . $this->msSeller->getNickname() . '_', strpos($download,'.'), strlen('.'));
-				$dl = MsImage::byName($this->registry, $download);
-				if (!$dl->checkFileAgainstSession()) {
-					$json['errors']['product_download'] = $dl->getErrors();
-				}
-				unset($dl);
-			}
+
+		$msconf_downloads_limits = explode(',',$this->config->get('msconf_downloads_limits'));
+		if (!isset($data['product_downloads'])) {
+			if ($msconf_downloads_limits[0] > 0) {
+				$json['errors']['product_download'] = sprintf($this->language->get('ms_error_product_download_count'),$msconf_downloads_limits[0]);
+			}			
 		} else {
-			$json['errors']['product_download'] = $this->language->get('ms_error_product_download_empty');
+			if ($msconf_downloads_limits[1] > 0 && count($data['product_downloads']) > $msconf_downloads_limits[1]) {
+				$json['errors']['product_download'] = sprintf($this->language->get('ms_error_product_download_maximum'),$msconf_downloads_limits[1]);
+			} else if ($msconf_downloads_limits[0] > 0 && count($data['product_downloads']) < $msconf_downloads_limits[0]) {
+				$json['errors']['product_download'] = sprintf($this->language->get('ms_error_product_download_count'), $msconf_downloads_limits[0]);
+			} else {
+				foreach ($data['product_downloads'] as &$download) {
+					//str_replace($this->msSeller->getNickname() . '_', '', $download);
+					//$download = substr_replace($download, '.' . $this->msSeller->getNickname() . '_', strpos($download,'.'), strlen('.'));
+					$dl = MsImage::byName($this->registry, $download);
+					if (!$dl->checkFileAgainstSession()) {
+						$json['errors']['product_download'] = $dl->getErrors();
+					}
+					unset($dl);
+				}
+			}
 		}
 		
 		$msconf_images_limits = explode(',',$this->config->get('msconf_images_limits'));
@@ -856,8 +873,12 @@ class ControllerAccountMsSeller extends Controller {
 		$this->data['product'] = FALSE;
 		$this->data['msconf_allow_multiple_categories'] = $this->config->get('msconf_allow_multiple_categories');
 		$this->data['msconf_enable_shipping'] = $this->config->get('msconf_enable_shipping');
-		$this->data['msconf_required_images'] = $this->config->get('msconf_required_images');
+		$this->data['msconf_images_limits'] = explode(',',$this->config->get('msconf_images_limits'));
+			$this->data['msconf_downloads_limits'] = explode(',',$this->config->get('msconf_downloads_limits'));		
 		$this->data['msconf_enable_quantities'] = $this->config->get('msconf_enable_quantities');
+		
+		$this->data['ms_account_product_download_note'] = sprintf($this->language->get('ms_account_product_download_note'), $this->config->get('msconf_allowed_download_types'));
+		$this->data['ms_account_product_image_note'] = sprintf($this->language->get('ms_account_product_image_note'), $this->config->get('msconf_allowed_image_types'));		
 		
 		$this->data['back'] = $this->url->link('account/ms-seller/products', '', 'SSL');
 		$this->data['heading'] = $this->language->get('ms_account_newproduct_heading');
@@ -980,7 +1001,8 @@ class ControllerAccountMsSeller extends Controller {
 			$this->data['msconf_enable_shipping'] = $this->config->get('msconf_enable_shipping');
 			$this->data['msconf_enable_quantities'] = $this->config->get('msconf_enable_quantities');
 			
-			$this->data['msconf_required_images'] = $this->config->get('msconf_required_images');
+			$this->data['msconf_images_limits'] = explode(',',$this->config->get('msconf_images_limits'));
+			$this->data['msconf_downloads_limits'] = explode(',',$this->config->get('msconf_downloads_limits'));
 			
 		$this->data['back'] = $this->url->link('account/ms-seller/products', '', 'SSL');						
 			$this->data['heading'] = $this->language->get('ms_account_editproduct_heading');

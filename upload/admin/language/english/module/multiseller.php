@@ -124,6 +124,9 @@ $_['ms_config_allowed_image_types_note'] = 'Allowed image extensions';
 $_['ms_config_images_limits'] = 'Product image limits';
 $_['ms_config_images_limits_note'] = 'Minimum and maximum number of images (incl. thumbnail) required/allowed for products (0 = no limit)';
 
+$_['ms_config_downloads_limits'] = 'Product download limits';
+$_['ms_config_downloads_limits_note'] = 'Minimum and maximum number of downloads required/allowed for products (0 = no limit)';
+
 $_['ms_config_enable_pdf_generator'] = 'Enable PDF to image generator';
 $_['ms_config_enable_pdf_generator_note'] = 'Allow sellers to automatically generate product images from submitted PDF downloads (requires Imagick extension for PHP)';
 
