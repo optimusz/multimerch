@@ -8,6 +8,7 @@ Usage in multiple projects:
 	This additional funding will allow us to spend more time upgrading the extension
 	and making it better and it will let you receive your free updates more promptly.
 
+
 Installation:
 ----------------------------------
 	1. If you don't have vQmod installed, install it first. vQmod is 
@@ -26,6 +27,7 @@ Installation:
 	   If you don't do this you'll get a MySQL error in frontend. 
 
 	5. Configure the module via Multiseller -> Settings.
+
 
 If you are using a custom theme:
 ----------------------------------
@@ -69,22 +71,34 @@ Usage:
 	Seller accounts
 	---------------
 	When a customer has signed up at your store, he may additionally create a seller account to upload and sell
-	digital downloadable goods. Seller commission is deducted from every sale and is a configurable percentage.
-	It is also possible to set new seller accounts and new products to be approved manually. If that's the case,
-	store administrator will have to review new sellers and products and either approve or decline them before
-	they are active.
+	products. Seller commission is deducted from every sale and is a configurable percentage, both globally and
+	per seller. It is also possible to set new seller accounts and new products to be approved manually. If 
+	that's the case, store administrator will have to review new sellers and products and either approve or decline
+	them before	they are activated.
 
 
 	Products
 	---------------
 	When a seller submits or updates a product, it either gets active right away or gets a "Pending" status if
 	product validation settting is set to "Manual". In that case, store administrator has to approve the product
-	before it gets available for purchase.
+	before it gets available for purchase. This setting can be changed for individual sellers.
 
-	Minimum product price, allowed file types and image preview sizes are all configurable values.
+	It is possible to configure settings as minimum product price, allowed file types and image preview sizes, 
+	allowed/required number of images and downloads, whether the products are shippable or downloadable, as well
+	as quantities, image generation from PDF files and everything else. Adding product to multiple categories is
+	also supported.
 
 	If your store has multiple languages configured, sellers will be able to fill in product name, description and
 	tags in different languages.
+
+	
+	Product attributes
+	---------------
+	It is possible to use product options as attributes for seller products. When an option is created in store and
+	enabled in Multiseller settings, it appears in the seller product form automatically for the seller to choose
+	a value. The value (or values) is then displayed on the product page.
+
+	Currently, radio, select and checkbox option types are supported.	
 
 
 	Order statuses and transactions
@@ -100,6 +114,7 @@ Usage:
 	Note, that "Product Sold" emails will only be sent for orders having one of the "credit order statuses", e.g.
 	only if the seller receives a positive transaction to his balance.
 
+
 	Withdrawals
 	---------------
 	Sellers can request a payout to their PayPal account. It is possible to fully disable withdrawal requests
@@ -113,13 +128,31 @@ Usage:
 
 Changelog:
 ---------------------------------
-        1.3.1 (2012-07-15)
+    1.4 (2012-09-28)
+		- Fixed compatibility with OC 1.5.4.x
+		- Added a setting to share buyer's information with the seller
+		- Added a setting to allow creation of shippable (physical) products
+		- Added a setting to allow specifying product quantities and stock subtraction
+		- Added a possibility to use options (attributes) for seller products
+		- Added a setting to limit the number of allowed images and downloads
+		- Added a possibility to automatically generate images from submitted PDF files (Imagick required)
+		- Added a possibility to use line breaks in product descriptions
+		- Removed thumbnail field from the product form. First image is now used as thumbnail
+		- Fixed a bug with temporary image names
+		- Fixed a bug with seller information on the product page
+		- Fixed a bug with stylesheet selection
+		- Fixed various minor bugs
+		- Removed ununsed code
+		- Reorganized module's settings page
+		- Updated note texts
+		- 
+    1.3.1 (2012-07-15)
 		- Fixed compatibility with OC 1.5.3.x
 		- Fixed withdrawal requests issue
         
 	1.3 (2012-07-11)
 		- Added a setting to allow submitting products to multiple categories
-                - Added new sellers sidebox
+        - Added new sellers sidebox
 		- Added top sellers sidebox
 		- Added seller dropdown sidebox
 		- Added default image for sellers with no avatars

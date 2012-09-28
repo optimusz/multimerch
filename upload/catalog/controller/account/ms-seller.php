@@ -18,7 +18,6 @@ class ControllerAccountMsSeller extends Controller {
 		$this->msProduct = new MsProduct($this->registry);
 		$this->msMail = new MsMail($this->registry);
 		
-		
 		$parts = explode('/', $this->request->request['route']);
 
     	if (!$this->customer->isLogged()) {

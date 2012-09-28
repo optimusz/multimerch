@@ -14,6 +14,26 @@ General upgrade guide
 	   save the settings.
 
 
+Upgrading to version 1.4
+----------------------------------
+	1. Perform steps 1 & 2 from the general upgrade guide.
+		NOTE: a lot of changes have been introduced to language files and ms-account-product-form.tpl tempalte.
+		If you have modified versions of these files, review the difference between the versions using diff and
+		merge them carefully. 
+	
+	2. Run the following SQL query against your database:
+		NOTE:
+		- replace prefix_ with your OpenCart table prefix if necessary
+		
+			CREATE TABLE prefix_ms_product_attribute (
+			 `product_id` int(11) NOT NULL,
+			 `option_id` int(11) NOT NULL,
+			 `option_value_id` int(11) NOT NULL,
+        	PRIMARY KEY (`product_id`,`option_id`,`option_value_id`)) default CHARSET=utf8
+
+	3. Perform step 3 from the general upgrade guide.
+
+
 Upgrading to version 1.2
 ----------------------------------
 	1. Perform steps 1 & 2 from the general upgrade guide.
