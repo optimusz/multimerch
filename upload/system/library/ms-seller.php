@@ -152,7 +152,12 @@ final class MsSeller {
 		
 		$review_statuses = $this->msProduct->getProductStatusArray();
 		foreach ($res->rows as &$row) {
-			$row['review_status'] = $review_statuses[$row['review_status_id']];
+			if ($row['review_status_id'] != MsProduct::MS_PRODUCT_STATUS_SELLER_DELETED) {
+				$row['review_status'] = $review_statuses[$row['review_status_id']];
+			}
+			else {
+				$row['review_status'] = $row['review_status_id'];
+			}
 			$row['status'] = $row['status_id'] ? $this->language->get('text_yes') : $this->language->get('text_no');
 		}
 		

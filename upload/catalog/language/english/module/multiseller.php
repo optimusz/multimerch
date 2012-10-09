@@ -4,6 +4,7 @@
 
 $_['ms_product_status_enabled']      = 'Enabled';
 $_['ms_product_status_disabled']      = 'Disabled';
+$_['ms_product_status_seller_deleted']       = 'Deleted by seller';
 
 $_['ms_product_review_status_draft']       = 'Draft';
 $_['ms_product_review_status_pending']       = 'Pending';

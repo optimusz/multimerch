@@ -1016,7 +1016,8 @@ class ControllerAccountMsSeller extends Controller {
 		$seller_id = (int)$this->customer->getId();
 		
 		if ($this->msProduct->productOwnedBySeller($product_id, $seller_id)) {
-			$this->msProduct->deleteProduct($product_id);			
+			//$this->msProduct->deleteProduct($product_id);
+			$this->msProduct->hideProduct($product_id);
 		}
 		
 		$this->redirect($this->url->link('account/ms-seller/products', '', 'SSL'));		

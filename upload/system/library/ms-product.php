@@ -4,6 +4,7 @@ class MsProduct {
 	const MS_PRODUCT_STATUS_PENDING = 2;
 	const MS_PRODUCT_STATUS_DECLINED = 3;
 	const MS_PRODUCT_STATUS_DRAFT = 4;
+	const MS_PRODUCT_STATUS_SELLER_DELETED = 5;
 	
 	const MS_PRODUCT_VALIDATION_NONE = 1;
 	const MS_PRODUCT_VALIDATION_APPROVAL = 2;
@@ -29,6 +30,7 @@ class MsProduct {
 			MsProduct::MS_PRODUCT_STATUS_PENDING => $this->language->get('ms_product_review_status_pending'),
 			MsProduct::MS_PRODUCT_STATUS_APPROVED => $this->language->get('ms_product_review_status_approved'),
 			MsProduct::MS_PRODUCT_STATUS_DECLINED => $this->language->get('ms_product_review_status_declined'),
+			MsProduct::MS_PRODUCT_STATUS_SELLER_DELETED => $this->language->get('ms_product_status_seller_deleted'),
 		);		
 	}	
 	
@@ -336,6 +338,18 @@ class MsProduct {
 
 		$res = $this->db->query($sql);
 		return $res->row['total'];
+	}
+	
+	public function hideProduct($product_id) {
+		$sql = "UPDATE " . DB_PREFIX . "ms_product
+				SET review_status_id = " . self::MS_PRODUCT_STATUS_SELLER_DELETED . "
+				WHERE product_id = " . (int)$product_id;
+		$res = $this->db->query($sql);
+		
+		$sql = "UPDATE " . DB_PREFIX . "product
+				SET status = 0 WHERE product_id = " . (int)$product_id;
+				
+		$res = $this->db->query($sql);
 	}
 	
 	public function disableProduct($product_id) {
