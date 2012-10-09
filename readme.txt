@@ -135,7 +135,7 @@ Changelog:
 		- Added a setting to allow specifying product quantities and stock subtraction
 		- Added a possibility to use options (attributes) for seller products
 		- Added a setting to limit the number of allowed images and downloads
-		- Added a possibility to automatically generate images from submitted PDF files (Imagick required)
+		- Added a possibility to automatically generate images from submitted PDF files (Imagick and Ghostscript required)
 		- Added a possibility to use line breaks in product descriptions
 		- Removed thumbnail field from the product form. First image is now used as thumbnail
 		- Fixed a bug with temporary image names
