@@ -43,8 +43,8 @@ class ControllerModuleMsSellerdropdown extends Controller {
 		}
 		$this->data['module'] = $module++; 
 		
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/multiseller/module/ms-sellerdropdown.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/multiseller/module/ms-sellerdropdown.tpl';
+		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/muliseller/ms-sellerdropdown.tpl')) {
+			$this->template = $this->config->get('config_template') . '/template/module/muliseller/ms-sellerdropdown.tpl';
 		} else {
 			$this->template = 'default/template/module/multiseller/ms-sellerdropdown.tpl';
 		}

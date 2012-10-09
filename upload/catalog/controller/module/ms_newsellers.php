@@ -44,8 +44,8 @@ class ControllerModuleMsNewsellers extends Controller {
 		}
 		$this->data['module'] = $module++; 
 		
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/multiseller/module/ms-newsellers.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/multiseller/module/ms-newsellers.tpl';
+		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/muliseller/ms-newsellers.tpl')) {
+			$this->template = $this->config->get('config_template') . '/template/module/muliseller/ms-newsellers.tpl';
 		} else {
 			$this->template = 'default/template/module/multiseller/ms-newsellers.tpl';
 		}

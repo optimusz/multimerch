@@ -44,8 +44,8 @@ class ControllerModuleMsTopsellers extends Controller {
 		}
 		$this->data['module'] = $module++; 
 		
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/multiseller/module/ms-topsellers.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/multiseller/module/ms-topsellers.tpl';
+		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/muliseller/ms-topsellers.tpl')) {
+			$this->template = $this->config->get('config_template') . '/template/module/muliseller/ms-topsellers.tpl';
 		} else {
 			$this->template = 'default/template/module/multiseller/ms-topsellers.tpl';
 		}
