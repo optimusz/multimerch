@@ -533,4 +533,66 @@
 			]]></add>
 		</operation>		
 	</file>
+	
+	<!-- Contact All Sellers in the Backend -->
+	
+	<file name="admin/language/english/sale/contact.php">
+		<operation>
+			<search position="after"><![CDATA[
+				$_['text_affiliate']       = 'Affiliates';	
+			]]></search>
+			<add><![CDATA[
+				$_['text_seller_all']       = 'All Sellers';
+			]]></add>
+		</operation>
+	</file>
+	
+	<file name="admin/view/template/sale/contact.tpl">
+		<operation>
+			<search position="after"><![CDATA[
+				<option value="affiliate"><?php echo $text_affiliate; ?></option>
+			]]></search>
+			<add><![CDATA[
+				<option value="seller_all"><?php echo $text_seller_all; ?></option>
+			]]></add>
+		</operation>
+	</file>
+				
+	<file name="admin/controller/sale/contact.php">
+		<operation>
+			<search position="after"><![CDATA[
+				$this->data['text_affiliate'] = $this->language->get('text_affiliate');	
+			]]></search>
+			<add><![CDATA[
+				$this->data['text_seller_all'] = $this->language->get('text_seller_all');
+			]]></add>
+		</operation>
+
+		<operation>
+			<search position="before"><![CDATA[
+				case 'product':
+			]]></search>
+			<add><![CDATA[
+				case 'seller_all':
+				
+					require_once(DIR_SYSTEM . 'library/ms-seller.php');
+					$this->msSeller = new MsSeller($this->registry);
+				
+					$sort = array(
+						'order_by'               => 'ms.nickname',
+						'order_way'              => 'ASC',
+					);
+					
+					$email_total = $this->msSeller->getTotalSellers(TRUE);
+					
+					$results = $this->msSeller->getSellers($sort, TRUE);
+					
+					foreach ($results as $result) {
+						$emails[] = $result['email'];
+					}
+					break;
+			]]></add>
+		</operation>
+	</file>
+	
 </modification>
