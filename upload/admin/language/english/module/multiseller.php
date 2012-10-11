@@ -35,6 +35,7 @@ $_['ms_transaction_withdrawal']      = 'Withdrawal: %s';
 
 
 $_['ms_seller'] = 'Seller';
+$_['ms_all_sellers'] = 'All sellers';
 $_['ms_amount'] = 'Amount';
 $_['ms_product'] = 'Product';
 $_['ms_net_amount'] = 'Net amount';

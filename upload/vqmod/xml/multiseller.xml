@@ -553,7 +553,8 @@
 				$this->data['text_affiliate'] = $this->language->get('text_affiliate');	
 			]]></search>
 			<add><![CDATA[
-				$this->data['text_seller_all'] = $this->language->get('text_seller_all');
+				$this->language->load('module/multiseller');
+				$this->data['text_seller_all'] = $this->language->get('ms_all_sellers');
 			]]></add>
 		</operation>
 
