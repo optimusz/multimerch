@@ -216,8 +216,8 @@
 		</operation>		
 	</file>
 	
-	<!-- seller information on product page -->
 	<file name="catalog/view/theme/&themeFolder;/template/product/product.tpl">
+		<!-- seller information on product page -->
 		<operation>
 			<search position="before"><![CDATA[
 			<div class="description">
@@ -246,20 +246,66 @@
 			    		
 			    		<p><b><?php echo $ms_catalog_seller_profile_totalsales; ?></b> <?php echo $seller['total_sales']; ?></p>
 			    		<p><b><?php echo $ms_catalog_seller_profile_totalproducts; ?></b> <?php echo $seller['total_products']; ?></p>
+			    		sssss
+			    		<p><a class="ms-sellercontact"><?php echo $ms_catalog_product_contact; ?></a></p>
 		    		</div>
 		    	</div>
 		    </div>
 			<?php } ?>
+		</div>			
 			]]></add>
 		</operation>
+		
+		<!-- product comments -->
+		<operation>
+			<search position="before" offset="1"><![CDATA[
+				<div id="tab-description" class="tab-content"><?php echo $description; ?></div>
+			]]></search>
+			<add><![CDATA[
+  				<a href="#tab-comments"><?php echo $tab_comments ?></a>
+			]]></add>
+		</operation>
+		
+		<operation>
+			<search position="before"><![CDATA[
+				<?php if ($tags) { ?>
+			]]></search>
+			<add><![CDATA[
+  				<div id="tab-comments" class="tab-content"></div>
+			]]></add>
+		</operation>
+	
+		<operation>
+			<search position="replace"><![CDATA[
+				<span><?php echo $text_stock; ?></span> <?php echo $stock; ?></div>
+			]]></search>
+			<add><![CDATA[
+  				<span><?php echo $text_stock; ?></span> <?php echo $stock; ?><br />
+  				<?php foreach ($ms_product_attributes as $attribute) { ?>
+	  				<span><?php echo $attribute['name']; ?></span> <?php echo implode(',',$attribute['values']); ?> <br />
+  				<?php } ?>
+  				</div>
+			]]></add>
+		</operation>
+		
+		<operation>
+			<search position="before"><![CDATA[
+				$('#button-review').bind('click', function() {
+			]]></search>
+			<add><![CDATA[
+  				$('#tab-comments').load('index.php?route=module/ms-comments/getComments&product_id=<?php echo $product_id; ?>');
+			]]></add>
+		</operation>		
 	</file>
 
 	<file name="catalog/controller/product/product.php">
+		<!-- seller information on product page -->	
 		<operation>
 			<search position="after"><![CDATA[
 			if ($product_info) {
 			]]></search>
 			<add><![CDATA[
+			$this->document->addScript('catalog/view/javascript/ms-contactseller.js');
 			$this->document->addStyle('catalog/view/theme/' . $this->config->get('config_template') . '/stylesheet/multiseller.css');
 			$this->data = array_merge($this->data, $this->load->language('module/multiseller'));
 			require_once(DIR_SYSTEM . 'library/ms-image.php');
@@ -311,54 +357,8 @@
 
 			]]></add>
 		</operation>
-	</file>
-
-	<!-- ************************ -->
-	<!--     product comments     -->
-	<!-- ************************ -->	
-	<file name="catalog/view/theme/&themeFolder;/template/product/product.tpl">
-		<operation>
-			<search position="before" offset="1"><![CDATA[
-				<div id="tab-description" class="tab-content"><?php echo $description; ?></div>
-			]]></search>
-			<add><![CDATA[
-  				<a href="#tab-comments"><?php echo $tab_comments ?></a>
-			]]></add>
-		</operation>
 		
-		<operation>
-			<search position="before"><![CDATA[
-				<?php if ($tags) { ?>
-			]]></search>
-			<add><![CDATA[
-  				<div id="tab-comments" class="tab-content"></div>
-			]]></add>
-		</operation>
-	
-		<operation>
-			<search position="replace"><![CDATA[
-				<span><?php echo $text_stock; ?></span> <?php echo $stock; ?></div>
-			]]></search>
-			<add><![CDATA[
-  				<span><?php echo $text_stock; ?></span> <?php echo $stock; ?><br />
-  				<?php foreach ($ms_product_attributes as $attribute) { ?>
-	  				<span><?php echo $attribute['name']; ?></span> <?php echo implode(',',$attribute['values']); ?> <br />
-  				<?php } ?>
-  				</div>
-			]]></add>
-		</operation>
-		
-		<operation>
-			<search position="before"><![CDATA[
-				$('#button-review').bind('click', function() {
-			]]></search>
-			<add><![CDATA[
-  				$('#tab-comments').load('index.php?route=module/ms-comments/getComments&product_id=<?php echo $product_id; ?>');
-			]]></add>
-		</operation>
-	</file>
-	
-	<file name="catalog/controller/product/product.php">
+		<!--  product comments  -->
 		<operation>
 			<search position="before"><![CDATA[
 			    $this->data['tab_related'] = $this->language->get('tab_related');
@@ -369,9 +369,7 @@
 				$this->data['tab_comments'] = sprintf($this->language->get('ms_comments_tab_comments'), $this->model_module_multiseller_comments->getCommentsCount($this->request->get['product_id']));
 			]]></add>
 		</operation>
-	</file>	
-
-
+	</file>
 
 	<!-- ************************ -->
 	<!-- ************************ -->
