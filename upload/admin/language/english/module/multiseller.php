@@ -312,4 +312,7 @@ $_['ms_mail_product_disabled'] = <<<EOT
 Your product %s at %s has been disabled.
 EOT;
 
+// Sales - Mail
+$_['ms_text_seller_all']      = 'All sellers';
+
 ?>

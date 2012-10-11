@@ -536,18 +536,7 @@
 	
 	<!-- Contact All Sellers in the Backend -->
 	
-	<file name="admin/language/english/sale/contact.php">
-		<operation>
-			<search position="after"><![CDATA[
-				$_['text_affiliate']       = 'Affiliates';	
-			]]></search>
-			<add><![CDATA[
-				$_['text_seller_all']       = 'All Sellers';
-			]]></add>
-		</operation>
-	</file>
-	
-	<file name="admin/view/template/sale/contact.tpl">
+	<file name="&adminFolder;/view/template/sale/contact.tpl">
 		<operation>
 			<search position="after"><![CDATA[
 				<option value="affiliate"><?php echo $text_affiliate; ?></option>
@@ -558,7 +547,7 @@
 		</operation>
 	</file>
 				
-	<file name="admin/controller/sale/contact.php">
+	<file name="&adminFolder;/controller/sale/contact.php">
 		<operation>
 			<search position="after"><![CDATA[
 				$this->data['text_affiliate'] = $this->language->get('text_affiliate');	
@@ -581,6 +570,8 @@
 					$sort = array(
 						'order_by'               => 'ms.nickname',
 						'order_way'              => 'ASC',
+						'page'					 => $page,
+						'limit'					 => 10,
 					);
 					
 					$email_total = $this->msSeller->getTotalSellers(TRUE);
