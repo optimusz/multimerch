@@ -183,6 +183,11 @@
 	margin: 5px 0;
 }
 
+.ms-sellerprofile .seller-data div.info-box a {
+	color: #38B0E3;
+	text-decoration: underline;
+}
+
 .ms-sellerprofile .seller-description {
 	clear: both;
 	margin: 40px 0;
@@ -320,4 +325,93 @@
 .ms-carousel .image img {
 	padding: 3px;
 	border: 1px solid #E7E7E7;
+}
+
+/* seller contact form */
+
+.ms-sellercontact-dialog,
+div.ms-sellercontact-dialog.ui-widget-content,
+.ms-sellercontact-dialog div.ui-widget-content {
+	background-color: white;
+}
+
+.ms-sellercontact-dialog .ui-widget-header,
+.ms-sellercontact-dialog .ui-widget-header .ui-state-hover {
+       background: url("../../../javascript/jquery/ui/themes/base/images/ui-bg_glass_75_dadada_1x400.png") repeat-x scroll 50% 50% #CCCCCC;
+       border: 1px solid #BBBBBB;
+       color: #666666;
+       border-bottom-left-radius: 0;
+       border-bottom-right-radius: 0;	
+   
+}
+
+p.warning {
+	padding: 10px 10px 10px 33px;
+	margin-bottom: 15px;
+	background: #FFD1D1 url('../image/warning.png') 10px center no-repeat;
+	border: 1px solid #F8ACAC;
+}
+
+.ms-sellercontact-dialog .ui-widget-header .ui-icon, .ms-sellercontact-dialog .ui-state-hover .ui-icon, .ms-sellercontact-dialog .ui-state-focus .ui-icon {
+	background-image: url("../../../javascript/jquery/ui/themes/base/images/ui-icons_222222_256x240.png");
+	border: medium none;
+       float: right;
+}
+
+.ms-sellercontact-image {
+	text-align: center;
+}
+
+.ms-sellercontact-image img {
+	padding: 3px;
+	border: 1px solid #E7E7E7;		
+}
+
+.ms-sellercontact-image a {
+	text-decoration: none;
+	outline: none;		
+}
+
+#ms-sellercontact-form {
+	width: 100%;
+}
+
+.ms-sellercontact-dialog h3,
+.ms-sellercontact-dialog h4 {
+	text-align: center;
+	margin: 20px 0;
+}
+
+#ms-sellercontact-form label {
+	margin-left: 20px;
+	width: 115px;
+	vertical-align: top;
+}
+
+#ms-sellercontact-form input {
+	width: 250px;
+}
+
+#ms-sellercontact-form textarea {
+	width: 250px;
+	height: 150px;
+}
+
+#ms-sellercontact-form label, #ms-sellercontact-form input, #ms-sellercontact-form textarea {
+	margin-top: 5px;
+	margin-bottom: 5px;
+	display: inline-block;
+}
+
+#ms-captcha {
+	display: inline;
+}
+
+.ms-sellercontact-dialog .ui-widget-content.ui-dialog-buttonpane {
+	border-top: none;
+}
+
+.ms-sellercontact-dialog .ui-dialog-buttonset {
+	text-align: center;
+	padding: 10px 0;
 }

@@ -63,6 +63,20 @@ $_['ms_mail_product_purchased'] = <<<EOT
 Your product %s has been purchased from %s.
 EOT;
 
+$_['ms_mail_subject_seller_contact']      = 'New customer message';
+$_['ms_mail_seller_contact'] = <<<EOT
+You have received a new customer message!
+
+Name: %s
+
+Email: %s
+
+Product: %s
+
+Message:
+%s
+EOT;
+
 $_['ms_mail_product_purchased_info'] = <<<EOT
 
 
@@ -183,6 +197,10 @@ $_['ms_error_withdraw_amount'] = 'Invalid amount';
 $_['ms_error_withdraw_balance'] = 'Not enough funds on your balance';
 $_['ms_error_withdraw_minimum'] = 'Cannot withdraw less than minimum limit';
 
+$_['ms_error_contact_email'] = 'Please specify a valid email address';
+$_['ms_error_contact_captcha'] = 'Invalid captcha code';
+$_['ms_error_contact_text'] = 'Message cannot be longer than 2000 characters';
+$_['ms_error_contact_allfields'] = 'Please fill in all fields';
 
 // Account - General
 
@@ -364,6 +382,7 @@ $_['ms_account_withdraw_no_paypal']      = 'Please <a href="index.php?route=acco
 $_['ms_catalog_product_sellerinfo']      = 'Seller information';
 $_['ms_catalog_product_date_added']      = 'Date added:';
 $_['ms_catalog_product_sales']      = 'Sales:';
+$_['ms_catalog_product_contact']      = 'Contact this seller';
 
 
 // Product page - Comments
@@ -443,4 +462,13 @@ $_['ms_newsellers_view']      = 'View all sellers';
 // Catalog - Seller dropdown
 $_['ms_sellerdropdown_sellers']      = 'Our sellers';
 $_['ms_sellerdropdown_select']      = '-- Select a seller --';
+
+// Catalog - Seller contact dialog
+$_['ms_sellercontact_title']      = 'Contact seller';
+$_['ms_sellercontact_name']      = 'Your name';
+$_['ms_sellercontact_email']      = 'Your email';
+$_['ms_sellercontact_text']      = 'Your message';
+$_['ms_sellercontact_captcha']      = 'Captcha';
+$_['ms_sellercontact_sendmessage']      = 'Send a message to %s';
+$_['ms_sellercontact_success']      = 'Your message has been successfully sent';
 ?>

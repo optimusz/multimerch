@@ -253,6 +253,7 @@ class ControllerProductSeller extends Controller {
 		$this->load->model('catalog/product');
     	
 		$seller = $this->msSeller->getSellerData($this->request->get['seller_id']);
+		$this->document->addScript('catalog/view/javascript/ms-contactseller.js');
 
 		if (empty($seller) || $seller['seller_status_id'] != MsSeller::MS_SELLER_STATUS_ACTIVE) {
 			$this->redirect($this->url->link('product/seller', '', 'SSL'));
@@ -269,7 +270,8 @@ class ControllerProductSeller extends Controller {
 		$this->data['seller']['description'] = $seller['description'];
 		$this->data['seller']['thumb'] = $image;
 		$this->data['seller']['href'] = $this->url->link('product/seller/products', 'seller_id=' . $seller['seller_id']);
-		//
+		$this->data['seller_id'] = $this->request->get['seller_id'];
+		
 		$country = $this->model_localisation_country->getCountry($seller['country_id']);
 		
 		if (!empty($country)) {			
@@ -597,6 +599,84 @@ class ControllerProductSeller extends Controller {
 		$this->document->setTitle(sprintf($this->language->get('ms_catalog_seller_products_heading'), $seller['nickname']));
 		$this->_setBreadcrumbs(sprintf($this->language->get('ms_catalog_seller_products_breadcrumbs'), $seller['nickname']), __FUNCTION__, '&seller_id='.$seller['seller_id']);
 		$this->_renderTemplate('ms-catalog-sellerproducts');
-  	}  	
+  	}
+  	
+  	public function jxSubmitContactDialog() {
+  		if (!isset($this->request->post['seller_id']))
+  			return false;
+  			
+  		$seller_id = $this->request->post['seller_id'];
+  		$product_id = $this->request->post['product_id'];
+  		$seller_email = $this->msSeller->getSellerEmail($seller_id);
+  		$seller_name = $this->msSeller->getSellerName($seller_id);
+  		$message_text = trim($this->request->post['ms-sellercontact-text']);
+  		$customer_name = mb_substr(trim($this->request->post['ms-sellercontact-name']),0,50);
+  		$customer_email = $this->request->post['ms-sellercontact-email'];
+
+		$json = array();
+
+		if (empty($message_text) || empty($customer_name) || empty($customer_email) || empty($this->request->post['ms-sellercontact-captcha'])) {
+			$json['errors'][] = $this->language->get('ms_error_contact_allfields');
+			$this->response->setOutput(json_encode($json));
+			return;
+		}
+
+		if (!isset($this->session->data['captcha']) || ($this->session->data['captcha'] != $this->request->post['ms-sellercontact-captcha'])) {
+			$json['errors'][] = $this->language->get('ms_error_contact_captcha');
+		}
+
+		if (!filter_var($customer_email, FILTER_VALIDATE_EMAIL)) {
+			$json['errors'][] = $this->language->get('ms_error_contact_email');			
+		}
+
+		if (mb_strlen($message_text) > 2000) {
+			$json['errors'][] = $this->language->get('ms_error_contact_text');
+		}
+
+		if (!isset($json['errors'])) {	
+			$mails[] = array(
+				'type' => MsMail::SMT_SELLER_CONTACT,
+				'data' => array(
+					'recipients' => $seller_email,
+					'customer_name' => $customer_name,
+					'customer_email' => $customer_email,
+					'customer_message' => $message_text,
+					'product_id' => $product_id,
+					'addressee' => $seller_name
+				)
+			);  		
+	  		$this->msMail->sendMails($mails);
+  			$json['success'] = $this->language->get('ms_sellercontact_success');
+  		}
+  		$this->response->setOutput(json_encode($json));
+  	}
+  	
+  	public function jxRenderContactDialog() {
+  		if (isset($this->request->get['product_id'])) {
+			$seller_id = $this->msProduct->getSellerId($this->request->get['product_id']);
+			$this->data['product_id'] = (int)$this->request->get['product_id'];
+  		} else {
+			$seller_id = $this->request->get['seller_id'];
+			$this->data['product_id'] = 0;
+  		}
+		$seller = $this->msSeller->getSellerData($seller_id);
+		
+		if (empty($seller))
+			return false;
+
+		$this->data['seller_id'] = $seller_id;			
+		
+		$this->data['customer_email'] = $this->customer->getEmail();
+		$this->data['customer_name'] = $this->customer->getFirstname() . ' ' . $this->customer->getLastname();
+		
+		if (!empty($seller['avatar_path']))
+			$this->data['seller_thumb'] = $this->msImage->resize($seller['avatar_path'], $this->config->get('config_image_category_width'), $this->config->get('config_image_category_height'));
+			
+		$this->data['seller_href'] = $this->url->link('product/seller/profile', 'seller_id=' . $seller['seller_id']);
+		$this->data['ms_sellercontact_sendmessage'] = sprintf($this->language->get('ms_sellercontact_sendmessage'), $seller['nickname']);
+		
+  		return $this->_renderTemplate('ms-catalog-sellercontact');
+  	}
+  	
 }
 ?>

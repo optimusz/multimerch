@@ -24,6 +24,7 @@ class MsMail extends Mail {
 	
 	const SMT_TRANSACTION_PERFORMED = 16;
 	
+	const SMT_SELLER_CONTACT = 20;
 	//
 	
 	const AMT_SELLER_ACCOUNT_CREATED = 101;
@@ -250,6 +251,12 @@ class MsMail extends Mail {
 				$mail_subject .= $this->language->get('ms_mail_subject_transaction_performed');
 				$mail_text .= sprintf($this->language->get('ms_mail_transaction_performed'), $this->config->get('config_name'));
 				break;
+				
+			case self::SMT_SELLER_CONTACT:
+				$mail_subject .= $this->language->get('ms_mail_subject_seller_contact');
+				$mail_text .= sprintf($this->language->get('ms_mail_seller_contact'), $data['customer_name'], $data['customer_email'], isset($data['product_id']) ? $product['name'] : '', $data['customer_message']);
+				break;				
+				
 				
 			// admin
 			case self::AMT_PRODUCT_CREATED:
