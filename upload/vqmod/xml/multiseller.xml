@@ -369,6 +369,41 @@
 			]]></add>
 		</operation>
 	</file>
+	
+	<!--  seller SEO URLs  -->
+	
+	<file name="catalog/controller/common/seo_url.php">
+
+		<operation>
+			<search position="before"><![CDATA[
+				if ($url[0] == 'information_id') {
+			]]></search>
+			<add><![CDATA[
+					if ($url[0] == 'seller_id') {
+						$this->request->get['seller_id'] = $url[1];
+					}
+			]]></add>
+		</operation>
+	
+		<operation>
+			<search position="before"><![CDATA[
+				} elseif (isset($this->request->get['information_id'])) {
+			]]></search>
+			<add><![CDATA[
+				} elseif (isset($this->request->get['seller_id'])) {
+				$this->request->get['route'] = 'product/seller/profile';
+			]]></add>
+		</operation>
+	
+		<operation>
+			<search position="replace"><![CDATA[
+				if (($data['route'] == 'product/product' && $key == 'product_id') || (($data['route'] == 'product/manufacturer/info' || $data['route'] == 'product/product') && $key == 'manufacturer_id') || ($data['route'] == 'information/information' && $key == 'information_id')) {
+			]]></search>
+			<add><![CDATA[
+				if (($data['route'] == 'product/product' && $key == 'product_id') || (($data['route'] == 'product/manufacturer/info' || $data['route'] == 'product/product') && $key == 'manufacturer_id') || ($data['route'] == 'product/seller/profile' && $key == 'seller_id') || ($data['route'] == 'information/information' && $key == 'information_id')) {
+			]]></add>
+		</operation>
+	</file>
 
 	<!-- ************************ -->
 	<!-- ************************ -->
