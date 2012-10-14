@@ -114,6 +114,11 @@ $_['ms_config_product_validation_note'] = 'Product validation';
 $_['ms_config_product_validation_none'] = 'No validation';
 $_['ms_config_product_validation_approval'] = 'Manual approval';
 
+$_['ms_config_enable_seo_urls'] = 'Enable SEO URLs generation for new product and seller pages';
+$_['ms_config_enable_seo_urls_note'] = 'To be able to use generated SEO URLs for products and sellers, enable SEO URL setting for your shop as well. Setting is located in System -> Settings -> (Your Store) Edit -> Server tab.';
+$_['ms_config_enable_update_seo_urls'] = 'Enable SEO URLs generation for updated products';
+$_['ms_config_enable_update_seo_urls_note'] = 'This setting enables new SEO URLs generation, when existing products are updated.';
+
 $_['ms_config_seller_commission'] = 'Default seller commission';
 $_['ms_config_seller_commission_note'] = 'Default seller commission (flat fee + %)';
 

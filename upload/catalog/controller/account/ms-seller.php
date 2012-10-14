@@ -592,6 +592,14 @@ class ControllerAccountMsSeller extends Controller {
 		} else { // disable quantities
 			$data['product_quantity'] = 999;
 		}
+		
+		if ($this->config->get('msconf_enable_seo_urls')) {
+			// Add id (?)
+			$data['keyword'] = implode("-", str_replace("-", "", explode(" ", $language['product_name'])));
+		}
+		/*else {
+			$data['keyword'] = "";
+		}*/
 
 		if (empty($json['errors'])) {
 			$mails = array();
@@ -829,6 +837,15 @@ class ControllerAccountMsSeller extends Controller {
 						break;
 				}
 				
+				if ($this->config->get('msconf_enable_seo_urls')) {
+				// Add /sellers/ (?)
+				// Allow spaces in nicknames (?)
+					$data['keyword'] = $onlyconsonants = implode("-", str_replace("-", "", explode(" ", $data['sellerinfo_nickname'])));
+				}
+				/*else {
+					$data['keyword'] = "";
+				}*/
+				
 				$data['seller_id'] = $this->customer->getId();
 				$data['sellerinfo_product_validation'] = $this->config->get('msconf_product_validation'); 
 				$this->msSeller->createSeller($data);
@@ -1005,8 +1022,8 @@ class ControllerAccountMsSeller extends Controller {
 			
 		$this->data['back'] = $this->url->link('account/ms-seller/products', '', 'SSL');						
 			$this->data['heading'] = $this->language->get('ms_account_editproduct_heading');
-			$this->document->setTitle($this->language->get('ms_account_editproduct_heading'));		
-			$this->_setBreadcrumbs('ms_account_editproduct_breadcrumbs', __FUNCTION__);		
+			$this->document->setTitle($this->language->get('ms_account_editproduct_heading'));
+			$this->_setBreadcrumbs('ms_account_editproduct_breadcrumbs', __FUNCTION__);
 			$this->_renderTemplate('ms-account-product-form');
 		}
 	}
@@ -1066,7 +1083,7 @@ class ControllerAccountMsSeller extends Controller {
 		$this->data['seller_validation'] = $this->config->get('msconf_seller_validation');
 		$this->data['back'] = $this->url->link('account/account', '', 'SSL');
 		$this->document->setTitle($this->language->get('ms_account_sellerinfo_heading'));
-		$this->_setBreadcrumbs('ms_account_sellerinfo_breadcrumbs', __FUNCTION__);		
+		$this->_setBreadcrumbs('ms_account_sellerinfo_breadcrumbs', __FUNCTION__);
 		$this->_renderTemplate('ms-account-sellerinfo');
 	}
 	/* ********************* */

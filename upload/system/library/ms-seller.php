@@ -226,6 +226,17 @@ final class MsSeller {
 					date_created = NOW()";
 		
 		$this->db->query($sql);
+		$seller_id = $this->db->getLastId();
+		
+		if ($data['keyword']) {
+			$similarity_query = $this->db->query("SELECT * FROM ". DB_PREFIX . "url_alias WHERE keyword LIKE '" . $this->db->escape($data['keyword']) . "%'");
+			$number = $similarity_query->num_rows;
+			
+			if ($number > 0) {
+				$data['keyword'] = $data['keyword'] . "-" . $number;
+			}
+			$this->db->query("INSERT INTO " . DB_PREFIX . "url_alias SET query = 'seller_id=" . (int)$seller_id . "', keyword = '" . $this->db->escape($data['keyword']) . "'");
+		}
 	}
 	
 	public function nicknameTaken($nickname) {

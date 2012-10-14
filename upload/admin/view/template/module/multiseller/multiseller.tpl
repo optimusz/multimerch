@@ -64,6 +64,32 @@
 					</tr>
 					
 					<tr>
+		            	<td>
+							<span><?php echo $ms_config_enable_seo_urls; ?></span>
+							<span class="help"><?php echo $ms_config_enable_seo_urls_note; ?></span>
+						</td>
+		            	<td>
+			                <input type="radio" name="msconf_enable_seo_urls" value="1" <?php if($msconf_enable_seo_urls == 1) { ?> checked="checked" <?php } ?>  />
+			                <?php echo $text_yes; ?>
+			                <input type="radio" name="msconf_enable_seo_urls" value="0" <?php if($msconf_enable_seo_urls == 0) { ?> checked="checked" <?php } ?>  />
+			                <?php echo $text_no; ?>
+		              	</td>
+		            </tr>
+					
+					<tr>
+		            	<td>
+							<span><?php echo $ms_config_enable_update_seo_urls; ?></span>
+							<span class="help"><?php echo $ms_config_enable_update_seo_urls_note; ?></span>
+						</td>
+		            	<td>
+			                <input type="radio" name="msconf_enable_update_seo_urls" value="1" <?php if($msconf_enable_update_seo_urls == 1) { ?> checked="checked" <?php } ?>  />
+			                <?php echo $text_yes; ?>
+			                <input type="radio" name="msconf_enable_update_seo_urls" value="0" <?php if($msconf_enable_update_seo_urls == 0) { ?> checked="checked" <?php } ?>  />
+			                <?php echo $text_no; ?>
+		              	</td>
+		            </tr>
+					
+					<tr>
 						<td>
 							<span><?php echo $ms_config_seller_commission; ?></span>
 							<span class="help"><?php echo $ms_config_seller_commission_note; ?></span>

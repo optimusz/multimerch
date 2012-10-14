@@ -61,7 +61,9 @@ class ControllerModuleMultiseller extends Controller {
 			"msconf_provide_buyerinfo" => 0, // 0 - no, 1 - yes, 2 - shipping dependent
 			"msconf_enable_quantities" => 0, // 0 - no, 1 - yes, 2 - shipping dependent
 			"msconf_product_options" => "",
-			"msconf_enable_pdf_generator" => 0
+			"msconf_enable_pdf_generator" => 0,
+			"msconf_enable_seo_urls" => 0,
+			"msconf_enable_update_seo_urls" => 0
 		);
 	}	
 	

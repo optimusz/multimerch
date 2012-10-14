@@ -402,6 +402,17 @@ class MsProduct {
 		
 		$this->db->query($sql);
 		$product_id = $this->db->getLastId();
+		
+		if ($data['keyword']) {
+			//$similarity_query = $this->db->query("SELECT * FROM ". DB_PREFIX . "url_alias WHERE keyword LIKE '" . $this->db->escape($data['keyword']) . "%' AND query LIKE 'product_id=%'");
+			$similarity_query = $this->db->query("SELECT * FROM ". DB_PREFIX . "url_alias WHERE keyword LIKE '" . $this->db->escape($data['keyword']) . "%'");
+			$number = $similarity_query->num_rows;
+			
+			if ($number > 0) {
+				$data['keyword'] = $data['keyword'] . "-" . $number;
+			}
+			$this->db->query("INSERT INTO " . DB_PREFIX . "url_alias SET query = 'product_id=" . (int)$product_id . "', keyword = '" . $this->db->escape($data['keyword']) . "'");
+		}
 
 		foreach ($data['languages'] as $language_id => $language) {
 			if (strcmp(VERSION,'1.5.4') >= 0) {
