@@ -13,7 +13,7 @@
   <?php if (isset($error_warning) && ($error_warning)) { ?>
   <div class="warning"><?php echo $error_warning; ?></div>
   <?php } ?>
-  
+
   <form id="ms-new-product" method="post" enctype="multipart/form-data">
   	<input type="hidden" name="product_id" value="<?php echo $product['product_id']; ?>" />
   	<input type="hidden" name="action" id="ms_action" />
@@ -192,17 +192,19 @@
         <tr>
           <td><?php if ($msconf_images_limits[0] > 0) { ?><span class="required">*</span><?php } ?> <?php echo $ms_account_product_image; ?></td>
           <td>
-          	<input type="file" name="product_image" id="product_image" />
+          	<input type="file" name="ms-file-addimages" id="ms-file-addimages" />
           	<p class="ms-note"><?php echo $ms_account_product_image_note; ?></p>
           	<p class="error" id="error_product_image"></p>
           	<div id="product_image_files">
           	<?php if (isset($product['images'])) { ?>
+          		<?php $i = 0; ?>           	
 	          	<?php foreach ($product['images'] as $image) { ?>
           		<div class="ms-image">
           			<input type="hidden" name="product_images[]" value="<?php echo $image['name']; ?>" />
           			<img src="<?php echo $image['thumb']; ?>" />
           			<img class="ms-remove" src="catalog/view/theme/default/image/remove.png" />
           		</div>
+	          	<?php $i++; ?>          		
 	          	<?php } ?>
           	<?php } ?>
           	</div>
@@ -211,20 +213,37 @@
         <tr>
           <td><?php if ($msconf_downloads_limits[0] > 0) { ?><span class="required">*</span><?php } ?> <?php echo $ms_account_product_download; ?></td>
           <td>
-          	<input type="file" name="product_download" id="product_download" />
+          	<input type="file" name="ms-file-addfiles" id="ms-file-addfiles" />
           	<p class="ms-note"><?php echo $ms_account_product_download_note; ?></p>
           	<p class="error" id="error_product_download"></p>
           	<div id="product_download_files">
           	<?php if (isset($product['downloads'])) { ?>
+          		<?php $i = 0; ?> 
 	          	<?php foreach ($product['downloads'] as $download) { ?>
-	          		<input type="hidden" name="product_downloads[]" value="<?php echo $download['src']; ?>" />
-	          		<p><a href="<?php echo $download['href']; ?>"><?php echo $download['name']; ?></a> <span style="cursor: pointer">[ <?php echo $ms_delete; ?> ]</span></p>
+	          	<div class="ms-download">
+          			<input type="hidden" name="product_downloads[<?php echo $i; ?>][download_id]" value="<?php echo $download['id']; ?>" />
+          			<input type="hidden" name="product_downloads[<?php echo $i; ?>][filename]" value="" />
+          			<span class="ms-download-name"><?php echo $download['name']; ?></span>
+	          		<div class="ms-buttons">
+	          			<a href="<?php echo $download['href']; ?>" class="ms-button-download" title="<?php echo $ms_download; ?>"></a>
+	          			<div class="ms-button-update">
+	          				<input id="ms-update-<?php echo $download['id']; ?>" name="ms-update-<?php echo $download['id']; ?>" class="ms-file-updatedownload" type="file" multiple="false" />
+	          			</div>
+	          			<a class="ms-button-delete" title="<?php echo $ms_delete; ?>"></a>
+	          		</div>
+	          	</div>
+	          	<?php $i++; ?>
 	          	<?php } ?>
           	<?php } ?>
           	</div>
+          	<div style="display: none">
+	          	<input type="checkbox" name="push_downloads" id="push_downloads" />
+				<label><?php echo $ms_account_product_push; ?></label>
+	          	<p class="ms-note"><?php echo $ms_account_product_push_note; ?></p>
+          	</div>
           </td>
         </tr>
-
+        
         <?php if ($seller['product_validation'] == MsProduct::MS_PRODUCT_VALIDATION_APPROVAL) { ?>
         <tr><td colspan="2"><h3>Message to the reviewer</h3></td></tr>        
         <tr>
@@ -241,177 +260,21 @@
     <div class="buttons">
       <div class="left"><a href="<?php echo $back; ?>" class="button"><span><?php echo $ms_button_cancel; ?></span></a></div>
       <div class="right"><a class="button" id="ms-submit-button"><span><?php echo $ms_button_submit; ?></span></a></div>
-	  <div class="right" style="margin-right: 20px;"><a class="button" id="ms-savedraft-button"><span><?php echo $ms_button_save_draft; ?></span></a></div>      
+	  <!--<div class="right" style="margin-right: 20px;"><a class="button" id="ms-savedraft-button"><span><?php echo $ms_button_save_draft; ?></span></a></div>-->
     </div>
   </form>
   
   <?php echo $content_bottom; ?></div>
-
-<script>
-$(function() {
-	$('#htabs a.lang').tabs();
-
-	$("input[name='product_enable_shipping']").live('change', function() {
-		if ($(this).val() == 1) {
-			if (!$("input[name='product_quantity']").hasClass("ffUnchangeable")) {
-				$("input[name='product_quantity']").parents("tr").show();
-			}
-		} else {
-			if (!$("input[name='product_quantity']").hasClass("ffUnchangeable")) {
-				$("input[name='product_quantity']").parents("tr").hide();
-			}
-		}
-	});
-
-	$("#product_image_files, #product_thumbnail_files").delegate(".ms-remove", "click", function() {
-		$(this).parent().remove();
-	});
-
-	$("#product_download_files").delegate("span.remove", "click", function() {
-		$(this).parent().remove();
-	});
-
-	$('#ms-new-product input[type="file"]').live('change', function() {
-		var element = $(this);
-		var id = $(this).attr('id');
-		$('#ms_action').val(id);
-		$('#error_'+id).text('');
-		$("#ms-new-product").ajaxForm({
-			url:  "index.php?route=account/ms-seller/jxuploadfile",
-			dataType: 'json', 
-		    beforeSend: function() {
-				$('#'+id+'_files').append('<span class="wait">&nbsp;<img src="catalog/view/theme/default/image/loading.gif" alt="" /></span>');
-				
-		    },
-			success: function(jsonData) {
-				$(element).replaceWith('<input type="file" name="'+$(element).attr('name')+'" id="'+$(element).attr('id')+'"/>');
-				$('#'+id+'_files span.wait').remove();
-			
-				if (!jQuery.isEmptyObject(jsonData.errors)) {
-					$('#error_'+id).text('');
-					for (error in jsonData.errors) {
-					    if (!jsonData.errors.hasOwnProperty(error)) {
-					        continue;
-					    }
-					    
-					    if ($('#error_'+error).length > 0) {
-					    	$('#error_'+error).text(jsonData.errors[error]);
-					    } else {
-					    	$('#error_'+id).text(jsonData.errors[error]);
-					   	}
-					    //console.log(error + " -> " + jsonData.errors[error]);
-					}
-				} else {
-					if (id == 'product_image') {
-						var imageHtml = [ '<div class="ms-image">',
-										  '<input type="hidden" value="'+jsonData.file.name+'" name="product_images[]" />',
-										  '<img src="'+jsonData.file.thumb+'" />',
-										  '<span class="ms-remove"></span>',
-										  '</div>' ];
-						$("#product_image_files").append(imageHtml.join('')); 
-					} else {
-						var imageHtml = [ '<div class="ms-download">',
-										  '<input type="hidden" value="'+jsonData.file.src+'" name="product_downloads[]" />',
-										  '<b>'+jsonData.file.name+'</b>',
-										  '<span style="cursor: pointer" class="remove">[ <?php echo $ms_delete; ?> ]</span>' ];
-
-						if (jsonData.file.pages > 0) {
-							imageHtml.push('<br/ ><?php echo $ms_account_product_download_pages; ?> <input value="0-'+ jsonData.file.pages +'" name="pages" type="text" style="width:30px; margin-left: 50px" /> <a class="button ms-generate-images"><span><?php echo $ms_button_generate; ?></span></a>');
-						}
-						imageHtml.push('</div>');
-						$("#product_download_files").append(imageHtml.join(''));
-						
-
-					}
-				}
-			}
-		}).submit();
-	});
-
-	$("#product_download_files").delegate(".ms-generate-images", "click", function() {
-		var generateButton = $(this);
-		$('#error_product_download').text('');
-    	generateButton.hide();
-    	generateButton.before('<span class="wait">&nbsp;<img src="catalog/view/theme/default/image/loading.gif" alt="" /></span>');
-    	
-	    $.ajax({
-			type: "POST",
-			dataType: "json",
-			url: 'index.php?route=account/ms-seller/jxgenerateimages',
-			data: $(this).parent().find('input').serialize(),
-		    beforeSend: function() {
-		    	//$('#ms-new-product a.button').hide();
-		    	//button.before('<span class="wait">&nbsp;<img src="catalog/view/theme/default/image/loading.gif" alt="" /></span>');
-		    },			
-			success: function(jsonData) {
-				generateButton.find('span').text('<?php echo $ms_button_regenerate; ?>');
-				generateButton.show().prev('span.wait').remove();
-				console.log(jsonData);
-				if (!jQuery.isEmptyObject(jsonData.errors)) {
-					for (error in jsonData.errors) {
-					    if (!jsonData.errors.hasOwnProperty(error)) {
-					        continue;
-					    }
-					    $('#error_'+error).text(jsonData.errors[error]);
-					}				
-				} else {
-					var imageHtml = [];
-					for(var i=0; i<jsonData.previews.length; i++) {
-						imageHtml.push(
-							'<div class="ms-image ms-pdf">',
-							  '<input type="hidden" value="'+jsonData.previews[i].name+'" name="product_images[]" />',
-							  '<img src="'+jsonData.previews[i].thumb+'" />',
-							  '<span class="ms-remove"></span>',
-							'</div>'
-						);
-					}
-					console.log(jsonData.token);
-					console.log();
-					$('#product_image_files input[value^="'+jsonData.token+'"]').parent().remove();
-					//$('#product_image_files .ms-image[value^="'+jsonData.token+'"]').remove();
-					$("#product_image_files").append(imageHtml.join(''));
-				}
-	       	}
-		});
-	});
-	
-	$("#ms-savedraft-button, #ms-submit-button").click(function() {
-		var button = $(this);
-		if ($(this).attr('id') == 'ms-savedraft-button') {
-			var url = 'jxsaveproductdraft';
-		} else {
-			var url = 'jxsubmitproduct';
-		}
-		
-	    $.ajax({
-			type: "POST",
-			dataType: "json",
-			url: 'index.php?route=account/ms-seller/'+url,
-			data: $(this).parents("form").serialize(),
-		    beforeSend: function() {
-		    	$('#ms-new-product a.button').hide();
-		    	button.before('<span class="wait">&nbsp;<img src="catalog/view/theme/default/image/loading.gif" alt="" /></span>');
-		    },			
-			success: function(jsonData) {
-				$('.error').text('');
-				if (!jQuery.isEmptyObject(jsonData.errors)) {
-					$('#ms-new-product a.button').show();
-					button.prev('span.wait').remove();
-					for (error in jsonData.errors) {
-					    if (!jsonData.errors.hasOwnProperty(error)) {
-					        continue;
-					    }
-					    $('#error_'+error).text(jsonData.errors[error]);
-					    window.scrollTo(0,0);
-					    
-					}				
-				} else {
-					console.log('success');
-					location = jsonData['redirect'];
-				}
-	       	}
-		});
-	});
-});
-</script>  
 <?php echo $footer; ?>
+
+<?php $timestamp = time(); ?>
+<script>
+	var msGlobals = {
+		button_generate: '<?php echo $ms_button_generate; ?>',
+		text_delete: '<?php echo $ms_delete; ?>',		
+		timestamp: '<?php echo $timestamp; ?>',
+		token     : '<?php echo md5($salt . $timestamp); ?>',
+		session_id: '<?php echo session_id(); ?>',
+		product_id: '<?php echo $product['product_id']; ?>'
+	};
+</script>

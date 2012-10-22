@@ -12,6 +12,9 @@ class MsProduct {
 	private $errors;
 		
   	public function __construct($registry) {
+		require_once(DIR_SYSTEM . 'library/ms-file.php');
+		$this->msFile = new MsFile($registry);
+  		
 		$this->config = $registry->get('config');
 		$this->db = $registry->get('db');
 		$this->request = $registry->get('request');
@@ -261,9 +264,15 @@ class MsProduct {
 	}
 		
 	public function getProductImages($product_id) {
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_image WHERE product_id = '" . (int)$product_id . "'");
+		$sql = "SELECT * FROM " . DB_PREFIX . "product_image WHERE product_id = '" . (int)$product_id . "'";
+		$res = $this->db->query($sql);
 		
-		return $query->rows;
+		$images = array();
+		foreach ($res->rows as $row) {
+			$images[$row['product_image_id']] = $row;
+		}
+		
+		return $images;
 	}
 
 	public function getProductDownloads($product_id) {
@@ -273,8 +282,13 @@ class MsProduct {
 					USING(download_id)
 				WHERE pd.product_id = " . (int)$product_id;
 		$res = $this->db->query($sql);
-				
-		return $res->rows;
+		
+		$downloads = array();
+		foreach ($res->rows as $row) {
+			$downloads[$row['download_id']] = $row;
+		}
+		
+		return $downloads;
 	}
 
 	public function getOptions($data = array()) {
@@ -381,9 +395,7 @@ class MsProduct {
 		$store_id = $this->config->get('config_store_id');
 
 		if (isset($data['product_thumbnail'])) {
-			$image = MsImage::byName($this->registry, $data['product_thumbnail']);
-			$image->move('I');
-			$thumbnail = $image->getName();
+			$thumbnail = $this->msFile->moveImage($data['product_thumbnail']);
 		} else {
 			$thumbnail = '';
 		}
@@ -462,22 +474,22 @@ class MsProduct {
 
 		if (isset($data['product_images'])) {
 			foreach ($data['product_images'] as $key => $img) {
-				$image = MsImage::byName($this->registry, $img);
-				$image->move('I');
-				$this->db->query("INSERT INTO " . DB_PREFIX . "product_image SET product_id = '" . (int)$product_id . "', image = '" . $this->db->escape(html_entity_decode($image->getName(), ENT_QUOTES, 'UTF-8')) . "', sort_order = '" . (int)$key . "'");
+				$newImagePath = $this->msFile->moveImage($img);
+				$this->db->query("INSERT INTO " . DB_PREFIX . "product_image SET product_id = '" . (int)$product_id . "', image = '" . $this->db->escape(html_entity_decode($newImagePath, ENT_QUOTES, 'UTF-8')) . "', sort_order = '" . (int)$key . "'");
 			}
 		}
 		
 		if (isset($data['product_downloads'])) {
 			foreach ($data['product_downloads'] as $key => $dl) {
-				$image = MsImage::byName($this->registry, $dl);
-				$image->move('F');
-				$this->db->query("INSERT INTO " . DB_PREFIX . "download SET remaining = 5, filename = '" . $this->db->escape($image->getName()) . "', mask = '" . $this->db->escape(substr($image->getName(),0,strrpos($image->getName(),'.'))) . "'");
+				$newFile = $this->msFile->moveDownload($dl);
+				$fileMask = substr($newFile,0,strrpos($newFile,'.'));
+				
+				$this->db->query("INSERT INTO " . DB_PREFIX . "download SET remaining = 5, filename = '" . $this->db->escape($newFile) . "', mask = '" . $this->db->escape($fileMask) . "'");
 				$download_id = $this->db->getLastId();
 				$this->db->query("INSERT INTO " . DB_PREFIX . "product_to_download SET product_id = '" . (int)$product_id . "', download_id = '" . (int)$download_id . "'");
 				
 				foreach ($data['languages'] as $language_id => $language) {
-					$this->db->query("INSERT INTO " . DB_PREFIX . "download_description SET download_id = '" . (int)$download_id . "', name = '" . $this->db->escape(substr($image->getName(),0,strrpos($image->getName(),'.'))) . "', language_id = '" . (int)$language_id . "'");
+					$this->db->query("INSERT INTO " . DB_PREFIX . "download_description SET download_id = '" . (int)$download_id . "', name = '" . $this->db->escape($fileMask) . "', language_id = '" . (int)$language_id . "'");
 				}
 			}
 		}
@@ -490,7 +502,7 @@ class MsProduct {
 					foreach ($attr['values'] as $option_value_id) {
 						$this->db->query("INSERT INTO " . DB_PREFIX . "ms_product_attribute SET product_id = '" . (int)$product_id . "', option_id = '" . (int)$option_id . "', option_value_id = '" . (int)$option_value_id . "'");
 					}
-				} 
+				}
 			}
 		}
 
@@ -505,16 +517,16 @@ class MsProduct {
 		$product_id = $data['product_id'];
 
 		$old_thumbnail = $this->getProductThumbnail($product_id);
-		
 		if (!isset($data['product_thumbnail']) || ($old_thumbnail['image'] != $data['product_thumbnail'])) {
-			$image = MsImage::byName($this->registry, $old_thumbnail['image']);
-			$image->delete('I');				
+			$this->msFile->deleteImage($old_thumbnail['image']);
 		}
 		
 		if (isset($data['product_thumbnail'])) {
-			$image = MsImage::byName($this->registry, $data['product_thumbnail']);
-			$image->move('I');
-			$thumbnail = $image->getName();
+			if ($old_thumbnail['image'] != $data['product_thumbnail']) {			
+				$thumbnail = $this->msFile->moveImage($data['product_thumbnail']);
+			} else {
+				$thumbnail = $old_thumbnail['image'];
+			}
 		} else {
 			$thumbnail = '';
 		}
@@ -580,51 +592,101 @@ class MsProduct {
 						category_id = " . (int)$category_id;
 			$this->db->query($sql);		
 		}
-		
-		// delete old images		
+
+		// images		
 		$old_images = $this->getProductImages($product_id);
-		foreach($old_images as $old_image) {
-			if (!isset($data['product_images']) || (array_search($old_image['image'], $data['product_images']) === FALSE && $old_image['image'] != $data['product_thumbnail'])) {
-				$image = MsImage::byName($this->registry, $old_image['image']);
-				$image->delete('I');				
-			}
-		}
-		$this->db->query("DELETE FROM " . DB_PREFIX . "product_image WHERE product_id = '" . (int)$product_id . "'");
-		
-		// add new images
 		if (isset($data['product_images'])) {
+			foreach($old_images as $k => $old_image) {
+				$key = array_search($old_image['image'], $data['product_images']);
+				if ($key !== FALSE) {
+					unset($old_images[$k]);
+					unset($data['product_images'][$key]);
+				}
+			}
+			
 			foreach ($data['product_images'] as $key => $product_image) {
-				$image = MsImage::byName($this->registry, $product_image);
-				$image->move('I');				
-				$this->db->query("INSERT INTO " . DB_PREFIX . "product_image SET product_id = '" . (int)$product_id . "', image = '" . $this->db->escape(html_entity_decode($image->getName(), ENT_QUOTES, 'UTF-8')) . "', sort_order = '" . (int)$key . "'");
+				$newImagePath = $this->msFile->moveImage($product_image);
+				$this->db->query("INSERT INTO " . DB_PREFIX . "product_image SET product_id = '" . (int)$product_id . "', image = '" . $this->db->escape(html_entity_decode($newImagePath, ENT_QUOTES, 'UTF-8')) . "', sort_order = '" . (int)$key . "'");
 			}
 		}		
 
-		$old_downloads = $this->getProductDownloads($product_id);
-		foreach($old_downloads as $old_download) {
-			if (!isset($data['product_downloads']) || array_search($old_download['filename'], $data['product_downloads']) === FALSE) {
-				$file = MsImage::byName($this->registry, $old_download['filename']);
-				$file->delete('F');
+		foreach($old_images as $old_image) {
+			if ($old_image['image'] != $thumbnail) {
+				$this->msFile->deleteImage($old_image['image']);
 			}
+			$this->db->query("DELETE FROM " . DB_PREFIX . "product_image WHERE product_id = '" . (int)$product_id . "' AND product_image_id = '" . (int)$old_image['product_image_id'] . "'");
 		}
-		$this->db->query("DELETE FROM " . DB_PREFIX . "download WHERE download_id IN (SELECT download_id FROM " . DB_PREFIX . "product_to_download WHERE product_id ='" . (int)$product_id . "')");
-		$this->db->query("DELETE FROM " . DB_PREFIX . "download_description WHERE download_id IN (SELECT download_id FROM " . DB_PREFIX . "product_to_download WHERE product_id ='" . (int)$product_id . "')");
-		$this->db->query("DELETE FROM " . DB_PREFIX . "product_to_download WHERE product_id = '" . (int)$product_id . "'");		
+
+
+		// downloads
+		$old_downloads = $this->getProductDownloads($product_id);
 		if (isset($data['product_downloads'])) {
 			foreach ($data['product_downloads'] as $key => $dl) {
-				$image = MsImage::byName($this->registry, $dl);
-				$image->move('F');
-				$this->db->query("INSERT INTO " . DB_PREFIX . "download SET remaining = 5, filename = '" . $this->db->escape($image->getName()) . "', mask = '" . $this->db->escape(substr($image->getName(),0,strrpos($image->getName(),'.'))) . "'");
-				$download_id = $this->db->getLastId();
-				$this->db->query("INSERT INTO " . DB_PREFIX . "product_to_download SET product_id = '" . (int)$product_id . "', download_id = '" . (int)$download_id . "'");
-				
-				foreach ($data['languages'] as $language_id => $language) {
-					$this->db->query("INSERT INTO " . DB_PREFIX . "download_description SET download_id = '" . (int)$download_id . "', name = '" . $this->db->escape($image->getName()) . "', language_id = '" . (int)$language_id . "'");
+				if (!empty($dl['download_id'])) {
+					if (!empty($dl['filename'])) {
+						var_dump('updating ' . $dl['download_id'] . ' with ' . $dl['filename']);
+						// update download #download_id:
+						$newFile = $this->msFile->moveDownload($dl['filename']);
+						$fileMask = substr($newFile,0,strrpos($newFile,'.'));
+						
+						$this->db->query("UPDATE " . DB_PREFIX . "download SET remaining = 5, filename = '" . $this->db->escape($newFile) . "', mask = '" . $this->db->escape($fileMask) . "' WHERE download_id = '" . (int)$dl['download_id'] . "'");
+						
+			        	if (isset($data['push_downloads'])) {
+			        		var_dump('pushing download ' . $dl['download_id']);
+			      			$this->db->query("UPDATE " . DB_PREFIX . "order_download SET remaining = 5, `filename` = '" . $this->db->escape($newFile) . "', mask = '" . $this->db->escape($fileMask) . "', name = '" . $this->db->escape($fileMask) . "' WHERE `filename` = '" . $this->db->escape($old_downloads[$dl['download_id']]['filename']) . "'");
+			      		}
+						
+						foreach ($data['languages'] as $language_id => $language) {
+							$this->db->query("UPDATE " . DB_PREFIX . "download_description SET name = '" . $this->db->escape($fileMask) . "' WHERE download_id = '" . (int)$dl['download_id'] . "' AND language_id = '" . (int)$language_id . "'");
+						}						
+						
+						$this->msFile->deleteDownload($old_downloads[$dl['download_id']]['filename']);
+					} else {
+						// do nothing
+					}
+					
+					// don't remove the download
+					unset($old_downloads[$dl['download_id']]);
+				} else if (!empty($dl['filename'])) {
+					var_dump('adding ' . $dl['filename']);
+					// add new download
+					$newFile = $this->msFile->moveDownload($dl['filename']);
+					$fileMask = substr($newFile,0,strrpos($newFile,'.'));					
+					
+					$this->db->query("INSERT INTO " . DB_PREFIX . "download SET remaining = 5, filename = '" . $this->db->escape($newFile) . "', mask = '" . $this->db->escape($fileMask) . "'");
+					$download_id = $this->db->getLastId();
+					$this->db->query("INSERT INTO " . DB_PREFIX . "product_to_download SET product_id = '" . (int)$product_id . "', download_id = '" . (int)$download_id . "'");
+					
+					foreach ($data['languages'] as $language_id => $language) {
+						$this->db->query("INSERT INTO " . DB_PREFIX . "download_description SET download_id = '" . (int)$download_id . "', name = '" . $this->db->escape($fileMask) . "', language_id = '" . (int)$language_id . "'");
+					}
+					
+		        	if (isset($data['push_downloads'])) {
+		        		$orders = $this->db->query("SELECT order_product_id, order_id FROM " . DB_PREFIX . "order_product WHERE product_id = '"  . (int)$product_id . "'");
+		        		var_dump($orders);
+		        		var_dump("SELECT order_product_id, order_id FROM " . DB_PREFIX . "order_product WHERE product_id = '"  . (int)$product_id . "'");
+		        		foreach ($orders->rows as $row) {
+							//var_dump('pushing download ' . $newFile . ' for ' . $row['order_product_id']);
+							//var_dump("INSERT INTO " . DB_PREFIX . "order_download SET order_id = '" . (int)$row['order_id'] . "', order_product_id = '" . (int)$row['order_product_id'] . "', remaining = 5, `filename` = '" . $this->db->escape($newFile) . "', mask = '" . $this->db->escape($fileMask) . "', name = '" . $this->db->escape($fileMask) . "'");
+		      				$this->db->query("INSERT INTO " . DB_PREFIX . "order_download SET order_id = '" . (int)$row['order_id'] . "', order_product_id = '" . (int)$row['order_product_id'] . "', remaining = 5, `filename` = '" . $this->db->escape($newFile) . "', mask = '" . $this->db->escape($fileMask) . "', name = '" . $this->db->escape($fileMask) . "'");
+		        		}
+		      		}					
 				}
 			}
 		}
 
+		if (!empty($old_downloads)) {
+			foreach($old_downloads as $old_download) {
+				var_dump('deleting ' . $old_download['filename']);
+				$this->db->query("DELETE FROM " . DB_PREFIX . "download WHERE download_id ='" . (int)$old_download['download_id'] . "'");
+				$this->db->query("DELETE FROM " . DB_PREFIX . "download_description WHERE download_id ='" . (int)$old_download['download_id'] . "'");
+				$this->db->query("DELETE FROM " . DB_PREFIX . "product_to_download WHERE download_id ='" . (int)$old_download['download_id'] . "'");
+				$this->msFile->deleteDownload($old_download['filename']);
+			}
+		}
 
+
+		// attributes
 		$this->db->query("DELETE FROM " . DB_PREFIX . "ms_product_attribute WHERE product_id = '" . (int)$product_id . "'");
 		if (isset($data['product_attributes'])) {
 			foreach ($data['product_attributes'] as $option_id => $attr) {
@@ -641,6 +703,23 @@ class MsProduct {
 		$this->registry->get('cache')->delete('product');
 		
 		return $product_id;		
+	}
+	
+	public function hasDownload($product_id, $download_id) {
+		$sql = "SELECT COUNT(*) as 'total'
+				FROM `" . DB_PREFIX . "product_to_download`
+				WHERE product_id = " . (int)$product_id . " 
+				AND download_id = " . (int)$download_id;
+		
+		$res = $this->db->query($sql);
+		
+		return $res->row['total'];			
+	}
+	
+	public function getDownload($download_id) {
+		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "download WHERE download_id = '" . (int)$download_id . "'");
+		
+		return $query->row;
 	}
 	
 	public function productOwnedBySeller($product_id, $seller_id) {

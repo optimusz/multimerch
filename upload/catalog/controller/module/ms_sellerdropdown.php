@@ -2,9 +2,7 @@
 class ControllerModuleMsSellerdropdown extends Controller {
 	protected function index($setting) {
 		require_once(DIR_SYSTEM . 'library/ms-seller.php');
-		require_once(DIR_SYSTEM . 'library/ms-image.php');
-		$this->msImage = new MsImage($this->registry);			
-		$this->msSeller = new MsSeller($this->registry);		
+		$this->msSeller = new MsSeller($this->registry);
 		
 		static $module = 0;
 		$this->load->model('tool/image');

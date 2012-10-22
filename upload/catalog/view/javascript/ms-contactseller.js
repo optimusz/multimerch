@@ -17,7 +17,7 @@ $(function() {
 		            		draggable: false,
 		            		modal: true,
 		            		title: title,
-		            		dialogClass: 'ms-sellercontact-dialog',
+		            		dialogClass: 'ms-sellercontact-dialog ms-jquery-dialog',
 		            		buttons: {
 		            			"Send": function() {
 		            				$.ajax({

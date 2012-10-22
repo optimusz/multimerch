@@ -7,7 +7,7 @@
 	<h3><?php echo $ms_sellercontact_sendmessage; ?></h3>
 	</div>
 	<?php } ?>
-	<div id="ms-sellercontact-form">
+	<div class="ms-form">
 	<form class="dialog">
 		<label for="ms-sellercontact-name"><?php echo $ms_sellercontact_name; ?></label>
 		<input type="text" name="ms-sellercontact-name" id="ms-sellercontact-name" value="<?php echo $customer_name; ?>"></input>

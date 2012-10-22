@@ -67,6 +67,78 @@
 
 .ms-product .ms-download {
 	margin: 10px 0;
+	height: 30px;
+	line-height: 28px;
+}
+
+.ms-product .ms-download-name {
+	font-weight: bold;
+}
+
+.ms-product .ms-download .ms-buttons {
+	display: inline-block;
+	float: right;
+}
+
+.ms-product .ms-download .ms-buttons a,
+.ms-product .ms-download .ms-buttons span.disabled {
+	display: inline-block;
+	width: 30px;
+	height: 30px;
+	margin: 0 2px;
+}
+
+.ms-product .ms-button-upload {
+	color: white;
+	height: 25px;
+	line-height: 25px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	background: url('../image/button.png') top left repeat-x;
+	text-align: center;
+	
+	-webkit-border-radius: 7px 7px 7px 7px;
+	-moz-border-radius: 7px 7px 7px 7px;
+	-khtml-border-radius: 7px 7px 7px 7px;
+	border-radius: 7px 7px 7px 7px;
+	-webkit-box-shadow: 0px 2px 2px #DDDDDD;
+	-moz-box-shadow: 0px 2px 2px #DDDDDD;
+	box-shadow: 0px 2px 2px #DDDDDD;
+}
+
+.ms-product .ms-download .ms-button-delete {
+	background-image: url(../image/ms-delete-30px.png); 
+}
+
+.ms-product .ms-download .ms-button-delete.disabled {
+	background-image: url(../image/ms-delete-30px-bw.png);
+}
+
+.ms-product .ms-download .ms-button-update {
+	display: inline-block;
+	vertical-align: top;
+}
+
+.ms-product .ms-download span.ms-button-update.disabled {
+	background-image: url(../image/ms-update-30px-bw.png);
+	margin: 0 4px;
+}
+
+.ms-product .uploadify-queue {
+	display: none;
+}
+
+.ms-product .ms-download .ms-button-pdf {
+	background-image: url(../image/ms-pdf-30px.png);
+}
+
+.ms-product .ms-download .ms-button-download {
+	background-image: url(../image/ms-download-30px.png);
+}
+
+.ms-product .ms-download .ms-button-download.disabled {
+	background-image: url(../image/ms-download-30px-bw.png);
 }
 
 .ms-product .ms-remove {
@@ -327,16 +399,16 @@
 	border: 1px solid #E7E7E7;
 }
 
-/* seller contact form */
+/* general dialog styles */
 
-.ms-sellercontact-dialog,
-div.ms-sellercontact-dialog.ui-widget-content,
-.ms-sellercontact-dialog div.ui-widget-content {
+.ms-jquery-dialog,
+div.ms-jquery-dialog.ui-widget-content,
+.ms-jquery-dialog div.ui-widget-content {
 	background-color: white;
 }
 
-.ms-sellercontact-dialog .ui-widget-header,
-.ms-sellercontact-dialog .ui-widget-header .ui-state-hover {
+.ms-jquery-dialog .ui-widget-header,
+.ms-jquery-dialog .ui-state-hover {
        background: url("../../../javascript/jquery/ui/themes/base/images/ui-bg_glass_75_dadada_1x400.png") repeat-x scroll 50% 50% #CCCCCC;
        border: 1px solid #BBBBBB;
        color: #666666;
@@ -345,18 +417,62 @@ div.ms-sellercontact-dialog.ui-widget-content,
    
 }
 
-p.warning {
+.ms-jquery-dialog .ui-widget-header .ui-icon,
+.ms-jquery-dialog .ui-state-hover .ui-icon,
+.ms-jquery-dialog .ui-state-focus .ui-icon {
+	background-image: url("../../../javascript/jquery/ui/themes/base/images/ui-icons_222222_256x240.png");
+	border: medium none;
+    float: right;
+}
+
+
+.ms-jquery-dialog .ui-widget-content.ui-dialog-buttonpane {
+	border-top: none;
+}
+
+.ms-jquery-dialog .ui-dialog-buttonset {
+	text-align: center;
+	padding: 10px 0;
+}
+
+/* general dialog form styles */
+
+.ms-jquery-dialog p.warning {
 	padding: 10px 10px 10px 33px;
 	margin-bottom: 15px;
 	background: #FFD1D1 url('../image/warning.png') 10px center no-repeat;
 	border: 1px solid #F8ACAC;
 }
 
-.ms-sellercontact-dialog .ui-widget-header .ui-icon, .ms-sellercontact-dialog .ui-state-hover .ui-icon, .ms-sellercontact-dialog .ui-state-focus .ui-icon {
-	background-image: url("../../../javascript/jquery/ui/themes/base/images/ui-icons_222222_256x240.png");
-	border: medium none;
-       float: right;
+.ms-jquery-dialog .ms-form {
+	width: 100%;
 }
+
+.ms-jquery-dialog .ms-form label {
+	margin-left: 20px;
+	width: 115px;
+	vertical-align: top;
+}
+
+.ms-jquery-dialog .ms-form input {
+	width: 250px;
+}
+
+.ms-jquery-dialog .ms-form textarea {
+	width: 250px;
+	height: 150px;
+}
+
+.ms-jquery-dialog .ms-form label,
+.ms-jquery-dialog .ms-form input,
+.ms-jquery-dialog .ms-form textarea {
+	margin-top: 5px;
+	margin-bottom: 5px;
+	display: inline-block;
+}
+
+
+/* seller contact form */
 
 .ms-sellercontact-image {
 	text-align: center;
@@ -372,46 +488,39 @@ p.warning {
 	outline: none;		
 }
 
-#ms-sellercontact-form {
-	width: 100%;
-}
-
 .ms-sellercontact-dialog h3,
 .ms-sellercontact-dialog h4 {
 	text-align: center;
 	margin: 20px 0;
 }
 
-#ms-sellercontact-form label {
+#ms-captcha {
+	display: inline;
+}
+
+
+/* pdf generator form */
+
+.ms-pdfgen-dialog .ms-form label {
 	margin-left: 20px;
-	width: 115px;
+	width: 60px;
 	vertical-align: top;
 }
 
-#ms-sellercontact-form input {
-	width: 250px;
+.ms-pdfgen-dialog .ms-form input {
+	width: 50px;
 }
 
-#ms-sellercontact-form textarea {
-	width: 250px;
-	height: 150px;
-}
-
-#ms-sellercontact-form label, #ms-sellercontact-form input, #ms-sellercontact-form textarea {
+.ms-pdfgen-dialog .ms-form label,
+.ms-pdfgen-dialog .ms-form input {
 	margin-top: 5px;
 	margin-bottom: 5px;
 	display: inline-block;
 }
 
-#ms-captcha {
-	display: inline;
-}
-
-.ms-sellercontact-dialog .ui-widget-content.ui-dialog-buttonpane {
-	border-top: none;
-}
-
-.ms-sellercontact-dialog .ui-dialog-buttonset {
-	text-align: center;
-	padding: 10px 0;
+.ms-pdfgen-dialog .ms-form span.ms-filename {
+	font-weight: bold;
+	width: 220px;
+	display: inline-block;
+	margin: 3px 0;
 }

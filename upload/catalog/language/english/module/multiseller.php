@@ -12,14 +12,16 @@ $_['ms_product_review_status_approved']       = 'Approved';
 $_['ms_product_review_status_declined']       = 'Declined';
 
 $_['ms_button_submit']      = 'Submit';
-$_['ms_button_generate']      = 'Generate images';
+$_['ms_button_generate']      = 'Generate images from PDF';
 $_['ms_button_regenerate']      = 'Regenerate images';
 $_['ms_button_submit_request']      = 'Submit request';
 $_['ms_button_save']      = 'Save';
 $_['ms_button_save_draft']      = 'Save draft';
 $_['ms_button_save_draft_unpublish']      = 'This product will be unpublished';
 $_['ms_button_cancel']      = 'Cancel';
+$_['ms_download']      = 'Download';
 $_['ms_delete']      = 'Delete';
+$_['ms_update']      = 'Update';
 
 $_['ms_transaction_sale']      = 'Sale: %s (-%s commission)';
 $_['ms_transaction_pending_withdrawal']      = 'Pending withdrawal request: %s';
@@ -242,6 +244,8 @@ $_['ms_account_product_quantity_note']    = 'Specify the quantity of your produc
 $_['ms_account_product_files']    = 'Files';
 $_['ms_account_product_download']     = 'Downloads';
 $_['ms_account_product_download_note']     = 'Upload files for your product. Allowed extensions: %s';
+$_['ms_account_product_push']     = 'Push updates to previous customers';
+$_['ms_account_product_push_note']     = 'Newly added and updated downloads will be made available to previous customers';
 $_['ms_account_product_image']     = 'Images';
 $_['ms_account_product_image_note']     = 'Select images for your product. First image will be used as a thumbnail. Allowed extensions: %s';
 
@@ -471,4 +475,10 @@ $_['ms_sellercontact_text']      = 'Your message';
 $_['ms_sellercontact_captcha']      = 'Captcha';
 $_['ms_sellercontact_sendmessage']      = 'Send a message to %s';
 $_['ms_sellercontact_success']      = 'Your message has been successfully sent';
+
+// Catalog - Seller contact dialog
+$_['ms_pdfgen_title']      = 'Generate images from PDF';
+$_['ms_pdfgen_pages']      = 'Pages';
+$_['ms_pdfgen_note']      = 'Select pages to generate images from. New images will be appended to the list of images on the product page.';
+$_['ms_pdfgen_file']      = 'File';
 ?>

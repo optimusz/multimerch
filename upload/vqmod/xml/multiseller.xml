@@ -307,11 +307,11 @@
 			$this->document->addScript('catalog/view/javascript/ms-contactseller.js');
 			$this->document->addStyle('catalog/view/theme/' . $this->config->get('config_template') . '/stylesheet/multiseller.css');
 			$this->data = array_merge($this->data, $this->load->language('module/multiseller'));
-			require_once(DIR_SYSTEM . 'library/ms-image.php');
+			require_once(DIR_SYSTEM . 'library/ms-file.php');
 			require_once(DIR_SYSTEM . 'library/ms-product.php');
 			require_once(DIR_SYSTEM . 'library/ms-seller.php');
 			$this->load->model('localisation/country');
-			$image = new MsImage($this->registry);
+			$msFile = new MsFile($this->registry);
 			$msProduct = new MsProduct($this->registry);
 			$msSeller = new MsSeller($this->registry);
 			
@@ -322,7 +322,7 @@
 				$this->data['seller'] = NULL;
 			} else {
 				if (!empty($seller['avatar_path']))
-					$this->data['seller']['thumb'] = $image->resize($seller['avatar_path'], $this->config->get('config_image_category_width'), $this->config->get('config_image_category_height'));
+					$this->data['seller']['thumb'] = $msFile->resizeImage($seller['avatar_path'], $this->config->get('config_image_category_width'), $this->config->get('config_image_category_height'));
 					
 				$country = $this->model_localisation_country->getCountry($seller['country_id']);
 				

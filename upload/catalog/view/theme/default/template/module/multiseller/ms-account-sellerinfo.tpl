@@ -89,7 +89,7 @@
         <tr>
           <td><?php echo $ms_account_sellerinfo_avatar; ?></td>
           <td>
-          	<input type="file" name="sellerinfo_avatar" id="sellerinfo_avatar" />
+          	<input type="file" name="ms-file-selleravatar" id="ms-file-selleravatar" />
           	<p class="ms-note"><?php echo $ms_account_sellerinfo_avatar_note; ?></p>
           	<p class="error" id="error_sellerinfo_avatar"></p>
           	<div id="sellerinfo_avatar_files">
@@ -126,88 +126,14 @@
   <?php echo $content_bottom; ?></div>
   
 <script>
-$(function() {
-	$("#ms-submit-button").click(function() {
-		$('.success').remove();	
-		var id = $(this).attr('id');
-	    $.ajax({
-			type: "POST",
-			dataType: "json",
-			url: 'index.php?route=account/ms-seller/jxsavesellerinfo',
-			data: $(this).parents("form").serialize(),
-		    beforeSend: function() {
-		    	$('#ms-sellerinfo a.button').hide().before('<span class="wait">&nbsp;<img src="catalog/view/theme/default/image/loading.gif" alt="" /></span>');
-		    },			
-			success: function(jsonData) {
-				if (!jQuery.isEmptyObject(jsonData.errors)) {
-					$('#ms-sellerinfo a.button').show().prev('span.wait').remove();				
-					$('#error_'+id).text('');
-					for (error in jsonData.errors) {
-					    if (!jsonData.errors.hasOwnProperty(error)) {
-					        continue;
-					    }
-					    
-					    if ($('#error_'+error).length > 0) {
-					    	$('#error_'+error).text(jsonData.errors[error]);
-					    } else {
-					    	$('#error_'+id).text(jsonData.errors[error]);
-					   	}
-					    //console.log(error + " -> " + jsonData.errors[error]);
-					}
-					window.scrollTo(0,0);
-				} else {
-					window.location.reload();
-				}
-	       	}
-		});
-	});
-	
-	$("#sellerinfo_avatar_files").delegate(".ms-remove", "click", function() {
-		$(this).parent().remove();
-	});	
-
-	$('#sellerinfo_avatar').live('change', function() {
-		var element = $(this);
-		var id = $(this).attr('id');
-		$('#ms_action').val(id);
-		$('#error_'+id).text('');
-		$('.success').remove();
-		$("#ms-sellerinfo").ajaxForm({
-			url:  "index.php?route=account/ms-seller/jxuploadfile",
-			dataType: 'json', 
-		    beforeSend: function() {
-				$('#'+id+'_files').append('<span class="wait">&nbsp;<img src="catalog/view/theme/default/image/loading.gif" alt="" /></span>');
-				
-		    },
-			success: function(jsonData) {
-				$(element).replaceWith('<input type="file" name="'+$(element).attr('name')+'" id="'+$(element).attr('id')+'"/>');
-				$('#'+id+'_files span.wait').remove();
-			
-				if (!jQuery.isEmptyObject(jsonData.errors)) {
-					$('#error_'+id).text('');
-					for (error in jsonData.errors) {
-					    if (!jsonData.errors.hasOwnProperty(error)) {
-					        continue;
-					    }
-					    
-					    if ($('#error_'+error).length > 0) {
-					    	$('#error_'+error).text(jsonData.errors[error]);
-					    } else {
-					    	$('#error_'+id).text(jsonData.errors[error]);
-					   	}
-					}
-					window.scrollTo(0,0);
-				} else {
-					var imageHtml = [ '<div class="ms-image">',
-									  '<input type="hidden" value="'+jsonData.file.name+'" name="sellerinfo_avatar_name" />',
-									  '<img src="'+jsonData.file.thumb+'" />',
-									  '<img class="ms-remove" />',
-									  '</div>' ];
-					$("#sellerinfo_avatar_files").html(imageHtml.join(''));				
-				}			
-			}
-		}).submit();
-	});	
-});
 </script>  
 <?php echo $footer; ?>
+
+<?php $timestamp = time(); ?>
+<script>
+	var msGlobals = {
+		timestamp: '<?php echo $timestamp; ?>',
+		token     : '<?php echo md5($salt . $timestamp); ?>',
+		session_id: '<?php echo session_id(); ?>',
+	};
+</script>

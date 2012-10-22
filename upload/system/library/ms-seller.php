@@ -40,7 +40,9 @@ final class MsSeller {
   		}
   		
 		require_once(DIR_SYSTEM . 'library/ms-product.php');
-		$this->msProduct = new MsProduct($registry);  		
+		$this->msProduct = new MsProduct($registry);
+		require_once(DIR_SYSTEM . 'library/ms-file.php');
+		$this->msFile = new MsFile($registry);  		
 	}
 		
   	public function isCustomerSeller($customer_id) {
@@ -205,12 +207,11 @@ final class MsSeller {
 		
 	public function createSeller($data) {
 		if (isset($data['sellerinfo_avatar_name'])) {
-			$image = MsImage::byName($this->registry, $data['sellerinfo_avatar_name']);
-			$image->move('I');
-			$avatar = $image->getName();
+			$avatar = $this->msFile->moveImage($data['sellerinfo_avatar_name']);
 		} else {
 			$avatar = '';
 		}
+		
 		$sql = "INSERT INTO " . DB_PREFIX . "ms_seller
 				SET seller_id = " . (int)$data['seller_id'] . ",
 					seller_status_id = " . (int)$data['seller_status_id'] . ",
@@ -255,14 +256,15 @@ final class MsSeller {
 		$old_avatar = $this->getSellerAvatar($seller_id);
 		
 		if (!isset($data['sellerinfo_avatar_name']) || ($old_avatar['avatar'] != $data['sellerinfo_avatar_name'])) {
-			$image = MsImage::byName($this->registry, $old_avatar['avatar']);
-			$image->delete('I');				
+			$this->msFile->deleteImage($old_avatar['avatar']);
 		}
 		
 		if (isset($data['sellerinfo_avatar_name'])) {
-			$image = MsImage::byName($this->registry, $data['sellerinfo_avatar_name']);
-			$image->move('I');
-			$avatar = $image->getName();
+			if ($old_avatar['avatar'] != $data['sellerinfo_avatar_name']) {			
+				$avatar = $this->msFile->moveImage($data['sellerinfo_avatar_name']);
+			} else {
+				$avatar = $old_avatar['avatar'];
+			}
 		} else {
 			$avatar = '';
 		}
@@ -272,7 +274,7 @@ final class MsSeller {
 					company = '" . $this->db->escape($data['sellerinfo_company']) . "',
 					country_id = " . (int)$data['sellerinfo_country'] . ",
 					paypal = '" . $this->db->escape($data['sellerinfo_paypal']) . "',
-					avatar_path = '" . $avatar . "'
+					avatar_path = '" . $this->db->escape($avatar) . "'
 				WHERE seller_id = " . (int)$seller_id;
 		
 		$this->db->query($sql);	
@@ -452,6 +454,16 @@ final class MsSeller {
 		$res = $this->db->query($sql);
 		
 		return $res->row['total'];
+	}
+	
+	public function getSalt($seller_id) {
+		$sql = "SELECT salt
+				FROM `" . DB_PREFIX . "customer`
+				WHERE customer_id = " . (int)$seller_id;
+		
+		$res = $this->db->query($sql);
+		
+		return $res->row['salt'];		
 	}
 	
 	

@@ -12,7 +12,7 @@ class ControllerModuleMultiseller extends Controller {
 		require_once(DIR_SYSTEM . 'library/ms-request.php');
 		require_once(DIR_SYSTEM . 'library/ms-product.php');
 		require_once(DIR_SYSTEM . 'library/ms-transaction.php');
-		require_once(DIR_SYSTEM . 'library/ms-image.php');
+		require_once(DIR_SYSTEM . 'library/ms-file.php');
 		require_once(DIR_SYSTEM . 'library/ms-mail.php');
 		require_once(DIR_SYSTEM . 'library/ms-seller.php');
 		
@@ -22,6 +22,7 @@ class ControllerModuleMultiseller extends Controller {
 		if (!isset($parts[2]) || !in_array($parts[2], array('install','uninstall'))) {
 			$this->msMail = new MsMail($registry);
 			$this->msSeller = new MsSeller($registry);
+			$this->msFile = new MsFile($registry);
 		}
 		
 		$this->data = array_merge($this->data, $this->load->language('module/multiseller'));
@@ -384,9 +385,8 @@ class ControllerModuleMultiseller extends Controller {
 			$this->data['seller'] = $seller;
 			$this->data['seller']['status'] = $this->msSeller->getSellerStatus($seller['seller_status_id']);
 			if (!empty($seller['avatar_path'])) {
-				$image = MsImage::byName($this->registry, $seller['avatar_path']);
 				$this->data['seller']['avatar']['name'] = $seller['avatar_path'];
-				$this->data['seller']['avatar']['thumb'] = $image->resize($seller['avatar_path'], $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'));
+				$this->data['seller']['avatar']['thumb'] = $this->msFile->resizeImage($seller['avatar_path'], $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'));
 				//$this->session->data['multiseller']['files'][] = $seller['avatar_path'];
 			}
 			
@@ -639,7 +639,6 @@ class ControllerModuleMultiseller extends Controller {
 	public function products() {
 		$this->_validate(__FUNCTION__);
 		$msProduct = new MsProduct($this->registry);
-		$msImage = new MsImage($this->registry);
 		
 		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
 
@@ -655,9 +654,9 @@ class ControllerModuleMultiseller extends Controller {
 
 		foreach ($results as $result) {
 			if ($result['prd.image'] && file_exists(DIR_IMAGE . $result['prd.image'])) {
-				$image = $msImage->resize($result['prd.image'], 40, 40);
+				$image = $this->msFile->resizeImage($result['prd.image'], 40, 40);
 			} else {
-				$image = $msImage->resize('no_image.jpg', 40, 40);
+				$image = $this->msFile->resizeImage('no_image.jpg', 40, 40);
 			}		
 			
 			$action = array();
