@@ -375,10 +375,10 @@
 			<add><![CDATA[
 				} elseif (isset($this->request->get['seller_id'])) {
 					if (strpos($this->request->get['_route_'], "products") !== FALSE) {
-						$this->request->get['route'] = 'product/seller/products';
+						$this->request->get['route'] = 'seller/seller/products';
 					}
 					else {
-						$this->request->get['route'] = 'product/seller/profile';
+						$this->request->get['route'] = 'seller/seller/profile';
 					}
 			]]></add>
 		</operation>
@@ -388,7 +388,7 @@
 				if (($data['route'] == 'product/product' && $key == 'product_id') || (($data['route'] == 'product/manufacturer/info' || $data['route'] == 'product/product') && $key == 'manufacturer_id') || ($data['route'] == 'information/information' && $key == 'information_id')) {
 			]]></search>
 			<add><![CDATA[
-				if (($data['route'] == 'product/product' && $key == 'product_id') || (($data['route'] == 'product/manufacturer/info' || $data['route'] == 'product/product') && $key == 'manufacturer_id') || ($data['route'] == 'product/seller/profile' && $key == 'seller_id') || ($data['route'] == 'product/seller/products' && $key == 'seller_id') || ($data['route'] == 'information/information' && $key == 'information_id')) {
+				if (($data['route'] == 'product/product' && $key == 'product_id') || (($data['route'] == 'product/manufacturer/info' || $data['route'] == 'product/product') && $key == 'manufacturer_id') || ($data['route'] == 'seller/seller/profile' && $key == 'seller_id') || ($data['route'] == 'seller/seller/products' && $key == 'seller_id') || ($data['route'] == 'information/information' && $key == 'information_id')) {
 			]]></add>
 		</operation>
 		
@@ -397,10 +397,10 @@
 				$url .= '/' . $query->row['keyword'];
 			]]></search>
 			<add><![CDATA[
-				if ($data['route'] == 'product/seller/profile') {
+				if ($data['route'] == 'seller/seller/profile') {
 					$url .= '/sellers/' . $query->row['keyword'];
 				}
-				else if ($data['route'] == 'product/seller/products') {
+				else if ($data['route'] == 'seller/seller/products') {
 					$url .= '/sellers/' . $query->row['keyword'] . '/products/';
 				}
 				else {
