@@ -14,14 +14,12 @@ class ControllerModuleMultiseller extends Controller {
 		require_once(DIR_SYSTEM . 'library/ms-transaction.php');
 		require_once(DIR_SYSTEM . 'library/ms-file.php');
 		require_once(DIR_SYSTEM . 'library/ms-mail.php');
-		require_once(DIR_SYSTEM . 'library/ms-seller.php');
 		
 		$this->load->config('ms-config');
 		
 		$parts = explode('/', $this->request->request['route']);
 		if (!isset($parts[2]) || !in_array($parts[2], array('install','uninstall'))) {
 			$this->msMail = new MsMail($registry);
-			$this->msSeller = new MsSeller($registry);
 			$this->msFile = new MsFile($registry);
 		}
 		
@@ -182,7 +180,7 @@ class ControllerModuleMultiseller extends Controller {
 		
 		$this->_validate(__FUNCTION__);
 		$data = $this->request->post;
-		$seller = $this->msSeller->getSellerData($data['seller_id']);
+		$seller = $this->registry->get('MsLoader')->get('MsSeller')->getSellerData($data['seller_id']);
 		$json = array();
 		
 		if (empty($seller)) {
@@ -192,7 +190,7 @@ class ControllerModuleMultiseller extends Controller {
 				$json['errors']['sellerinfo_nickname'] = 'Username can only contain alphanumeric characters';
 			} else if (strlen($data['sellerinfo_nickname']) < 4 || strlen($data['sellerinfo_nickname']) > 50 ) {
 				$json['errors']['sellerinfo_nickname'] = 'Username should be between 4 and 50 characters';			
-			} else if ($this->msSeller->nicknameTaken($data['sellerinfo_nickname'])) {
+			} else if ($this->registry->get('MsLoader')->get('MsSeller')->nicknameTaken($data['sellerinfo_nickname'])) {
 				$json['errors']['sellerinfo_nickname'] = 'This username is already taken';
 			}
 		}
@@ -213,8 +211,8 @@ class ControllerModuleMultiseller extends Controller {
 						$mails[] = array(
 							'type' => MsMail::SMT_SELLER_ACCOUNT_ENABLED,
 							'data' => array(
-								'recipients' => $this->msSeller->getSellerEmail($data['seller_id']),
-								'addressee' => $this->msSeller->getSellerName($data['seller_id']),
+								'recipients' => $this->registry->get('MsLoader')->get('MsSeller')->getSellerEmail($data['seller_id']),
+								'addressee' => $this->registry->get('MsLoader')->get('MsSeller')->getSellerName($data['seller_id']),
 								'message' => $data['sellerinfo_message']
 							)
 						);
@@ -226,8 +224,8 @@ class ControllerModuleMultiseller extends Controller {
 						$mails[] = array(
 							'type' => MsMail::SMT_SELLER_ACCOUNT_DISABLED,
 							'data' => array(
-								'recipients' => $this->msSeller->getSellerEmail($data['seller_id']),
-								'addressee' => $this->msSeller->getSellerName($data['seller_id']),
+								'recipients' => $this->registry->get('MsLoader')->get('MsSeller')->getSellerEmail($data['seller_id']),
+								'addressee' => $this->registry->get('MsLoader')->get('MsSeller')->getSellerName($data['seller_id']),
 								'message' => $data['sellerinfo_message']
 							)
 						);
@@ -239,8 +237,8 @@ class ControllerModuleMultiseller extends Controller {
 						$mails[] = array(
 							'type' => MsMail::SMT_SELLER_ACCOUNT_APPROVED,
 							'data' => array(
-								'recipients' => $this->msSeller->getSellerEmail($data['seller_id']),
-								'addressee' => $this->msSeller->getSellerName($data['seller_id']),
+								'recipients' => $this->registry->get('MsLoader')->get('MsSeller')->getSellerEmail($data['seller_id']),
+								'addressee' => $this->registry->get('MsLoader')->get('MsSeller')->getSellerName($data['seller_id']),
 								'message' => $data['sellerinfo_message']
 							)
 						);
@@ -252,8 +250,8 @@ class ControllerModuleMultiseller extends Controller {
 						$mails[] = array(
 							'type' => MsMail::SMT_SELLER_ACCOUNT_DECLINED,
 							'data' => array(
-								'recipients' => $this->msSeller->getSellerEmail($data['seller_id']),
-								'addressee' => $this->msSeller->getSellerName($data['seller_id']),
+								'recipients' => $this->registry->get('MsLoader')->get('MsSeller')->getSellerEmail($data['seller_id']),
+								'addressee' => $this->registry->get('MsLoader')->get('MsSeller')->getSellerName($data['seller_id']),
 								'message' => $data['sellerinfo_message']
 							)
 						);
@@ -269,14 +267,14 @@ class ControllerModuleMultiseller extends Controller {
 				$mails[] = array(
 					'type' => MsMail::SMT_SELLER_ACCOUNT_MODIFIED,
 					'data' => array(
-						'recipients' => $this->msSeller->getSellerEmail($data['seller_id']),
-						'addressee' => $this->msSeller->getSellerName($data['seller_id']),
+						'recipients' => $this->registry->get('MsLoader')->get('MsSeller')->getSellerEmail($data['seller_id']),
+						'addressee' => $this->registry->get('MsLoader')->get('MsSeller')->getSellerName($data['seller_id']),
 						'message' => $data['sellerinfo_message']
 					)
 				);				
 			}
 			// edit seller
-			$this->msSeller->adminEditSeller($data);
+			$this->registry->get('MsLoader')->get('MsSeller')->adminEditSeller($data);
 			
 			if ($data['sellerinfo_notify']) {
 				$this->msMail->sendMails($mails);
@@ -319,16 +317,16 @@ class ControllerModuleMultiseller extends Controller {
 			'limit' => $this->config->get('config_admin_limit')
 		);
 				
-		$results = $this->msSeller->getSellers($sort);
-		$total_sellers = $this->msSeller->getTotalSellers($sort);
+		$results = $this->registry->get('MsLoader')->get('MsSeller')->getSellers($sort);
+		$total_sellers = $this->registry->get('MsLoader')->get('MsSeller')->getTotalSellers($sort);
 
     	foreach ($results as &$result) {
     		$result['date_created'] = date($this->language->get('date_format_short'), strtotime($result['date_created']));
-    		$result['total_products'] = $this->msSeller->getTotalSellerProducts($result['seller_id']);
-			//$result['total_earnings'] = $this->currency->format($this->msSeller->getEarningsForSeller($result['seller_id']), $this->config->get('config_currency'));
-			$result['current_balance'] = $this->currency->format($this->msSeller->getBalanceForSeller($result['seller_id']), $this->config->get('config_currency'));
-			$result['total_sales'] = $this->msSeller->getSalesForSeller($result['seller_id']);
-			$result['status'] = $this->msSeller->getSellerStatus($result['seller_status_id']);
+    		$result['total_products'] = $this->registry->get('MsLoader')->get('MsSeller')->getTotalSellerProducts($result['seller_id']);
+			//$result['total_earnings'] = $this->currency->format($this->registry->get('MsLoader')->get('MsSeller')->getEarningsForSeller($result['seller_id']), $this->config->get('config_currency'));
+			$result['current_balance'] = $this->currency->format($this->registry->get('MsLoader')->get('MsSeller')->getBalanceForSeller($result['seller_id']), $this->config->get('config_currency'));
+			$result['total_sales'] = $this->registry->get('MsLoader')->get('MsSeller')->getSalesForSeller($result['seller_id']);
+			$result['status'] = $this->registry->get('MsLoader')->get('MsSeller')->getSellerStatus($result['seller_status_id']);
 			$result['action'][] = array(
 				'text' => $this->language->get('text_view'),
 				'href' => $this->url->link('module/multiseller/sellerinfo', 'token=' . $this->session->data['token'] . '&seller_id=' . $result['seller_id'], 'SSL')
@@ -379,11 +377,11 @@ class ControllerModuleMultiseller extends Controller {
 		$this->load->model('localisation/country');
     	$this->data['countries'] = $this->model_localisation_country->getCountries();		
 
-		$seller = $this->msSeller->getSellerData($this->request->get['seller_id']);
+		$seller = $this->registry->get('MsLoader')->get('MsSeller')->getSellerData($this->request->get['seller_id']);
 
 		if (!empty($seller)) {
 			$this->data['seller'] = $seller;
-			$this->data['seller']['status'] = $this->msSeller->getSellerStatus($seller['seller_status_id']);
+			$this->data['seller']['status'] = $this->registry->get('MsLoader')->get('MsSeller')->getSellerStatus($seller['seller_status_id']);
 			if (!empty($seller['avatar_path'])) {
 				$this->data['seller']['avatar']['name'] = $seller['avatar_path'];
 				$this->data['seller']['avatar']['thumb'] = $this->msFile->resizeImage($seller['avatar_path'], $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'));
@@ -832,8 +830,8 @@ class ControllerModuleMultiseller extends Controller {
 					'type' => MsProduct::SMT_WITHDRAW_REQUEST_COMPLETED,
 					'data' => array(
 						'product_id' => $product_id,
-						'recipients' => $this->msSeller->getSellerEmail($seller_id),
-						'addressee' => $this->msSeller->getSellerName($seller_id),
+						'recipients' => $this->registry->get('MsLoader')->get('MsSeller')->getSellerEmail($seller_id),
+						'addressee' => $this->registry->get('MsLoader')->get('MsSeller')->getSellerName($seller_id),
 						'message' => $this->request->post['product_message']
 					)
 				);*/
@@ -881,8 +879,8 @@ class ControllerModuleMultiseller extends Controller {
 						'type' => $msProduct->getStatus($product_id) == MsProduct::MS_PRODUCT_STATUS_PENDING ? MsMail::SMT_PRODUCT_APPROVED : MsMail::SMT_PRODUCT_ENABLED,
 						'data' => array(
 							'product_id' => $product_id,
-							'recipients' => $this->msSeller->getSellerEmail($seller_id),
-							'addressee' => $this->msSeller->getSellerName($seller_id),
+							'recipients' => $this->registry->get('MsLoader')->get('MsSeller')->getSellerEmail($seller_id),
+							'addressee' => $this->registry->get('MsLoader')->get('MsSeller')->getSellerName($seller_id),
 							'message' => $this->request->post['product_message']
 						)
 					);
@@ -892,8 +890,8 @@ class ControllerModuleMultiseller extends Controller {
 						'type' => $msProduct->getStatus($product_id) == MsProduct::MS_PRODUCT_STATUS_PENDING ? MsMail::SMT_PRODUCT_DECLINED : MsMail::SMT_PRODUCT_DISABLED,
 						'data' => array(
 							'product_id' => $product_id,
-							'recipients' => $this->msSeller->getSellerEmail($seller_id),
-							'addressee' => $this->msSeller->getSellerName($seller_id),
+							'recipients' => $this->registry->get('MsLoader')->get('MsSeller')->getSellerEmail($seller_id),
+							'addressee' => $this->registry->get('MsLoader')->get('MsSeller')->getSellerName($seller_id),
 							'message' => $this->request->post['product_message']
 						)
 					);					

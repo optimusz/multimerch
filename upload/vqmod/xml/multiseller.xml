@@ -65,13 +65,11 @@
 			]]></search>
 			<add><![CDATA[
 				$this->data = array_merge($this->data, $this->load->language('module/multiseller'));
-				require_once(DIR_SYSTEM . 'library/ms-seller.php');
-				$msSeller = new MsSeller($this->registry);
 				require_once(DIR_SYSTEM . 'library/ms-product.php');
 				$msProduct = new MsProduct($this->registry);				
 
 				$this->data['ms_total_products'] = $msProduct->getTotalProducts(TRUE, FALSE);
-				$this->data['ms_total_sellers'] = $msSeller->getTotalSellers(TRUE);
+				$this->data['ms_total_sellers'] = $this->registry->get('MsLoader')->get('MsSeller')->getTotalSellers(TRUE);
 			]]></add>
 		</operation>	
 	</file>
@@ -106,9 +104,7 @@
 				$this->response->setOutput($this->render());
 			]]></search>
 			<add><![CDATA[
-				require_once(DIR_SYSTEM . 'library/ms-seller.php');
-				$msSeller = new MsSeller($this->registry);
-				$this->data['ms_seller_created'] = $msSeller->isCustomerSeller($this->customer->getId());
+				$this->data['ms_seller_created'] = $this->registry->get('MsLoader')->get('MsSeller')->isCustomerSeller($this->customer->getId());
 				$this->data = array_merge($this->data, $this->load->language('module/multiseller'));			
 				$this->data['ms_link_sellerinfo'] = $this->url->link('account/ms-seller/sellerinfo', '', 'SSL');
 				$this->data['ms_link_newproduct'] = $this->url->link('account/ms-seller/newproduct', '', 'SSL');
@@ -169,9 +165,7 @@
 				$this->render();
 			]]></search>
 			<add><![CDATA[
-				require_once(DIR_SYSTEM . 'library/ms-seller.php');
-				$msSeller = new MsSeller($this->registry);
-				$this->data['ms_seller_created'] = $msSeller->isCustomerSeller($this->customer->getId());			
+				$this->data['ms_seller_created'] = $this->registry->get('MsLoader')->get('MsSeller')->isCustomerSeller($this->customer->getId());			
 				$this->data = array_merge($this->data, $this->load->language('module/multiseller'));			
 				$this->data['ms_link_sellerinfo'] = $this->url->link('account/ms-seller/sellerinfo', '', 'SSL');
 				$this->data['ms_link_newproduct'] = $this->url->link('account/ms-seller/newproduct', '', 'SSL');
@@ -309,14 +303,12 @@
 			$this->data = array_merge($this->data, $this->load->language('module/multiseller'));
 			require_once(DIR_SYSTEM . 'library/ms-file.php');
 			require_once(DIR_SYSTEM . 'library/ms-product.php');
-			require_once(DIR_SYSTEM . 'library/ms-seller.php');
 			$this->load->model('localisation/country');
 			$msFile = new MsFile($this->registry);
 			$msProduct = new MsProduct($this->registry);
-			$msSeller = new MsSeller($this->registry);
 			
 			$seller_id = $msProduct->getSellerId($this->request->get['product_id']);
-			$seller = $msSeller->getSellerData($seller_id);
+			$seller = $this->registry->get('MsLoader')->get('MsSeller')->getSellerData($seller_id);
 			
 			if (empty($seller)) {
 				$this->data['seller'] = NULL;
@@ -348,8 +340,8 @@
 				
 				$this->data['seller']['href'] = $this->url->link('product/seller/profile', 'seller_id=' . $seller['seller_id']);
 				
-				$this->data['seller']['total_sales'] = $msSeller->getSalesForSeller($seller['seller_id']);
-				$this->data['seller']['total_products'] = $msSeller->getTotalSellerProducts($seller['seller_id'], TRUE);
+				$this->data['seller']['total_sales'] = $this->registry->get('MsLoader')->get('MsSeller')->getSalesForSeller($seller['seller_id']);
+				$this->data['seller']['total_products'] = $this->registry->get('MsLoader')->get('MsSeller')->getTotalSellerProducts($seller['seller_id'], TRUE);
 			}
 
 			$this->data['ms_product_attributes'] = $msProduct->getProductAttributes($this->request->get['product_id']);
@@ -518,11 +510,9 @@
 			$this->data['products'][] = array(
 			]]></search>
 			<add><![CDATA[
-			require_once(DIR_SYSTEM . 'library/ms-seller.php');
-			$msSeller = new MsSeller($this->registry);
 			$this->language->load('module/multiseller');
 			$this->data['column_seller'] = $this->language->get('ms_seller');
-			$seller = $msSeller->getSellerDataForProduct($product['product_id']);
+			$seller = $this->registry->get('MsLoader')->get('MsSeller')->getSellerDataForProduct($product['product_id']);
 			]]></add>
 		</operation>	
 	
@@ -598,10 +588,6 @@
 		]]></search>
 		<add><![CDATA[
 			case 'seller_all':
-			
-				require_once(DIR_SYSTEM . 'library/ms-seller.php');
-				$this->msSeller = new MsSeller($this->registry);
-			
 				$sort = array(
 					'order_by'               => 'ms.nickname',
 					'order_way'              => 'ASC',
@@ -609,9 +595,9 @@
 					'limit'					 => 10,
 				);
 				
-				$email_total = $this->msSeller->getTotalSellers(TRUE);
+				$email_total = $this->registry->get('MsLoader')->get('MsSeller')->getTotalSellers(TRUE);
 				
-				$results = $this->msSeller->getSellers($sort, TRUE);
+				$results = $this->registry->get('MsLoader')->get('MsSeller')->getSellers($sort, TRUE);
 				
 				foreach ($results as $result) {
 					$emails[] = $result['email'];

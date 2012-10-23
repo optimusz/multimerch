@@ -23,10 +23,7 @@ final class MsTransaction extends Model {
 		$this->load = $registry->get('load');
 		$this->language = $registry->get('language');
 		$this->load->language('module/multiseller');
-		
-		require_once(DIR_SYSTEM . 'library/ms-seller.php');
 		require_once(DIR_SYSTEM . 'library/ms-product.php');
-		$this->msSeller = new MsSeller($registry);
 		$this->msProduct = new MsProduct($registry);
 	}
 	
@@ -125,7 +122,7 @@ final class MsTransaction extends Model {
 			$order_info = $this->model_checkout_order->getOrder($order_id);			
 		} else {
 			$this->load->model('sale/order');
-			$order_info = $this->model_sale_order->getOrder($order_id);			
+			$order_info = $this->model_sale_order->getOrder($order_id);
 		}
 		
 		$order_products = $this->_getOrderProducts($order_id);
@@ -142,7 +139,7 @@ final class MsTransaction extends Model {
 			if ($debit)
 				$product['total'] = -1 * abs($product['total']);
 
-			$description = sprintf($this->language->get('ms_transaction_sale'),$product['name'],$this->currency->format($product['total'] * $this->msSeller->getCommissionPercentForSeller($seller_id) / 100 + $this->msSeller->getCommissionFlatForSeller($seller_id), $this->config->get('config_currency')));
+			$description = sprintf($this->language->get('ms_transaction_sale'),$product['name'],$this->currency->format($product['total'] * $this->registry->get('MsLoader')->get('MsSeller')->getCommissionPercentForSeller($seller_id) / 100 + $this->registry->get('MsLoader')->get('MsSeller')->getCommissionFlatForSeller($seller_id), $this->config->get('config_currency')));
 
 			$sql = "INSERT INTO " . DB_PREFIX . "ms_transaction
 					SET parent_transaction_id = " . (int)$parent_tr_id . ",
@@ -153,8 +150,8 @@ final class MsTransaction extends Model {
 						currency_id = ". $order_info['currency_id'] . ",
 						currency_code = '" . $order_info['currency_code'] . "',
 						currency_value = " . $order_info['currency_value'] . ",
-						commission = " . $this->msSeller->getCommissionPercentForSeller($seller_id) . ",
-						commission_flat = " . $this->msSeller->getCommissionFlatForSeller($seller_id) . ",
+						commission = " . $this->registry->get('MsLoader')->get('MsSeller')->getCommissionPercentForSeller($seller_id) . ",
+						commission_flat = " . $this->registry->get('MsLoader')->get('MsSeller')->getCommissionFlatForSeller($seller_id) . ",
 						description = '" . $this->db->escape($description) . "',
 						date_created = NOW(),
 						date_modified = NOW()";

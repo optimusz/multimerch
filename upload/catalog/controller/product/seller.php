@@ -6,9 +6,7 @@ class ControllerProductSeller extends Controller {
 		require_once(DIR_SYSTEM . 'library/ms-request.php');
 		require_once(DIR_SYSTEM . 'library/ms-transaction.php');
 		require_once(DIR_SYSTEM . 'library/ms-product.php');
-		require_once(DIR_SYSTEM . 'library/ms-seller.php');
 		require_once(DIR_SYSTEM . 'library/ms-mail.php');
-		$this->msSeller = new MsSeller($this->registry);
 		$this->msProduct = new MsProduct($this->registry);
 		$this->msMail = new MsMail($this->registry);
 		$this->msFile = new MsFile($this->registry);
@@ -101,8 +99,8 @@ class ControllerProductSeller extends Controller {
 			'limit'              => $limit
 		);
 		
-		$total_sellers = $this->msSeller->getTotalSellers(TRUE);
-		$results = $this->msSeller->getSellers($data, TRUE);
+		$total_sellers = $this->registry->get('MsLoader')->get('MsSeller')->getTotalSellers(TRUE);
+		$results = $this->registry->get('MsLoader')->get('MsSeller')->getSellers($data, TRUE);
 		
 		foreach ($results as $result) {
 			if ($result['avatar_path'] && file_exists(DIR_IMAGE . $result['avatar_path'])) {
@@ -120,8 +118,8 @@ class ControllerProductSeller extends Controller {
 				//'rating'      => $result['rating'],
 				'country' => ($country ? $country['name'] : NULL),
 				'country_flag' => ($country ? 'image/flags/' . strtolower($country['iso_code_2']) . '.png' : NULL),
-				'total_sales' => $this->msSeller->getSalesForSeller($result['seller_id']),
-				'total_products' => $this->msSeller->getTotalSellerProducts($result['seller_id'], TRUE),
+				'total_sales' => $this->registry->get('MsLoader')->get('MsSeller')->getSalesForSeller($result['seller_id']),
+				'total_products' => $this->registry->get('MsLoader')->get('MsSeller')->getTotalSellerProducts($result['seller_id'], TRUE),
 				'href'        => $this->url->link('product/seller/profile', '&seller_id=' . $result['seller_id'])
 			);
 		}
@@ -252,7 +250,7 @@ class ControllerProductSeller extends Controller {
 		$this->load->model('localisation/country');
 		$this->load->model('catalog/product');
     	
-		$seller = $this->msSeller->getSellerData($this->request->get['seller_id']);
+		$seller = $this->registry->get('MsLoader')->get('MsSeller')->getSellerData($this->request->get['seller_id']);
 		$this->document->addScript('catalog/view/javascript/ms-contactseller.js');
 
 		if (empty($seller) || $seller['seller_status_id'] != MsSeller::MS_SELLER_STATUS_ACTIVE) {
@@ -292,8 +290,8 @@ class ControllerProductSeller extends Controller {
 			$this->data['seller']['website'] = NULL;
 		}
 		
-		$this->data['seller']['total_sales'] = $this->msSeller->getSalesForSeller($seller['seller_id']);
-		$this->data['seller']['total_products'] = $this->msSeller->getTotalSellerProducts($seller['seller_id'], TRUE);
+		$this->data['seller']['total_sales'] = $this->registry->get('MsLoader')->get('MsSeller')->getSalesForSeller($seller['seller_id']);
+		$this->data['seller']['total_products'] = $this->registry->get('MsLoader')->get('MsSeller')->getTotalSellerProducts($seller['seller_id'], TRUE);
 				
 		$sort = array(
 			'order_by'  => 'pd.name',
@@ -302,7 +300,7 @@ class ControllerProductSeller extends Controller {
 			'limit'              => 5
 		);
 		
-		$products = $this->msSeller->getSellerProducts($seller['seller_id'], $sort, TRUE);
+		$products = $this->registry->get('MsLoader')->get('MsSeller')->getSellerProducts($seller['seller_id'], $sort, TRUE);
 
 		if (!empty($products)) {
 			foreach ($products as $product) {
@@ -359,7 +357,7 @@ class ControllerProductSeller extends Controller {
 		$this->load->model('localisation/country');
     	$this->language->load('product/category');
     	
-		$seller = $this->msSeller->getSellerData($this->request->get['seller_id']);
+		$seller = $this->registry->get('MsLoader')->get('MsSeller')->getSellerData($this->request->get['seller_id']);
 
 		if (empty($seller) || $seller['seller_status_id'] != MsSeller::MS_SELLER_STATUS_ACTIVE) {
 			$this->redirect($this->url->link('product/seller', '', 'SSL'));
@@ -398,8 +396,8 @@ class ControllerProductSeller extends Controller {
 			$this->data['seller']['website'] = NULL;
 		}
 		
-		$this->data['seller']['total_sales'] = $this->msSeller->getSalesForSeller($seller['seller_id']);
-		$this->data['seller']['total_products'] = $this->msSeller->getTotalSellerProducts($seller['seller_id'], TRUE);
+		$this->data['seller']['total_sales'] = $this->registry->get('MsLoader')->get('MsSeller')->getSalesForSeller($seller['seller_id']);
+		$this->data['seller']['total_products'] = $this->registry->get('MsLoader')->get('MsSeller')->getTotalSellerProducts($seller['seller_id'], TRUE);
 
 		/* seller products part */
 		$this->data['text_display'] = $this->language->get('text_display');
@@ -439,8 +437,8 @@ class ControllerProductSeller extends Controller {
 			'limit'              => $limit
 		);
 		
-		$total_products = $this->msSeller->getTotalSellerProducts($seller['seller_id'], TRUE);
-		$products = $this->msSeller->getSellerProducts($seller['seller_id'], $sort, TRUE);
+		$total_products = $this->registry->get('MsLoader')->get('MsSeller')->getTotalSellerProducts($seller['seller_id'], TRUE);
+		$products = $this->registry->get('MsLoader')->get('MsSeller')->getSellerProducts($seller['seller_id'], $sort, TRUE);
 		if (!empty($products)) {
 			foreach ($products as $product) {
 				$product_data = $this->model_catalog_product->getProduct($product['product_id']);
@@ -607,8 +605,8 @@ class ControllerProductSeller extends Controller {
   			
   		$seller_id = $this->request->post['seller_id'];
   		$product_id = $this->request->post['product_id'];
-  		$seller_email = $this->msSeller->getSellerEmail($seller_id);
-  		$seller_name = $this->msSeller->getSellerName($seller_id);
+  		$seller_email = $this->registry->get('MsLoader')->get('MsSeller')->getSellerEmail($seller_id);
+  		$seller_name = $this->registry->get('MsLoader')->get('MsSeller')->getSellerName($seller_id);
   		$message_text = trim($this->request->post['ms-sellercontact-text']);
   		$customer_name = mb_substr(trim($this->request->post['ms-sellercontact-name']),0,50);
   		$customer_email = $this->request->post['ms-sellercontact-email'];
@@ -659,7 +657,7 @@ class ControllerProductSeller extends Controller {
 			$seller_id = $this->request->get['seller_id'];
 			$this->data['product_id'] = 0;
   		}
-		$seller = $this->msSeller->getSellerData($seller_id);
+		$seller = $this->registry->get('MsLoader')->get('MsSeller')->getSellerData($seller_id);
 		
 		if (empty($seller))
 			return false;

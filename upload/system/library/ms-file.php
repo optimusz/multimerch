@@ -89,10 +89,7 @@ class MsFile {
 	}
 	
 	public function uploadDownload($file) {
-		require_once(DIR_SYSTEM . 'library/ms-seller.php');
-		$this->msSeller = new MsSeller($this->registry);
-		
-		$filename =   time() . '_' . md5(rand()) . '.' . $this->msSeller->getNickname() . '_' . $file["name"];
+		$filename =   time() . '_' . md5(rand()) . '.' . $this->registry->get('MsLoader')->get('MsSeller')->getNickname() . '_' . $file["name"];
 		move_uploaded_file($file["tmp_name"], DIR_IMAGE . $this->tmpPath .  $filename);
 		
 		if (!in_array($filename, $this->session->data['multiseller']['files']))

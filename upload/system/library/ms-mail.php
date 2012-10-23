@@ -50,8 +50,6 @@ class MsMail extends Mail {
 		$this->errors = array();
 		
 		require_once(DIR_SYSTEM . 'library/ms-product.php');
-		require_once(DIR_SYSTEM . 'library/ms-seller.php');
-		$this->msSeller = new MsSeller($registry);
 		$this->msProduct = new MsProduct($registry);		
 	}
 
@@ -97,8 +95,8 @@ class MsMail extends Mail {
 				$mails[] = array(
 					'type' => MsMail::SMT_PRODUCT_PURCHASED,
 					'data' => array(
-						'recipients' => $this->msSeller->getSellerEmail($seller_id),
-						'addressee' => $this->msSeller->getSellerName($seller_id),
+						'recipients' => $this->registry->get('MsLoader')->get('MsSeller')->getSellerEmail($seller_id),
+						'addressee' => $this->registry->get('MsLoader')->get('MsSeller')->getSellerName($seller_id),
 						'product_id' => $product['product_id'],
 						'order_id' => $order_id
 					)

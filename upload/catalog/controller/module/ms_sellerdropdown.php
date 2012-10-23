@@ -1,9 +1,6 @@
 <?php  
 class ControllerModuleMsSellerdropdown extends Controller {
 	protected function index($setting) {
-		require_once(DIR_SYSTEM . 'library/ms-seller.php');
-		$this->msSeller = new MsSeller($this->registry);
-		
 		static $module = 0;
 		$this->load->model('tool/image');
 		
@@ -30,7 +27,7 @@ class ControllerModuleMsSellerdropdown extends Controller {
 			'limit'              => $this->data['limit']
 		);
 		
-		$results = $this->msSeller->getSellers($data, TRUE);
+		$results = $this->registry->get('MsLoader')->get('MsSeller')->getSellers($data, TRUE);
 
 		$this->data['sellers'] = array();
 		foreach ($results as $result) {

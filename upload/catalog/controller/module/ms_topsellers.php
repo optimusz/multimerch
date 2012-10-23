@@ -1,9 +1,7 @@
 <?php  
 class ControllerModuleMsTopsellers extends Controller {
 	protected function index($setting) {
-		require_once(DIR_SYSTEM . 'library/ms-seller.php');
 		require_once(DIR_SYSTEM . 'library/ms-file.php');
-		$this->msSeller = new MsSeller($this->registry);			
 		$this->msFile = new MsFile($this->registry);		
 		
 		static $module = 0;
@@ -32,7 +30,7 @@ class ControllerModuleMsTopsellers extends Controller {
 			'limit'              => $this->data['limit']
 		);
 		
-		$results = $this->msSeller->getTopSellers($data, TRUE);
+		$results = $this->registry->get('MsLoader')->get('MsSeller')->getTopSellers($data, TRUE);
 
 		$this->data['sellers'] = array();
 		foreach ($results as $result) {

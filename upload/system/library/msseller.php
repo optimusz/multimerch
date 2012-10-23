@@ -246,7 +246,7 @@ final class MsSeller {
 				WHERE p.nickname = '" . $this->db->escape($nickname) . "'";
 		
 		$res = $this->db->query($sql);
-		
+
 		return $res->num_rows;
 	}
 	
