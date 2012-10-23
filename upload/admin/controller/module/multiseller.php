@@ -13,7 +13,6 @@ class ControllerModuleMultiseller extends Controller {
 		$this->registry = $registry;
 		require_once(DIR_SYSTEM . 'library/ms-request.php');
 		require_once(DIR_SYSTEM . 'library/ms-transaction.php');
-		require_once(DIR_SYSTEM . 'library/ms-file.php');
 		require_once(DIR_SYSTEM . 'library/ms-mail.php');
 		
 		$this->load->config('ms-config');
@@ -21,7 +20,6 @@ class ControllerModuleMultiseller extends Controller {
 		$parts = explode('/', $this->request->request['route']);
 		if (!isset($parts[2]) || !in_array($parts[2], array('install','uninstall'))) {
 			$this->msMail = new MsMail($registry);
-			$this->msFile = new MsFile($registry);
 		}
 		
 		$this->data = array_merge($this->data, $this->load->language('module/multiseller'));
@@ -385,7 +383,7 @@ class ControllerModuleMultiseller extends Controller {
 			$this->data['seller']['status'] = $this->registry->get('MsLoader')->get('MsSeller')->getSellerStatus($seller['seller_status_id']);
 			if (!empty($seller['avatar_path'])) {
 				$this->data['seller']['avatar']['name'] = $seller['avatar_path'];
-				$this->data['seller']['avatar']['thumb'] = $this->msFile->resizeImage($seller['avatar_path'], $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'));
+				$this->data['seller']['avatar']['thumb'] = $this->registry->get('MsLoader')->get('MsFile')->resizeImage($seller['avatar_path'], $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'));
 				//$this->session->data['multiseller']['files'][] = $seller['avatar_path'];
 			}
 			
@@ -652,9 +650,9 @@ class ControllerModuleMultiseller extends Controller {
 
 		foreach ($results as $result) {
 			if ($result['prd.image'] && file_exists(DIR_IMAGE . $result['prd.image'])) {
-				$image = $this->msFile->resizeImage($result['prd.image'], 40, 40);
+				$image = $this->registry->get('MsLoader')->get('MsFile')->resizeImage($result['prd.image'], 40, 40);
 			} else {
-				$image = $this->msFile->resizeImage('no_image.jpg', 40, 40);
+				$image = $this->registry->get('MsLoader')->get('MsFile')->resizeImage('no_image.jpg', 40, 40);
 			}		
 			
 			$action = array();

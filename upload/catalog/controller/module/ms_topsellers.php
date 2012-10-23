@@ -1,9 +1,6 @@
 <?php  
 class ControllerModuleMsTopsellers extends Controller {
 	protected function index($setting) {
-		require_once(DIR_SYSTEM . 'library/ms-file.php');
-		$this->msFile = new MsFile($this->registry);		
-		
 		static $module = 0;
 		$this->load->model('tool/image');
 		
@@ -37,7 +34,7 @@ class ControllerModuleMsTopsellers extends Controller {
 			$this->data['sellers'][] = array(
 				'nickname'        => $result['nickname'],
 				'href'        => $this->url->link('product/seller/profile','seller_id=' . $result['seller_id']),
-				'image' => !empty($result['avatar_path']) && file_exists(DIR_IMAGE . $result['avatar_path']) ? $this->msFile->resizeImage($result['avatar_path'], $setting['width'], $setting['height']) : $this->msFile->resizeImage('ms_no_image.jpg', $setting['width'], $setting['height']) 
+				'image' => !empty($result['avatar_path']) && file_exists(DIR_IMAGE . $result['avatar_path']) ? $this->registry->get('MsLoader')->get('MsFile')->resizeImage($result['avatar_path'], $setting['width'], $setting['height']) : $this->registry->get('MsLoader')->get('MsFile')->resizeImage('ms_no_image.jpg', $setting['width'], $setting['height']) 
 			);
 		}
 		$this->data['module'] = $module++; 

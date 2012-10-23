@@ -10,9 +10,7 @@ class ControllerAccountMsSeller extends Controller {
 		require_once(DIR_SYSTEM . 'library/ms-request.php');
 		require_once(DIR_SYSTEM . 'library/ms-transaction.php');
 		require_once(DIR_SYSTEM . 'library/ms-mail.php');
-		require_once(DIR_SYSTEM . 'library/ms-file.php');
 		$this->msMail = new MsMail($this->registry);
-		$this->msFile = new MsFile($this->registry);
 		$this->data = array_merge($this->data, $this->load->language('module/multiseller'),$this->load->language('account/account'));
 		$parts = explode('/', $this->request->request['route']);
 
@@ -123,7 +121,7 @@ class ControllerAccountMsSeller extends Controller {
 	
 	public function jxUpdateFile() {
 		$json = array();
-		$json['errors'] = $this->msFile->checkPostMax($_POST, $_FILES);
+		$json['errors'] = $this->registry->get('MsLoader')->get('MsFile')->checkPostMax($_POST, $_FILES);
 
 		if ($json['errors']) {
 			return $this->_setJsonResponse($json);
@@ -135,12 +133,12 @@ class ControllerAccountMsSeller extends Controller {
 			$seller_id = $this->customer->getId();
 			if  ($this->registry->get('MsLoader')->get('MsProduct')->productOwnedBySeller($product_id,$seller_id) && $this->registry->get('MsLoader')->get('MsProduct')->hasDownload($product_id,$download_id)) {
 				$file = array_shift($_FILES);
-				$errors = $this->msFile->checkDownload($file);
+				$errors = $this->registry->get('MsLoader')->get('MsFile')->checkDownload($file);
 				
 				if ($errors) {
 					$json['errors'] = array_merge($json['errors'], $errors);
 				} else {
-					$fileData = $this->msFile->uploadDownload($file);
+					$fileData = $this->registry->get('MsLoader')->get('MsFile')->uploadDownload($file);
 					$json['fileName'] = $fileData['fileName'];
 					$json['fileMask'] = $fileData['fileMask'];
 				}
@@ -154,20 +152,20 @@ class ControllerAccountMsSeller extends Controller {
 		$json = array();
 		$file = array();
 		
-		$json['errors'] = $this->msFile->checkPostMax($_POST, $_FILES);
+		$json['errors'] = $this->registry->get('MsLoader')->get('MsFile')->checkPostMax($_POST, $_FILES);
 
 		if ($json['errors']) {
 			return $this->_setJsonResponse($json);
 		}
 
 		foreach ($_FILES as $file) {
-			$errors = $this->msFile->checkImage($file);
+			$errors = $this->registry->get('MsLoader')->get('MsFile')->checkImage($file);
 			
 			if ($errors) {
 				$json['errors'] = array_merge($json['errors'], $errors);
 			} else {
-				$fileName = $this->msFile->uploadImage($file);
-				$thumbUrl = $this->msFile->resizeImage($this->msFile->getTmpPath() . $fileName, $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'));
+				$fileName = $this->registry->get('MsLoader')->get('MsFile')->uploadImage($file);
+				$thumbUrl = $this->registry->get('MsLoader')->get('MsFile')->resizeImage($this->registry->get('MsLoader')->get('MsFile')->getTmpPath() . $fileName, $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'));
 				$json['files'][] = array(
 					'name' => $fileName,
 					'thumb' => $thumbUrl
@@ -182,7 +180,7 @@ class ControllerAccountMsSeller extends Controller {
 		$json = array();
 		$file = array();
 		
-		$json['errors'] = $this->msFile->checkPostMax($_POST, $_FILES);
+		$json['errors'] = $this->registry->get('MsLoader')->get('MsFile')->checkPostMax($_POST, $_FILES);
 
 		if ($json['errors']) {
 			return $this->_setJsonResponse($json);
@@ -197,13 +195,13 @@ class ControllerAccountMsSeller extends Controller {
 				$this->_setJsonResponse($json);
 				return;
 			} else {
-				$errors = $this->msFile->checkImage($file);
+				$errors = $this->registry->get('MsLoader')->get('MsFile')->checkImage($file);
 				
 				if ($errors) {
 					$json['errors'] = array_merge($json['errors'], $errors);
 				} else {
-					$fileName = $this->msFile->uploadImage($file);
-					$thumbUrl = $this->msFile->resizeImage($this->msFile->getTmpPath() . $fileName, $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'));
+					$fileName = $this->registry->get('MsLoader')->get('MsFile')->uploadImage($file);
+					$thumbUrl = $this->registry->get('MsLoader')->get('MsFile')->resizeImage($this->registry->get('MsLoader')->get('MsFile')->getTmpPath() . $fileName, $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'));
 					$json['files'][] = array(
 						'name' => $fileName,
 						'thumb' => $thumbUrl
@@ -219,7 +217,7 @@ class ControllerAccountMsSeller extends Controller {
 		$json = array();
 		$file = array();
 		
-		$json['errors'] = $this->msFile->checkPostMax($_POST, $_FILES);
+		$json['errors'] = $this->registry->get('MsLoader')->get('MsFile')->checkPostMax($_POST, $_FILES);
 
 		if ($json['errors']) {
 			return $this->_setJsonResponse($json);
@@ -234,17 +232,17 @@ class ControllerAccountMsSeller extends Controller {
 				$this->_setJsonResponse($json);
 				return;
 			} else {
-				$errors = $this->msFile->checkDownload($file);
+				$errors = $this->registry->get('MsLoader')->get('MsFile')->checkDownload($file);
 				
 				if ($errors) {
 					$json['errors'] = array_merge($json['errors'], $errors);
 				} else {
-					$fileData = $this->msFile->uploadDownload($file);
+					$fileData = $this->registry->get('MsLoader')->get('MsFile')->uploadDownload($file);
 					
 					if ($this->config->get('msconf_enable_pdf_generator') && extension_loaded('imagick')) {
 						$ext = explode('.', $file['name']); $ext = end($ext);
 						if (strtolower($ext) == 'pdf') {
-							$im = new imagick(DIR_IMAGE . $this->msFile->getTmpPath() . $fileData['fileName']);
+							$im = new imagick(DIR_IMAGE . $this->registry->get('MsLoader')->get('MsFile')->getTmpPath() . $fileData['fileName']);
 							$pages = $im->getNumberImages() - 1;
 						}
 					}
@@ -317,7 +315,7 @@ class ControllerAccountMsSeller extends Controller {
 		if (isset($data['product_downloads'])) {
 			foreach ($data['product_downloads'] as $key => $download) {
 				if (!empty($download['filename'])) {
-					if (!$this->msFile->checkFileAgainstSession($download['filename'])) {
+					if (!$this->registry->get('MsLoader')->get('MsFile')->checkFileAgainstSession($download['filename'])) {
 						var_dump($download);
 						$json['errors']['product_download'] = $this->language->get('ms_error_file_upload_error');
 					}						
@@ -336,7 +334,7 @@ class ControllerAccountMsSeller extends Controller {
 		
 		if (isset($data['product_images'])) {
 			foreach ($data['product_images'] as $image) {
-				if (!$this->msFile->checkFileAgainstSession($image)) {
+				if (!$this->registry->get('MsLoader')->get('MsFile')->checkFileAgainstSession($image)) {
 					$json['errors']['product_image'] = $this->language->get('ms_error_file_upload_error');
 				}
 			}
@@ -485,7 +483,7 @@ class ControllerAccountMsSeller extends Controller {
 			} else {
 				foreach ($data['product_downloads'] as $key => $download) {
 					if (!empty($download['filename'])) {
-						if (!$this->msFile->checkFileAgainstSession($download['filename'])) {
+						if (!$this->registry->get('MsLoader')->get('MsFile')->checkFileAgainstSession($download['filename'])) {
 							var_dump($download);
 							$json['errors']['product_download'] = $this->language->get('ms_error_file_upload_error');
 						}						
@@ -515,7 +513,7 @@ class ControllerAccountMsSeller extends Controller {
 				$json['errors']['product_image'] = sprintf($this->language->get('ms_error_product_image_count'), $msconf_images_limits[0]);
 			} else {
 				foreach ($data['product_images'] as $image) {
-					if (!$this->msFile->checkFileAgainstSession($image)) {
+					if (!$this->registry->get('MsLoader')->get('MsFile')->checkFileAgainstSession($image)) {
 						$json['errors']['product_image'] = $this->language->get('ms_error_file_upload_error');
 					}
 				}
@@ -773,7 +771,7 @@ class ControllerAccountMsSeller extends Controller {
 			
 		$data = $this->request->post;
 		
-		$json = $this->msFile->generatePdfImages($this->request->post['ms-pdfgen-filename'], $this->request->post['ms-pdfgen-pages']);
+		$json = $this->registry->get('MsLoader')->get('MsFile')->generatePdfImages($this->request->post['ms-pdfgen-filename'], $this->request->post['ms-pdfgen-pages']);
 		return $this->_setJsonResponse($json);
   	}
   	
@@ -796,7 +794,7 @@ class ControllerAccountMsSeller extends Controller {
   			$fileName = '';
   		}*/
 
-  		$pages = $this->msFile->getPdfPages($fileName);
+  		$pages = $this->registry->get('MsLoader')->get('MsFile')->getPdfPages($fileName);
   		
   		if ($pages == 0)
   			return;
@@ -843,7 +841,7 @@ class ControllerAccountMsSeller extends Controller {
 		}
 		
 		if (isset($data['sellerinfo_avatar_name']) && !empty($data['sellerinfo_avatar_name'])) {
-			if (!$this->msFile->checkFileAgainstSession($data['sellerinfo_avatar_name'])) {
+			if (!$this->registry->get('MsLoader')->get('MsFile')->checkFileAgainstSession($data['sellerinfo_avatar_name'])) {
 				$json['errors']['sellerinfo_avatar'] = $this->language->get('ms_error_file_upload_error');
 			}
 		}
@@ -1056,7 +1054,7 @@ class ControllerAccountMsSeller extends Controller {
 			if (!empty($product['thumbnail'])) {
 				$product['images'][] = array(
 					'name' => $product['thumbnail'],
-					'thumb' => $this->msFile->resizeImage($product['thumbnail'], $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'))
+					'thumb' => $this->registry->get('MsLoader')->get('MsFile')->resizeImage($product['thumbnail'], $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'))
 				);
 				
 				if (!in_array($product['thumbnail'], $this->session->data['multiseller']['files']))
@@ -1067,7 +1065,7 @@ class ControllerAccountMsSeller extends Controller {
 			foreach ($images as $image) {
 				$product['images'][] = array(
 					'name' => $image['image'],
-					'thumb' => $this->msFile->resizeImage($image['image'], $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'))
+					'thumb' => $this->registry->get('MsLoader')->get('MsFile')->resizeImage($image['image'], $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'))
 				);
 				
 				if (!in_array($image['image'], $this->session->data['multiseller']['files']))
@@ -1137,7 +1135,7 @@ class ControllerAccountMsSeller extends Controller {
 			$this->data['salt'] = $this->registry->get('MsLoader')->get('MsSeller')->getSalt($this->customer->getId());
 			if (!empty($seller['avatar_path'])) {
 				$this->data['seller']['avatar']['name'] = $seller['avatar_path'];
-				$this->data['seller']['avatar']['thumb'] = $this->msFile->resizeImage($seller['avatar_path'], $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'));
+				$this->data['seller']['avatar']['thumb'] = $this->registry->get('MsLoader')->get('MsFile')->resizeImage($seller['avatar_path'], $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'));
 				$this->session->data['multiseller']['files'][] = $seller['avatar_path'];
 			}
 			

@@ -38,9 +38,6 @@ final class MsSeller {
 				$this->paypal = $seller_query->row['paypal'];
 			}
   		}
-  		
-		require_once(DIR_SYSTEM . 'library/ms-file.php');
-		$this->msFile = new MsFile($registry);  		
 	}
 		
   	public function isCustomerSeller($customer_id) {
@@ -205,7 +202,7 @@ final class MsSeller {
 		
 	public function createSeller($data) {
 		if (isset($data['sellerinfo_avatar_name'])) {
-			$avatar = $this->msFile->moveImage($data['sellerinfo_avatar_name']);
+			$avatar = $this->registry->get('MsLoader')->get('MsFile')->moveImage($data['sellerinfo_avatar_name']);
 		} else {
 			$avatar = '';
 		}
@@ -254,12 +251,12 @@ final class MsSeller {
 		$old_avatar = $this->getSellerAvatar($seller_id);
 		
 		if (!isset($data['sellerinfo_avatar_name']) || ($old_avatar['avatar'] != $data['sellerinfo_avatar_name'])) {
-			$this->msFile->deleteImage($old_avatar['avatar']);
+			$this->registry->get('MsLoader')->get('MsFile')->deleteImage($old_avatar['avatar']);
 		}
 		
 		if (isset($data['sellerinfo_avatar_name'])) {
 			if ($old_avatar['avatar'] != $data['sellerinfo_avatar_name']) {			
-				$avatar = $this->msFile->moveImage($data['sellerinfo_avatar_name']);
+				$avatar = $this->registry->get('MsLoader')->get('MsFile')->moveImage($data['sellerinfo_avatar_name']);
 			} else {
 				$avatar = $old_avatar['avatar'];
 			}
