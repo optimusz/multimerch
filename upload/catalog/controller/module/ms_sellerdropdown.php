@@ -27,7 +27,7 @@ class ControllerModuleMsSellerdropdown extends Controller {
 			'limit'              => $this->data['limit']
 		);
 		
-		$results = $this->registry->get('MsLoader')->get('MsSeller')->getSellers($data, TRUE);
+		$results = $this->MsLoader->MsSeller->getSellers($data, TRUE);
 
 		$this->data['sellers'] = array();
 		foreach ($results as $result) {

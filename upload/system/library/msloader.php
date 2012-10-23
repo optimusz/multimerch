@@ -6,6 +6,14 @@ class MsLoader {
 		spl_autoload_register(array('MsLoader', '_autoload'));
    	}
 
+	public function __get($class) {
+		if (!isset($this->$class)){
+			$this->$class = new $class($this->registry);
+		}
+
+		return $this->$class;		
+	}
+
 	private function _autoload($class)
 	{
 	    $file = DIR_SYSTEM . 'library/' . strtolower($class) . '.php';

@@ -104,6 +104,21 @@ class ModelModuleMultisellerSettings extends Model {
         	PRIMARY KEY (`product_id`,`option_id`,`option_value_id`)) default CHARSET=utf8";
         
         $this->db->query($createTable);
+        
+		$sql = "
+			CREATE TABLE `" . DB_PREFIX . "ms_balance` (
+             `balance_id` int(11) NOT NULL AUTO_INCREMENT,
+             `seller_id` int(11) NOT NULL,
+             `change` DECIMAL(15,4) NOT NULL,
+             `order_id` int(11) NOT NULL DEFAULT '0',
+             `product_id` int(11) NOT NULL DEFAULT '0',
+             `withdrawal_id` int(11) NOT NULL DEFAULT '0',
+             `description` TEXT NOT NULL DEFAULT '',
+			 `date_created` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+			 `date_modified` DATETIME DEFAULT NULL',
+        	PRIMARY KEY (`transaction_id`)) default CHARSET=utf8";
+        
+        $this->db->query($sql);        
 	}
 	
 	public function dropTable() {
@@ -113,7 +128,8 @@ class ModelModuleMultisellerSettings extends Model {
 				`" . DB_PREFIX . "ms_transaction`,
 				`" . DB_PREFIX . "ms_request`,
 				`" . DB_PREFIX . "ms_product_attribute`,
-				`" . DB_PREFIX . "ms_comments`";
+				`" . DB_PREFIX . "ms_comments`,
+				`" . DB_PREFIX . "ms_balance`";
 								
 		$this->db->query($sql);
     }

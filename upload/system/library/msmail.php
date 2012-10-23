@@ -1,5 +1,5 @@
 <?php
-class MsMail extends Mail {
+class MsMail extends Model {
 	const SMT_SELLER_ACCOUNT_CREATED = 1;
 	const SMT_SELLER_ACCOUNT_AWAITING_MODERATION = 2;
 	const SMT_SELLER_ACCOUNT_APPROVED = 3;
@@ -40,13 +40,7 @@ class MsMail extends Mail {
 	const AMT_WITHDRAW_REQUEST_COMPLETED = 108;
 	
   	public function __construct($registry) {
-		$this->config = $registry->get('config');
-		$this->db = $registry->get('db');
-		$this->registry = $registry;
-		$this->request = $registry->get('request');
-		$this->session = $registry->get('session');
-		$this->language = $registry->get('language');
-		$this->load = $registry->get('load');
+  		parent::__construct($registry);
 		$this->errors = array();
 	}
 
@@ -86,14 +80,14 @@ class MsMail extends Mail {
 			
 		$mails = array();
 		foreach ($order_products as $product) {
-			$seller_id = $this->registry->get('MsLoader')->get('MsProduct')->getSellerId($product['product_id']);
+			$seller_id = $this->MsLoader->MsProduct->getSellerId($product['product_id']);
 			
 			if ($seller_id) {
 				$mails[] = array(
 					'type' => MsMail::SMT_PRODUCT_PURCHASED,
 					'data' => array(
-						'recipients' => $this->registry->get('MsLoader')->get('MsSeller')->getSellerEmail($seller_id),
-						'addressee' => $this->registry->get('MsLoader')->get('MsSeller')->getSellerName($seller_id),
+						'recipients' => $this->MsLoader->MsSeller->getSellerEmail($seller_id),
+						'addressee' => $this->MsLoader->MsSeller->getSellerName($seller_id),
 						'product_id' => $product['product_id'],
 						'order_id' => $order_id
 					)
@@ -116,7 +110,7 @@ class MsMail extends Mail {
 	
 	public function sendMail($mail_type, $data = array()) {
 		if (isset($data['product_id'])) {
-			$product = $this->registry->get('MsLoader')->get('MsProduct')->getProduct($data['product_id']);
+			$product = $this->MsLoader->MsProduct->getProduct($data['product_id']);
 			$n = reset($product['languages']);
 			$product['name'] = $n['name'];
 		}

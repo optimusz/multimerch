@@ -1,5 +1,5 @@
 <?php
-class MsFile {
+class MsFile extends Model {
 	private $tmpPath;
 	
 	private function _isNewUpload($fileName) {
@@ -7,12 +7,7 @@ class MsFile {
 	}
 		
   	public function __construct($registry) {
-  		$this->registry = $registry;
-		$this->config = $registry->get('config');
-		$this->db = $registry->get('db');
-		$this->request = $registry->get('request');
-		$this->session = $registry->get('session');
-		$this->language = $registry->get('language');
+  		parent::__construct($registry);
 		$this->tmpPath = 'tmp/';
 	}
 	
@@ -89,7 +84,7 @@ class MsFile {
 	}
 	
 	public function uploadDownload($file) {
-		$filename =   time() . '_' . md5(rand()) . '.' . $this->registry->get('MsLoader')->get('MsSeller')->getNickname() . '_' . $file["name"];
+		$filename =   time() . '_' . md5(rand()) . '.' . $this->MsLoader->MsSeller->getNickname() . '_' . $file["name"];
 		move_uploaded_file($file["tmp_name"], DIR_IMAGE . $this->tmpPath .  $filename);
 		
 		if (!in_array($filename, $this->session->data['multiseller']['files']))

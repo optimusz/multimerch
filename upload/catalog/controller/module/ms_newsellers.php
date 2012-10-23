@@ -27,14 +27,14 @@ class ControllerModuleMsNewsellers extends Controller {
 			'limit'              => $this->data['limit']
 		);
 
-		$results = $this->registry->get('MsLoader')->get('MsSeller')->getSellers($data, TRUE);
+		$results = $this->MsLoader->MsSeller->getSellers($data, TRUE);
 
 		$this->data['sellers'] = array();
 		foreach ($results as $result) {
 			$this->data['sellers'][] = array(
 				'nickname'        => $result['nickname'],
 				'href'        => $this->url->link('product/seller/profile','seller_id=' . $result['seller_id']),
-				'image' => !empty($result['avatar_path']) && file_exists(DIR_IMAGE . $result['avatar_path']) ? $this->registry->get('MsLoader')->get('MsFile')->resizeImage($result['avatar_path'], $setting['width'], $setting['height']) : $this->registry->get('MsLoader')->get('MsFile')->resizeImage('ms_no_image.jpg', $setting['width'], $setting['height']) 
+				'image' => !empty($result['avatar_path']) && file_exists(DIR_IMAGE . $result['avatar_path']) ? $this->MsLoader->MsFile->resizeImage($result['avatar_path'], $setting['width'], $setting['height']) : $this->MsLoader->MsFile->resizeImage('ms_no_image.jpg', $setting['width'], $setting['height']) 
 			);
 		}
 		$this->data['module'] = $module++; 

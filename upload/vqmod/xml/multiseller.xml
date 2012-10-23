@@ -65,8 +65,8 @@
 			]]></search>
 			<add><![CDATA[
 				$this->data = array_merge($this->data, $this->load->language('module/multiseller'));
-				$this->data['ms_total_products'] = $this->registry->get('MsLoader')->get('MsProduct')->getTotalProducts(TRUE, FALSE);
-				$this->data['ms_total_sellers'] = $this->registry->get('MsLoader')->get('MsSeller')->getTotalSellers(TRUE);
+				$this->data['ms_total_products'] = $this->MsLoader->MsProduct->getTotalProducts(TRUE, FALSE);
+				$this->data['ms_total_sellers'] = $this->MsLoader->MsSeller->getTotalSellers(TRUE);
 			]]></add>
 		</operation>	
 	</file>
@@ -101,7 +101,7 @@
 				$this->response->setOutput($this->render());
 			]]></search>
 			<add><![CDATA[
-				$this->data['ms_seller_created'] = $this->registry->get('MsLoader')->get('MsSeller')->isCustomerSeller($this->customer->getId());
+				$this->data['ms_seller_created'] = $this->MsLoader->MsSeller->isCustomerSeller($this->customer->getId());
 				$this->data = array_merge($this->data, $this->load->language('module/multiseller'));			
 				$this->data['ms_link_sellerinfo'] = $this->url->link('account/ms-seller/sellerinfo', '', 'SSL');
 				$this->data['ms_link_newproduct'] = $this->url->link('account/ms-seller/newproduct', '', 'SSL');
@@ -162,7 +162,7 @@
 				$this->render();
 			]]></search>
 			<add><![CDATA[
-				$this->data['ms_seller_created'] = $this->registry->get('MsLoader')->get('MsSeller')->isCustomerSeller($this->customer->getId());			
+				$this->data['ms_seller_created'] = $this->MsLoader->MsSeller->isCustomerSeller($this->customer->getId());			
 				$this->data = array_merge($this->data, $this->load->language('module/multiseller'));			
 				$this->data['ms_link_sellerinfo'] = $this->url->link('account/ms-seller/sellerinfo', '', 'SSL');
 				$this->data['ms_link_newproduct'] = $this->url->link('account/ms-seller/newproduct', '', 'SSL');
@@ -186,7 +186,7 @@
 
 				if (in_array($order_status_id, explode(',',$this->config->get('msconf_credit_order_statuses')))) {
 					$msTransaction->addTransactionsForOrder($order_id);
-					$this->registry->get('MsLoader')->get('MsMail')->sendOrderMails($order_id);
+					$this->MsLoader->MsMail->sendOrderMails($order_id);
 				} else if (in_array($order_status_id, explode(',',$this->config->get('msconf_debit_order_statuses')))) {
 					$msTransaction->addTransactionsForOrder($order_id, TRUE);
 				}
@@ -298,14 +298,14 @@
 			$this->data = array_merge($this->data, $this->load->language('module/multiseller'));
 			$this->load->model('localisation/country');
 			
-			$seller_id = $this->registry->get('MsLoader')->get('MsProduct')->getSellerId($this->request->get['product_id']);
-			$seller = $this->registry->get('MsLoader')->get('MsSeller')->getSellerData($seller_id);
+			$seller_id = $this->MsLoader->MsProduct->getSellerId($this->request->get['product_id']);
+			$seller = $this->MsLoader->MsSeller->getSellerData($seller_id);
 			
 			if (empty($seller)) {
 				$this->data['seller'] = NULL;
 			} else {
 				if (!empty($seller['avatar_path']))
-					$this->data['seller']['thumb'] = $this->registry->get('MsLoader')->get('MsFile')->resizeImage($seller['avatar_path'], $this->config->get('config_image_category_width'), $this->config->get('config_image_category_height'));
+					$this->data['seller']['thumb'] = $this->MsLoader->MsFile->resizeImage($seller['avatar_path'], $this->config->get('config_image_category_width'), $this->config->get('config_image_category_height'));
 					
 				$country = $this->model_localisation_country->getCountry($seller['country_id']);
 				
@@ -331,11 +331,11 @@
 				
 				$this->data['seller']['href'] = $this->url->link('product/seller/profile', 'seller_id=' . $seller['seller_id']);
 				
-				$this->data['seller']['total_sales'] = $this->registry->get('MsLoader')->get('MsSeller')->getSalesForSeller($seller['seller_id']);
-				$this->data['seller']['total_products'] = $this->registry->get('MsLoader')->get('MsSeller')->getTotalSellerProducts($seller['seller_id'], TRUE);
+				$this->data['seller']['total_sales'] = $this->MsLoader->MsSeller->getSalesForSeller($seller['seller_id']);
+				$this->data['seller']['total_products'] = $this->MsLoader->MsSeller->getTotalSellerProducts($seller['seller_id'], TRUE);
 			}
 
-			$this->data['ms_product_attributes'] = $this->registry->get('MsLoader')->get('MsProduct')->getProductAttributes($this->request->get['product_id']);
+			$this->data['ms_product_attributes'] = $this->MsLoader->MsProduct->getProductAttributes($this->request->get['product_id']);
 
 			]]></add>
 		</operation>
@@ -503,7 +503,7 @@
 			<add><![CDATA[
 			$this->language->load('module/multiseller');
 			$this->data['column_seller'] = $this->language->get('ms_seller');
-			$seller = $this->registry->get('MsLoader')->get('MsSeller')->getSellerDataForProduct($product['product_id']);
+			$seller = $this->MsLoader->MsSeller->getSellerDataForProduct($product['product_id']);
 			]]></add>
 		</operation>	
 	
@@ -586,9 +586,9 @@
 					'limit'					 => 10,
 				);
 				
-				$email_total = $this->registry->get('MsLoader')->get('MsSeller')->getTotalSellers(TRUE);
+				$email_total = $this->MsLoader->MsSeller->getTotalSellers(TRUE);
 				
-				$results = $this->registry->get('MsLoader')->get('MsSeller')->getSellers($sort, TRUE);
+				$results = $this->MsLoader->MsSeller->getSellers($sort, TRUE);
 				
 				foreach ($results as $result) {
 					$emails[] = $result['email'];

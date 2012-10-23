@@ -147,7 +147,7 @@ final class MsSeller {
 
 		$res = $this->db->query($sql);
 		
-		$review_statuses = $this->registry->get('MsLoader')->get('MsProduct')->getProductStatusArray();
+		$review_statuses = $this->MsLoader->MsProduct->getProductStatusArray();
 		foreach ($res->rows as &$row) {
 			if ($row['review_status_id'] != MsProduct::MS_PRODUCT_STATUS_SELLER_DELETED) {
 				$row['review_status'] = $review_statuses[$row['review_status_id']];
@@ -179,7 +179,7 @@ final class MsSeller {
 		$res = $this->db->query($sql);
 		
 		
-		$review_statuses = $this->registry->get('MsLoader')->get('MsProduct')->getProductStatusArray();
+		$review_statuses = $this->MsLoader->MsProduct->getProductStatusArray();
 		foreach ($res->rows as &$row) {
 			$row['review_status'] = $review_statuses[$row['review_status_id']];
 			$row['status'] = $row['status_id'] ? $this->language->get('text_yes') : $this->language->get('text_no');
@@ -202,7 +202,7 @@ final class MsSeller {
 		
 	public function createSeller($data) {
 		if (isset($data['sellerinfo_avatar_name'])) {
-			$avatar = $this->registry->get('MsLoader')->get('MsFile')->moveImage($data['sellerinfo_avatar_name']);
+			$avatar = $this->MsLoader->MsFile->moveImage($data['sellerinfo_avatar_name']);
 		} else {
 			$avatar = '';
 		}
@@ -251,12 +251,12 @@ final class MsSeller {
 		$old_avatar = $this->getSellerAvatar($seller_id);
 		
 		if (!isset($data['sellerinfo_avatar_name']) || ($old_avatar['avatar'] != $data['sellerinfo_avatar_name'])) {
-			$this->registry->get('MsLoader')->get('MsFile')->deleteImage($old_avatar['avatar']);
+			$this->MsLoader->MsFile->deleteImage($old_avatar['avatar']);
 		}
 		
 		if (isset($data['sellerinfo_avatar_name'])) {
 			if ($old_avatar['avatar'] != $data['sellerinfo_avatar_name']) {			
-				$avatar = $this->registry->get('MsLoader')->get('MsFile')->moveImage($data['sellerinfo_avatar_name']);
+				$avatar = $this->MsLoader->MsFile->moveImage($data['sellerinfo_avatar_name']);
 			} else {
 				$avatar = $old_avatar['avatar'];
 			}
