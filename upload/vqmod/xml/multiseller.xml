@@ -374,7 +374,12 @@
 			]]></search>
 			<add><![CDATA[
 				} elseif (isset($this->request->get['seller_id'])) {
-				$this->request->get['route'] = 'product/seller/profile';
+					if (strpos($this->request->get['_route_'], "products") !== FALSE) {
+						$this->request->get['route'] = 'product/seller/products';
+					}
+					else {
+						$this->request->get['route'] = 'product/seller/profile';
+					}
 			]]></add>
 		</operation>
 	
@@ -383,7 +388,24 @@
 				if (($data['route'] == 'product/product' && $key == 'product_id') || (($data['route'] == 'product/manufacturer/info' || $data['route'] == 'product/product') && $key == 'manufacturer_id') || ($data['route'] == 'information/information' && $key == 'information_id')) {
 			]]></search>
 			<add><![CDATA[
-				if (($data['route'] == 'product/product' && $key == 'product_id') || (($data['route'] == 'product/manufacturer/info' || $data['route'] == 'product/product') && $key == 'manufacturer_id') || ($data['route'] == 'product/seller/profile' && $key == 'seller_id') || ($data['route'] == 'information/information' && $key == 'information_id')) {
+				if (($data['route'] == 'product/product' && $key == 'product_id') || (($data['route'] == 'product/manufacturer/info' || $data['route'] == 'product/product') && $key == 'manufacturer_id') || ($data['route'] == 'product/seller/profile' && $key == 'seller_id') || ($data['route'] == 'product/seller/products' && $key == 'seller_id') || ($data['route'] == 'information/information' && $key == 'information_id')) {
+			]]></add>
+		</operation>
+		
+		<operation>
+			<search position="replace"><![CDATA[
+				$url .= '/' . $query->row['keyword'];
+			]]></search>
+			<add><![CDATA[
+				if ($data['route'] == 'product/seller/profile') {
+					$url .= '/sellers/' . $query->row['keyword'];
+				}
+				else if ($data['route'] == 'product/seller/products') {
+					$url .= '/sellers/' . $query->row['keyword'] . '/products/';
+				}
+				else {
+					$url .= '/' . $query->row['keyword'];
+				}
 			]]></add>
 		</operation>
 	</file>
