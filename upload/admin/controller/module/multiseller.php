@@ -13,13 +13,11 @@ class ControllerModuleMultiseller extends Controller {
 		$this->registry = $registry;
 		require_once(DIR_SYSTEM . 'library/ms-request.php');
 		require_once(DIR_SYSTEM . 'library/ms-transaction.php');
-		require_once(DIR_SYSTEM . 'library/ms-mail.php');
 		
 		$this->load->config('ms-config');
 		
 		$parts = explode('/', $this->request->request['route']);
 		if (!isset($parts[2]) || !in_array($parts[2], array('install','uninstall'))) {
-			$this->msMail = new MsMail($registry);
 		}
 		
 		$this->data = array_merge($this->data, $this->load->language('module/multiseller'));
@@ -276,7 +274,7 @@ class ControllerModuleMultiseller extends Controller {
 			$this->registry->get('MsLoader')->get('MsSeller')->adminEditSeller($data);
 			
 			if ($data['sellerinfo_notify']) {
-				$this->msMail->sendMails($mails);
+				$this->registry->get('MsLoader')->get('MsMail')->sendMails($mails);
 			}
 			
 			$this->session->data['success'] = 'Seller account data saved.';
@@ -896,7 +894,7 @@ class ControllerModuleMultiseller extends Controller {
 				$msRequest->processProductRequests($product_id,$this->user->getId(),$this->request->post['product_message']);
 			}
 			unset($msRequest);
-			$this->msMail->sendMails($mails);
+			$this->registry->get('MsLoader')->get('MsMail')->sendMails($mails);
 			$this->session->data['success'] = 'Successfully changed product status.';
 		} else {
 			$this->session->data['error'] = 'Error changing product status.';

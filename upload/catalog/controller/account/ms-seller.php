@@ -9,8 +9,6 @@ class ControllerAccountMsSeller extends Controller {
 		require_once(DIR_SYSTEM . 'library/ms-image.php');
 		require_once(DIR_SYSTEM . 'library/ms-request.php');
 		require_once(DIR_SYSTEM . 'library/ms-transaction.php');
-		require_once(DIR_SYSTEM . 'library/ms-mail.php');
-		$this->msMail = new MsMail($this->registry);
 		$this->data = array_merge($this->data, $this->load->language('module/multiseller'),$this->load->language('account/account'));
 		$parts = explode('/', $this->request->request['route']);
 
@@ -30,7 +28,6 @@ class ControllerAccountMsSeller extends Controller {
 	  				if (isset($_POST['token']) && isset($_POST['timestamp']) && $_POST['token'] == md5($salt . $_POST['timestamp'])) {
 	  					$this->session->data['customer_id'] = $_SESSION['customer_id'];
 	  					$this->customer = new Customer($this->registry);
-	  					$this->msFile = new MsFile($this->registry);
 	  				}
 	  			}
 	  		}
@@ -686,7 +683,7 @@ class ControllerAccountMsSeller extends Controller {
 				$mail['data']['product_id'] = $product_id;
 			}
 			
-			$this->msMail->sendMails($mails);
+			$this->registry->get('MsLoader')->get('MsMail')->sendMails($mails);
 			
 			$json['redirect'] = $this->url->link('account/ms-seller/products', '', 'SSL');
 		}
@@ -755,7 +752,7 @@ class ControllerAccountMsSeller extends Controller {
 				'type' => MsMail::AMT_WITHDRAW_REQUEST_SUBMITTED,
 			);
 			
-			$this->msMail->sendMails($mails);
+			$this->registry->get('MsLoader')->get('MsMail')->sendMails($mails);
 			
 			$this->session->data['success'] = $this->language->get('ms_request_submitted');
 			$json['redirect'] = $this->url->link('account/ms-seller/transactions', '', 'SSL');
@@ -901,7 +898,7 @@ class ControllerAccountMsSeller extends Controller {
 				$data['seller_id'] = $this->customer->getId();
 				$data['sellerinfo_product_validation'] = $this->config->get('msconf_product_validation'); 
 				$this->registry->get('MsLoader')->get('MsSeller')->createSeller($data);
-				$this->msMail->sendMails($mails);
+				$this->registry->get('MsLoader')->get('MsMail')->sendMails($mails);
 				$this->session->data['success'] = $this->language->get('ms_account_sellerinfo_saved');
 			} else {
 				// edit seller
@@ -1229,13 +1226,6 @@ class ControllerAccountMsSeller extends Controller {
 		$this->_setBreadcrumbs('ms_account_withdraw_breadcrumbs', __FUNCTION__);		
 		$this->_renderTemplate('ms-account-withdraw');
 	}
-	
-	/*
-	public function test() {
-		$msMail = new MsMail($this->registry);
-		$msMail->sendMail(MsMail::SMT_PRODUCT_AWAITING_MODERATION, array('product_id' => 76, 'message' => "We don't like it, lol\n Deal with it"));
-	}
-	*/
 	
 	public function download() {
 		if (!$this->customer->isLogged()) {

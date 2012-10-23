@@ -4,8 +4,6 @@ class ControllerProductSeller extends Controller {
 		parent::__construct($registry);
 		require_once(DIR_SYSTEM . 'library/ms-request.php');
 		require_once(DIR_SYSTEM . 'library/ms-transaction.php');
-		require_once(DIR_SYSTEM . 'library/ms-mail.php');
-		$this->msMail = new MsMail($this->registry);
 		
 		$this->document->addStyle('catalog/view/theme/' . $this->config->get('config_template') . '/stylesheet/multiseller.css');
 		$this->data = array_merge($this->data, $this->load->language('module/multiseller'),$this->load->language('account/account'),$this->language->load('product/product'));
@@ -639,7 +637,7 @@ class ControllerProductSeller extends Controller {
 					'addressee' => $seller_name
 				)
 			);  		
-	  		$this->msMail->sendMails($mails);
+	  		$this->registry->get('MsLoader')->get('MsMail')->sendMails($mails);
   			$json['success'] = $this->language->get('ms_sellercontact_success');
   		}
   		$this->response->setOutput(json_encode($json));

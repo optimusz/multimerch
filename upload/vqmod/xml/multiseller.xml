@@ -182,13 +182,11 @@
 			]]></search>
 			<add><![CDATA[
 				require_once(DIR_SYSTEM . 'library/ms-transaction.php');
-				require_once(DIR_SYSTEM . 'library/ms-mail.php');
 				$msTransaction = new MsTransaction($this->registry);
-				$msMail = new MsMail($this->registry);
 
 				if (in_array($order_status_id, explode(',',$this->config->get('msconf_credit_order_statuses')))) {
 					$msTransaction->addTransactionsForOrder($order_id);
-					$msMail->sendOrderMails($order_id);
+					$this->registry->get('MsLoader')->get('MsMail')->sendOrderMails($order_id);
 				} else if (in_array($order_status_id, explode(',',$this->config->get('msconf_debit_order_statuses')))) {
 					$msTransaction->addTransactionsForOrder($order_id, TRUE);
 				}
