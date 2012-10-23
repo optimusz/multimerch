@@ -18,7 +18,7 @@ class ControllerModuleMsSellerdropdown extends Controller {
 		if (!isset($setting['height']) || (int)$setting['height'] <= 0)
 			$setting['height'] = $this->config->get('config_image_category_height');
 			
-		$this->data['sellers_href'] = $this->url->link('product/seller');
+		$this->data['sellers_href'] = $this->url->link('seller/seller');
 				
 		$data = array(
 			'order_by'               => 'date_added',
@@ -33,7 +33,7 @@ class ControllerModuleMsSellerdropdown extends Controller {
 		foreach ($results as $result) {
 			$this->data['sellers'][] = array(
 				'nickname'        => $result['nickname'],
-				'href'        => $this->url->link('product/seller/profile','seller_id=' . $result['seller_id']),
+				'href'        => $this->url->link('seller/seller/profile','seller_id=' . $result['seller_id']),
 			);
 		}
 		$this->data['module'] = $module++; 

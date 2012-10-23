@@ -22,13 +22,13 @@ class ControllerSellerSeller extends Controller {
 
       	$this->data['breadcrumbs'][] = array(
         	'text'      => $this->language->get('ms_catalog_sellers'),
-			'href'      => $this->url->link('product/seller', '', 'SSL'),        	
+			'href'      => $this->url->link('seller/seller', '', 'SSL'),        	
         	'separator' => $this->language->get('text_separator')
       	);
 
       	$this->data['breadcrumbs'][] = array(
         	'text'      => $this->language->get($textVar),
-			'href'      => $this->url->link("product/seller/" . strtolower($function), $parms, 'SSL'),       	
+			'href'      => $this->url->link("seller/seller/" . strtolower($function), $parms, 'SSL'),       	
         	'separator' => $this->language->get('text_separator')
       	);
 	}
@@ -114,7 +114,7 @@ class ControllerSellerSeller extends Controller {
 				'country_flag' => ($country ? 'image/flags/' . strtolower($country['iso_code_2']) . '.png' : NULL),
 				'total_sales' => $this->MsLoader->MsSeller->getSalesForSeller($result['seller_id']),
 				'total_products' => $this->MsLoader->MsSeller->getTotalSellerProducts($result['seller_id'], TRUE),
-				'href'        => $this->url->link('product/seller/profile', '&seller_id=' . $result['seller_id'])
+				'href'        => $this->url->link('seller/seller/profile', '&seller_id=' . $result['seller_id'])
 			);
 		}
 		
@@ -129,25 +129,25 @@ class ControllerSellerSeller extends Controller {
 		$this->data['sorts'][] = array(
 			'text'  => $this->language->get('ms_sort_nickname_asc'),
 			'value' => 'ms.nickname-ASC',
-			'href'  => $this->url->link('product/seller', '&sort=ms.nickname&order=ASC' . $url)
+			'href'  => $this->url->link('seller/seller', '&sort=ms.nickname&order=ASC' . $url)
 		);
 
 		$this->data['sorts'][] = array(
 			'text'  => $this->language->get('ms_sort_nickname_desc'),
 			'value' => 'ms.nickname-DESC',
-			'href'  => $this->url->link('product/seller', '&sort=ms.nickname&order=DESC' . $url)
+			'href'  => $this->url->link('seller/seller', '&sort=ms.nickname&order=DESC' . $url)
 		);
 
 		$this->data['sorts'][] = array(
 			'text'  => $this->language->get('ms_sort_country_asc'),
 			'value' => 'ms.country_id-ASC',
-			'href'  => $this->url->link('product/seller', '&sort=ms.country_id&order=ASC' . $url)
+			'href'  => $this->url->link('seller/seller', '&sort=ms.country_id&order=ASC' . $url)
 		); 
 
 		$this->data['sorts'][] = array(
 			'text'  => $this->language->get('ms_sort_country_desc'),
 			'value' => 'ms.country_id-DESC',
-			'href'  => $this->url->link('product/seller', '&sort=ms.country_id&order=DESC' . $url)
+			'href'  => $this->url->link('seller/seller', '&sort=ms.country_id&order=DESC' . $url)
 		); 
 		
 		$url = '';
@@ -166,31 +166,31 @@ class ControllerSellerSeller extends Controller {
 		$this->data['limits'][] = array(
 			'text'  => $this->config->get('config_catalog_limit'),
 			'value' => $this->config->get('config_catalog_limit'),
-			'href'  => $this->url->link('product/seller', $url . '&limit=' . $this->config->get('config_catalog_limit'))
+			'href'  => $this->url->link('seller/seller', $url . '&limit=' . $this->config->get('config_catalog_limit'))
 		);
 					
 		$this->data['limits'][] = array(
 			'text'  => 25,
 			'value' => 25,
-			'href'  => $this->url->link('product/seller', $url . '&limit=25')
+			'href'  => $this->url->link('seller/seller', $url . '&limit=25')
 		);
 		
 		$this->data['limits'][] = array(
 			'text'  => 50,
 			'value' => 50,
-			'href'  => $this->url->link('product/seller', $url . '&limit=50')
+			'href'  => $this->url->link('seller/seller', $url . '&limit=50')
 		);
 
 		$this->data['limits'][] = array(
 			'text'  => 75,
 			'value' => 75,
-			'href'  => $this->url->link('product/seller', $url . '&limit=75')
+			'href'  => $this->url->link('seller/seller', $url . '&limit=75')
 		);
 		
 		$this->data['limits'][] = array(
 			'text'  => 100,
 			'value' => 100,
-			'href'  => $this->url->link('product/seller', $url . '&limit=100')
+			'href'  => $this->url->link('seller/seller', $url . '&limit=100')
 		);
 		
 		$url = '';
@@ -212,7 +212,7 @@ class ControllerSellerSeller extends Controller {
 		$pagination->page = $page;
 		$pagination->limit = $limit;
 		$pagination->text = $this->language->get('text_pagination');
-		$pagination->url = $this->url->link('product/seller', $url . '&page={page}');
+		$pagination->url = $this->url->link('seller/seller', $url . '&page={page}');
 	
 		$this->data['pagination'] = $pagination->render();
 		
@@ -233,7 +233,7 @@ class ControllerSellerSeller extends Controller {
 
       	$this->data['breadcrumbs'][] = array(
         	'text'      => $this->language->get('ms_catalog_sellers'),
-			'href'      => $this->url->link('product/seller', '', 'SSL'),        	
+			'href'      => $this->url->link('seller/seller', '', 'SSL'),        	
         	'separator' => $this->language->get('text_separator')
       	);
       	
@@ -248,7 +248,7 @@ class ControllerSellerSeller extends Controller {
 		$this->document->addScript('catalog/view/javascript/ms-contactseller.js');
 
 		if (empty($seller) || $seller['seller_status_id'] != MsSeller::MS_SELLER_STATUS_ACTIVE) {
-			$this->redirect($this->url->link('product/seller', '', 'SSL'));
+			$this->redirect($this->url->link('seller/seller', '', 'SSL'));
 			return;
 		}
 			
@@ -261,7 +261,7 @@ class ControllerSellerSeller extends Controller {
 		$this->data['seller']['nickname'] = $seller['nickname'];
 		$this->data['seller']['description'] = $seller['description'];
 		$this->data['seller']['thumb'] = $image;
-		$this->data['seller']['href'] = $this->url->link('product/seller/products', 'seller_id=' . $seller['seller_id']);
+		$this->data['seller']['href'] = $this->url->link('seller/seller/products', 'seller_id=' . $seller['seller_id']);
 		$this->data['seller_id'] = $this->request->get['seller_id'];
 		
 		$country = $this->model_localisation_country->getCountry($seller['country_id']);
@@ -354,7 +354,7 @@ class ControllerSellerSeller extends Controller {
 		$seller = $this->MsLoader->MsSeller->getSellerData($this->request->get['seller_id']);
 
 		if (empty($seller) || $seller['seller_status_id'] != MsSeller::MS_SELLER_STATUS_ACTIVE) {
-			$this->redirect($this->url->link('product/seller', '', 'SSL'));
+			$this->redirect($this->url->link('seller/seller', '', 'SSL'));
 			return;
 		}
 		
@@ -368,7 +368,7 @@ class ControllerSellerSeller extends Controller {
 		$this->data['seller']['nickname'] = $seller['nickname'];
 		$this->data['seller']['description'] = $seller['description'];
 		$this->data['seller']['thumb'] = $image;
-		$this->data['seller']['href'] = $this->url->link('product/seller/profile', 'seller_id=' . $seller['seller_id']);
+		$this->data['seller']['href'] = $this->url->link('seller/seller/profile', 'seller_id=' . $seller['seller_id']);
 		
 		$country = $this->model_localisation_country->getCountry($seller['country_id']);
 		
@@ -495,26 +495,26 @@ class ControllerSellerSeller extends Controller {
 		$this->data['sorts'][] = array(
 			'text'  => $this->language->get('ms_sort_nickname_asc'),
 			'value' => 'pd.name-ASC',
-			'href'  => $this->url->link('product/seller/products', '&sort=pd.name&order=ASC&seller_id=' . $seller['seller_id'] . $url)
+			'href'  => $this->url->link('seller/seller/products', '&sort=pd.name&order=ASC&seller_id=' . $seller['seller_id'] . $url)
 		);
 
 		$this->data['sorts'][] = array(
 			'text'  => $this->language->get('ms_sort_nickname_desc'),
 			'value' => 'pd.name-DESC',
-			'href'  => $this->url->link('product/seller/products', '&sort=pd.name&order=DESC&seller_id=' . $seller['seller_id'] . $url)
+			'href'  => $this->url->link('seller/seller/products', '&sort=pd.name&order=DESC&seller_id=' . $seller['seller_id'] . $url)
 		);
 
 		/*
 		$this->data['sorts'][] = array(
 			'text'  => $this->language->get('ms_sort_country_asc'),
 			'value' => 'ms.country_id-ASC',
-			'href'  => $this->url->link('product/seller/products', '&sort=ms.country_id&order=ASC' . $url)
+			'href'  => $this->url->link('seller/seller/products', '&sort=ms.country_id&order=ASC' . $url)
 		); 
 
 		$this->data['sorts'][] = array(
 			'text'  => $this->language->get('ms_sort_country_desc'),
 			'value' => 'ms.country_id-DESC',
-			'href'  => $this->url->link('product/seller/products', '&sort=ms.country_id&order=DESC' . $url)
+			'href'  => $this->url->link('seller/seller/products', '&sort=ms.country_id&order=DESC' . $url)
 		); 
 		*/
 		$url = '';
@@ -533,31 +533,31 @@ class ControllerSellerSeller extends Controller {
 		$this->data['limits'][] = array(
 			'text'  => $this->config->get('config_catalog_limit'),
 			'value' => $this->config->get('config_catalog_limit'),
-			'href'  => $this->url->link('product/seller/products', $url . '&limit=' . $this->config->get('config_catalog_limit') . '&seller_id=' . $seller['seller_id'])
+			'href'  => $this->url->link('seller/seller/products', $url . '&limit=' . $this->config->get('config_catalog_limit') . '&seller_id=' . $seller['seller_id'])
 		);
 					
 		$this->data['limits'][] = array(
 			'text'  => 25,
 			'value' => 25,
-			'href'  => $this->url->link('product/seller/products', $url . '&limit=25&seller_id=' . $seller['seller_id'])
+			'href'  => $this->url->link('seller/seller/products', $url . '&limit=25&seller_id=' . $seller['seller_id'])
 		);
 		
 		$this->data['limits'][] = array(
 			'text'  => 50,
 			'value' => 50,
-			'href'  => $this->url->link('product/seller/products', $url . '&limit=50&seller_id=' . $seller['seller_id'])
+			'href'  => $this->url->link('seller/seller/products', $url . '&limit=50&seller_id=' . $seller['seller_id'])
 		);
 
 		$this->data['limits'][] = array(
 			'text'  => 75,
 			'value' => 75,
-			'href'  => $this->url->link('product/seller/products', $url . '&limit=75&seller_id=' . $seller['seller_id'])
+			'href'  => $this->url->link('seller/seller/products', $url . '&limit=75&seller_id=' . $seller['seller_id'])
 		);
 		
 		$this->data['limits'][] = array(
 			'text'  => 100,
 			'value' => 100,
-			'href'  => $this->url->link('product/seller/products', $url . '&limit=100&seller_id=' . $seller['seller_id'])
+			'href'  => $this->url->link('seller/seller/products', $url . '&limit=100&seller_id=' . $seller['seller_id'])
 		);
 		
 		$url = '';
@@ -579,7 +579,7 @@ class ControllerSellerSeller extends Controller {
 		$pagination->page = $page;
 		$pagination->limit = $limit;
 		$pagination->text = $this->language->get('text_pagination');
-		$pagination->url = $this->url->link('product/seller/products', $url . '&page={page}');
+		$pagination->url = $this->url->link('seller/seller/products', $url . '&page={page}');
 	
 		$this->data['pagination'] = $pagination->render();
 		
@@ -664,7 +664,7 @@ class ControllerSellerSeller extends Controller {
 		if (!empty($seller['avatar_path']))
 			$this->data['seller_thumb'] = $this->MsLoader->MsFile->resizeImage($seller['avatar_path'], $this->config->get('config_image_category_width'), $this->config->get('config_image_category_height'));
 			
-		$this->data['seller_href'] = $this->url->link('product/seller/profile', 'seller_id=' . $seller['seller_id']);
+		$this->data['seller_href'] = $this->url->link('seller/seller/profile', 'seller_id=' . $seller['seller_id']);
 		$this->data['ms_sellercontact_sendmessage'] = sprintf($this->language->get('ms_sellercontact_sendmessage'), $seller['nickname']);
 		
   		return $this->_renderTemplate('ms-catalog-sellercontact');

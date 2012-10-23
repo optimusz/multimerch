@@ -235,7 +235,7 @@
 			    		
 			    		<p><b><?php echo $ms_catalog_seller_profile_totalsales; ?></b> <?php echo $seller['total_sales']; ?></p>
 			    		<p><b><?php echo $ms_catalog_seller_profile_totalproducts; ?></b> <?php echo $seller['total_products']; ?></p>
-						<p><a href="index.php?route=product/seller/jxRenderContactDialog&product_id=<?php echo $product_id; ?>" class="ms-sellercontact" title="<?php echo $ms_sellercontact_title; ?>"><?php echo $ms_catalog_product_contact; ?></a></p>
+						<p><a href="index.php?route=seller/seller/jxRenderContactDialog&product_id=<?php echo $product_id; ?>" class="ms-sellercontact" title="<?php echo $ms_sellercontact_title; ?>"><?php echo $ms_catalog_product_contact; ?></a></p>
 		    		</div>
 		    	</div>
 		    </div>
@@ -329,7 +329,7 @@
 				
 				$this->data['seller']['nickname'] = $seller['nickname'];
 				
-				$this->data['seller']['href'] = $this->url->link('product/seller/profile', 'seller_id=' . $seller['seller_id']);
+				$this->data['seller']['href'] = $this->url->link('seller/seller/profile', 'seller_id=' . $seller['seller_id']);
 				
 				$this->data['seller']['total_sales'] = $this->MsLoader->MsSeller->getSalesForSeller($seller['seller_id']);
 				$this->data['seller']['total_products'] = $this->MsLoader->MsSeller->getTotalSellerProducts($seller['seller_id'], TRUE);
