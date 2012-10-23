@@ -65,10 +65,7 @@
 			]]></search>
 			<add><![CDATA[
 				$this->data = array_merge($this->data, $this->load->language('module/multiseller'));
-				require_once(DIR_SYSTEM . 'library/ms-product.php');
-				$msProduct = new MsProduct($this->registry);				
-
-				$this->data['ms_total_products'] = $msProduct->getTotalProducts(TRUE, FALSE);
+				$this->data['ms_total_products'] = $this->registry->get('MsLoader')->get('MsProduct')->getTotalProducts(TRUE, FALSE);
 				$this->data['ms_total_sellers'] = $this->registry->get('MsLoader')->get('MsSeller')->getTotalSellers(TRUE);
 			]]></add>
 		</operation>	
@@ -302,12 +299,10 @@
 			$this->document->addStyle('catalog/view/theme/' . $this->config->get('config_template') . '/stylesheet/multiseller.css');
 			$this->data = array_merge($this->data, $this->load->language('module/multiseller'));
 			require_once(DIR_SYSTEM . 'library/ms-file.php');
-			require_once(DIR_SYSTEM . 'library/ms-product.php');
 			$this->load->model('localisation/country');
 			$msFile = new MsFile($this->registry);
-			$msProduct = new MsProduct($this->registry);
 			
-			$seller_id = $msProduct->getSellerId($this->request->get['product_id']);
+			$seller_id = $this->registry->get('MsLoader')->get('MsProduct')->getSellerId($this->request->get['product_id']);
 			$seller = $this->registry->get('MsLoader')->get('MsSeller')->getSellerData($seller_id);
 			
 			if (empty($seller)) {
@@ -344,7 +339,7 @@
 				$this->data['seller']['total_products'] = $this->registry->get('MsLoader')->get('MsSeller')->getTotalSellerProducts($seller['seller_id'], TRUE);
 			}
 
-			$this->data['ms_product_attributes'] = $msProduct->getProductAttributes($this->request->get['product_id']);
+			$this->data['ms_product_attributes'] = $this->registry->get('MsLoader')->get('MsProduct')->getProductAttributes($this->request->get['product_id']);
 
 			]]></add>
 		</operation>

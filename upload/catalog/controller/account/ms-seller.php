@@ -2,8 +2,6 @@
 
 class ControllerAccountMsSeller extends Controller {
 	private $name = 'ms-seller';
-	private $msSeller;
-	private $msProduct;
 	
 	public function __construct($registry) {
 		parent::__construct($registry);
@@ -11,10 +9,8 @@ class ControllerAccountMsSeller extends Controller {
 		require_once(DIR_SYSTEM . 'library/ms-image.php');
 		require_once(DIR_SYSTEM . 'library/ms-request.php');
 		require_once(DIR_SYSTEM . 'library/ms-transaction.php');
-		require_once(DIR_SYSTEM . 'library/ms-product.php');
 		require_once(DIR_SYSTEM . 'library/ms-mail.php');
 		require_once(DIR_SYSTEM . 'library/ms-file.php');
-		$this->msProduct = new MsProduct($this->registry);
 		$this->msMail = new MsMail($this->registry);
 		$this->msFile = new MsFile($this->registry);
 		$this->data = array_merge($this->data, $this->load->language('module/multiseller'),$this->load->language('account/account'));
@@ -137,7 +133,7 @@ class ControllerAccountMsSeller extends Controller {
 			$download_id = (int)substr($this->request->post['file_id'], strrpos($this->request->post['file_id'], '-')+1);
 			$product_id = (int)$this->request->post['product_id'];
 			$seller_id = $this->customer->getId();
-			if  ($this->msProduct->productOwnedBySeller($product_id,$seller_id) && $this->msProduct->hasDownload($product_id,$download_id)) {
+			if  ($this->registry->get('MsLoader')->get('MsProduct')->productOwnedBySeller($product_id,$seller_id) && $this->registry->get('MsLoader')->get('MsProduct')->hasDownload($product_id,$download_id)) {
 				$file = array_shift($_FILES);
 				$errors = $this->msFile->checkDownload($file);
 				
@@ -269,9 +265,9 @@ class ControllerAccountMsSeller extends Controller {
 		$data = $this->request->post;
 		
 		if (isset($data['product_id']) && !empty($data['product_id'])) {
-			if  ($this->msProduct->productOwnedBySeller($data['product_id'], $this->customer->getId())) {
-				$product = $this->msProduct->getProduct($data['product_id']);
-				$data['images'] = $this->msProduct->getProductImages($data['product_id']);
+			if  ($this->registry->get('MsLoader')->get('MsProduct')->productOwnedBySeller($data['product_id'], $this->customer->getId())) {
+				$product = $this->registry->get('MsLoader')->get('MsProduct')->getProduct($data['product_id']);
+				$data['images'] = $this->registry->get('MsLoader')->get('MsProduct')->getProductImages($data['product_id']);
 			} else {
 				return;
 			}
@@ -326,7 +322,7 @@ class ControllerAccountMsSeller extends Controller {
 						$json['errors']['product_download'] = $this->language->get('ms_error_file_upload_error');
 					}						
 				} else if (!empty($download['download_id']) && !empty($product['product_id'])) {
-					if (!$this->msProduct->hasDownload($product['product_id'],$download['download_id'])) {
+					if (!$this->registry->get('MsLoader')->get('MsProduct')->hasDownload($product['product_id'],$download['download_id'])) {
 						var_dump($download);
 						$json['errors']['product_download'] = $this->language->get('ms_error_file_upload_error');
 					}
@@ -400,9 +396,9 @@ class ControllerAccountMsSeller extends Controller {
 			$data['review_status_id'] = MsProduct::MS_PRODUCT_STATUS_DRAFT;
 
 			if (isset($data['product_id']) && !empty($data['product_id'])) {
-				$this->msProduct->editProduct($data);
+				$this->registry->get('MsLoader')->get('MsProduct')->editProduct($data);
 			} else {
-				$this->msProduct->saveProduct($data);
+				$this->registry->get('MsLoader')->get('MsProduct')->saveProduct($data);
 			}
 			
 			$json['redirect'] = $this->url->link('account/ms-seller/products', '', 'SSL');			
@@ -416,9 +412,9 @@ class ControllerAccountMsSeller extends Controller {
 		$seller = $this->registry->get('MsLoader')->get('MsSeller')->getSellerData($this->customer->getId());
 
 		if (isset($data['product_id']) && !empty($data['product_id'])) {
-			if  ($this->msProduct->productOwnedBySeller($data['product_id'], $this->customer->getId())) {
-				$product = $this->msProduct->getProduct($data['product_id']);
-				$data['images'] = $this->msProduct->getProductImages($data['product_id']);
+			if  ($this->registry->get('MsLoader')->get('MsProduct')->productOwnedBySeller($data['product_id'], $this->customer->getId())) {
+				$product = $this->registry->get('MsLoader')->get('MsProduct')->getProduct($data['product_id']);
+				$data['images'] = $this->registry->get('MsLoader')->get('MsProduct')->getProductImages($data['product_id']);
 			} else {
 				return;
 			}
@@ -494,7 +490,7 @@ class ControllerAccountMsSeller extends Controller {
 							$json['errors']['product_download'] = $this->language->get('ms_error_file_upload_error');
 						}						
 					} else if (!empty($download['download_id']) && !empty($product['product_id'])) {
-						if (!$this->msProduct->hasDownload($product['product_id'],$download['download_id'])) {
+						if (!$this->registry->get('MsLoader')->get('MsProduct')->hasDownload($product['product_id'],$download['download_id'])) {
 							var_dump($download);
 							$json['errors']['product_download'] = $this->language->get('ms_error_file_upload_error');
 						}
@@ -549,9 +545,9 @@ class ControllerAccountMsSeller extends Controller {
 			$product_attributes = $data['product_attributes'];
 			unset($data['product_attributes']);
 						
-			foreach ($this->msProduct->getOptions(array('option_ids' => $this->config->get('msconf_product_options'))) as $option) {
+			foreach ($this->registry->get('MsLoader')->get('MsProduct')->getOptions(array('option_ids' => $this->config->get('msconf_product_options'))) as $option) {
 				$options[$option['option_id']] = $option;
-				$options[$option['option_id']]['values'] = $this->msProduct->getOptionValues($option['option_id']);
+				$options[$option['option_id']]['values'] = $this->registry->get('MsLoader')->get('MsProduct')->getOptionValues($option['option_id']);
 			}
 			foreach ($product_attributes as $option_id => $attr) {
 				if (!isset($options[$option_id])) continue;
@@ -672,9 +668,9 @@ class ControllerAccountMsSeller extends Controller {
 			}
 
 			if (isset($data['product_id']) && !empty($data['product_id'])) {
-				$product_id = $this->msProduct->editProduct($data);
+				$product_id = $this->registry->get('MsLoader')->get('MsProduct')->editProduct($data);
 			} else {
-				$product_id = $this->msProduct->saveProduct($data);
+				$product_id = $this->registry->get('MsLoader')->get('MsProduct')->saveProduct($data);
 			}
 			
 			if (isset($request_type)) {
@@ -793,7 +789,7 @@ class ControllerAccountMsSeller extends Controller {
   		}
   		
   		/* else if (!empty($this->request->post['fileId'])) {
-  			$download = $this->msProduct->getDownload($this->request->post['fileId']);
+  			$download = $this->registry->get('MsLoader')->get('MsProduct')->getDownload($this->request->post['fileId']);
   			$fileName = $download['filename'];
   			$this->data['fileMask'] = substr($fileName, 0, strrpos($fileName,'.'));//+1,mb_strlen($fileName));
   		} else {
@@ -933,15 +929,15 @@ class ControllerAccountMsSeller extends Controller {
 		$this->data['seller'] = $this->registry->get('MsLoader')->get('MsSeller')->getSellerData($this->customer->getId());
 		
 		if (!$this->config->get('msconf_allow_multiple_categories'))
-			$this->data['categories'] = $this->msProduct->getCategories();		
+			$this->data['categories'] = $this->registry->get('MsLoader')->get('MsProduct')->getCategories();		
 		else
-			$this->data['categories'] = $this->msProduct->getMultipleCategories(0);
+			$this->data['categories'] = $this->registry->get('MsLoader')->get('MsProduct')->getMultipleCategories(0);
 
 //
 		$this->data['options'] = array();
-		$options = $this->msProduct->getOptions(array('option_ids' => $this->config->get('msconf_product_options')));
+		$options = $this->registry->get('MsLoader')->get('MsProduct')->getOptions(array('option_ids' => $this->config->get('msconf_product_options')));
 		foreach ($options as $option) {
-			$option_values = $this->msProduct->getOptionValues($option['option_id']);
+			$option_values = $this->registry->get('MsLoader')->get('MsProduct')->getOptionValues($option['option_id']);
 			$option['values'] = $option_values;
 			$this->data['options'][] = $option;
 		}
@@ -1026,9 +1022,9 @@ class ControllerAccountMsSeller extends Controller {
 		$this->data['seller'] = $this->registry->get('MsLoader')->get('MsSeller')->getSellerData($this->customer->getId());
 		
 		if (!$this->config->get('msconf_allow_multiple_categories'))
-			$this->data['categories'] = $this->msProduct->getCategories();		
+			$this->data['categories'] = $this->registry->get('MsLoader')->get('MsProduct')->getCategories();		
 		else
-			$this->data['categories'] = $this->msProduct->getMultipleCategories(0);
+			$this->data['categories'] = $this->registry->get('MsLoader')->get('MsProduct')->getMultipleCategories(0);
 
 		$this->load->model('localisation/language');
 		$this->data['languages'] = $this->model_localisation_language->getLanguages();		
@@ -1036,8 +1032,8 @@ class ControllerAccountMsSeller extends Controller {
 		$product_id = isset($this->request->get['product_id']) ? (int)$this->request->get['product_id'] : 0;
 		$seller_id = $this->customer->getId();
 		
-		if  ($this->msProduct->productOwnedBySeller($product_id,$seller_id)) {
-    		$product = $this->msProduct->getProduct($product_id);
+		if  ($this->registry->get('MsLoader')->get('MsProduct')->productOwnedBySeller($product_id,$seller_id)) {
+    		$product = $this->registry->get('MsLoader')->get('MsProduct')->getProduct($product_id);
 		} else {
 			$product = NULL;
 		}
@@ -1048,14 +1044,14 @@ class ControllerAccountMsSeller extends Controller {
 			$this->redirect($this->url->link('account/ms-seller/products', '', 'SSL'));
 		} else {
 			$this->data['options'] = array();
-			$options = $this->msProduct->getOptions(array('option_ids' => $this->config->get('msconf_product_options')));
+			$options = $this->registry->get('MsLoader')->get('MsProduct')->getOptions(array('option_ids' => $this->config->get('msconf_product_options')));
 			foreach ($options as $option) {
-				$option_values = $this->msProduct->getOptionValues($option['option_id']);
+				$option_values = $this->registry->get('MsLoader')->get('MsProduct')->getOptionValues($option['option_id']);
 				$option['values'] = $option_values;
 				$this->data['options'][] = $option;
 			}
 			
-			$this->data['product_attributes'] = $this->msProduct->getProductAttributes($product_id);
+			$this->data['product_attributes'] = $this->registry->get('MsLoader')->get('MsProduct')->getProductAttributes($product_id);
 			
 			if (!empty($product['thumbnail'])) {
 				$product['images'][] = array(
@@ -1067,7 +1063,7 @@ class ControllerAccountMsSeller extends Controller {
 					$this->session->data['multiseller']['files'][] = $product['thumbnail'];
 			}
 			
-			$images = $this->msProduct->getProductImages($product_id);
+			$images = $this->registry->get('MsLoader')->get('MsProduct')->getProductImages($product_id);
 			foreach ($images as $image) {
 				$product['images'][] = array(
 					'name' => $image['image'],
@@ -1078,7 +1074,7 @@ class ControllerAccountMsSeller extends Controller {
 					$this->session->data['multiseller']['files'][] = $image['image'];
 			}
 
-			$downloads = $this->msProduct->getProductDownloads($product_id);
+			$downloads = $this->registry->get('MsLoader')->get('MsProduct')->getProductDownloads($product_id);
 			foreach ($downloads as $download) {
 				//$ext = explode('.', $download['mask']); $ext = end($ext);
 				
@@ -1117,9 +1113,9 @@ class ControllerAccountMsSeller extends Controller {
 		$product_id = (int)$this->request->get['product_id'];
 		$seller_id = (int)$this->customer->getId();
 		
-		if ($this->msProduct->productOwnedBySeller($product_id, $seller_id)) {
-			//$this->msProduct->deleteProduct($product_id);
-			$this->msProduct->hideProduct($product_id);
+		if ($this->registry->get('MsLoader')->get('MsProduct')->productOwnedBySeller($product_id, $seller_id)) {
+			//$this->registry->get('MsLoader')->get('MsProduct')->deleteProduct($product_id);
+			$this->registry->get('MsLoader')->get('MsProduct')->hideProduct($product_id);
 		}
 		
 		$this->redirect($this->url->link('account/ms-seller/products', '', 'SSL'));		
@@ -1262,10 +1258,10 @@ class ControllerAccountMsSeller extends Controller {
 			$product_id = 0;
 		}
 		
-		if (!$this->msProduct->hasDownload($product_id,$download_id))
+		if (!$this->registry->get('MsLoader')->get('MsProduct')->hasDownload($product_id,$download_id))
 			$this->redirect($this->url->link('account/ms-seller/products', '', 'SSL'));
 			
-		$download_info = $this->msProduct->getDownload($download_id);
+		$download_info = $this->registry->get('MsLoader')->get('MsProduct')->getDownload($download_id);
 		
 		if ($download_info) {
 			$file = DIR_DOWNLOAD . $download_info['filename'];

@@ -39,8 +39,6 @@ final class MsSeller {
 			}
   		}
   		
-		require_once(DIR_SYSTEM . 'library/ms-product.php');
-		$this->msProduct = new MsProduct($registry);
 		require_once(DIR_SYSTEM . 'library/ms-file.php');
 		$this->msFile = new MsFile($registry);  		
 	}
@@ -152,7 +150,7 @@ final class MsSeller {
 
 		$res = $this->db->query($sql);
 		
-		$review_statuses = $this->msProduct->getProductStatusArray();
+		$review_statuses = $this->registry->get('MsLoader')->get('MsProduct')->getProductStatusArray();
 		foreach ($res->rows as &$row) {
 			if ($row['review_status_id'] != MsProduct::MS_PRODUCT_STATUS_SELLER_DELETED) {
 				$row['review_status'] = $review_statuses[$row['review_status_id']];
@@ -184,7 +182,7 @@ final class MsSeller {
 		$res = $this->db->query($sql);
 		
 		
-		$review_statuses = $this->msProduct->getProductStatusArray();
+		$review_statuses = $this->registry->get('MsLoader')->get('MsProduct')->getProductStatusArray();
 		foreach ($res->rows as &$row) {
 			$row['review_status'] = $review_statuses[$row['review_status_id']];
 			$row['status'] = $row['status_id'] ? $this->language->get('text_yes') : $this->language->get('text_no');

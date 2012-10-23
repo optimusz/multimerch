@@ -23,8 +23,6 @@ final class MsTransaction extends Model {
 		$this->load = $registry->get('load');
 		$this->language = $registry->get('language');
 		$this->load->language('module/multiseller');
-		require_once(DIR_SYSTEM . 'library/ms-product.php');
-		$this->msProduct = new MsProduct($registry);
 	}
 	
 	private function _getOrderProducts($order_id) {
@@ -133,7 +131,7 @@ final class MsTransaction extends Model {
 		$parent_transactions = $this->getTransactionsForOrder($order_id);
 		
 		foreach ($order_products as $product) {
-			$seller_id = $this->msProduct->getSellerId($product['product_id']);
+			$seller_id = $this->registry->get('MsLoader')->get('MsProduct')->getSellerId($product['product_id']);
 			$parent_tr_id = isset($parent_transactions[$product['product_id']]) ? $parent_transactions[$product['product_id']] : NULL;
 
 			if ($debit)

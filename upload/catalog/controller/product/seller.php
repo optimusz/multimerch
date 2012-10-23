@@ -5,9 +5,7 @@ class ControllerProductSeller extends Controller {
 		require_once(DIR_SYSTEM . 'library/ms-file.php');
 		require_once(DIR_SYSTEM . 'library/ms-request.php');
 		require_once(DIR_SYSTEM . 'library/ms-transaction.php');
-		require_once(DIR_SYSTEM . 'library/ms-product.php');
 		require_once(DIR_SYSTEM . 'library/ms-mail.php');
-		$this->msProduct = new MsProduct($this->registry);
 		$this->msMail = new MsMail($this->registry);
 		$this->msFile = new MsFile($this->registry);
 		
@@ -651,7 +649,7 @@ class ControllerProductSeller extends Controller {
   	
   	public function jxRenderContactDialog() {
   		if (isset($this->request->get['product_id'])) {
-			$seller_id = $this->msProduct->getSellerId($this->request->get['product_id']);
+			$seller_id = $this->registry->get('MsLoader')->get('MsProduct')->getSellerId($this->request->get['product_id']);
 			$this->data['product_id'] = (int)$this->request->get['product_id'];
   		} else {
 			$seller_id = $this->request->get['seller_id'];

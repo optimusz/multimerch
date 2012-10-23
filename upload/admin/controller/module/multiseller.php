@@ -9,8 +9,9 @@ class ControllerModuleMultiseller extends Controller {
 
 	public function __construct($registry) {
 		parent::__construct($registry);		
+		
+		$this->registry = $registry;
 		require_once(DIR_SYSTEM . 'library/ms-request.php');
-		require_once(DIR_SYSTEM . 'library/ms-product.php');
 		require_once(DIR_SYSTEM . 'library/ms-transaction.php');
 		require_once(DIR_SYSTEM . 'library/ms-file.php');
 		require_once(DIR_SYSTEM . 'library/ms-mail.php');
@@ -29,7 +30,7 @@ class ControllerModuleMultiseller extends Controller {
 		
 		$this->settings = Array(
 			"msconf_seller_validation" => MS_SELLER_VALIDATION_NONE,
-			"msconf_product_validation" => MsProduct::MS_PRODUCT_VALIDATION_NONE,
+			"msconf_product_validation" => MS_PRODUCT_VALIDATION_NONE,
 			"msconf_seller_commission" => 5,
 			"msconf_image_preview_width" => 100,
 			"msconf_image_preview_height" => 100,
@@ -636,7 +637,6 @@ class ControllerModuleMultiseller extends Controller {
 	
 	public function products() {
 		$this->_validate(__FUNCTION__);
-		$msProduct = new MsProduct($this->registry);
 		
 		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
 
@@ -647,8 +647,8 @@ class ControllerModuleMultiseller extends Controller {
 			'limit' => 5
 		);
 
-		$results = $msProduct->getProducts($sort, true);
-		$total_products = $msProduct->getTotalProducts(true);
+		$results = $this->registry->get('MsLoader')->get('MsProduct')->getProducts($sort, true);
+		$total_products = $this->registry->get('MsLoader')->get('MsProduct')->getTotalProducts(true);
 
 		foreach ($results as $result) {
 			if ($result['prd.image'] && file_exists(DIR_IMAGE . $result['prd.image'])) {
@@ -869,14 +869,13 @@ class ControllerModuleMultiseller extends Controller {
 		$this->_validate(__FUNCTION__);
 		$mails = array();
 		if (isset($this->request->post['selected'])) {
-			$msProduct = new MsProduct($this->registry);
 			$msRequest = new MsRequest($this->registry);			
 			foreach ($this->request->post['selected'] as $product_id) {
-				$seller_id = $msProduct->getSellerId($product_id);
+				$seller_id = $this->registry->get('MsLoader')->get('MsProduct')->getSellerId($product_id);
 				if ($this->request->post['ms-action'] == 'ms-enable') {
-					$msProduct->enableProduct($product_id);
+					$this->registry->get('MsLoader')->get('MsProduct')->enableProduct($product_id);
 					$mails[] = array(
-						'type' => $msProduct->getStatus($product_id) == MsProduct::MS_PRODUCT_STATUS_PENDING ? MsMail::SMT_PRODUCT_APPROVED : MsMail::SMT_PRODUCT_ENABLED,
+						'type' => $this->registry->get('MsLoader')->get('MsProduct')->getStatus($product_id) == MsProduct::MS_PRODUCT_STATUS_PENDING ? MsMail::SMT_PRODUCT_APPROVED : MsMail::SMT_PRODUCT_ENABLED,
 						'data' => array(
 							'product_id' => $product_id,
 							'recipients' => $this->registry->get('MsLoader')->get('MsSeller')->getSellerEmail($seller_id),
@@ -885,9 +884,9 @@ class ControllerModuleMultiseller extends Controller {
 						)
 					);
 				} else {
-					$msProduct->disableProduct($product_id);
+					$this->registry->get('MsLoader')->get('MsProduct')->disableProduct($product_id);
 					$mails[] = array(
-						'type' => $msProduct->getStatus($product_id) == MsProduct::MS_PRODUCT_STATUS_PENDING ? MsMail::SMT_PRODUCT_DECLINED : MsMail::SMT_PRODUCT_DISABLED,
+						'type' => $this->registry->get('MsLoader')->get('MsProduct')->getStatus($product_id) == MsProduct::MS_PRODUCT_STATUS_PENDING ? MsMail::SMT_PRODUCT_DECLINED : MsMail::SMT_PRODUCT_DISABLED,
 						'data' => array(
 							'product_id' => $product_id,
 							'recipients' => $this->registry->get('MsLoader')->get('MsSeller')->getSellerEmail($seller_id),
@@ -898,7 +897,7 @@ class ControllerModuleMultiseller extends Controller {
 				}
 				$msRequest->processProductRequests($product_id,$this->user->getId(),$this->request->post['product_message']);
 			}
-			unset($msProduct,$msRequest);
+			unset($msRequest);
 			$this->msMail->sendMails($mails);
 			$this->session->data['success'] = 'Successfully changed product status.';
 		} else {

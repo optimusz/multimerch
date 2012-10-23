@@ -48,9 +48,6 @@ class MsMail extends Mail {
 		$this->language = $registry->get('language');
 		$this->load = $registry->get('load');
 		$this->errors = array();
-		
-		require_once(DIR_SYSTEM . 'library/ms-product.php');
-		$this->msProduct = new MsProduct($registry);		
 	}
 
 	private function _getRecipients($mail_type) {
@@ -89,7 +86,7 @@ class MsMail extends Mail {
 			
 		$mails = array();
 		foreach ($order_products as $product) {
-			$seller_id = $this->msProduct->getSellerId($product['product_id']);
+			$seller_id = $this->registry->get('MsLoader')->get('MsProduct')->getSellerId($product['product_id']);
 			
 			if ($seller_id) {
 				$mails[] = array(
@@ -119,7 +116,7 @@ class MsMail extends Mail {
 	
 	public function sendMail($mail_type, $data = array()) {
 		if (isset($data['product_id'])) {
-			$product = $this->msProduct->getProduct($data['product_id']);
+			$product = $this->registry->get('MsLoader')->get('MsProduct')->getProduct($data['product_id']);
 			$n = reset($product['languages']);
 			$product['name'] = $n['name'];
 		}
