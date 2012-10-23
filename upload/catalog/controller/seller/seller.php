@@ -1,5 +1,5 @@
 <?php 
-class ControllerProductSeller extends Controller {
+class ControllerSellerSeller extends Controller {
 	public function __construct($registry) {
 		parent::__construct($registry);
 		require_once(DIR_SYSTEM . 'library/ms-request.php');
