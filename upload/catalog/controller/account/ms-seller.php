@@ -106,21 +106,12 @@ class ControllerAccountMsSeller extends Controller {
 		$this->response->setOutput($this->render());
 	}
 	
-	private function _setJsonResponse($json) {
-		if (strcmp(VERSION,'1.5.1.3') >= 0) {
-			$this->response->setOutput(json_encode($json));
-		} else {
-			$this->load->library('json');
-			$this->response->setOutput(Json::encode($json));			
-		}
-	}
-	
 	public function jxUpdateFile() {
 		$json = array();
 		$json['errors'] = $this->MsLoader->MsFile->checkPostMax($_POST, $_FILES);
 
 		if ($json['errors']) {
-			return $this->_setJsonResponse($json);
+			return $this->response->setOutput(json_encode($json));
 		}
 		
 		if (isset($this->request->post['file_id']) && isset($this->request->post['product_id'])) {
@@ -151,7 +142,7 @@ class ControllerAccountMsSeller extends Controller {
 		$json['errors'] = $this->MsLoader->MsFile->checkPostMax($_POST, $_FILES);
 
 		if ($json['errors']) {
-			return $this->_setJsonResponse($json);
+			return $this->response->setOutput(json_encode($json));
 		}
 
 		foreach ($_FILES as $file) {
@@ -169,7 +160,7 @@ class ControllerAccountMsSeller extends Controller {
 			}
 		}
 		
-		return $this->_setJsonResponse($json);
+		return $this->response->setOutput(json_encode($json));
 	}	
 	
 	public function jxUploadImages() {
@@ -179,7 +170,7 @@ class ControllerAccountMsSeller extends Controller {
 		$json['errors'] = $this->MsLoader->MsFile->checkPostMax($_POST, $_FILES);
 
 		if ($json['errors']) {
-			return $this->_setJsonResponse($json);
+			return $this->response->setOutput(json_encode($json));
 		}
 
 		// allow a maximum of N images
@@ -188,7 +179,7 @@ class ControllerAccountMsSeller extends Controller {
 			if ($msconf_images_limits[1] > 0 && $this->request->post['imageCount'] >= $msconf_images_limits[1]) {
 				$json['errors'][] = sprintf($this->language->get('ms_error_product_image_maximum'),$msconf_images_limits[1]);
 				$json['cancel'] = 1;
-				$this->_setJsonResponse($json);
+				$this->response->setOutput(json_encode($json));
 				return;
 			} else {
 				$errors = $this->MsLoader->MsFile->checkImage($file);
@@ -206,7 +197,7 @@ class ControllerAccountMsSeller extends Controller {
 			}
 		}
 		
-		return $this->_setJsonResponse($json);
+		return $this->response->setOutput(json_encode($json));
 	}
 	
 	public function jxUploadDownloads() {
@@ -216,7 +207,7 @@ class ControllerAccountMsSeller extends Controller {
 		$json['errors'] = $this->MsLoader->MsFile->checkPostMax($_POST, $_FILES);
 
 		if ($json['errors']) {
-			return $this->_setJsonResponse($json);
+			return $this->response->setOutput(json_encode($json));
 		}
 
 		// allow a maximum of N images
@@ -225,7 +216,7 @@ class ControllerAccountMsSeller extends Controller {
 			if ($msconf_downloads_limits[1] > 0 && $this->request->post['downloadCount'] >= $msconf_downloads_limits[1]) {
 				$json['errors'][] = sprintf($this->language->get('ms_error_product_download_maximum'),$msconf_downloads_limits[1]);
 				$json['cancel'] = 1;
-				$this->_setJsonResponse($json);
+				$this->response->setOutput(json_encode($json));
 				return;
 			} else {
 				$errors = $this->MsLoader->MsFile->checkDownload($file);
@@ -252,7 +243,7 @@ class ControllerAccountMsSeller extends Controller {
 			}
 		}
 		
-		return $this->_setJsonResponse($json);
+		return $this->response->setOutput(json_encode($json));
 	}	
 	
 	public function jxSaveProductDraft() {
@@ -398,7 +389,7 @@ class ControllerAccountMsSeller extends Controller {
 			$json['redirect'] = $this->url->link('account/ms-seller/products', '', 'SSL');			
 		}
 
-		$this->_setJsonResponse($json);
+		$this->response->setOutput(json_encode($json));
 	}
 	
 	public function jxSubmitProduct() {
@@ -687,7 +678,7 @@ class ControllerAccountMsSeller extends Controller {
 			$json['redirect'] = $this->url->link('account/ms-seller/products', '', 'SSL');
 		}
 
-		$this->_setJsonResponse($json);
+		$this->response->setOutput(json_encode($json));
 	}
 
 	public function jxRequestMoney() {
@@ -701,7 +692,7 @@ class ControllerAccountMsSeller extends Controller {
 		
 		if (!$this->MsLoader->MsSeller->getPaypal()) {
 			$json['errors']['withdraw_amount'] = $this->language->get('ms_account_withdraw_no_paypal');
-			$this->_setJsonResponse($json);
+			$this->response->setOutput(json_encode($json));
 			return;
 		}
 		
@@ -756,7 +747,7 @@ class ControllerAccountMsSeller extends Controller {
 			$this->session->data['success'] = $this->language->get('ms_request_submitted');
 			$json['redirect'] = $this->url->link('account/ms-seller/transactions', '', 'SSL');
 		}
-		$this->_setJsonResponse($json);
+		$this->response->setOutput(json_encode($json));
 	}
 	
   	public function jxSubmitPdfgenDialog() {
@@ -768,7 +759,7 @@ class ControllerAccountMsSeller extends Controller {
 		$data = $this->request->post;
 		
 		$json = $this->MsLoader->MsFile->generatePdfImages($this->request->post['ms-pdfgen-filename'], $this->request->post['ms-pdfgen-pages']);
-		return $this->_setJsonResponse($json);
+		return $this->response->setOutput(json_encode($json));
   	}
   	
   	public function jxRenderPdfgenDialog() {
@@ -807,7 +798,7 @@ class ControllerAccountMsSeller extends Controller {
 		$json = array();
 		
 		if (!empty($seller) && ($seller['seller_status_id'] != MsSeller::MS_SELLER_STATUS_ACTIVE)) {
-			$this->_setJsonResponse($json);
+			$this->response->setOutput(json_encode($json));
 			return;
 		}
 		
@@ -907,7 +898,7 @@ class ControllerAccountMsSeller extends Controller {
 			}
 		}
 		
-		$this->_setJsonResponse($json);
+		$this->response->setOutput(json_encode($json));
 	}
 
 	public function newProduct() {

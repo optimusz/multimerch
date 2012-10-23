@@ -1,22 +1,13 @@
 <?php
-class MsRequest {
+class MsRequest extends Model {
 	const MS_REQUEST_PRODUCT_CREATED = 1;
 	const MS_REQUEST_PRODUCT_UPDATED = 2;
 	const MS_REQUEST_SELLER_CREATED = 3;
 	const MS_REQUEST_WITHDRAWAL = 4;
 	
-	private $errors;
+	private $errors = array();
 	private $fileName;
 		
-  	public function __construct($registry) {
-		$this->config = $registry->get('config');
-		$this->db = $registry->get('db');
-		$this->request = $registry->get('request');
-		$this->session = $registry->get('session');
-		
-		$this->errors = array();
-	}
-	
 	public function createRequest($data) {
 		$created_message = isset($data['created_message']) ? $this->db->escape($data['created_message']) : '';		
 		$seller_id = isset($data['seller_id']) ? (int)$data['seller_id'] : '0';

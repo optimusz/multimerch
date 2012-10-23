@@ -110,13 +110,13 @@ class ModelModuleMultisellerSettings extends Model {
              `balance_id` int(11) NOT NULL AUTO_INCREMENT,
              `seller_id` int(11) NOT NULL,
              `change` DECIMAL(15,4) NOT NULL,
-             `order_id` int(11) NOT NULL DEFAULT '0',
-             `product_id` int(11) NOT NULL DEFAULT '0',
-             `withdrawal_id` int(11) NOT NULL DEFAULT '0',
+             `order_id` int(11) DEFAULT NULL,
+             `product_id` int(11) DEFAULT NULL,
+             `withdrawal_id` int(11) DEFAULT NULL,
              `description` TEXT NOT NULL DEFAULT '',
-			 `date_created` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+			 `date_created` DATETIME NOT NULL,
 			 `date_modified` DATETIME DEFAULT NULL',
-        	PRIMARY KEY (`transaction_id`)) default CHARSET=utf8";
+        	PRIMARY KEY (`balance_id`)) default CHARSET=utf8";
         
         $this->db->query($sql);        
 	}

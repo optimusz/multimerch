@@ -150,15 +150,6 @@ class ControllerModuleMultiseller extends Controller {
 		return($this->render());
 	}	
 	
-	private function _setJsonResponse($json) {
-		if (strcmp(VERSION,'1.5.1.3') >= 0) {
-			$this->response->setOutput(json_encode($json));
-		} else {
-			$this->load->library('json');
-			$this->response->setOutput(Json::encode($json));			
-		}
-	}	
-	
 	public function install() {
 		$this->_validate(__FUNCTION__);		
 		$this->load->model("module/{$this->name}/settings");
@@ -279,7 +270,7 @@ class ControllerModuleMultiseller extends Controller {
 			$this->session->data['success'] = 'Seller account data saved.';
 		}
 		
-		$this->_setJsonResponse($json);
+		$this->response->setOutput(json_encode($json));
 	}	
 	
 	public function sellers() {
@@ -443,38 +434,12 @@ class ControllerModuleMultiseller extends Controller {
 		$this->request->post['msconf_paypal_sandbox'] = 1;
 		magic*/
 		
-		if (isset($this->request->post['msconf_credit_order_statuses'])) 
-			$this->request->post['msconf_credit_order_statuses'] = implode(',',$this->request->post['msconf_credit_order_statuses']);
-		else
-			$this->request->post['msconf_credit_order_statuses'] = '';
-
-		if (isset($this->request->post['msconf_debit_order_statuses'])) 
-			$this->request->post['msconf_debit_order_statuses'] = implode(',',$this->request->post['msconf_debit_order_statuses']);
-		else
-			$this->request->post['msconf_debit_order_statuses'] = '';
-
-		if (isset($this->request->post['msconf_product_options'])) 
-			$this->request->post['msconf_product_options'] = implode(',',$this->request->post['msconf_product_options']);
-		else
-			$this->request->post['msconf_product_options'] = '';	
-		
-		foreach($this->request->post['msconf_images_limits'] as &$limit)
-			$limit = (int)$limit;
-		$this->request->post['msconf_images_limits'] = implode(',',$this->request->post['msconf_images_limits']);
-
-		foreach($this->request->post['msconf_downloads_limits'] as &$limit)
-			$limit = (int)$limit;
-		$this->request->post['msconf_downloads_limits'] = implode(',',$this->request->post['msconf_downloads_limits']);
 		
 		$this->_editSettings();
 		
 		$json = array();
-		if (strcmp(VERSION,'1.5.1.3') >= 0) {
-			$this->response->setOutput(json_encode($json));
-		} else {
-			$this->load->library('json');
-			$this->response->setOutput(Json::encode($json));			
-		}		
+		
+		$this->response->setOutput(json_encode($json));
 	}
 	
 	public function index() {
@@ -730,7 +695,7 @@ class ControllerModuleMultiseller extends Controller {
 		} else {
 			$json['error'] = $this->language->get('ms_error_withdraw_norequests');
 		}
-		$this->_setJsonResponse($json);
+		$this->response->setOutput(json_encode($json));
 		return;		
 	}
 	
@@ -762,7 +727,7 @@ class ControllerModuleMultiseller extends Controller {
 		} else {
 			$json['error'] = $this->language->get('ms_error_withdraw_norequests');
 		}
-		$this->_setJsonResponse($json);
+		$this->response->setOutput(json_encode($json));
 		return;		
 	}	
 	
@@ -772,7 +737,7 @@ class ControllerModuleMultiseller extends Controller {
 		
 		if (!isset($this->request->post['selected'])) {
 			$json['error'] = $this->language->get('ms_error_withdraw_norequests');
-			$this->_setJsonResponse($json);
+			$this->response->setOutput(json_encode($json));
 			return;
 		}
 		
@@ -800,7 +765,7 @@ class ControllerModuleMultiseller extends Controller {
 		
 		if (empty($paymentParams)) {
 			$json['error'] = $this->language->get('ms_error_withdraw_norequests');
-			$this->_setJsonResponse($json);
+			$this->response->setOutput(json_encode($json));
 			return;
 		}
 		
@@ -832,7 +797,7 @@ class ControllerModuleMultiseller extends Controller {
 				);*/
 			}		
 		}
-		$this->_setJsonResponse($json);
+		$this->response->setOutput(json_encode($json));
 		return;
 	}
 
@@ -842,7 +807,7 @@ class ControllerModuleMultiseller extends Controller {
 		
 		if (!isset($this->request->post['selected'])) {
 			$json['error'] = $this->language->get('ms_error_withdraw_norequests');
-			$this->_setJsonResponse($json);
+			$this->response->setOutput(json_encode($json));
 			return;
 		}
 		
@@ -856,7 +821,7 @@ class ControllerModuleMultiseller extends Controller {
 			$msTransaction->completeWithdrawal($r->getAssociatedTransaction($request_id));
 		}
 		$json['success'] = $this->language->get('ms_success_withdrawals_marked');
-		$this->_setJsonResponse($json);
+		$this->response->setOutput(json_encode($json));
 		return;
 	}
 

@@ -1,5 +1,5 @@
 <?php
-final class MsSeller {
+final class MsSeller extends Model {
 	const MS_SELLER_STATUS_ACTIVE = 1;
 	const MS_SELLER_STATUS_TOBEACTIVATED = 2;
 	const MS_SELLER_STATUS_TOBEAPPROVED = 3;
@@ -16,12 +16,7 @@ final class MsSeller {
 	private $paypal;
 	
   	public function __construct($registry) {
-		$this->config = $registry->get('config');
-		$this->db = $registry->get('db');
-		$this->request = $registry->get('request');
-		$this->session = $registry->get('session');
-		$this->registry = $registry;
-		$this->language = $registry->get('language');
+  		parent::__construct($registry);
 		if (isset($this->session->data['customer_id'])) {
 			//TODO 
 			//$seller_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "ms_seller WHERE seller_id = '" . (int)$this->session->data['customer_id'] . "' AND seller_status_id = '1'");

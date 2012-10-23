@@ -25,7 +25,7 @@ class MsFile extends Model {
 	 		}
 		}
 		
-	 	return $errors;		
+	 	return $errors;
 	}
 	
 	public function checkFile($file, $allowed_filetypes) {
