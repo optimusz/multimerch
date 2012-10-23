@@ -6,7 +6,6 @@ class ControllerAccountMsSeller extends Controller {
 	public function __construct($registry) {
 		parent::__construct($registry);
 
-		require_once(DIR_SYSTEM . 'library/ms-image.php');
 		require_once(DIR_SYSTEM . 'library/ms-request.php');
 		require_once(DIR_SYSTEM . 'library/ms-transaction.php');
 		$this->data = array_merge($this->data, $this->load->language('module/multiseller'),$this->load->language('account/account'));

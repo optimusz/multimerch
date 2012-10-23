@@ -26,7 +26,7 @@ class ControllerModuleMultiseller extends Controller {
 		
 		$this->settings = Array(
 			"msconf_seller_validation" => MS_SELLER_VALIDATION_NONE,
-			"msconf_product_validation" => MS_PRODUCT_VALIDATION_NONE,
+			"msconf_product_validation" => MsProduct::MS_PRODUCT_VALIDATION_NONE,
 			"msconf_seller_commission" => 5,
 			"msconf_image_preview_width" => 100,
 			"msconf_image_preview_height" => 100,

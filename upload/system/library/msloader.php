@@ -3,31 +3,23 @@
 class MsLoader {
    	public function __construct($registry) {
 		$this->registry = $registry;
+		spl_autoload_register(array('MsLoader', '_autoload'));
    	}
 
-	private function _getClass($class) {
-		switch ($class){
-			case '';
-				$path = 'catalog/controller/';
-			default:
-		        $path = DIR_SYSTEM . 'library/';//;//'system/library/';
-		}
-		return $path . strtolower($class) . '.php';
+	private function _autoload($class)
+	{
+	    $file = DIR_SYSTEM . 'library/' . strtolower($class) . '.php';
+	    if (file_exists($file)) {
+	    	require($file);
+	    }
 	}
 
 	public function get($class) {
-		//echo memory_get_usage() . "<br \>";		
-		$file = $this->_getClass($class);
-		//var_dump($file);
-		if (!class_exists($class))
-			include_once($file);
-		
-		$a = new $class($this->registry);
-		//echo memory_get_usage() . "<br \><br \>";
-		return $a;
-		
-		
-		return new $class($this->registry);
+		if (!isset($this->$class)){
+			$this->$class = new $class($this->registry);
+		}
+
+		return $this->$class;		
    	}
 }
 
