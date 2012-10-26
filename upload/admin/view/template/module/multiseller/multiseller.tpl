@@ -90,6 +90,19 @@
 		            </tr>
 					
 					<tr>
+		            	<td>
+							<span><?php echo $ms_config_enable_non_alphanumeric_seo; ?></span>
+							<span class="help"><?php echo $ms_config_enable_non_alphanumeric_seo_note; ?></span>
+						</td>
+		            	<td>
+			                <input type="radio" name="msconf_enable_non_alphanumeric_seo" value="1" <?php if($msconf_enable_non_alphanumeric_seo == 1) { ?> checked="checked" <?php } ?>  />
+			                <?php echo $text_yes; ?>
+			                <input type="radio" name="msconf_enable_non_alphanumeric_seo" value="0" <?php if($msconf_enable_non_alphanumeric_seo == 0) { ?> checked="checked" <?php } ?>  />
+			                <?php echo $text_no; ?>
+		              	</td>
+		            </tr>
+					
+					<tr>
 						<td>
 							<span><?php echo $ms_config_seller_commission; ?></span>
 							<span class="help"><?php echo $ms_config_seller_commission_note; ?></span>

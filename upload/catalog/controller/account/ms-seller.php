@@ -592,13 +592,17 @@ class ControllerAccountMsSeller extends Controller {
 			$data['product_quantity'] = 999;
 		}
 		
+		// SEO urls generation for products
 		if ($this->config->get('msconf_enable_seo_urls')) {
-			// Add id (?)
-			$data['keyword'] = implode("-", str_replace("-", "", explode(" ", preg_replace("/[^A-Za-z0-9 ]/", '', strtolower($language['product_name'])))));
+			$latin_check = '/[^\x{0030}-\x{007f}]/u';
+			$non_latin_chars = preg_match($latin_check, $_POST['full_name']);
+			if ($this->config->get('msconf_enable_non_alphanumeric_seo') && $non_latin_chars) {
+				$data['keyword'] = implode("-", str_replace("-", "", explode(" ", strtolower($language['product_name']))));
+			}
+			else {
+				$data['keyword'] = implode("-", str_replace("-", "", explode(" ", preg_replace("/[^A-Za-z0-9 ]/", '', strtolower($language['product_name'])))));
+			}
 		}
-		/*else {
-			$data['keyword'] = "";
-		}*/
 
 		if (empty($json['errors'])) {
 			$mails = array();
@@ -876,14 +880,17 @@ class ControllerAccountMsSeller extends Controller {
 						break;
 				}
 				
+				// SEO urls generation for sellers
 				if ($this->config->get('msconf_enable_seo_urls')) {
-				// Add /sellers/ (?)
-				// Allow spaces in nicknames (?)
-					$data['keyword'] = implode("-", str_replace("-", "", explode(" ", preg_replace("/[^A-Za-z0-9 ]/", '', strtolower($data['sellerinfo_nickname'])))));
+					$latin_check = '/[^\x{0030}-\x{007f}]/u';
+					$non_latin_chars = preg_match($latin_check, $_POST['full_name']);
+					if ($this->config->get('msconf_enable_non_alphanumeric_seo') && $non_latin_chars) {
+						$data['keyword'] = implode("-", str_replace("-", "", explode(" ", strtolower($data['sellerinfo_nickname']))));
+					}
+					else {
+						$data['keyword'] = implode("-", str_replace("-", "", explode(" ", preg_replace("/[^A-Za-z0-9 ]/", '', strtolower($data['sellerinfo_nickname'])))));
+					}
 				}
-				/*else {
-					$data['keyword'] = "";
-				}*/
 				
 				$data['seller_id'] = $this->customer->getId();
 				$data['sellerinfo_product_validation'] = $this->config->get('msconf_product_validation'); 

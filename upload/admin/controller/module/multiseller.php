@@ -59,7 +59,8 @@ class ControllerModuleMultiseller extends Controller {
 			"msconf_product_options" => "",
 			"msconf_enable_pdf_generator" => 0,
 			"msconf_enable_seo_urls" => 0,
-			"msconf_enable_update_seo_urls" => 0
+			"msconf_enable_update_seo_urls" => 0,
+			"msconf_enable_non_alphanumeric_seo" => 0
 		);
 	}	
 	
