@@ -219,7 +219,7 @@ final class MsSeller extends Model {
 		$this->db->query($sql);
 		$seller_id = $this->db->getLastId();
 		
-		if ($data['keyword']) {
+		if (isset($data['keyword'])) {
 			$similarity_query = $this->db->query("SELECT * FROM ". DB_PREFIX . "url_alias WHERE keyword LIKE '" . $this->db->escape($data['keyword']) . "%'");
 			$number = $similarity_query->num_rows;
 			

@@ -594,7 +594,7 @@ class ControllerAccountMsSeller extends Controller {
 		
 		if ($this->config->get('msconf_enable_seo_urls')) {
 			// Add id (?)
-			$data['keyword'] = implode("-", str_replace("-", "", explode(" ", strtolower($language['product_name']))));
+			$data['keyword'] = implode("-", str_replace("-", "", explode(" ", preg_replace("/[^A-Za-z0-9 ]/", '', strtolower($language['product_name'])))));
 		}
 		/*else {
 			$data['keyword'] = "";
@@ -879,7 +879,7 @@ class ControllerAccountMsSeller extends Controller {
 				if ($this->config->get('msconf_enable_seo_urls')) {
 				// Add /sellers/ (?)
 				// Allow spaces in nicknames (?)
-					$data['keyword'] = implode("-", str_replace("-", "", explode(" ", strtolower($data['sellerinfo_nickname']))));
+					$data['keyword'] = implode("-", str_replace("-", "", explode(" ", preg_replace("/[^A-Za-z0-9 ]/", '', strtolower($data['sellerinfo_nickname'])))));
 				}
 				/*else {
 					$data['keyword'] = "";
