@@ -136,7 +136,7 @@
 			                  <?php foreach ($order_statuses as $status) { ?>
 			                  <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
 			                  <div class="<?php echo $class; ?>">
-			                    <?php if (in_array($status['order_status_id'], explode(',',$msconf_credit_order_statuses))) { ?>
+			                    <?php if (in_array($status['order_status_id'], $msconf_credit_order_statuses)) { ?>
 			                    <input type="checkbox" name="msconf_credit_order_statuses[]" value="<?php echo $status['order_status_id']; ?>" checked="checked" />
 			                    <?php echo $status['name']; ?>
 			                    <?php } else { ?>
@@ -160,7 +160,7 @@
 			                  <?php foreach ($order_statuses as $status) { ?>
 			                  <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
 			                  <div class="<?php echo $class; ?>">
-			                    <?php if (in_array($status['order_status_id'], explode(',',$msconf_debit_order_statuses))) { ?>
+			                    <?php if (in_array($status['order_status_id'], $msconf_debit_order_statuses)) { ?>
 			                    <input type="checkbox" name="msconf_debit_order_statuses[]" value="<?php echo $status['order_status_id']; ?>" checked="checked" />
 			                    <?php echo $status['name']; ?>
 			                    <?php } else { ?>
@@ -403,7 +403,7 @@
 			                  <?php if (!in_array($option['type'], array('checkbox','radio','select'))) continue; ?>
 			                  <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
 			                  <div class="<?php echo $class; ?>">
-			                    <?php if (in_array($option['option_id'], explode(',',$msconf_product_options))) { ?>
+			                    <?php if (in_array($option['option_id'], $msconf_product_options)) { ?>
 			                    <input type="checkbox" name="msconf_product_options[]" value="<?php echo $option['option_id']; ?>" checked="checked" />
 			                    <?php echo $option['name']; ?>
 			                    <?php } else { ?>

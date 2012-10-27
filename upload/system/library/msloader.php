@@ -14,6 +14,12 @@ class MsLoader {
 		return $this->$class;		
 	}
 
+	/*
+	public function __set($class) {
+		$this->$class = new $class($this->registry);
+		return $this->$class;		
+	}
+	*/
 	private function _autoload($class)
 	{
 	    $file = DIR_SYSTEM . 'library/' . strtolower($class) . '.php';
@@ -21,7 +27,7 @@ class MsLoader {
 	    	require($file);
 	    }
 	}
-
+/*
 	public function get($class) {
 		if (!isset($this->$class)){
 			$this->$class = new $class($this->registry);
@@ -29,6 +35,11 @@ class MsLoader {
 
 		return $this->$class;		
    	}
+
+	public function create($class) {
+		return new $class($this->registry);
+   	}
+   */
 }
 
 ?>

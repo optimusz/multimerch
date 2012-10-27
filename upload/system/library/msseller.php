@@ -17,6 +17,8 @@ final class MsSeller extends Model {
 	
   	public function __construct($registry) {
   		parent::__construct($registry);
+  		
+  		//$this->log->write('creating seller object: ' . $this->session->data['customer_id']);
 		if (isset($this->session->data['customer_id'])) {
 			//TODO 
 			//$seller_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "ms_seller WHERE seller_id = '" . (int)$this->session->data['customer_id'] . "' AND seller_status_id = '1'");

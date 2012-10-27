@@ -1,5 +1,5 @@
 <?php
-class MsRequest extends Model {
+class MsRequesta extends Model {
 	const MS_REQUEST_PRODUCT_CREATED = 1;
 	const MS_REQUEST_PRODUCT_UPDATED = 2;
 	const MS_REQUEST_SELLER_CREATED = 3;
@@ -7,8 +7,8 @@ class MsRequest extends Model {
 	
 	private $errors = array();
 	private $fileName;
-		
-	public function createRequest($data) {
+
+	public function createRequest($seller_id, $data) {
 		$created_message = isset($data['created_message']) ? $this->db->escape($data['created_message']) : '';		
 		$seller_id = isset($data['seller_id']) ? (int)$data['seller_id'] : '0';
 		$product_id = isset($data['product_id']) ? (int)$data['product_id'] : '0';

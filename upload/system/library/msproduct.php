@@ -470,7 +470,7 @@ class MsProduct extends Model {
 		
 		if (isset($data['product_downloads'])) {
 			foreach ($data['product_downloads'] as $key => $dl) {
-				$newFile = $this->MsLoader->MsFile->moveDownload($dl);
+				$newFile = $this->MsLoader->MsFile->moveDownload($dl['filename']);
 				$fileMask = substr($newFile,0,strrpos($newFile,'.'));
 				
 				$this->db->query("INSERT INTO " . DB_PREFIX . "download SET remaining = 5, filename = '" . $this->db->escape($newFile) . "', mask = '" . $this->db->escape($fileMask) . "'");

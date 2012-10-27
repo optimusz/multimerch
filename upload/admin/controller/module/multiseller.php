@@ -30,8 +30,8 @@ class ControllerModuleMultiseller extends Controller {
 			"msconf_seller_commission" => 5,
 			"msconf_image_preview_width" => 100,
 			"msconf_image_preview_height" => 100,
-			"msconf_credit_order_statuses" => "5",
-			"msconf_debit_order_statuses" => "8",
+			"msconf_credit_order_statuses" => array(5),
+			"msconf_debit_order_statuses" => array(8),
 			"msconf_minimum_withdrawal_amount" => "50",
 			"msconf_allow_partial_withdrawal" => 1,
 			"msconf_paypal_sandbox" => 1,			
@@ -40,8 +40,8 @@ class ControllerModuleMultiseller extends Controller {
 			"msconf_paypal_api_signature" => "",
 			"msconf_allow_withdrawal_requests" => 1,
 			"msconf_comments_maxlen" => 500,
-			"msconf_allowed_image_types" => "png,jpg",
-			"msconf_allowed_download_types" => "zip,rar",
+			"msconf_allowed_image_types" => array('png','jpg'),
+			"msconf_allowed_download_types" => array('zip','rar'),
 			"msconf_minimum_product_price" => 0,
 			"msconf_notification_email" => "",
 			"ms_carousel_module" => "",
@@ -51,8 +51,8 @@ class ControllerModuleMultiseller extends Controller {
 			"msconf_allow_free_products" => 0,
 			"msconf_seller_commission_flat" => 0.5,
 			"msconf_allow_multiple_categories" => 0,
-			"msconf_images_limits" => "0,0",
-			"msconf_downloads_limits" => "0,0",			
+			"msconf_images_limits" => array(0,0),
+			"msconf_downloads_limits" => array(0,0),		
 			"msconf_enable_shipping" => 0, // 0 - no, 1 - yes, 2 - seller select
 			"msconf_provide_buyerinfo" => 0, // 0 - no, 1 - yes, 2 - shipping dependent
 			"msconf_enable_quantities" => 0, // 0 - no, 1 - yes, 2 - shipping dependent
@@ -304,7 +304,7 @@ class ControllerModuleMultiseller extends Controller {
 			'page' => $page,
 			'limit' => $this->config->get('config_admin_limit')
 		);
-				
+
 		$results = $this->MsLoader->MsSeller->getSellers($sort);
 		$total_sellers = $this->MsLoader->MsSeller->getTotalSellers($sort);
 
@@ -449,13 +449,13 @@ class ControllerModuleMultiseller extends Controller {
 		$this->load->model("module/{$this->name}/settings");
 		
 		foreach($this->settings as $s=>$v) {
+			var_dump($s,$this->config->get($s));
 			$this->data[$s] = $this->config->get($s);
 		}
-
 		$this->load->model("localisation/order_status");	
 		$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
-		$this->data['msconf_images_limits'] = explode(',',$this->data['msconf_images_limits']);
-		$this->data['msconf_downloads_limits'] = explode(',',$this->data['msconf_downloads_limits']);
+		//$this->data['msconf_images_limits'] = explode(',',$this->data['msconf_images_limits']);
+		//$this->data['msconf_downloads_limits'] = explode(',',$this->data['msconf_downloads_limits']);
 		$this->load->model("catalog/option");	
 		$this->data['options'] = $this->model_catalog_option->getOptions();
 
@@ -488,28 +488,25 @@ class ControllerModuleMultiseller extends Controller {
 		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
 		
 		$sort = array(
-			'order_by'  => 'mr.date_created',
+			'order_by'  => 'mrd.date_created',
 			'order_way' => 'DESC',
-			'page' => $page,
+			'page' => ($page - 1) * $this->config->get('config_admin_limit'),
 			'limit' => $this->config->get('config_admin_limit')
 		);
 
-		$r = new MsRequest($this->registry);
-		
-		$results = $r->getWithdrawalRequests($sort);
-		$total_withdrawals = $r->getTotalWithdrawalRequests();
+		$results = $this->MsLoader->MsRequest->getWithdrawalRequests(array(), $sort);
+		$total_withdrawals = $this->MsLoader->MsRequest->getTotalRequests(MsRequest::MS_REQUEST_TYPE_WITHDRAWAL_CREATE);
 
 		foreach ($results as $result) {
-
-		$this->data['requests'][] = array(
-			'request_id' => $result['req.id'],
-			'seller' => $result['sel.nickname'],
-			'amount' => $this->currency->format(abs($result['trn.amount']),$this->config->get('config_currency')),
-			'date_created' => date($this->language->get('date_format_short'), strtotime($result['req.date_created'])),
-			'status' => empty($result['req.date_processed']) ? 'Pending' : 'Completed',
-			'processed_by' => $result['u.username'],
-			'date_processed' => $result['req.date_processed'] ? date($this->language->get('date_format_short'), strtotime($result['req.date_processed'])) : ''
-		);
+			$this->data['requests'][] = array(
+				'request_id' => $result['request_id'],
+				'seller' => $result['nickname'],
+				'amount' => $this->currency->format(abs($result['mrw.amount']),$result['mrw.currency_code']),
+				'date_created' => date($this->language->get('date_format_short'), strtotime($result['mrd.date_created'])),
+				'status' => empty($result['mrd.date_processed']) ? 'Pending' : 'Completed',
+				'processed_by' => $result['u.username'],
+				'date_processed' => $result['mrd.date_processed'] ? date($this->language->get('date_format_short'), strtotime($result['mrd.date_processed'])) : ''
+			);
 		}
 		
 		$pagination = new Pagination();
@@ -542,34 +539,31 @@ class ControllerModuleMultiseller extends Controller {
 	
 	public function transactions() {
 		$this->_validate(__FUNCTION__);
-		$msTransaction = new MsTransaction($this->registry);
-		
 		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
 
 		$sort = array(
-			'order_by'  => 'mt.date_created',
+			'order_by'  => 'mb.date_created',
 			'order_way' => 'DESC',
 			'page' => $page,
 			'limit' => 5
 		);
 
-		$results = $msTransaction->getTransactions($sort);
-		$total_transactions = $msTransaction->getTotalTransactions();
+		$balance_entries = $this->MsLoader->MsBalance->getBalanceEntries($sort);
 
-		foreach ($results as $result) {
+		foreach ($balance_entries as $result) {
 			$this->data['transactions'][] = array(
-				'seller' => $result['sel.nickname'],
-				'description' => $result['trn.description'],
-				'net_amount' => $this->currency->format($result['trn.net_amount'], $this->config->get('config_currency')),			
-				'date_created' => date($this->language->get('date_format_short'), strtotime($result['trn.date_created'])),
-				'date_modified' => date($this->language->get('date_format_short'), strtotime($result['trn.date_modified'])),
+				'seller' => $result['nickname'],
+				'description' => $result['mb.description'],
+				'net_amount' => $this->currency->format($result['amount'], $this->config->get('config_currency')),			
+				'date_created' => date($this->language->get('date_format_short'), strtotime($result['mb.date_created'])),
+				//'date_modified' => date($this->language->get('date_format_short'), strtotime($result['trn.date_modified'])),
 				//'status' => empty($result['req.date_processed']) ? 'Pending' : 'Completed',
 			);
 		}
 		
 		$pagination = new Pagination();
-		$pagination->total = $total_transactions;
 		$pagination->page = $page;
+		$pagination->total = $this->MsLoader->MsBalance->getTotalBalanceEntries();		
 		$pagination->limit = $this->config->get('config_admin_limit');
 		$pagination->text = $this->language->get('text_pagination');
 		$pagination->url = $this->url->link("module/{$this->name}/transactions", 'token=' . $this->session->data['token'] . '&page={page}', 'SSL');
@@ -589,7 +583,7 @@ class ControllerModuleMultiseller extends Controller {
 			$this->data['success'] = '';
 		}		
 
-		$this->data['token'] = $this->session->data['token'];		
+		$this->data['token'] = $this->session->data['token'];
 		$this->data['heading'] = $this->language->get('ms_finances_transactions_heading');
 		$this->document->setTitle($this->language->get('ms_finances_transactions_heading'));
 		$this->_setBreadcrumbs('ms_finances_transactions_breadcrumbs', __FUNCTION__);
@@ -669,19 +663,27 @@ class ControllerModuleMultiseller extends Controller {
 	public function jxConfirmPayment() {
 		$this->_validate(__FUNCTION__);
 		$json = array();
-		require_once(DIR_SYSTEM . 'library/ms-request.php');
+
 		if (isset($this->request->post['selected'])) {
-			$r = new MsRequest($this->registry);
 			$payments = array();
 			$total = 0;
 			foreach ($this->request->post['selected'] as $request_id) {
-				$result = $r->getRequestPaymentData($request_id);
-				if (!empty($result) && ($result['date_processed'] == NULL)) {
-					$total += abs($result['amount']);
+				$result = $this->MsLoader->MsRequest->getWithdrawalRequests(
+					array(
+						'request_id' => $request_id
+					),
+					array(
+						'page' => 0,
+						'limit' => 1
+					)
+				);
+
+				if (!empty($result) && ($result['mrd.date_processed'] == NULL)) {
+					$total += abs($result['mrw.amount']);
 					$payments[] = array (
-						'nickname' => $result['sel.nickname'],
-						'paypal' => $result['sel.paypal'],
-						'amount' => $this->currency->format(abs($result['trn.amount']),$this->config->get('config_currency'))
+						'nickname' => $result['ms.nickname'],
+						'paypal' => $result['ms.paypal'],
+						'amount' => $this->currency->format(abs($result['mrw.amount']),$result['mrw.currency_code'])
 					);
 				}
 			}
@@ -703,17 +705,25 @@ class ControllerModuleMultiseller extends Controller {
 	public function jxConfirmWithdrawalPaid() {
 		$this->_validate(__FUNCTION__);
 		$json = array();
-		require_once(DIR_SYSTEM . 'library/ms-request.php');
+
 		if (isset($this->request->post['selected'])) {
-			$r = new MsRequest($this->registry);
 			$payments = array();
 			$total = 0;
 			foreach ($this->request->post['selected'] as $request_id) {
-				$result = $r->getRequestPaymentData($request_id);
-				if (!empty($result) && ($result['date_processed'] == NULL)) {
+				$result = $this->MsLoader->MsRequest->getWithdrawalRequests(
+					array(
+						'request_id' => $request_id
+					),
+					array(
+						'page' => 0,
+						'limit' => 1
+					)
+				);
+				
+				if (!empty($result) && ($result['mrd.date_processed'] == NULL)) {
 					$payments[] = array (
-						'nickname' => $result['sel.nickname'],
-						'amount' => $this->currency->format(abs($result['trn.amount']),$this->config->get('config_currency'))
+						'nickname' => $result['ms.nickname'],
+						'amount' => $this->currency->format(abs($result['mrw.amount']),$result['mrw.currency_code'])
 					);
 				}
 			}
@@ -742,7 +752,6 @@ class ControllerModuleMultiseller extends Controller {
 			return;
 		}
 		
-		require_once(DIR_SYSTEM . 'library/ms-request.php');
 		require_once(DIR_SYSTEM . 'library/ms-paypal.php');
 
 		$requestParams = array(
@@ -752,14 +761,20 @@ class ControllerModuleMultiseller extends Controller {
 		
 		$paymentParams = array();
 		
-		$r = new MsRequest($this->registry);
-		$msTransaction = new MsTransaction($this->registry);
 		$i = 0;		
 		foreach ($this->request->post['selected'] as $request_id) {
-			$result = $r->getRequestPaymentData($request_id);
-			if (!empty($result) && ($result['date_processed'] == NULL)) {
-				$paymentParams['L_EMAIL' . $i] = $result['sel.paypal'];
-				$paymentParams['L_AMT' . $i] = abs($result['trn.amount']);
+			$result = $this->MsLoader->MsRequest->getWithdrawalRequests(
+				array(
+					'request_id' => $request_id
+				),
+				array(
+					'page' => 0,
+					'limit' => 1
+				)
+			);
+			if (!empty($result) && ($result['mrd.date_processed'] == NULL)) {
+				$paymentParams['L_EMAIL' . $i] = $result['ms.paypal'];
+				$paymentParams['L_AMT' . $i] = abs($result['mrw.amount']);
 				$i++;
 			}
 		}
@@ -784,22 +799,37 @@ class ControllerModuleMultiseller extends Controller {
 			$json['response'] = print_r($response, true);
 			//$mails = array();
 			foreach ($this->request->post['selected'] as $request_id) {
-				$r->processRequest($request_id, $this->user->getId());
-				$msTransaction->completeWithdrawal($r->getAssociatedTransaction($request_id));
-				/*
-				$mails[] = array(
-					'type' => MsProduct::SMT_WITHDRAW_REQUEST_COMPLETED,
-					'data' => array(
-						'product_id' => $product_id,
-						'recipients' => $this->MsLoader->MsSeller->getSellerEmail($seller_id),
-						'addressee' => $this->MsLoader->MsSeller->getSellerName($seller_id),
-						'message' => $this->request->post['product_message']
+				$result = $this->MsLoader->MsRequest->getWithdrawalRequests(
+					array(
+						'request_id' => $request_id
+					),
+					array(
+						'page' => 0,
+						'limit' => 1
 					)
-				);*/
+				);
+				
+				$this->MsLoader->MsRequest->processRequest($request_id,
+					array(
+						'request_status' => MsRequest::MS_REQUEST_STATUS_APPROVED,
+						'processed_by' => $this->user->getId(),
+						'message_processed' => 'Paid'
+					)
+				);
+				
+				$this->MsLoader->MsBalance->addBalanceEntry(
+					$result['ms.seller_id'],
+					array(
+						'withdrawal_id' => $request_id,
+						'balance_type' => MsBalance::MS_BALANCE_TYPE_WITHDRAWAL,
+						'amount' => -1 * $result['mrw.amount'],
+						'description' => 'Withdrawal'
+					)
+				);
 			}		
 		}
-		$this->response->setOutput(json_encode($json));
-		return;
+		
+		return $this->response->setOutput(json_encode($json));
 	}
 
 	public function jxCompleteWithdrawalPaid() {
@@ -812,14 +842,35 @@ class ControllerModuleMultiseller extends Controller {
 			return;
 		}
 		
-		require_once(DIR_SYSTEM . 'library/ms-request.php');
-
-		$r = new MsRequest($this->registry);
-		$msTransaction = new MsTransaction($this->registry);
 		$i = 0;		
 		foreach ($this->request->post['selected'] as $request_id) {
-			$r->processRequest($request_id, $this->user->getId());
-			$msTransaction->completeWithdrawal($r->getAssociatedTransaction($request_id));
+			$result = $this->MsLoader->MsRequest->getWithdrawalRequests(
+				array(
+					'request_id' => $request_id
+				),
+				array(
+					'page' => 0,
+					'limit' => 1
+				)
+			);			
+			
+			$this->MsLoader->MsRequest->processRequest($request_id,
+				array(
+					'request_status' => MsRequest::MS_REQUEST_STATUS_APPROVED,
+					'processed_by' => $this->user->getId(),
+					'message_processed' => 'Marked as paid'
+				)
+			);
+			
+			$this->MsLoader->MsBalance->addBalanceEntry(
+				$result['ms.seller_id'],
+				array(
+					'withdrawal_id' => $request_id,
+					'balance_type' => MsBalance::MS_BALANCE_TYPE_WITHDRAWAL,
+					'amount' => -1 * $result['mrw.amount'],
+					'description' => 'Withdrawal'
+				)
+			);
 		}
 		$json['success'] = $this->language->get('ms_success_withdrawals_marked');
 		$this->response->setOutput(json_encode($json));
@@ -830,9 +881,19 @@ class ControllerModuleMultiseller extends Controller {
 		$this->_validate(__FUNCTION__);
 		$mails = array();
 		if (isset($this->request->post['selected'])) {
-			$msRequest = new MsRequest($this->registry);			
 			foreach ($this->request->post['selected'] as $product_id) {
 				$seller_id = $this->MsLoader->MsProduct->getSellerId($product_id);
+				// todo
+				$result = $this->MsLoader->MsRequest->getProductRequests(
+					array(
+						'product_id' => $product_id
+					),
+					array(
+						'page' => 0,
+						'limit' => 1
+					)
+				);			
+				
 				if ($this->request->post['ms-action'] == 'ms-enable') {
 					$this->MsLoader->MsProduct->enableProduct($product_id);
 					$mails[] = array(
@@ -858,7 +919,7 @@ class ControllerModuleMultiseller extends Controller {
 				}
 				$msRequest->processProductRequests($product_id,$this->user->getId(),$this->request->post['product_message']);
 			}
-			unset($msRequest);
+
 			$this->MsLoader->MsMail->sendMails($mails);
 			$this->session->data['success'] = 'Successfully changed product status.';
 		} else {

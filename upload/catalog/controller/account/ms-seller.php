@@ -12,10 +12,10 @@ class ControllerAccountMsSeller extends Controller {
 		$parts = explode('/', $this->request->request['route']);
 
 		// Uploadify checks
+		//$this->_log = new Log("uploadify.log");
 		if (in_array($parts[2], array('jxUpdateFile','jxUploadImages', 'jxUploadDownloads', 'jxUploadSellerAvatar'))) {
 			if (empty($_POST) || empty($_FILES))
 				return;
-				
 			// Re-create session as Flash doesn't pass session info
 	  		if (isset($_POST['session_id'])) {
 	  			session_destroy();
@@ -27,6 +27,7 @@ class ControllerAccountMsSeller extends Controller {
 	  				if (isset($_POST['token']) && isset($_POST['timestamp']) && $_POST['token'] == md5($salt . $_POST['timestamp'])) {
 	  					$this->session->data['customer_id'] = $_SESSION['customer_id'];
 	  					$this->customer = new Customer($this->registry);
+	  					// todo re-initialize seller object
 	  				}
 	  			}
 	  		}
@@ -36,7 +37,7 @@ class ControllerAccountMsSeller extends Controller {
 	  		$this->session->data['redirect'] = $this->url->link('account/account', '', 'SSL');
 	  		$this->redirect($this->url->link('account/login', '', 'SSL')); 
     	} else if (!$this->MsLoader->MsSeller->isSeller()) {
-    		if (!in_array($parts[2], array('sellerinfo','jxsavesellerinfo'))) {
+    		if (!in_array($parts[2], array('sellerinfo','jxsavesellerinfo','jxUploadSellerAvatar'))) {
     			$this->redirect($this->url->link('account/ms-seller/sellerinfo', '', 'SSL'));
     		}
     	} else if ($this->MsLoader->MsSeller->getStatus() != MsSeller::MS_SELLER_STATUS_ACTIVE) {
@@ -166,7 +167,6 @@ class ControllerAccountMsSeller extends Controller {
 	public function jxUploadImages() {
 		$json = array();
 		$file = array();
-		
 		$json['errors'] = $this->MsLoader->MsFile->checkPostMax($_POST, $_FILES);
 
 		if ($json['errors']) {
@@ -174,7 +174,7 @@ class ControllerAccountMsSeller extends Controller {
 		}
 
 		// allow a maximum of N images
-		$msconf_images_limits = explode(',',$this->config->get('msconf_images_limits'));
+		$msconf_images_limits = $this->config->get('msconf_images_limits');
 		foreach ($_FILES as $file) {
 			if ($msconf_images_limits[1] > 0 && $this->request->post['imageCount'] >= $msconf_images_limits[1]) {
 				$json['errors'][] = sprintf($this->language->get('ms_error_product_image_maximum'),$msconf_images_limits[1]);
@@ -211,7 +211,7 @@ class ControllerAccountMsSeller extends Controller {
 		}
 
 		// allow a maximum of N images
-		$msconf_downloads_limits = explode(',',$this->config->get('msconf_downloads_limits'));
+		$msconf_downloads_limits = $this->config->get('msconf_downloads_limits');
 		foreach ($_FILES as $file) {
 			if ($msconf_downloads_limits[1] > 0 && $this->request->post['downloadCount'] >= $msconf_downloads_limits[1]) {
 				$json['errors'][] = sprintf($this->language->get('ms_error_product_download_maximum'),$msconf_downloads_limits[1]);
@@ -457,7 +457,7 @@ class ControllerAccountMsSeller extends Controller {
 			$json['errors']['product_price'] = $this->language->get('ms_error_product_price_low');
 		}		
 
-		$msconf_downloads_limits = explode(',',$this->config->get('msconf_downloads_limits'));
+		$msconf_downloads_limits = $this->config->get('msconf_downloads_limits');
 		if (!isset($data['product_downloads'])) {
 			if ($msconf_downloads_limits[0] > 0) {
 				$json['errors']['product_download'] = sprintf($this->language->get('ms_error_product_download_count'),$msconf_downloads_limits[0]);
@@ -488,7 +488,7 @@ class ControllerAccountMsSeller extends Controller {
 			}
 		}
 		
-		$msconf_images_limits = explode(',',$this->config->get('msconf_images_limits'));
+		$msconf_images_limits = $this->config->get('msconf_images_limits');
 		if (!isset($data['product_images'])) {
 			if ($msconf_images_limits[0] > 0) {
 				$json['errors']['product_image'] = sprintf($this->language->get('ms_error_product_image_count'),$msconf_images_limits[0]);
@@ -613,9 +613,9 @@ class ControllerAccountMsSeller extends Controller {
 					$data['review_status_id'] = MsProduct::MS_PRODUCT_STATUS_PENDING;
 					
 					if (isset($data['product_id']) && !empty($data['product_id'])) {
-						$request_type = MsRequest::MS_REQUEST_PRODUCT_CREATED;
+						$request_type = MsRequest::MS_REQUEST_TYPE_PRODUCT_UPDATE;
 					} else {
-						$request_type = MsRequest::MS_REQUEST_PRODUCT_UPDATED;
+						$request_type = MsRequest::MS_REQUEST_TYPE_PRODUCT_CREATE;
 					}
 					
 					if (!isset($data['product_id']) || empty($data['product_id']) || ($product['review_status_id'] == MsProduct::MS_PRODUCT_STATUS_DRAFT)) {
@@ -661,16 +661,15 @@ class ControllerAccountMsSeller extends Controller {
 			} else {
 				$product_id = $this->MsLoader->MsProduct->saveProduct($data);
 			}
-			
+
 			if (isset($request_type)) {
-				$r = new MsRequest($this->registry);
-				$r->createRequest(array(
-					'product_id' => $product_id,
-					'seller_id' => $this->customer->getId(),
-					'request_type' => $request_type,
-					'created_message' => isset($data['product_message']) ? $data['product_message'] : '',
-				));
-				unset($r);
+				$this->MsLoader->MsRequest->createProductRequest($this->customer->getId(),
+					array(
+						'product_id' => $product_id,
+						'message' => isset($data['product_message']) ? $data['product_message'] : '',
+						'request_type' => $request_type
+					)
+				);				
 			}
 			
 			foreach ($mails as &$mail) {
@@ -686,12 +685,11 @@ class ControllerAccountMsSeller extends Controller {
 	}
 
 	public function jxRequestMoney() {
-		$msTransaction = new MsTransaction($this->registry);
 		$data = $this->request->post;
 
 		$seller = $this->MsLoader->MsSeller->getSellerData($this->customer->getId());
-		
-		$balance = $this->MsLoader->MsSeller->getBalanceForSeller($this->customer->getId());
+		$balance = $this->MsLoader->MsBalance->getSellerBalance($this->customer->getId()) - $this->MsLoader->MsBalance->getReservedSellerFunds($this->customer->getId());
+
 		$json = array();
 		
 		if (!$this->MsLoader->MsSeller->getPaypal()) {
@@ -716,28 +714,16 @@ class ControllerAccountMsSeller extends Controller {
 		}
 		
 		if (empty($json['errors'])) {
-			$transaction = array(
-				'parent_transaction_id' => 0,
-				'order_id' => 0,
-				'product_id' => 0,
-				'seller_id' => $this->customer->getId(),
-				'amount' => -1*($data['withdraw_amount']),
-				'currency_id' => '',
-				'currency_code' =>'',
-				'currency_value' =>'',
-				'commission' =>'',
-				'commission_flat' =>'',
-				'description' => sprintf($this->language->get('ms_transaction_pending_withdrawal'),$this->currency->format($data['withdraw_amount'], $this->config->get('config_currency')))
+			$this->MsLoader->MsRequest->createWithdrawalRequest($this->customer->getId(),
+				array(
+					'request_type' => MsRequest::MS_REQUEST_TYPE_WITHDRAWAL_CREATE,
+					'amount' => $data['withdraw_amount'],
+					'currency_id' => $this->currency->getId($this->config->get('config_currency')),
+					'currency_code' => $this->currency->getCode($this->config->get('config_currency')),
+					'currency_value' => "1",
+					'message' => ''
+				)
 			);
-			
-			$transaction_id = $msTransaction->addTransaction($transaction);				
-			
-			$r = new MsRequest($this->registry);
-			$r->createRequest(array(
-				'seller_id' => $this->customer->getId(),
-				'transaction_id' => $transaction_id,
-				'request_type' => MsRequest::MS_REQUEST_WITHDRAWAL,
-			));
 			
 			$mails[] = array(
 				'type' => MsMail::SMT_WITHDRAW_REQUEST_SUBMITTED
@@ -802,8 +788,7 @@ class ControllerAccountMsSeller extends Controller {
 		$json = array();
 		
 		if (!empty($seller) && ($seller['seller_status_id'] != MsSeller::MS_SELLER_STATUS_ACTIVE)) {
-			$this->response->setOutput(json_encode($json));
-			return;
+			return $this->response->setOutput(json_encode($json));
 		}
 		
 		if (empty($seller)) {
@@ -860,12 +845,12 @@ class ControllerAccountMsSeller extends Controller {
 						);
 						$data['seller_status_id'] = MsSeller::MS_SELLER_STATUS_TOBEAPPROVED;
 
-						$r = new MsRequest($this->registry);
-						$r->createRequest(array(
-							'seller_id' => $this->customer->getId(),
-							'request_type' => MsRequest::MS_REQUEST_SELLER_CREATED,
-						));
-						unset($r);
+						$this->MsLoader->MsRequest->createSellerRequest($this->customer->getId(),
+							array(
+								'message' => $data['sellerinfo_reviewer_message'],
+								'request_type' => MsRequest::MS_REQUEST_TYPE_SELLER_CREATE
+							)
+						);
 						break;
 					
 					case MS_SELLER_VALIDATION_NONE:
@@ -911,7 +896,7 @@ class ControllerAccountMsSeller extends Controller {
 	public function newProduct() {
 		$this->load->model('catalog/category');
 		$this->document->addScript('catalog/view/javascript/jquery.form.js');
-		
+		$this->document->addScript('catalog/view/javascript/jquery.uploadify.js');
 		if ($this->config->get('msconf_enable_pdf_generator') && extension_loaded('imagick')) {
 			$this->document->addScript('catalog/view/javascript/ms-pdfgen.js');
 		}		
@@ -919,7 +904,7 @@ class ControllerAccountMsSeller extends Controller {
 		$this->document->addScript('catalog/view/javascript/ms-productform.js');
 		
 		$this->data['seller'] = $this->MsLoader->MsSeller->getSellerData($this->customer->getId());
-		
+		$this->data['salt'] = $this->MsLoader->MsSeller->getSalt($this->customer->getId());
 		if (!$this->config->get('msconf_allow_multiple_categories'))
 			$this->data['categories'] = $this->MsLoader->MsProduct->getCategories();		
 		else
@@ -942,8 +927,8 @@ class ControllerAccountMsSeller extends Controller {
 		$this->data['product'] = FALSE;
 		$this->data['msconf_allow_multiple_categories'] = $this->config->get('msconf_allow_multiple_categories');
 		$this->data['msconf_enable_shipping'] = $this->config->get('msconf_enable_shipping');
-		$this->data['msconf_images_limits'] = explode(',',$this->config->get('msconf_images_limits'));
-		$this->data['msconf_downloads_limits'] = explode(',',$this->config->get('msconf_downloads_limits'));		
+		$this->data['msconf_images_limits'] = $this->config->get('msconf_images_limits');
+		$this->data['msconf_downloads_limits'] = $this->config->get('msconf_downloads_limits');
 		$this->data['msconf_enable_quantities'] = $this->config->get('msconf_enable_quantities');
 		$this->data['ms_account_product_download_note'] = sprintf($this->language->get('ms_account_product_download_note'), $this->config->get('msconf_allowed_download_types'));
 		$this->data['ms_account_product_image_note'] = sprintf($this->language->get('ms_account_product_image_note'), $this->config->get('msconf_allowed_image_types'));		
@@ -1087,9 +1072,8 @@ class ControllerAccountMsSeller extends Controller {
 			$this->data['msconf_allow_multiple_categories'] = $this->config->get('msconf_allow_multiple_categories');
 			$this->data['msconf_enable_shipping'] = $this->config->get('msconf_enable_shipping');
 			$this->data['msconf_enable_quantities'] = $this->config->get('msconf_enable_quantities');
-			
-			$this->data['msconf_images_limits'] = explode(',',$this->config->get('msconf_images_limits'));
-			$this->data['msconf_downloads_limits'] = explode(',',$this->config->get('msconf_downloads_limits'));
+			$this->data['msconf_images_limits'] = $this->config->get('msconf_images_limits');
+			$this->data['msconf_downloads_limits'] = $this->config->get('msconf_downloads_limits');			
 			$this->data['ms_account_product_download_note'] = sprintf($this->language->get('ms_account_product_download_note'), $this->config->get('msconf_allowed_download_types'));
 			$this->data['ms_account_product_image_note'] = sprintf($this->language->get('ms_account_product_image_note'), $this->config->get('msconf_allowed_image_types'));			
 			
@@ -1123,10 +1107,9 @@ class ControllerAccountMsSeller extends Controller {
     	$this->data['countries'] = $this->model_localisation_country->getCountries();		
 
 		$seller = $this->MsLoader->MsSeller->getSellerData($this->customer->getId());
-
+			$this->data['salt'] = $this->MsLoader->MsSeller->getSalt($this->customer->getId());
 		if (!empty($seller)) {
 			$this->data['seller'] = $seller;
-			$this->data['salt'] = $this->MsLoader->MsSeller->getSalt($this->customer->getId());
 			if (!empty($seller['avatar_path'])) {
 				$this->data['seller']['avatar']['name'] = $seller['avatar_path'];
 				$this->data['seller']['avatar']['thumb'] = $this->MsLoader->MsFile->resizeImage($seller['avatar_path'], $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'));
@@ -1164,8 +1147,6 @@ class ControllerAccountMsSeller extends Controller {
 	
 	
 	public function transactions() {
-		$msTransaction = new MsTransaction($this->registry);
-		
 		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
 
 		$sort = array(
@@ -1177,18 +1158,19 @@ class ControllerAccountMsSeller extends Controller {
 
 		$seller_id = $this->customer->getId();
 		
-		$transactions = $msTransaction->getSellerTransactions($seller_id, $sort);
+		$balance_entries = $this->MsLoader->MsBalance->getSellerBalanceEntries($seller_id, $sort);
 		
-    	foreach ($transactions as &$transaction) {
-   			$transaction['amount'] = $this->currency->format($transaction['amount'], $this->config->get('config_currency'));
-   			$transaction['net_amount'] = $this->currency->format($transaction['net_amount'], $this->config->get('config_currency'));
-   			$transaction['date_created'] = date($this->language->get('date_format_short'), strtotime($transaction['date_created']));
-		}
+    	foreach ($balance_entries as $entry) {
+    		$this->data['transactions'][] = array(
+    			'description' => $entry['description'],
+    			'amount' => $this->currency->format($entry['amount'], $this->config->get('config_currency')),
+   				'date_created' => date($this->language->get('date_format_short'), strtotime($entry['date_created']))
+   			);
+   		}
 
-		$this->data['transactions'] = $transactions;
-		$this->data['balance'] =  $this->currency->format($this->MsLoader->MsSeller->getBalanceForSeller($seller_id),$this->config->get('config_currency'));
+		$this->data['balance'] =  $this->currency->format($this->MsLoader->MsBalance->getSellerBalance($seller_id),$this->config->get('config_currency'));
 		$pagination = new Pagination();
-		$pagination->total = $msTransaction->getTotalSellerTransactions($seller_id);
+		$pagination->total = $this->MsLoader->MsBalance->getTotalSellerBalanceEntries($seller_id);
 		$pagination->page = $sort['page'];
 		$pagination->limit = $sort['limit']; 
 		$pagination->text = $this->language->get('text_pagination');
@@ -1203,16 +1185,28 @@ class ControllerAccountMsSeller extends Controller {
 	}
 	
 	public function withdraw() {
+		if (!$this->config->get('msconf_allow_withdrawal_requests'))
+			$this->redirect($this->url->link('account/account', '', 'SSL'));
+		
 		$seller_id = $this->customer->getId();
-		$this->data['balance'] =  $this->MsLoader->MsSeller->getBalanceForSeller($seller_id);
-		$this->data['balance_formatted'] =  $this->currency->format($this->MsLoader->MsSeller->getBalanceForSeller($seller_id),$this->config->get('config_currency'));
+		
+		$seller_balance = $this->MsLoader->MsBalance->getSellerBalance($seller_id);
+		$available_balance = $seller_balance - $this->MsLoader->MsBalance->getReservedSellerFunds($seller_id);
+		
+		$this->document->addScript('catalog/view/javascript/ms-withdraw.js');
+		
+		$this->data['balance'] =  $seller_balance;
+		$this->data['balance_formatted'] =  $this->currency->format($this->data['balance'],$this->config->get('config_currency'));
+
+		$this->data['balance_available'] =  $available_balance;
+		$this->data['balance_available_formatted'] =  $this->currency->format($available_balance, $this->config->get('config_currency'));
+		
 		$this->data['paypal'] =  $this->MsLoader->MsSeller->getPaypal();
 		$this->data['msconf_minimum_withdrawal_amount'] =  $this->currency->format($this->config->get('msconf_minimum_withdrawal_amount'),$this->config->get('config_currency'));
 		$this->data['msconf_allow_partial_withdrawal'] = $this->config->get('msconf_allow_partial_withdrawal');
-		$this->data['msconf_allow_withdrawal_requests'] = $this->config->get('msconf_allow_withdrawal_requests');
 		$this->data['currency_code'] = $this->config->get('config_currency');
 		
-		if ($this->MsLoader->MsSeller->getBalanceForSeller($seller_id) - $this->config->get('msconf_minimum_withdrawal_amount') > 0) {
+		if ($available_balance - $this->config->get('msconf_minimum_withdrawal_amount') > 0) {
 			$this->data['withdrawal_minimum_reached'] = TRUE;
 		} else {
 			$this->data['withdrawal_minimum_reached'] = FALSE;
@@ -1220,7 +1214,7 @@ class ControllerAccountMsSeller extends Controller {
 			
 		$this->data['back'] = $this->url->link('account/account', '', 'SSL');
 		$this->document->setTitle($this->language->get('ms_account_withdraw_heading'));
-		$this->_setBreadcrumbs('ms_account_withdraw_breadcrumbs', __FUNCTION__);		
+		$this->_setBreadcrumbs('ms_account_withdraw_breadcrumbs', __FUNCTION__);
 		$this->_renderTemplate('ms-account-withdraw');
 	}
 	

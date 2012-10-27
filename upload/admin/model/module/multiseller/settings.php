@@ -109,16 +109,85 @@ class ModelModuleMultisellerSettings extends Model {
 			CREATE TABLE `" . DB_PREFIX . "ms_balance` (
              `balance_id` int(11) NOT NULL AUTO_INCREMENT,
              `seller_id` int(11) NOT NULL,
-             `change` DECIMAL(15,4) NOT NULL,
              `order_id` int(11) DEFAULT NULL,
              `product_id` int(11) DEFAULT NULL,
              `withdrawal_id` int(11) DEFAULT NULL,
+             `balance_type` int(11) DEFAULT NULL,
+             `amount` DECIMAL(15,4) NOT NULL,
+             `balance` DECIMAL(15,4) NOT NULL,
              `description` TEXT NOT NULL DEFAULT '',
 			 `date_created` DATETIME NOT NULL,
-			 `date_modified` DATETIME DEFAULT NULL',
+			 `date_modified` DATETIME DEFAULT NULL,
         	PRIMARY KEY (`balance_id`)) default CHARSET=utf8";
         
-        $this->db->query($sql);        
+        $this->db->query($sql);
+	
+		$sql = "
+			CREATE TABLE `" . DB_PREFIX . "ms_order_product_data` (
+             `order_product_data_id` int(11) NOT NULL AUTO_INCREMENT,
+             `order_id` int(11) NOT NULL,
+             `product_id` int(11) NOT NULL,
+             `seller_id` int(11) DEFAULT NULL,
+             `store_commission_flat` DECIMAL(15,4) NOT NULL,
+             `store_commission_pct` DECIMAL(15,4) NOT NULL,
+             `seller_net_amt` DECIMAL(15,4) NOT NULL,
+        	PRIMARY KEY (`order_product_data_id`)) default CHARSET=utf8";
+        
+        $this->db->query($sql);
+        
+		$sql = "
+			CREATE TABLE `" . DB_PREFIX . "ms_payout_method` (
+             `payout_method_id` int(11) NOT NULL AUTO_INCREMENT,
+             `payout_method_name` VARCHAR(96) NOT NULL,
+        	PRIMARY KEY (`balance_id`)) default CHARSET=utf8";        
+        
+		$sql = "
+			CREATE TABLE `" . DB_PREFIX . "ms_request_withdrawal` (
+             `request_withdrawal_id` int(11) NOT NULL AUTO_INCREMENT,
+			 `request_id` int(11) NOT NULL,
+             `seller_id` int(11) NOT NULL,
+             `withdrawal_method_id` int(11) NOT NULL DEFAULT 0,
+             `withdrawal_method_data` TEXT NOT NULL DEFAULT '',
+             `amount` DECIMAL(15,4) NOT NULL,
+             `currency_id` int(11) NOT NULL,
+             `currency_code` VARCHAR(3) NOT NULL,
+             `currency_value` DECIMAL(15,8) NOT NULL,
+        	PRIMARY KEY (`request_withdrawal_id`)) default CHARSET=utf8";
+        
+        $this->db->query($sql);
+
+		$sql = "
+			CREATE TABLE `" . DB_PREFIX . "ms_request_seller` (
+             `request_seller_id` int(11) NOT NULL AUTO_INCREMENT,
+			 `request_id` int(11) NOT NULL,
+             `seller_id` int(11) NOT NULL,
+        	PRIMARY KEY (`request_seller_id`)) default CHARSET=utf8";
+        
+        $this->db->query($sql);
+
+		$sql = "
+			CREATE TABLE `" . DB_PREFIX . "ms_request_product` (
+             `request_product_id` int(11) NOT NULL AUTO_INCREMENT,
+			 `request_id` int(11) NOT NULL,
+             `product_id` int(11) NOT NULL,
+        	PRIMARY KEY (`request_product_id`)) default CHARSET=utf8";
+        
+        $this->db->query($sql);
+
+		$sql = "
+			CREATE TABLE `" . DB_PREFIX . "ms_request_data` (
+             `request_id` int(11) NOT NULL AUTO_INCREMENT,
+			 `request_type` TINYINT NOT NULL,
+			 `request_status` TINYINT NOT NULL,
+             `processed_by` int(11) DEFAULT NULL,
+			 `date_created` DATETIME NOT NULL,
+			 `date_processed` DATETIME DEFAULT NULL,
+             `message_created` TEXT NOT NULL DEFAULT '',
+             `message_processed` TEXT NOT NULL DEFAULT '',
+        	PRIMARY KEY (`request_id`)) default CHARSET=utf8";
+        
+        $this->db->query($sql);
+
 	}
 	
 	public function dropTable() {
