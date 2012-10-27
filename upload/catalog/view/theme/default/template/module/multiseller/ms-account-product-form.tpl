@@ -226,7 +226,7 @@
           			<span class="ms-download-name"><?php echo $download['name']; ?></span>
 	          		<div class="ms-buttons">
 	          			<a href="<?php echo $download['href']; ?>" class="ms-button-download" title="<?php echo $ms_download; ?>"></a>
-	          			<div class="ms-button-update">
+	          			<div class="ms-button-update" title="<?php echo $ms_update; ?>">
 	          				<input id="ms-update-<?php echo $download['id']; ?>" name="ms-update-<?php echo $download['id']; ?>" class="ms-file-updatedownload" type="file" multiple="false" />
 	          			</div>
 	          			<a class="ms-button-delete" title="<?php echo $ms_delete; ?>"></a>
