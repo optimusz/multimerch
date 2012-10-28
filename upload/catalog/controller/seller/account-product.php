@@ -1,112 +1,6 @@
 <?php
 
-class ControllerAccountMsSeller extends Controller {
-	private $name = 'ms-seller';
-	
-	public function __construct($registry) {
-		parent::__construct($registry);
-
-		require_once(DIR_SYSTEM . 'library/ms-request.php');
-		require_once(DIR_SYSTEM . 'library/ms-transaction.php');
-		$this->data = array_merge($this->data, $this->load->language('module/multiseller'),$this->load->language('account/account'));
-		$parts = explode('/', $this->request->request['route']);
-
-		// Uploadify checks
-		//$this->_log = new Log("uploadify.log");
-		if (in_array($parts[2], array('jxUpdateFile','jxUploadImages', 'jxUploadDownloads', 'jxUploadSellerAvatar'))) {
-			if (empty($_POST) || empty($_FILES))
-				return;
-			// Re-create session as Flash doesn't pass session info
-	  		if (isset($_POST['session_id'])) {
-	  			session_destroy();
-	  			$_COOKIE['PHPSESSID'] = $_POST['session_id'];
-	  			$registry->set('session', new Session());
-	  			//session_start();
-	  			if (isset($_SESSION['customer_id'])) {
-	  				$salt = $this->MsLoader->MsSeller->getSalt($_SESSION['customer_id']);
-	  				if (isset($_POST['token']) && isset($_POST['timestamp']) && $_POST['token'] == md5($salt . $_POST['timestamp'])) {
-	  					$this->session->data['customer_id'] = $_SESSION['customer_id'];
-	  					$this->customer = new Customer($this->registry);
-	  					// todo re-initialize seller object
-	  				}
-	  			}
-	  		}
-		}
-		
-	  	if (!$this->customer->isLogged()) {
-	  		$this->session->data['redirect'] = $this->url->link('account/account', '', 'SSL');
-	  		$this->redirect($this->url->link('account/login', '', 'SSL')); 
-    	} else if (!$this->MsLoader->MsSeller->isSeller()) {
-    		if (!in_array($parts[2], array('sellerinfo','jxsavesellerinfo','jxUploadSellerAvatar'))) {
-    			$this->redirect($this->url->link('account/ms-seller/sellerinfo', '', 'SSL'));
-    		}
-    	} else if ($this->MsLoader->MsSeller->getStatus() != MsSeller::MS_SELLER_STATUS_ACTIVE) {
-    		if (!in_array($parts[2], array('sellerinfo'))) {
-    			$this->redirect($this->url->link('account/ms-seller/sellerinfo', '', 'SSL'));
-    		}
-    	}
-		
-		if (isset($this->session->data['success'])) {
-			$this->data['success'] = $this->session->data['success'];
-    		unset($this->session->data['success']);
-		} else {
-			$this->data['success'] = '';
-		}
-		
-		if (file_exists('catalog/view/theme/' . $this->config->get('config_template') . '/stylesheet/multiseller.css')) {
-			$this->document->addStyle('catalog/view/theme/' . $this->config->get('config_template') . '/stylesheet/multiseller.css');
-		} else {
-			$this->document->addStyle('catalog/view/theme/default/stylesheet/multiseller.css');
-		}
-		
-		//$config = $this->registry->get('config');
-		$this->load->config('ms-config');
-		
-		if (!isset($this->session->data['multiseller']['files']))
-			$this->session->data['multiseller']['files'] = array();
-	}
-	
-	private function _setBreadcrumbs($textVar, $function) {
-      	$this->data['breadcrumbs'] = array();
-
-      	$this->data['breadcrumbs'][] = array(
-        	'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home'),     	
-        	'separator' => false
-      	); 
-
-      	$this->data['breadcrumbs'][] = array(
-        	'text'      => $this->language->get('text_account'),
-			'href'      => $this->url->link('account/account', '', 'SSL'),        	
-        	'separator' => $this->language->get('text_separator')
-      	);
-
-      	$this->data['breadcrumbs'][] = array(
-        	'text'      => $this->language->get($textVar),
-			'href'      => $this->url->link("account/{$this->name}/" . strtolower($function), '', 'SSL'),       	
-        	'separator' => $this->language->get('text_separator')
-      	);
-	}
-	
-	private function _renderTemplate($templateName) {
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . "/template/module/multiseller/$templateName.tpl")) {
-			$this->template = $this->config->get('config_template') . "/template/module/multiseller/$templateName.tpl";
-		} else {
-			$this->template = "default/template/module/multiseller/$templateName.tpl";
-		}
-		
-		$this->children = array(
-			'common/column_left',
-			'common/column_right',
-			'common/content_top',
-			'common/content_bottom',
-			'common/footer',
-			'common/header'	
-		);
-
-		$this->response->setOutput($this->render());
-	}
-	
+class ControllerSellerAccountProduct extends ControllerSellerAccount {
 	public function jxUpdateFile() {
 		$json = array();
 		$json['errors'] = $this->MsLoader->MsFile->checkPostMax($_POST, $_FILES);
@@ -162,7 +56,7 @@ class ControllerAccountMsSeller extends Controller {
 		}
 		
 		return $this->response->setOutput(json_encode($json));
-	}	
+	}
 	
 	public function jxUploadImages() {
 		$json = array();
@@ -244,152 +138,6 @@ class ControllerAccountMsSeller extends Controller {
 		}
 		
 		return $this->response->setOutput(json_encode($json));
-	}	
-	
-	public function jxSaveProductDraft() {
-		$data = $this->request->post;
-		
-		if (isset($data['product_id']) && !empty($data['product_id'])) {
-			if  ($this->MsLoader->MsProduct->productOwnedBySeller($data['product_id'], $this->customer->getId())) {
-				$product = $this->MsLoader->MsProduct->getProduct($data['product_id']);
-				$data['images'] = $this->MsLoader->MsProduct->getProductImages($data['product_id']);
-			} else {
-				return;
-			}
-		}
-
-		$json = array();
-
-		// only check default language for errors
-		$i = 0;
-		foreach ($data['languages'] as $language_id => $language) {
-			// main language inputs are mandatory
-			if ($i == 0) {
-				if (empty($language['product_name'])) {
-					$json['errors']['product_name_' . $language_id] = $this->language->get('ms_error_product_name_empty'); 
-				} else if (mb_strlen($language['product_name']) > 50 ) {
-					$json['errors']['product_name_' . $language_id] = $this->language->get('ms_error_product_name_length');			
-				}
-		
-				if (mb_strlen($language['product_description']) > 1000 ) {
-					$json['errors']['product_description_' . $language_id] = $this->language->get('ms_error_product_description_length');			
-				}
-			} else {
-				if (!empty($language['product_name']) && (mb_strlen($language['product_name']) < 4 || mb_strlen($language['product_name']) > 50)) {
-					$json['errors']['product_name_' . $language_id] = $this->language->get('ms_error_product_name_length');			
-				}
-
-				if (!empty($language['product_description']) && (mb_strlen($language['product_description']) < 25 || mb_strlen($language['product_description']) > 1000)) {
-					$json['errors']['product_description_' . $language_id] = $this->language->get('ms_error_product_description_length');			
-				}
-			}
-			
-			if (!empty($language['product_tags']) && mb_strlen($language['product_tags']) > 1000) {
-				$json['errors']['product_tags_' . $language_id] = $this->language->get('ms_error_product_tags_length');			
-			}
-						
-			$i++;
-		}
-		
-		if (!empty($data['product_price'])) {
-			if (!is_numeric($data['product_price'])) {
-				$json['errors']['product_price'] = $this->language->get('ms_error_product_price_invalid');			
-			} else if ($data['product_price'] < $this->config->get('msconf_minimum_product_price')) {
-				$json['errors']['product_price'] = $this->language->get('ms_error_product_price_low');
-			}
-		}
-		
-		if (isset($data['product_downloads'])) {
-			foreach ($data['product_downloads'] as $key => $download) {
-				if (!empty($download['filename'])) {
-					if (!$this->MsLoader->MsFile->checkFileAgainstSession($download['filename'])) {
-						var_dump($download);
-						$json['errors']['product_download'] = $this->language->get('ms_error_file_upload_error');
-					}						
-				} else if (!empty($download['download_id']) && !empty($product['product_id'])) {
-					if (!$this->MsLoader->MsProduct->hasDownload($product['product_id'],$download['download_id'])) {
-						var_dump($download);
-						$json['errors']['product_download'] = $this->language->get('ms_error_file_upload_error');
-					}
-				} else {
-					unset($data['product_downloads'][$key]);	
-				}
-				//str_replace($this->MsLoader->MsSeller->getNickname() . '_', '', $download);
-				//$download = substr_replace($download, '.' . $this->MsLoader->MsSeller->getNickname() . '_', strpos($download,'.'), strlen('.'));
-			}
-		}
-		
-		if (isset($data['product_images'])) {
-			foreach ($data['product_images'] as $image) {
-				if (!$this->MsLoader->MsFile->checkFileAgainstSession($image)) {
-					$json['errors']['product_image'] = $this->language->get('ms_error_file_upload_error');
-				}
-			}
-			$data['product_thumbnail'] = array_shift($data['product_images']);
-		}
-
-		if (isset($data['product_category'])) {
-			if (is_array($data['product_category'])) {
-				if (!$this->config->get('msconf_allow_multiple_categories')) {
-					$data['product_category'] = $data['product_category'][0];
-				}
-			} else {
-				$data['product_category'] = array($data['product_category']);
-			}
-		} else {
-			$data['product_category'] = array();			
-		}
-		
-		$data['product_subtract'] = 0;
-		if ($this->config->get('msconf_enable_shipping') == 1) { // enable shipping
-			$data['product_enable_shipping'] = 1;
-		} else if ($this->config->get('msconf_enable_shipping') == 2) { // seller select
-		 	if  (!isset($data['product_enable_shipping']) || $data['product_enable_shipping'] != 1) {
-		 		$data['product_enable_shipping'] = 0;
-		 	} else {
-		 		$data['product_enable_shipping'] = 1;
-		 	}
-		} else { // disable shipping
-			$data['product_enable_shipping'] = 0;
-		}
-		
-		if ($this->config->get('msconf_enable_quantities') == 1) { // enable quantities
-			$data['product_quantity'] = (int)$data['product_quantity'];
-			$data['product_subtract'] = 1;
-		} else if ($this->config->get('msconf_enable_quantities') == 2) { // shipping dependent
-			if ($this->config->get('msconf_enable_shipping') == 1) {
-				$data['product_subtract'] = 1;
-				if (!isset($data['product_quantity']))
-					$data['product_quantity'] = 0;						
-			} else if ($this->config->get('msconf_enable_shipping') == 2) {
-				if (!$data['product_enable_shipping']) {
-					$data['product_quantity'] = 999;
-				} else {
-					$data['product_subtract'] = 1;
-					if (!isset($data['product_quantity']))
-						$data['product_quantity'] = 0;
-				}
-			} else { // shipping disabled
-				$data['product_quantity'] = 999;
-			}
-		} else { // disable quantities
-			$data['product_quantity'] = 999;
-		}		
-		
-		if (empty($json['errors'])) {
-			$data['enabled'] = 0;
-			$data['review_status_id'] = MsProduct::MS_PRODUCT_STATUS_DRAFT;
-
-			if (isset($data['product_id']) && !empty($data['product_id'])) {
-				$this->MsLoader->MsProduct->editProduct($data);
-			} else {
-				$this->MsLoader->MsProduct->saveProduct($data);
-			}
-			
-			$json['redirect'] = $this->url->link('account/ms-seller/products', '', 'SSL');			
-		}
-
-		$this->response->setOutput(json_encode($json));
 	}
 	
 	public function jxSubmitProduct() {
@@ -678,68 +426,12 @@ class ControllerAccountMsSeller extends Controller {
 			
 			$this->MsLoader->MsMail->sendMails($mails);
 			
-			$json['redirect'] = $this->url->link('account/ms-seller/products', '', 'SSL');
+			$json['redirect'] = $this->url->link('seller/account-product', '', 'SSL');
 		}
 
 		$this->response->setOutput(json_encode($json));
 	}
 
-	public function jxRequestMoney() {
-		$data = $this->request->post;
-
-		$seller = $this->MsLoader->MsSeller->getSellerData($this->customer->getId());
-		$balance = $this->MsLoader->MsBalance->getSellerBalance($this->customer->getId()) - $this->MsLoader->MsBalance->getReservedSellerFunds($this->customer->getId());
-
-		$json = array();
-		
-		if (!$this->MsLoader->MsSeller->getPaypal()) {
-			$json['errors']['withdraw_amount'] = $this->language->get('ms_account_withdraw_no_paypal');
-			$this->response->setOutput(json_encode($json));
-			return;
-		}
-		
-		if (!isset($data['withdraw_amount'])) {
-			$data['withdraw_amount'] = $balance;
-		}
-		
-		if (preg_match("/[^0-9.]/",$data['withdraw_amount']) || (float)$data['withdraw_amount'] <= 0) {
-			$json['errors']['withdraw_amount'] = $this->language->get('ms_error_withdraw_amount');
-		} else {
-			$data['withdraw_amount'] = (float)$data['withdraw_amount'];
-			if ($data['withdraw_amount'] > $balance) {
-				$json['errors']['withdraw_amount'] = $this->language->get('ms_error_withdraw_balance');
-			} else if ($data['withdraw_amount'] < $this->config->get('msconf_minimum_withdrawal_amount')) {
-				$json['errors']['withdraw_amount'] = $this->language->get('ms_error_withdraw_minimum');
-			}			
-		}
-		
-		if (empty($json['errors'])) {
-			$this->MsLoader->MsRequest->createWithdrawalRequest($this->customer->getId(),
-				array(
-					'request_type' => MsRequest::MS_REQUEST_TYPE_WITHDRAWAL_CREATE,
-					'amount' => $data['withdraw_amount'],
-					'currency_id' => $this->currency->getId($this->config->get('config_currency')),
-					'currency_code' => $this->currency->getCode($this->config->get('config_currency')),
-					'currency_value' => "1",
-					'message' => ''
-				)
-			);
-			
-			$mails[] = array(
-				'type' => MsMail::SMT_WITHDRAW_REQUEST_SUBMITTED
-			);
-			$mails[] = array(
-				'type' => MsMail::AMT_WITHDRAW_REQUEST_SUBMITTED,
-			);
-			
-			$this->MsLoader->MsMail->sendMails($mails);
-			
-			$this->session->data['success'] = $this->language->get('ms_request_submitted');
-			$json['redirect'] = $this->url->link('account/ms-seller/transactions', '', 'SSL');
-		}
-		$this->response->setOutput(json_encode($json));
-	}
-	
   	public function jxSubmitPdfgenDialog() {
 		$json = array();
 
@@ -762,14 +454,6 @@ class ControllerAccountMsSeller extends Controller {
   		} else {
   			return;
   		}
-  		
-  		/* else if (!empty($this->request->post['fileId'])) {
-  			$download = $this->MsLoader->MsProduct->getDownload($this->request->post['fileId']);
-  			$fileName = $download['filename'];
-  			$this->data['fileMask'] = substr($fileName, 0, strrpos($fileName,'.'));//+1,mb_strlen($fileName));
-  		} else {
-  			$fileName = '';
-  		}*/
 
   		$pages = $this->MsLoader->MsFile->getPdfPages($fileName);
   		
@@ -779,129 +463,19 @@ class ControllerAccountMsSeller extends Controller {
 		$this->data['fileName'] = $fileName;		
 		$this->data['filePages'] = $pages;
 
-  		return $this->_renderTemplate('ms-pdfgen');
+		list($this->template, $this->children) = $this->MsLoader->MsHelper->loadTemplate('ms-pdfgen');
+		return $this->response->setOutput($this->render());
   	}
 	
-	public function jxSaveSellerInfo() {
-		$data = $this->request->post;
-		$seller = $this->MsLoader->MsSeller->getSellerData($this->customer->getId());
-		$json = array();
-		
-		if (!empty($seller) && ($seller['seller_status_id'] != MsSeller::MS_SELLER_STATUS_ACTIVE)) {
-			return $this->response->setOutput(json_encode($json));
-		}
-		
-		if (empty($seller)) {
-			// seller doesn't exist yet
-			if (empty($data['sellerinfo_nickname'])) {
-				$json['errors']['sellerinfo_nickname'] = $this->language->get('ms_error_sellerinfo_nickname_empty'); 
-			} else if (!ctype_alnum($data['sellerinfo_nickname'])) {
-				$json['errors']['sellerinfo_nickname'] = $this->language->get('ms_error_sellerinfo_nickname_alphanumeric');
-			} else if (mb_strlen($data['sellerinfo_nickname']) < 4 || mb_strlen($data['sellerinfo_nickname']) > 50 ) {
-				$json['errors']['sellerinfo_nickname'] = $this->language->get('ms_error_sellerinfo_nickname_length');			
-			} else if ($this->MsLoader->MsSeller->nicknameTaken($data['sellerinfo_nickname'])) {
-				$json['errors']['sellerinfo_nickname'] = $this->language->get('ms_error_sellerinfo_nickname_taken');
-			}
-		}
-		
-		if (mb_strlen($data['sellerinfo_company']) > 50 ) {
-			$json['errors']['sellerinfo_company'] = $this->language->get('ms_error_sellerinfo_company_length');			
-		}
-		
-		if (mb_strlen($data['sellerinfo_description']) > 1000) {
-			$json['errors']['sellerinfo_description'] = $this->language->get('ms_error_sellerinfo_description_length');			
-		}
-
-		if (mb_strlen($data['sellerinfo_paypal']) > 256) {
-			$json['errors']['sellerinfo_paypal'] = $this->language->get('ms_error_sellerinfo_paypal');			
-		}
-		
-		if (isset($data['sellerinfo_avatar_name']) && !empty($data['sellerinfo_avatar_name'])) {
-			if (!$this->MsLoader->MsFile->checkFileAgainstSession($data['sellerinfo_avatar_name'])) {
-				$json['errors']['sellerinfo_avatar'] = $this->language->get('ms_error_file_upload_error');
-			}
-		}
-		
-		if (empty($json['errors'])) {
-			$mails = array();
-			if (empty($seller)) {
-				// create new seller
-				switch ($this->config->get('msconf_seller_validation')) {
-					/*
-					case MS_SELLER_VALIDATION_ACTIVATION:
-						$data['seller_status_id'] = MsSeller::MS_SELLER_STATUS_TOBEACTIVATED;
-						break;
-					*/
-					
-					case MS_SELLER_VALIDATION_APPROVAL:
-						$mails[] = array(
-							'type' => MsMail::SMT_SELLER_ACCOUNT_AWAITING_MODERATION
-						);
-						$mails[] = array(
-							'type' => MsMail::AMT_SELLER_ACCOUNT_AWAITING_MODERATION,
-							'data' => array(
-								'message' => $data['sellerinfo_reviewer_message']
-							)
-						);
-						$data['seller_status_id'] = MsSeller::MS_SELLER_STATUS_TOBEAPPROVED;
-
-						$this->MsLoader->MsRequest->createSellerRequest($this->customer->getId(),
-							array(
-								'message' => $data['sellerinfo_reviewer_message'],
-								'request_type' => MsRequest::MS_REQUEST_TYPE_SELLER_CREATE
-							)
-						);
-						break;
-					
-					case MS_SELLER_VALIDATION_NONE:
-					default:
-						$mails[] = array(
-							'type' => MsMail::SMT_SELLER_ACCOUNT_CREATED
-						);
-						$mails[] = array(
-							'type' => MsMail::AMT_SELLER_ACCOUNT_CREATED
-						);					
-						$data['seller_status_id'] = MsSeller::MS_SELLER_STATUS_ACTIVE;
-						break;
-				}
-				
-				// SEO urls generation for sellers
-				if ($this->config->get('msconf_enable_seo_urls')) {
-					$latin_check = '/[^\x{0030}-\x{007f}]/u';
-					$non_latin_chars = preg_match($latin_check, $_POST['full_name']);
-					if ($this->config->get('msconf_enable_non_alphanumeric_seo') && $non_latin_chars) {
-						$data['keyword'] = implode("-", str_replace("-", "", explode(" ", strtolower($data['sellerinfo_nickname']))));
-					}
-					else {
-						$data['keyword'] = implode("-", str_replace("-", "", explode(" ", preg_replace("/[^A-Za-z0-9 ]/", '', strtolower($data['sellerinfo_nickname'])))));
-					}
-				}
-				
-				$data['seller_id'] = $this->customer->getId();
-				$data['sellerinfo_product_validation'] = $this->config->get('msconf_product_validation'); 
-				$this->MsLoader->MsSeller->createSeller($data);
-				$this->MsLoader->MsMail->sendMails($mails);
-				$this->session->data['success'] = $this->language->get('ms_account_sellerinfo_saved');
-			} else {
-				// edit seller
-				$data['seller_id'] = $seller['seller_id'];
-				$this->MsLoader->MsSeller->editSeller($data);
-				$this->session->data['success'] = $this->language->get('ms_account_sellerinfo_saved');
-			}
-		}
-		
-		$this->response->setOutput(json_encode($json));
-	}
-
-	public function newProduct() {
+	public function create() {
 		$this->load->model('catalog/category');
 		$this->document->addScript('catalog/view/javascript/jquery.form.js');
 		$this->document->addScript('catalog/view/javascript/jquery.uploadify.js');
 		if ($this->config->get('msconf_enable_pdf_generator') && extension_loaded('imagick')) {
-			$this->document->addScript('catalog/view/javascript/ms-pdfgen.js');
+			$this->document->addScript('catalog/view/javascript/dialog-pdf.js');
 		}		
 		
-		$this->document->addScript('catalog/view/javascript/ms-productform.js');
+		$this->document->addScript('catalog/view/javascript/account-product-form.js');
 		
 		$this->data['seller'] = $this->MsLoader->MsSeller->getSellerData($this->customer->getId());
 		$this->data['salt'] = $this->MsLoader->MsSeller->getSalt($this->customer->getId());
@@ -933,14 +507,26 @@ class ControllerAccountMsSeller extends Controller {
 		$this->data['ms_account_product_download_note'] = sprintf($this->language->get('ms_account_product_download_note'), $this->config->get('msconf_allowed_download_types'));
 		$this->data['ms_account_product_image_note'] = sprintf($this->language->get('ms_account_product_image_note'), $this->config->get('msconf_allowed_image_types'));		
 		
-		$this->data['back'] = $this->url->link('account/ms-seller/products', '', 'SSL');
+		$this->data['back'] = $this->url->link('seller/account-product', '', 'SSL');
 		$this->data['heading'] = $this->language->get('ms_account_newproduct_heading');
 		$this->document->setTitle($this->language->get('ms_account_newproduct_heading'));
-		$this->_setBreadcrumbs('ms_account_newproduct_breadcrumbs', __FUNCTION__);
-		$this->_renderTemplate('ms-account-product-form');
+		
+		$this->data['breadcrumbs'] = $this->MsLoader->MsHelper->setBreadcrumbs(array(
+			array(
+				'text' => $this->language->get('text_account'),
+				'href' => $this->url->link('account/account', '', 'SSL'),
+			),
+			array(
+				'text' => $this->language->get('ms_account_newproduct_breadcrumbs'),
+				'href' => $this->url->link('seller/account-product/create', '', 'SSL'),
+			)
+		));
+		
+		list($this->template, $this->children) = $this->MsLoader->MsHelper->loadTemplate('account-product-form');
+		$this->response->setOutput($this->render());
 	}
 	
-	public function products() {
+	public function index() {
 		$this->load->model('localisation/language');
 		$this->data['languages'] = $this->model_localisation_language->getLanguages();
 
@@ -964,8 +550,8 @@ class ControllerAccountMsSeller extends Controller {
 			'status' => $product['status'],
 			'review_status' => $product['review_status'],
 			'date_added' => date($this->language->get('date_format_short'), strtotime($product['date_added'])),
-			'edit_link' => $this->url->link('account/ms-seller/editproduct', 'product_id=' . $product['product_id'], 'SSL'),
-			'delete_link' => $this->url->link('account/ms-seller/deleteproduct', 'product_id=' . $product['product_id'], 'SSL')
+			'edit_link' => $this->url->link('seller/account-product/update', 'product_id=' . $product['product_id'], 'SSL'),
+			'delete_link' => $this->url->link('seller/account-product/delete', 'product_id=' . $product['product_id'], 'SSL')
 			);
 		}
 		
@@ -974,27 +560,39 @@ class ControllerAccountMsSeller extends Controller {
 		$pagination->page = $sort['page'];
 		$pagination->limit = $sort['limit']; 
 		$pagination->text = $this->language->get('text_pagination');
-		$pagination->url = $this->url->link('account/' . $this->name . '/' . __FUNCTION__, 'page={page}', 'SSL');
+		$pagination->url = $this->url->link('seller/account-product', 'page={page}', 'SSL');
 		
 		$this->data['pagination'] = $pagination->render();
 		$this->data['continue'] = $this->url->link('account/account', '', 'SSL');
 		
-		$this->document->setTitle($this->language->get('ms_account_products_heading'));		
-		$this->_setBreadcrumbs('ms_account_products_breadcrumbs', __FUNCTION__);		
-		$this->_renderTemplate('ms-account-products');
+		$this->document->setTitle($this->language->get('ms_account_products_heading'));
+		
+		$this->data['breadcrumbs'] = $this->MsLoader->MsHelper->setBreadcrumbs(array(
+			array(
+				'text' => $this->language->get('text_account'),
+				'href' => $this->url->link('account/account', '', 'SSL'),
+			),
+			array(
+				'text' => $this->language->get('ms_account_products_breadcrumbs'),
+				'href' => $this->url->link('seller/account-product', '', 'SSL'),
+			)
+		));
+		
+		list($this->template, $this->children) = $this->MsLoader->MsHelper->loadTemplate('account-product');
+		$this->response->setOutput($this->render());
 	}
 	
-	public function editProduct() {
+	public function update() {
 		$this->load->model('tool/image');
 		$this->load->model('catalog/category');
 		$this->document->addScript('catalog/view/javascript/jquery.form.js');
 		$this->document->addScript('catalog/view/javascript/jquery.uploadify.js');
 		
 		if ($this->config->get('msconf_enable_pdf_generator') && extension_loaded('imagick')) {
-			$this->document->addScript('catalog/view/javascript/ms-pdfgen.js');
+			$this->document->addScript('catalog/view/javascript/dialog-pdf.js');
 		}
 
-		$this->document->addScript('catalog/view/javascript/ms-productform.js');
+		$this->document->addScript('catalog/view/javascript/account-product-form.js');
 		
 		$this->data['seller'] = $this->MsLoader->MsSeller->getSellerData($this->customer->getId());
 		
@@ -1018,7 +616,7 @@ class ControllerAccountMsSeller extends Controller {
 		$this->data['salt'] = $this->MsLoader->MsSeller->getSalt($seller_id);
 
 		if (!$product['product_id']) {
-			$this->redirect($this->url->link('account/ms-seller/products', '', 'SSL'));
+			$this->redirect($this->url->link('seller/account-product', '', 'SSL'));
 		} else {
 			$this->data['options'] = array();
 			$options = $this->MsLoader->MsProduct->getOptions(array('option_ids' => $this->config->get('msconf_product_options')));
@@ -1059,7 +657,7 @@ class ControllerAccountMsSeller extends Controller {
 					'name' => $download['mask'],
 					'src' => $download['filename'],
 					//'href' => HTTPS_SERVER . 'download/' . $download['filename'],
-					'href' => $this->url->link('account/ms-seller/download', 'download_id=' . $download['download_id'] . '&product_id=' . $product_id, 'SSL'),
+					'href' => $this->url->link('seller/account-product/download', 'download_id=' . $download['download_id'] . '&product_id=' . $product_id, 'SSL'),
 					'id' => $download['download_id'],
 					//'pdf' => ($this->config->get('msconf_enable_pdf_generator') && extension_loaded('imagick') && strtolower($ext) == 'pdf') ? 1 : 0
 				);
@@ -1077,15 +675,28 @@ class ControllerAccountMsSeller extends Controller {
 			$this->data['ms_account_product_download_note'] = sprintf($this->language->get('ms_account_product_download_note'), $this->config->get('msconf_allowed_download_types'));
 			$this->data['ms_account_product_image_note'] = sprintf($this->language->get('ms_account_product_image_note'), $this->config->get('msconf_allowed_image_types'));			
 			
-			$this->data['back'] = $this->url->link('account/ms-seller/products', '', 'SSL');						
+			$this->data['back'] = $this->url->link('seller/account-product', '', 'SSL');						
 			$this->data['heading'] = $this->language->get('ms_account_editproduct_heading');
+			
 			$this->document->setTitle($this->language->get('ms_account_editproduct_heading'));
-			$this->_setBreadcrumbs('ms_account_editproduct_breadcrumbs', __FUNCTION__);
-			$this->_renderTemplate('ms-account-product-form');
+			
+			$this->data['breadcrumbs'] = $this->MsLoader->MsHelper->setBreadcrumbs(array(
+				array(
+					'text' => $this->language->get('text_account'),
+					'href' => $this->url->link('account/account', '', 'SSL'),
+				),
+				array(
+					'text' => $this->language->get('ms_account_editproduct_breadcrumbs'),
+					'href' => $this->url->link('seller/account-product/update', '', 'SSL'),
+				)
+			));
+		
+			list($this->template, $this->children) = $this->MsLoader->MsHelper->loadTemplate('account-product-form');
+			$this->response->setOutput($this->render());
 		}
 	}
 	
-	public function deleteProduct() {
+	public function delete() {
 		$product_id = (int)$this->request->get['product_id'];
 		$seller_id = (int)$this->customer->getId();
 		
@@ -1094,134 +705,11 @@ class ControllerAccountMsSeller extends Controller {
 			$this->MsLoader->MsProduct->hideProduct($product_id);
 		}
 		
-		$this->redirect($this->url->link('account/ms-seller/products', '', 'SSL'));		
+		$this->redirect($this->url->link('seller/account-product', '', 'SSL'));		
 	}	
-	
-
-	/* ********************* */
-	public function sellerInfo() {
-		$this->document->addScript('catalog/view/javascript/jquery.form.js');
-		$this->document->addScript('catalog/view/javascript/ms-sellerform.js');
-		$this->document->addScript('catalog/view/javascript/jquery.uploadify.js');		
-		$this->load->model('localisation/country');
-    	$this->data['countries'] = $this->model_localisation_country->getCountries();		
-
-		$seller = $this->MsLoader->MsSeller->getSellerData($this->customer->getId());
-			$this->data['salt'] = $this->MsLoader->MsSeller->getSalt($this->customer->getId());
-		if (!empty($seller)) {
-			$this->data['seller'] = $seller;
-			if (!empty($seller['avatar_path'])) {
-				$this->data['seller']['avatar']['name'] = $seller['avatar_path'];
-				$this->data['seller']['avatar']['thumb'] = $this->MsLoader->MsFile->resizeImage($seller['avatar_path'], $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'));
-				$this->session->data['multiseller']['files'][] = $seller['avatar_path'];
-			}
-			
-			switch ($seller['seller_status_id']) {
-				case MsSeller::MS_SELLER_STATUS_TOBEACTIVATED:
-					$this->data['statustext'] = $this->language->get('ms_account_status') . $this->language->get('ms_account_status_activation');
-					break;
-				case MsSeller::MS_SELLER_STATUS_TOBEAPPROVED:
-					$this->data['statustext'] = $this->language->get('ms_account_status') . $this->language->get('ms_account_status_approval');
-					break;
-				case MsSeller::MS_SELLER_STATUS_DISABLED:
-					$this->data['statustext'] = $this->language->get('ms_account_status') . $this->language->get('ms_account_status_disabled');
-					break;					
-				case MsSeller::MS_SELLER_STATUS_ACTIVE:
-				default:
-					//$this->data['statustext'] = $this->language->get('ms_account_status') . $this->language->get('ms_account_status_active');
-					//$this->data['statustext'] .= '<br />' . $this->language->get('ms_account_status_fullaccess');
-					break;
-			}
-		} else { 		
-			$this->data['seller'] = FALSE;
-			$this->data['statustext'] = $this->language->get('ms_account_status_please_fill_in');			
-		}
-
-		$this->data['seller_validation'] = $this->config->get('msconf_seller_validation');
-		$this->data['back'] = $this->url->link('account/account', '', 'SSL');
-		$this->document->setTitle($this->language->get('ms_account_sellerinfo_heading'));
-		$this->_setBreadcrumbs('ms_account_sellerinfo_breadcrumbs', __FUNCTION__);
-		$this->_renderTemplate('ms-account-sellerinfo');
-	}
-	/* ********************* */
-	
-	
-	public function transactions() {
-		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
-
-		$sort = array(
-			'order_by'  => 'date_created',
-			'order_way' => 'DESC',
-			'page' => $page,
-			'limit' => 5
-		);
-
-		$seller_id = $this->customer->getId();
-		
-		$balance_entries = $this->MsLoader->MsBalance->getSellerBalanceEntries($seller_id, $sort);
-		
-    	foreach ($balance_entries as $entry) {
-    		$this->data['transactions'][] = array(
-    			'description' => $entry['description'],
-    			'amount' => $this->currency->format($entry['amount'], $this->config->get('config_currency')),
-   				'date_created' => date($this->language->get('date_format_short'), strtotime($entry['date_created']))
-   			);
-   		}
-
-		$this->data['balance'] =  $this->currency->format($this->MsLoader->MsBalance->getSellerBalance($seller_id),$this->config->get('config_currency'));
-		$pagination = new Pagination();
-		$pagination->total = $this->MsLoader->MsBalance->getTotalSellerBalanceEntries($seller_id);
-		$pagination->page = $sort['page'];
-		$pagination->limit = $sort['limit']; 
-		$pagination->text = $this->language->get('text_pagination');
-		$pagination->url = $this->url->link('account/' . $this->name . '/' . __FUNCTION__, 'page={page}', 'SSL');
-		
-		$this->data['pagination'] = $pagination->render();
-		$this->data['continue'] = $this->url->link('account/account', '', 'SSL');
-		
-		$this->document->setTitle($this->language->get('ms_account_transactions_heading'));
-		$this->_setBreadcrumbs('ms_account_transactions_breadcrumbs', __FUNCTION__);		
-		$this->_renderTemplate('ms-account-transactions');
-	}
-	
-	public function withdraw() {
-		if (!$this->config->get('msconf_allow_withdrawal_requests'))
-			$this->redirect($this->url->link('account/account', '', 'SSL'));
-		
-		$seller_id = $this->customer->getId();
-		
-		$seller_balance = $this->MsLoader->MsBalance->getSellerBalance($seller_id);
-		$available_balance = $seller_balance - $this->MsLoader->MsBalance->getReservedSellerFunds($seller_id);
-		
-		$this->document->addScript('catalog/view/javascript/ms-withdraw.js');
-		
-		$this->data['balance'] =  $seller_balance;
-		$this->data['balance_formatted'] =  $this->currency->format($this->data['balance'],$this->config->get('config_currency'));
-
-		$this->data['balance_available'] =  $available_balance;
-		$this->data['balance_available_formatted'] =  $this->currency->format($available_balance, $this->config->get('config_currency'));
-		
-		$this->data['paypal'] =  $this->MsLoader->MsSeller->getPaypal();
-		$this->data['msconf_minimum_withdrawal_amount'] =  $this->currency->format($this->config->get('msconf_minimum_withdrawal_amount'),$this->config->get('config_currency'));
-		$this->data['msconf_allow_partial_withdrawal'] = $this->config->get('msconf_allow_partial_withdrawal');
-		$this->data['currency_code'] = $this->config->get('config_currency');
-		
-		if ($available_balance - $this->config->get('msconf_minimum_withdrawal_amount') > 0) {
-			$this->data['withdrawal_minimum_reached'] = TRUE;
-		} else {
-			$this->data['withdrawal_minimum_reached'] = FALSE;
-		}
-			
-		$this->data['back'] = $this->url->link('account/account', '', 'SSL');
-		$this->document->setTitle($this->language->get('ms_account_withdraw_heading'));
-		$this->_setBreadcrumbs('ms_account_withdraw_breadcrumbs', __FUNCTION__);
-		$this->_renderTemplate('ms-account-withdraw');
-	}
 	
 	public function download() {
 		if (!$this->customer->isLogged()) {
-			$this->session->data['redirect'] = $this->url->link('account/download', '', 'SSL');
-
 			$this->redirect($this->url->link('account/login', '', 'SSL'));
 		}
 
@@ -1238,7 +726,7 @@ class ControllerAccountMsSeller extends Controller {
 		}
 		
 		if (!$this->MsLoader->MsProduct->hasDownload($product_id,$download_id))
-			$this->redirect($this->url->link('account/ms-seller/products', '', 'SSL'));
+			$this->redirect($this->url->link('seller/account-product', '', 'SSL'));
 			
 		$download_info = $this->MsLoader->MsProduct->getDownload($download_id);
 		
@@ -1266,7 +754,7 @@ class ControllerAccountMsSeller extends Controller {
 				exit('Error: Headers already sent out!');
 			}
 		} else {
-			$this->redirect($this->url->link('account/ms-seller/products', '', 'SSL'));
+			$this->redirect($this->url->link('seller/account-product', '', 'SSL'));
 		}
 	}	
 }

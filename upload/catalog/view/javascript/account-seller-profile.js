@@ -5,7 +5,7 @@ $(function() {
 	    $.ajax({
 			type: "POST",
 			dataType: "json",
-			url: 'index.php?route=account/ms-seller/jxsavesellerinfo',
+			url: 'index.php?route=seller/account-profile/jxsavesellerinfo',
 			data: $(this).parents("form").serialize(),
 		    beforeSend: function() {
 		    	$('#ms-sellerinfo a.button').hide().before('<span class="wait">&nbsp;<img src="catalog/view/theme/default/image/loading.gif" alt="" /></span>');
@@ -55,7 +55,7 @@ $(function() {
 				'session_id': msGlobals.session_id,
 			},
 			'swf'      : 'catalog/view/javascript/uploadify.swf',
-			'uploader' : 'index.php?route=account/ms-seller/jxUploadSellerAvatar',
+			'uploader' : 'index.php?route=seller/account-profile/jxUploadSellerAvatar',
 	        'onUploadStart' : function(file) {
 	        },
 	        'onSelect' : function(file) {

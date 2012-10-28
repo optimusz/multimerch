@@ -1,11 +1,7 @@
 <?php  
-class ControllerModuleMsSellerdropdown extends Controller {
+class ControllerModuleMsSellerdropdown extends ControllerSellerCatalog {
 	protected function index($setting) {
 		static $module = 0;
-		$this->load->model('tool/image');
-		
-		$this->document->addStyle('catalog/view/theme/' . $this->config->get('config_template') . '/stylesheet/multiseller.css');
-		$this->data = array_merge($this->data, $this->load->language('module/multiseller'));
 		
 		if (isset($setting['limit']))
 			$this->data['limit'] = (int)$setting['limit'];
@@ -18,7 +14,7 @@ class ControllerModuleMsSellerdropdown extends Controller {
 		if (!isset($setting['height']) || (int)$setting['height'] <= 0)
 			$setting['height'] = $this->config->get('config_image_category_height');
 			
-		$this->data['sellers_href'] = $this->url->link('seller/seller');
+		$this->data['sellers_href'] = $this->url->link('seller/catalog-seller');
 				
 		$data = array(
 			'order_by'               => 'date_added',
@@ -33,18 +29,12 @@ class ControllerModuleMsSellerdropdown extends Controller {
 		foreach ($results as $result) {
 			$this->data['sellers'][] = array(
 				'nickname'        => $result['nickname'],
-				'href'        => $this->url->link('seller/seller/profile','seller_id=' . $result['seller_id']),
+				'href'        => $this->url->link('seller/catalog-seller/profile','seller_id=' . $result['seller_id']),
 			);
 		}
 		$this->data['module'] = $module++; 
-		
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/muliseller/ms-sellerdropdown.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/module/muliseller/ms-sellerdropdown.tpl';
-		} else {
-			$this->template = 'default/template/module/multiseller/ms-sellerdropdown.tpl';
-		}
-		
-		$this->render(); 
+		list($this->template, $this->children) = $this->MsLoader->MsHelper->loadTemplate('module-sellerdropdown', array());
+		$this->response->setOutput($this->render());
 	}
 }
 ?>

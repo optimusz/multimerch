@@ -11,7 +11,7 @@ $(function() {
 	    $.ajax({
 			type: "POST",
 			dataType: "json",
-			url: 'index.php?route=account/ms-seller/jxrequestmoney',
+			url: 'index.php?route=seller/account-withdraw/jxrequestmoney',
 			data: $(this).parents("form").serialize(),
 		    beforeSend: function() {
 		    	$('#ms-withdrawal a.button').hide().before('<span class="wait">&nbsp;<img src="catalog/view/theme/default/image/loading.gif" alt="" /></span>');

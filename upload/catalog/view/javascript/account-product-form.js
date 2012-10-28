@@ -33,7 +33,7 @@ $(function() {
 	    $.ajax({
 			type: "POST",
 			dataType: "json",
-			url: 'index.php?route=account/ms-seller/'+url,
+			url: 'index.php?route=seller/account-product/'+url,
 			data: $(this).parents("form").serialize(),
 		    beforeSend: function() {
 		    	$('#ms-new-product a.button').hide();
@@ -77,7 +77,7 @@ $(function() {
 				'product_id': msGlobals.product_id
 			},
 			'swf'      : 'catalog/view/javascript/uploadify.swf',
-			'uploader' : 'index.php?route=account/ms-seller/jxUploadImages',
+			'uploader' : 'index.php?route=seller/account-product/jxUploadImages',
 	        'onUploadStart' : function(file) {
 	        	$('#ms-file-addimages').uploadify('settings','formData',{'imageCount':$('.ms-image').length});
 	        },
@@ -142,7 +142,7 @@ $(function() {
 				'product_id': msGlobals.product_id
 			},
 			'swf'      : 'catalog/view/javascript/uploadify.swf',
-			'uploader' : 'index.php?route=account/ms-seller/jxUpdateFile',
+			'uploader' : 'index.php?route=seller/account-product/jxUpdateFile',
 	        'onUploadStart' : function(file) {
 	        	fileTag.uploadify('settings','formData',{'file_id':fileTag.attr('id')});
 	        },
@@ -196,7 +196,7 @@ $(function() {
 				'product_id': msGlobals.product_id
 			},
 			'swf'      : 'catalog/view/javascript/uploadify.swf',
-			'uploader' : 'index.php?route=account/ms-seller/jxUploadDownloads',
+			'uploader' : 'index.php?route=seller/account-product/jxUploadDownloads',
 	        'onUploadStart' : function(file) {
 	        	fileTag.uploadify('settings','formData',{'downloadCount':$('.ms-download').length});
 	        },
@@ -236,7 +236,7 @@ $(function() {
 	          				(data.files[i].filePages ? '<input type="hidden" name="product_downloads[' + newFileNum + '][filePages]" value="' + data.files[i].filePages + '" />' : '') +
 	          				'<span class="ms-download-name">'+data.files[i].fileMask+'</span>' +
 	          				'<div class="ms-buttons">' +
-	          				(data.files[i].filePages ? '<a href="index.php?route=account/ms-seller/jxRenderPdfgenDialog" class="ms-button-pdf" title="'+msGlobals.button_generate+'"></a>' : '') +
+	          				(data.files[i].filePages ? '<a href="index.php?route=seller/account-product/jxRenderPdfgenDialog" class="ms-button-pdf" title="'+msGlobals.button_generate+'"></a>' : '') +
 	          				'<span class="ms-button-download disabled"></span>' +
 	          				'<span class="ms-button-update disabled"></span>' +
 		          			'<a class="ms-button-delete" title="'+msGlobals.text_delete+'"></a>' +

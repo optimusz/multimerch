@@ -1,11 +1,7 @@
 <?php  
-class ControllerModuleMsNewsellers extends Controller {
+class ControllerModuleMsNewsellers extends ControllerSellerCatalog {
 	protected function index($setting) {
 		static $module = 0;
-		$this->load->model('tool/image');
-		
-		$this->document->addStyle('catalog/view/theme/' . $this->config->get('config_template') . '/stylesheet/multiseller.css');
-		$this->data = array_merge($this->data, $this->load->language('module/multiseller'));
 		
 		if (isset($setting['limit']) && (int)$setting['limit'] > 0)
 			$this->data['limit'] = (int)$setting['limit'];
@@ -18,7 +14,7 @@ class ControllerModuleMsNewsellers extends Controller {
 		if (!isset($setting['height']) || (int)$setting['height'] <= 0)
 			$setting['height'] = $this->config->get('config_image_category_height');
 			
-		$this->data['sellers_href'] = $this->url->link('seller/seller');
+		$this->data['sellers_href'] = $this->url->link('seller/catalog-seller');
 				
 		$data = array(
 			'order_by'               => 'date_added',
@@ -33,19 +29,14 @@ class ControllerModuleMsNewsellers extends Controller {
 		foreach ($results as $result) {
 			$this->data['sellers'][] = array(
 				'nickname'        => $result['nickname'],
-				'href'        => $this->url->link('seller/seller/profile','seller_id=' . $result['seller_id']),
+				'href'        => $this->url->link('seller/catalog-seller/profile','seller_id=' . $result['seller_id']),
 				'image' => !empty($result['avatar_path']) && file_exists(DIR_IMAGE . $result['avatar_path']) ? $this->MsLoader->MsFile->resizeImage($result['avatar_path'], $setting['width'], $setting['height']) : $this->MsLoader->MsFile->resizeImage('ms_no_image.jpg', $setting['width'], $setting['height']) 
 			);
 		}
+		
 		$this->data['module'] = $module++; 
-		
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/muliseller/ms-newsellers.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/module/muliseller/ms-newsellers.tpl';
-		} else {
-			$this->template = 'default/template/module/multiseller/ms-newsellers.tpl';
-		}
-		
-		$this->render(); 
+		list($this->template, $this->children) = $this->MsLoader->MsHelper->loadTemplate('module-newsellers', array());
+		$this->response->setOutput($this->render());
 	}
 }
 ?>

@@ -23,7 +23,7 @@ $(function() {
 		            				$.ajax({
 		            					type: "POST",
 		            					dataType: "json",
-		            					url: 'index.php?route=seller/seller/jxSubmitContactDialog',
+		            					url: 'index.php?route=seller/catalog-seller/jxSubmitContactDialog',
 		            					data: $("#ms-sellercontact-dialog form").serialize(),		            					beforeSend: function() {
 		            						$('.ms-sellercontact-dialog .success,.ms-sellercontact-dialog .warning').remove();
 		            						$('#ms-sellercontact-dialog button').attr('disabled', true);

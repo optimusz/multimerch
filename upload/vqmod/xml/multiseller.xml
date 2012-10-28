@@ -105,11 +105,11 @@
 			<add><![CDATA[
 				$this->data['ms_seller_created'] = $this->MsLoader->MsSeller->isCustomerSeller($this->customer->getId());
 				$this->data = array_merge($this->data, $this->load->language('module/multiseller'));			
-				$this->data['ms_link_sellerinfo'] = $this->url->link('account/ms-seller/sellerinfo', '', 'SSL');
-				$this->data['ms_link_newproduct'] = $this->url->link('account/ms-seller/newproduct', '', 'SSL');
-				$this->data['ms_link_products'] = $this->url->link('account/ms-seller/products', '', 'SSL');
-				$this->data['ms_link_transactions'] = $this->url->link('account/ms-seller/transactions', '', 'SSL');
-				$this->data['ms_link_withdraw'] = $this->url->link('account/ms-seller/withdraw', '', 'SSL');
+				$this->data['ms_link_sellerinfo'] = $this->url->link('seller/account-profile', '', 'SSL');
+				$this->data['ms_link_newproduct'] = $this->url->link('seller/account-product/create', '', 'SSL');
+				$this->data['ms_link_products'] = $this->url->link('seller/account-product', '', 'SSL');
+				$this->data['ms_link_transactions'] = $this->url->link('seller/account-transaction', '', 'SSL');
+				$this->data['ms_link_withdraw'] = $this->url->link('seller/account-withdrawal', '', 'SSL');
 			]]></add>
 		</operation>
 	</file>
@@ -168,11 +168,11 @@
 			<add><![CDATA[
 				$this->data['ms_seller_created'] = $this->MsLoader->MsSeller->isCustomerSeller($this->customer->getId());			
 				$this->data = array_merge($this->data, $this->load->language('module/multiseller'));			
-				$this->data['ms_link_sellerinfo'] = $this->url->link('account/ms-seller/sellerinfo', '', 'SSL');
-				$this->data['ms_link_newproduct'] = $this->url->link('account/ms-seller/newproduct', '', 'SSL');
-				$this->data['ms_link_products'] = $this->url->link('account/ms-seller/products', '', 'SSL');
-				$this->data['ms_link_transactions'] = $this->url->link('account/ms-seller/transactions', '', 'SSL');
-				$this->data['ms_link_withdraw'] = $this->url->link('account/ms-seller/withdraw', '', 'SSL');
+				$this->data['ms_link_sellerinfo'] = $this->url->link('seller/account-profile', '', 'SSL');
+				$this->data['ms_link_newproduct'] = $this->url->link('seller/account-product/create', '', 'SSL');
+				$this->data['ms_link_products'] = $this->url->link('seller/account-product', '', 'SSL');
+				$this->data['ms_link_transactions'] = $this->url->link('seller/account-transaction', '', 'SSL');
+				$this->data['ms_link_withdraw'] = $this->url->link('seller/account-withdrawal', '', 'SSL');
 			]]></add>
 		</operation>
 	</file>
@@ -245,7 +245,7 @@ if (in_array($order_status_id, $this->config->get('msconf_credit_order_statuses'
 			'order_id' => $order_id,
 			'balance_type' => MsBalance::MS_BALANCE_TYPE_REFUND
 		)
-	);					
+	);
 	
 	if (!$refund_balance_entry) {
 		$balance_entry = $this->MsLoader->MsBalance->getBalanceEntry(
@@ -322,7 +322,7 @@ if (in_array($order_status_id, $this->config->get('msconf_credit_order_statuses'
 			    		
 			    		<p><b><?php echo $ms_catalog_seller_profile_totalsales; ?></b> <?php echo $seller['total_sales']; ?></p>
 			    		<p><b><?php echo $ms_catalog_seller_profile_totalproducts; ?></b> <?php echo $seller['total_products']; ?></p>
-						<p><a href="index.php?route=seller/seller/jxRenderContactDialog&product_id=<?php echo $product_id; ?>" class="ms-sellercontact" title="<?php echo $ms_sellercontact_title; ?>"><?php echo $ms_catalog_product_contact; ?></a></p>
+						<p><a href="index.php?route=seller/catalog-seller/jxRenderContactDialog&product_id=<?php echo $product_id; ?>" class="ms-sellercontact" title="<?php echo $ms_sellercontact_title; ?>"><?php echo $ms_catalog_product_contact; ?></a></p>
 		    		</div>
 		    	</div>
 		    </div>
@@ -416,7 +416,7 @@ if (in_array($order_status_id, $this->config->get('msconf_credit_order_statuses'
 				
 				$this->data['seller']['nickname'] = $seller['nickname'];
 				
-				$this->data['seller']['href'] = $this->url->link('seller/seller/profile', 'seller_id=' . $seller['seller_id']);
+				$this->data['seller']['href'] = $this->url->link('seller/catalog-seller/profile', 'seller_id=' . $seller['seller_id']);
 				
 				$this->data['seller']['total_sales'] = $this->MsLoader->MsSeller->getSalesForSeller($seller['seller_id']);
 				$this->data['seller']['total_products'] = $this->MsLoader->MsSeller->getTotalSellerProducts($seller['seller_id'], TRUE);
@@ -462,10 +462,10 @@ if (in_array($order_status_id, $this->config->get('msconf_credit_order_statuses'
 			<add><![CDATA[
 				} elseif (isset($this->request->get['seller_id'])) {
 					if (strpos($this->request->get['_route_'], "products") !== FALSE) {
-						$this->request->get['route'] = 'seller/seller/products';
+						$this->request->get['route'] = 'seller/catalog-seller/products';
 					}
 					else {
-						$this->request->get['route'] = 'seller/seller/profile';
+						$this->request->get['route'] = 'seller/catalog-seller/profile';
 					}
 			]]></add>
 		</operation>
@@ -475,7 +475,7 @@ if (in_array($order_status_id, $this->config->get('msconf_credit_order_statuses'
 				if (($data['route'] == 'product/product' && $key == 'product_id') || (($data['route'] == 'product/manufacturer/info' || $data['route'] == 'product/product') && $key == 'manufacturer_id') || ($data['route'] == 'information/information' && $key == 'information_id')) {
 			]]></search>
 			<add><![CDATA[
-				if (($data['route'] == 'product/product' && $key == 'product_id') || (($data['route'] == 'product/manufacturer/info' || $data['route'] == 'product/product') && $key == 'manufacturer_id') || ($data['route'] == 'seller/seller/profile' && $key == 'seller_id') || ($data['route'] == 'seller/seller/products' && $key == 'seller_id') || ($data['route'] == 'information/information' && $key == 'information_id')) {
+				if (($data['route'] == 'product/product' && $key == 'product_id') || (($data['route'] == 'product/manufacturer/info' || $data['route'] == 'product/product') && $key == 'manufacturer_id') || ($data['route'] == 'seller/catalog-seller/profile' && $key == 'seller_id') || ($data['route'] == 'seller/catalog-seller/products' && $key == 'seller_id') || ($data['route'] == 'information/information' && $key == 'information_id')) {
 			]]></add>
 		</operation>
 		
@@ -484,10 +484,10 @@ if (in_array($order_status_id, $this->config->get('msconf_credit_order_statuses'
 				$url .= '/' . $query->row['keyword'];
 			]]></search>
 			<add><![CDATA[
-				if ($data['route'] == 'seller/seller/profile') {
+				if ($data['route'] == 'seller/catalog-seller/profile') {
 					$url .= '/sellers/' . $query->row['keyword'];
 				}
-				else if ($data['route'] == 'seller/seller/products') {
+				else if ($data['route'] == 'seller/catalog-seller/products') {
 					$url .= '/sellers/' . $query->row['keyword'] . '/products/';
 				}
 				else {

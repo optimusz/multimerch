@@ -380,7 +380,7 @@ $_['ms_account_withdraw_all']      = 'All earnings currently available';
 $_['ms_account_withdraw_minimum_not_reached']      = 'Your total balance is less than the minimum withdrawal amount!';
 $_['ms_account_withdraw_no_funds']      = 'No funds to withdraw.';
 $_['ms_account_withdraw_disabled']      = 'We don\'t accept withdrawal requests. You will be paid automatically.';
-$_['ms_account_withdraw_no_paypal']      = 'Please <a href="index.php?route=account/ms-seller/sellerinfo">specify your PayPal address</a> first!';
+$_['ms_account_withdraw_no_paypal']      = 'Please <a href="index.php?route=seller/account-profile">specify your PayPal address</a> first!';
 
 
 // Product page - Seller information
