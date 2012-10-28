@@ -276,17 +276,6 @@ final class MsSeller extends Model {
 		$this->db->query($sql);	
 	}		
 		
-	public function getBalanceForSeller($seller_id) {
-		$sql = "SELECT SUM(amount - (amount*commission/100) - commission_flat) as total
-				FROM `" . DB_PREFIX . "ms_transaction`
-				WHERE seller_id = " . (int)$seller_id . " 
-				AND transaction_status_id != " . MsTransaction::MS_TRANSACTION_STATUS_CLOSED;
-		
-		$res = $this->db->query($sql);
-		
-		return (float)$res->row['total'];
-	}
-		
 	public function getCommissionPercentForSeller($seller_id) {
 		$sql = "SELECT 	commission
 				FROM `" . DB_PREFIX . "ms_seller`

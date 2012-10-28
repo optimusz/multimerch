@@ -72,12 +72,14 @@ class MsBalance extends Model {
 	}
 
 	public function getSellerBalance($seller_id) {
-		$sql = "SELECT balance
-				FROM " . DB_PREFIX . "ms_balance
-				WHERE seller_id = " . (int)$seller_id . " 
-				ORDER BY balance_id DESC
-				LIMIT 1";
-				
+		$sql = "SELECT COALESCE (
+					(SELECT balance FROM " . DB_PREFIX . "ms_balance
+						WHERE seller_id = " . (int)$seller_id . " 
+						ORDER BY balance_id DESC
+						LIMIT 1
+					),
+					0
+				) as balance";
 		$res = $this->db->query($sql);
 
 		return $res->row['balance'];

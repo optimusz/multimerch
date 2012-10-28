@@ -561,19 +561,11 @@ if (in_array($order_status_id, $this->config->get('msconf_credit_order_statuses'
 			<add><![CDATA[
 		      <li id="multiseller"><a class="top"><?php echo $ms_menu_multiseller; ?></a>
 		        <ul>
-		          <li><a class="parent"><?php echo $ms_menu_catalog; ?></a>
-		            <ul>
-		           	  <li><a href="<?php echo $ms_link_catalog_sellers; ?>"><?php echo $ms_menu_catalog_sellers; ?></a></li>
-		           	  <li><a href="<?php echo $ms_link_catalog_products; ?>"><?php echo $ms_menu_catalog_products; ?></a></li>
-		            </ul>
-		          </li>		          
-		          <li><a class="parent"><?php echo $ms_menu_finances; ?></a>
-		            <ul>
-		              <li><a href="<?php echo $ms_link_finances_transactions; ?>"><?php echo $ms_menu_finances_transactions; ?></a></li>
-		              <li><a href="<?php echo $ms_link_finances_withdrawals; ?>"><?php echo $ms_menu_finances_withdrawals; ?></a></li>
-		            </ul>
-		          </li>		          
-		          <li><a href="<?php echo $ms_link_settings; ?>"><?php echo $ms_menu_settings; ?></a></li>
+		           	  <li><a href="<?php echo $ms_link_sellers; ?>"><?php echo $ms_menu_sellers; ?></a></li>
+		           	  <li><a href="<?php echo $ms_link_products; ?>"><?php echo $ms_menu_products; ?></a></li>
+		              <li><a href="<?php echo $ms_link_transactions; ?>"><?php echo $ms_menu_transactions; ?></a></li>
+		              <li><a href="<?php echo $ms_link_requests; ?>"><?php echo $ms_menu_requests; ?></a></li>
+			          <li><a href="<?php echo $ms_link_settings; ?>"><?php echo $ms_menu_settings; ?></a></li>
 		        </ul>
 		      </li>
 			]]></add>
@@ -595,10 +587,10 @@ if (in_array($order_status_id, $this->config->get('msconf_credit_order_statuses'
 			$this->data['stores'] = array();
 			]]></search>
 			<add><![CDATA[
-			$this->data['ms_link_catalog_sellers'] = $this->url->link('module/multiseller/sellers', 'token=' . $this->session->data['token'], 'SSL');
-			$this->data['ms_link_catalog_products'] = $this->url->link('module/multiseller/products', 'token=' . $this->session->data['token'], 'SSL');
-			$this->data['ms_link_finances_withdrawals'] = $this->url->link('module/multiseller/withdrawals', 'token=' . $this->session->data['token'], 'SSL');
-			$this->data['ms_link_finances_transactions'] = $this->url->link('module/multiseller/transactions', 'token=' . $this->session->data['token'], 'SSL');
+			$this->data['ms_link_sellers'] = $this->url->link('multiseller/seller', 'token=' . $this->session->data['token'], 'SSL');
+			$this->data['ms_link_products'] = $this->url->link('multiseller/product', 'token=' . $this->session->data['token'], 'SSL');
+			$this->data['ms_link_requests'] = $this->url->link('multiseller/request-withdrawal', 'token=' . $this->session->data['token'], 'SSL');
+			$this->data['ms_link_transactions'] = $this->url->link('multiseller/transaction', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['ms_link_settings'] = $this->url->link('module/multiseller', 'token=' . $this->session->data['token'], 'SSL'); 
 			]]></add>
 		</operation>		

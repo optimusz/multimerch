@@ -52,7 +52,7 @@ class ControllerSellerAccountWithdrawal extends ControllerSellerAccount {
 			$this->MsLoader->MsMail->sendMails($mails);
 			
 			$this->session->data['success'] = $this->language->get('ms_request_submitted');
-			$json['redirect'] = $this->url->link('seller/account-withdrawal', '', 'SSL');
+			$json['redirect'] = $this->url->link('account/account', '', 'SSL');
 		}
 		$this->response->setOutput(json_encode($json));
 	}
@@ -66,7 +66,7 @@ class ControllerSellerAccountWithdrawal extends ControllerSellerAccount {
 		$seller_balance = $this->MsLoader->MsBalance->getSellerBalance($seller_id);
 		$available_balance = $seller_balance - $this->MsLoader->MsBalance->getReservedSellerFunds($seller_id);
 		
-		$this->document->addScript('catalog/view/javascript/account-withdraw.js');
+		$this->document->addScript('catalog/view/javascript/account-withdrawal.js');
 		
 		$this->data['balance'] =  $seller_balance;
 		$this->data['balance_formatted'] =  $this->currency->format($this->data['balance'],$this->config->get('config_currency'));

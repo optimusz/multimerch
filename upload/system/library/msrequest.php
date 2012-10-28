@@ -117,7 +117,7 @@ class MsRequest extends Model {
 			return $res->rows;
 	}
 
-	public function getSellerRequests($data, $sort) {
+	public function getSellerRequests($data, $sort = array()) {
 		$sql = "SELECT *
 				FROM " . DB_PREFIX . "ms_request_data mrd
 				INNER JOIN " . DB_PREFIX . "ms_request_seller mrs
@@ -126,6 +126,8 @@ class MsRequest extends Model {
 					USING (seller_id)
 				WHERE 1 = 1 "
 				. (isset($data['seller_id']) ? " AND seller_id =  " .  (int)$data['seller_id'] : '')
+				. (isset($data['request_type']) ? " AND request_type IN  (" .  $this->db->escape(implode(',', $data['request_type'])) . ")" : '')
+				. (isset($data['request_status']) ? " AND request_status IN  (" .  $this->db->escape(implode(',', $data['request_status'])) . ")" : '')
 
 				. (isset($sort['order_by']) ? " ORDER BY {$sort['order_by']} {$sort['order_way']}" : '')
     			. (isset($sort['limit']) ? " LIMIT ".(int)$sort['page'].', '.(int)($sort['limit']) : '');

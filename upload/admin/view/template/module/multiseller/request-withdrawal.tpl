@@ -22,7 +22,7 @@
     <div class="content">
       <style type="text/css">
       	.msBlack .ui-widget-header {
-		    background: url("view/javascript/jquery/ui/themes/ui-lightness/images/ui-bg_gloss-wave_35_000000_500x100.png") repeat-x scroll 50% 50% #F6A828;
+		    background: url("view/image/ui-bg_gloss-wave_35_000000_500x100.png") repeat-x scroll 50% 50% #F6A828;
 		    border: 1px solid #000000;
       	}
       </style>
@@ -76,7 +76,7 @@ $(document).ready(function() {
 	    $.ajax({
 			type: "POST",
 			dataType: "json",
-			url: 'index.php?route=module/multiseller/jxConfirmPayment&token=<?php echo $token; ?>',
+			url: 'index.php?route=multiseller/request-withdrawal/jxConfirmPayment&token=<?php echo $token; ?>',
 			data: $('#form').serialize(),
 			success: function(jsonData) {
 				if (jsonData.error) {
@@ -101,7 +101,7 @@ $(document).ready(function() {
 								    $.ajax({
 										type: "POST",
 										dataType: "json",
-										url: 'index.php?route=module/multiseller/jxCompletePayment&token=<?php echo $token; ?>',
+										url: 'index.php?route=multiseller/request-withdrawal/jxCompletePayment&token=<?php echo $token; ?>',
 										data: $('#form').serialize(),
 										success: function(jsonData) {
 											$('#button-pay').remove();
@@ -145,7 +145,7 @@ $(document).ready(function() {
 	    $.ajax({
 			type: "POST",
 			dataType: "json",
-			url: 'index.php?route=module/multiseller/jxConfirmWithdrawalPaid&token=<?php echo $token; ?>',
+			url: 'index.php?route=multiseller/request-withdrawal/jxConfirmWithdrawalPaid&token=<?php echo $token; ?>',
 			data: $('#form').serialize(),
 			success: function(jsonData) {
 				if (jsonData.error) {
@@ -170,7 +170,7 @@ $(document).ready(function() {
 								    $.ajax({
 										type: "POST",
 										dataType: "json",
-										url: 'index.php?route=module/multiseller/jxCompleteWithdrawalPaid&token=<?php echo $token; ?>',
+										url: 'index.php?route=multiseller/request-withdrawal/jxCompleteWithdrawalPaid&token=<?php echo $token; ?>',
 										data: $('#form').serialize(),
 										success: function(jsonData) {
 											$('#button-pay').remove();

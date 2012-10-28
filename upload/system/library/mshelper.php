@@ -6,7 +6,7 @@ class MsHelper extends Model {
 		
 		$breadcrumbs[] = array(
         	'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home'),     	
+			'href'      => $this->url->link('common/home', 'SSL'),
         	'separator' => false
       	);
 		
@@ -14,6 +14,26 @@ class MsHelper extends Model {
 	      	$breadcrumbs[] = array(
 	        	'text'      => $breadcrumb['text'],
 				'href'      => $breadcrumb['href'],
+	        	'separator' => $this->language->get('text_separator')
+	      	);
+		}
+		
+		return $breadcrumbs;
+	}
+	
+	public function admSetBreadcrumbs($data) {
+		$breadcrumbs = array();
+		
+		$breadcrumbs[] = array(
+        	'text'      => $this->language->get('text_home'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+        	'separator' => false
+      	);
+		
+		foreach ($data as $breadcrumb) {
+	      	$breadcrumbs[] = array(
+	        	'text'      => $breadcrumb['text'],
+				'href'      => $breadcrumb['href'] . '&token=' . $this->session->data['token'],
 	        	'separator' => $this->language->get('text_separator')
 	      	);
 		}
@@ -41,6 +61,19 @@ class MsHelper extends Model {
 	
 		return array($template, $children);
 	}
+
+	public function admLoadTemplate($templateName, $children = FALSE) {
+		$template = "module/multiseller/$templateName.tpl";
+		
+		if ($children === FALSE) {
+			$children = array(
+				'common/footer',
+				'common/header'
+			);
+		}
+	
+		return array($template, $children);
+	}
 	
 	public function addStyle($style) {
 		if (file_exists("catalog/view/theme/" . $this->config->get('config_template') . "/stylesheet/{$style}.css")) {
@@ -48,7 +81,7 @@ class MsHelper extends Model {
 		} else {
 			$this->document->addStyle("catalog/view/theme/default/stylesheet/{$style}.css");
 		}
-	}	
+	}
 }
 
 ?>

@@ -169,7 +169,7 @@ $(function() {
 	    $.ajax({
 			type: "POST",
 			dataType: "json",
-			url: 'index.php?route=module/multiseller/jxsavesellerinfo&token=<?php echo $token; ?>',
+			url: 'index.php?route=multiseller/seller/jxsavesellerinfo&token=<?php echo $token; ?>',
 			data: $('#ms-sellerinfo').serialize(),
 			success: function(jsonData) {
 				if (!jQuery.isEmptyObject(jsonData.errors)) {
@@ -189,7 +189,7 @@ $(function() {
 					window.scrollTo(0,0);
 					$("#ms-submit-button").show();
 				} else {
-					window.location = 'index.php?route=module/multiseller/sellers&token=<?php echo $token; ?>';
+					window.location = 'index.php?route=multiseller/seller&token=<?php echo $token; ?>';
 				}
 	       	}
 		});
