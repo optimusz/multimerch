@@ -9,12 +9,7 @@ class ControllerModuleMultiseller extends Controller {
 
 	public function __construct($registry) {
 		parent::__construct($registry);		
-		
 		$this->registry = $registry;
-		require_once(DIR_SYSTEM . 'library/ms-request.php');
-		require_once(DIR_SYSTEM . 'library/ms-transaction.php');
-		
-		$this->load->config('ms-config');
 		
 		$parts = explode('/', $this->request->request['route']);
 		if (!isset($parts[2]) || !in_array($parts[2], array('install','uninstall'))) {
@@ -25,7 +20,7 @@ class ControllerModuleMultiseller extends Controller {
 		$this->document->addStyle('view/stylesheet/multiseller.css');
 		
 		$this->settings = Array(
-			"msconf_seller_validation" => MS_SELLER_VALIDATION_NONE,
+			"msconf_seller_validation" => MsSeller::MS_SELLER_VALIDATION_NONE,
 			"msconf_product_validation" => MsProduct::MS_PRODUCT_VALIDATION_NONE,
 			"msconf_seller_commission" => 5,
 			"msconf_image_preview_width" => 100,

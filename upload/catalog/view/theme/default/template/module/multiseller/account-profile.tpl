@@ -103,7 +103,7 @@
           	</div>
           </td>
         </tr>
-        <?php if (!isset($seller['seller_id']) &&  $seller_validation != MS_SELLER_VALIDATION_NONE) { ?>
+        <?php if (!isset($seller['seller_id']) &&  $seller_validation != MsSeller::MS_SELLER_VALIDATION_NONE) { ?>
         <tr>
           <td><?php echo $ms_account_sellerinfo_reviewer_message; ?></td>
           <td>

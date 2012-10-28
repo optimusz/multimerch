@@ -6,6 +6,10 @@ final class MsSeller extends Model {
 	const MS_SELLER_STATUS_DISABLED = 4;
 	const MS_SELLER_STATUS_INACTIVE = 5;
 		
+	const MS_SELLER_VALIDATION_NONE = 1;
+	const MS_SELLER_VALIDATION_ACTIVATION = 2;
+	const MS_SELLER_VALIDATION_APPROVAL = 3;
+
 	private $isSeller = FALSE; 
 	private $nickname;
 	private $description;

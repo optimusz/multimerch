@@ -75,12 +75,12 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 				// create new seller
 				switch ($this->config->get('msconf_seller_validation')) {
 					/*
-					case MS_SELLER_VALIDATION_ACTIVATION:
+					case MsSeller::MS_SELLER_VALIDATION_ACTIVATION:
 						$data['seller_status_id'] = MsSeller::MS_SELLER_STATUS_TOBEACTIVATED;
 						break;
 					*/
 					
-					case MS_SELLER_VALIDATION_APPROVAL:
+					case MsSeller::MS_SELLER_VALIDATION_APPROVAL:
 						$mails[] = array(
 							'type' => MsMail::SMT_SELLER_ACCOUNT_AWAITING_MODERATION
 						);
@@ -100,7 +100,7 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 						);
 						break;
 					
-					case MS_SELLER_VALIDATION_NONE:
+					case MsSeller::MS_SELLER_VALIDATION_NONE:
 					default:
 						$mails[] = array(
 							'type' => MsMail::SMT_SELLER_ACCOUNT_CREATED
