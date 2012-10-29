@@ -310,7 +310,7 @@
 								<span class="help"><?php echo $ms_config_allowed_image_types_note; ?></span>
 			              </td>
 			              <td>
-			              	<input type="text" name="msconf_allowed_image_types" value="<?php echo implode(',', $msconf_allowed_image_types); ?>" />
+			              	<input type="text" name="msconf_allowed_image_types" value="<?php echo $msconf_allowed_image_types; ?>" />
 			              </td>
 		            </tr>
 		            
@@ -320,7 +320,7 @@
 								<span class="help"><?php echo $ms_config_allowed_download_types_note; ?></span>
 			              </td>
 			              <td>
-			              	<input type="text" name="msconf_allowed_download_types" value="<?php echo implode(',', $msconf_allowed_download_types); ?>" />
+			              	<input type="text" name="msconf_allowed_download_types" value="<?php echo $msconf_allowed_download_types; ?>" />
 			              </td>
 		            </tr>
 		            

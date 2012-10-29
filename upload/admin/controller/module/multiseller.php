@@ -17,8 +17,8 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		"msconf_paypal_api_signature" => "",
 		"msconf_allow_withdrawal_requests" => 1,
 		"msconf_comments_maxlen" => 500,
-		"msconf_allowed_image_types" => array('png','jpg'),
-		"msconf_allowed_download_types" => array('zip','rar'),
+		"msconf_allowed_image_types" => 'png,jpg,jpeg',
+		"msconf_allowed_download_types" => 'zip,rar,pdf',
 		"msconf_minimum_product_price" => 0,
 		"msconf_notification_email" => "",
 		"ms_carousel_module" => "",
@@ -105,6 +105,8 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 
 	public function saveSettings() {
 		$this->validate(__FUNCTION__);
+		
+		$
 		
 		/*magic
 		if ($this->request->post['msconf_image_preview_width'] > 200)
