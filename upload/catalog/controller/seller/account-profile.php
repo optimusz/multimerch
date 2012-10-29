@@ -92,7 +92,7 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 						);
 						$data['seller_status_id'] = MsSeller::MS_SELLER_STATUS_TOBEAPPROVED;
 
-						$this->MsLoader->MsRequest->createSellerRequest($this->customer->getId(),
+						$this->MsLoader->MsRequestSeller->createSellerRequest($this->customer->getId(),
 							array(
 								'message' => $data['sellerinfo_reviewer_message'],
 								'request_type' => MsRequest::MS_REQUEST_TYPE_SELLER_CREATE

@@ -12,7 +12,7 @@ class ControllerMultisellerRequestWithdrawal extends ControllerMultisellerBase {
 			'limit' => $this->config->get('config_admin_limit')
 		);
 
-		$results = $this->MsLoader->MsRequest->getWithdrawalRequests(array(), $sort);
+		$results = $this->MsLoader->MsRequestWithdrawal->getWithdrawalRequests(array(), $sort);
 		$total_withdrawals = $this->MsLoader->MsRequest->getTotalRequests(MsRequest::MS_REQUEST_TYPE_WITHDRAWAL_CREATE);
 
 		foreach ($results as $result) {
@@ -80,7 +80,7 @@ class ControllerMultisellerRequestWithdrawal extends ControllerMultisellerBase {
 			$payments = array();
 			$total = 0;
 			foreach ($this->request->post['selected'] as $request_id) {
-				$result = $this->MsLoader->MsRequest->getWithdrawalRequests(
+				$result = $this->MsLoader->MsRequestWithdrawal->getWithdrawalRequests(
 					array(
 						'request_id' => $request_id
 					),
@@ -122,7 +122,7 @@ class ControllerMultisellerRequestWithdrawal extends ControllerMultisellerBase {
 			$payments = array();
 			$total = 0;
 			foreach ($this->request->post['selected'] as $request_id) {
-				$result = $this->MsLoader->MsRequest->getWithdrawalRequests(
+				$result = $this->MsLoader->MsRequestWithdrawal->getWithdrawalRequests(
 					array(
 						'request_id' => $request_id
 					),
@@ -175,7 +175,7 @@ class ControllerMultisellerRequestWithdrawal extends ControllerMultisellerBase {
 		
 		$i = 0;		
 		foreach ($this->request->post['selected'] as $request_id) {
-			$result = $this->MsLoader->MsRequest->getWithdrawalRequests(
+			$result = $this->MsLoader->MsRequestWithdrawal->getWithdrawalRequests(
 				array(
 					'request_id' => $request_id
 				),
@@ -211,7 +211,7 @@ class ControllerMultisellerRequestWithdrawal extends ControllerMultisellerBase {
 			$json['response'] = print_r($response, true);
 			//$mails = array();
 			foreach ($this->request->post['selected'] as $request_id) {
-				$result = $this->MsLoader->MsRequest->getWithdrawalRequests(
+				$result = $this->MsLoader->MsRequestWithdrawal->getWithdrawalRequests(
 					array(
 						'request_id' => $request_id
 					),
@@ -256,7 +256,7 @@ class ControllerMultisellerRequestWithdrawal extends ControllerMultisellerBase {
 		
 		$i = 0;		
 		foreach ($this->request->post['selected'] as $request_id) {
-			$result = $this->MsLoader->MsRequest->getWithdrawalRequests(
+			$result = $this->MsLoader->MsRequestWithdrawal->getWithdrawalRequests(
 				array(
 					'request_id' => $request_id
 				),

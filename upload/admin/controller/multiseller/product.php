@@ -95,7 +95,7 @@ class ControllerMultisellerProduct extends ControllerMultisellerBase {
 			foreach ($this->request->post['selected'] as $product_id) {
 				$seller_id = $this->MsLoader->MsProduct->getSellerId($product_id);
 				// todo
-				$result = $this->MsLoader->MsRequest->getProductRequests(
+				$result = $this->MsLoader->MsRequestProduct->getProductRequests(
 					array(
 						'product_id' => $product_id
 					),

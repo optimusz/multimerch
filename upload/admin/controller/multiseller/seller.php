@@ -86,7 +86,7 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 						break;
 				}
 				
-				$requests = $this->MsLoader->MsRequest->getSellerRequests(array(
+				$requests = $this->MsLoader->MsRequestSeller->getSellerRequests(array(
 					'seller_id' => $data['seller_id'],
 					'request_type' => array(MsRequest::MS_REQUEST_TYPE_SELLER_CREATE, MsRequest::MS_REQUEST_TYPE_SELLER_UPDATE),
 					'request_status' => array(MsRequest::MS_REQUEST_STATUS_PENDING)

@@ -31,7 +31,7 @@ class ControllerSellerAccountWithdrawal extends ControllerSellerAccount {
 		}
 		
 		if (empty($json['errors'])) {
-			$this->MsLoader->MsRequest->createWithdrawalRequest($this->customer->getId(),
+			$this->MsLoader->MsRequestWithdrawal->createWithdrawalRequest($this->customer->getId(),
 				array(
 					'request_type' => MsRequest::MS_REQUEST_TYPE_WITHDRAWAL_CREATE,
 					'amount' => $data['withdraw_amount'],
