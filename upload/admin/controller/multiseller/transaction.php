@@ -63,7 +63,7 @@ class ControllerMultisellerTransaction extends ControllerMultisellerBase {
 		));
 		
 		list($this->template, $this->children) = $this->MsLoader->MsHelper->admLoadTemplate('transaction');
-		$this->response->setOutput($this->render());	
+		$this->response->setOutput($this->render());
 	}
 }
 ?>

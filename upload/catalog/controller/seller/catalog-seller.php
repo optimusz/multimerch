@@ -637,7 +637,7 @@ class ControllerSellerCatalogSeller extends ControllerSellerCatalog {
 		$this->data['seller_href'] = $this->url->link('seller/catalog-seller/profile', 'seller_id=' . $seller['seller_id']);
 		$this->data['ms_sellercontact_sendmessage'] = sprintf($this->language->get('ms_sellercontact_sendmessage'), $seller['nickname']);
 		
-		list($this->template, $this->children) = $this->MsLoader->MsHelper->loadTemplate('ms-catalog-sellercontact');
+		list($this->template, $this->children) = $this->MsLoader->MsHelper->loadTemplate('dialog-sellercontact');
 		return $this->response->setOutput($this->render());
   	}
   	

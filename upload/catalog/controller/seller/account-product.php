@@ -463,7 +463,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		$this->data['fileName'] = $fileName;		
 		$this->data['filePages'] = $pages;
 
-		list($this->template, $this->children) = $this->MsLoader->MsHelper->loadTemplate('ms-pdfgen');
+		list($this->template, $this->children) = $this->MsLoader->MsHelper->loadTemplate('dialog-pdf');
 		return $this->response->setOutput($this->render());
   	}
 	
