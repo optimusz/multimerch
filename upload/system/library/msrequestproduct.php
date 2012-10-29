@@ -1,11 +1,16 @@
 <?php
 class MsRequestProduct extends Model {
+	const TYPE_PRODUCT_CREATE = 1;
+	const TYPE_PRODUCT_UPDATE = 2;
+	const TYPE_PRODUCT_DELETE = 3;
+		
 	public function createProductRequest($product_id, $data) {
 		$request_id = $this->MsLoader->MsRequest->createRequestData($data);
 		
 		$sql = "INSERT INTO " . DB_PREFIX . "ms_request_product
 				SET request_id = " . (int)$request_id  . ",
-					product_id = " . (int)$product_id;
+					product_id = " . (int)$product_id  . ",
+					request_type = " . (int)$data['request_type'];
 
 		$this->db->query($sql);
 		

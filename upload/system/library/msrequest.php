@@ -1,32 +1,16 @@
 <?php
 class MsRequest extends Model {
-	const MS_REQUEST_STATUS_PENDING = 1;
-	
-	const MS_REQUEST_STATUS_DECLINED = 2;
-	const MS_REQUEST_STATUS_APPROVED = 3;
-	const MS_REQUEST_STATUS_CLOSED = 4;
-	const MS_REQUEST_STATUS_REVOKED = 5;
+	const STATUS_PENDING = 1;
+	const STATUS_PROCESSED = 2;
 
-	const MS_REQUEST_TYPE_SELLER_CREATE = 1;
-	const MS_REQUEST_TYPE_SELLER_UPDATE = 2;
-	const MS_REQUEST_TYPE_SELLER_DELETE = 3;
-		
-	const MS_REQUEST_TYPE_PRODUCT_CREATE = 4;
-	const MS_REQUEST_TYPE_PRODUCT_UPDATE = 5;	
-	const MS_REQUEST_TYPE_PRODUCT_DELETE = 6;
-	
-	const MS_REQUEST_TYPE_WITHDRAWAL_CREATE = 7;
-		
-  	public function __construct($registry) {
-  		parent::__construct($registry);
-	}
-
-	/* CREATE */
+	const RESOLUTION_APPROVED = 1;
+	const RESOLUTION_DECLINED = 2;
+	const RESOLUTION_CLOSED = 3;
+	const RESOLUTION_REVOKED = 4;
 	
 	public function createRequestData($data) {
 		$sql = "INSERT INTO " . DB_PREFIX . "ms_request_data
-				SET request_type = " . (int)$data['request_type'] . ",
-					request_status = " . (int)self::MS_REQUEST_STATUS_PENDING . ",
+				SET request_status = " . (int)self::STATUS_PENDING . ",
 					date_created = NOW(),
 		            message_created = '" . (isset($data['message']) ? $this->db->escape($data['message']) : '') . "'";
 
@@ -71,7 +55,8 @@ class MsRequest extends Model {
 	public function processRequest($request_id, $data) {
 		$sql = "UPDATE " . DB_PREFIX . "ms_request_data
 				SET message_processed = '" . (isset($data['message']) ? $this->db->escape($data['message']) : '') . "',
-			 		request_status = " . (int)$data['request_status'] . ",
+			 		request_status = " . (int)self::STATUS_PROCESSED . ",
+			 		resolution_type = " . (int)$data['resolution_type'] . ",
              		processed_by = " . (isset($data['processed_by']) ? (int)$data['processed_by'] : 'NULL') . ",
 			 		date_processed = NOW()
 				WHERE request_id = " . (int)$request_id;
@@ -79,6 +64,7 @@ class MsRequest extends Model {
 		$this->db->query($sql);
 	}
 	
+	//todo
 	public function revokeRequest($request_id, $data) {
 		$sql = "UPDATE " . DB_PREFIX . "ms_request_data
 				SET message_processed = '" . $this->db->escape('Revoked by user') . "',
@@ -89,7 +75,7 @@ class MsRequest extends Model {
 		$this->db->query($sql);
 	}
 	
-	//
+	//todo
 	public function getRequests($data, $sort) {
 		$sql = "SELECT *
 				FROM " . DB_PREFIX . "ms_request_data mrd

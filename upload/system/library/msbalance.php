@@ -91,7 +91,7 @@ class MsBalance extends Model {
 				INNER JOIN " . DB_PREFIX . "ms_request_data
 				USING (request_id)
 				WHERE seller_id = " . (int)$seller_id . " 
-				AND request_status = " . (int)MsRequest::MS_REQUEST_STATUS_PENDING;
+				AND request_status = " . (int)MsRequest::STATUS_PENDING;
 				
 		$res = $this->db->query($sql);
 

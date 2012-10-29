@@ -95,7 +95,7 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 						$this->MsLoader->MsRequestSeller->createSellerRequest($this->customer->getId(),
 							array(
 								'message' => $data['sellerinfo_reviewer_message'],
-								'request_type' => MsRequest::MS_REQUEST_TYPE_SELLER_CREATE
+								'request_type' => MsRequestSeller::TYPE_SELLER_CREATE
 							)
 						);
 						break;

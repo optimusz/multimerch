@@ -361,9 +361,9 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 					$data['review_status_id'] = MsProduct::MS_PRODUCT_STATUS_PENDING;
 					
 					if (isset($data['product_id']) && !empty($data['product_id'])) {
-						$request_type = MsRequest::MS_REQUEST_TYPE_PRODUCT_UPDATE;
+						$request_type = MsRequestProduct::TYPE_PRODUCT_UPDATE;
 					} else {
-						$request_type = MsRequest::MS_REQUEST_TYPE_PRODUCT_CREATE;
+						$request_type = MsRequestProduct::TYPE_PRODUCT_CREATE;
 					}
 					
 					if (!isset($data['product_id']) || empty($data['product_id']) || ($product['review_status_id'] == MsProduct::MS_PRODUCT_STATUS_DRAFT)) {
@@ -411,7 +411,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 			}
 
 			if (isset($request_type)) {
-				$this->MsLoader->MsRequest->createProductRequest($this->customer->getId(),
+				$this->MsLoader->MsRequestProduct->createProductRequest($this->customer->getId(),
 					array(
 						'product_id' => $product_id,
 						'message' => isset($data['product_message']) ? $data['product_message'] : '',

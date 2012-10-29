@@ -13,7 +13,7 @@ class ControllerMultisellerRequestWithdrawal extends ControllerMultisellerBase {
 		);
 
 		$results = $this->MsLoader->MsRequestWithdrawal->getWithdrawalRequests(array(), $sort);
-		$total_withdrawals = $this->MsLoader->MsRequest->getTotalRequests(MsRequest::MS_REQUEST_TYPE_WITHDRAWAL_CREATE);
+		$total_withdrawals = $this->MsLoader->MsRequest->getTotalRequests(MsRequestWithdrawal::TYPE_WITHDRAWAL_SUBMIT);
 
 		foreach ($results as $result) {
 			$this->data['requests'][] = array(
@@ -223,7 +223,7 @@ class ControllerMultisellerRequestWithdrawal extends ControllerMultisellerBase {
 				
 				$this->MsLoader->MsRequest->processRequest($request_id,
 					array(
-						'request_status' => MsRequest::MS_REQUEST_STATUS_APPROVED,
+						'resolution_type' => MsRequest::RESOLUTION_APPROVED,
 						'processed_by' => $this->user->getId(),
 						'message_processed' => 'Paid'
 					)
@@ -268,7 +268,7 @@ class ControllerMultisellerRequestWithdrawal extends ControllerMultisellerBase {
 			
 			$this->MsLoader->MsRequest->processRequest($request_id,
 				array(
-					'request_status' => MsRequest::MS_REQUEST_STATUS_APPROVED,
+					'resolution_type' => MsRequest::RESOLUTION_APPROVED,
 					'processed_by' => $this->user->getId(),
 					'message_processed' => 'Marked as paid'
 				)

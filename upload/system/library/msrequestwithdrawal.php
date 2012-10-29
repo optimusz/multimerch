@@ -1,11 +1,14 @@
 <?php
 class MsRequestWithdrawal extends Model {
+	const TYPE_WITHDRAWAL_SUBMIT = 1;
+
 	public function createWithdrawalRequest($seller_id, $data) {
 		$request_id = $request_id = $this->MsLoader->MsRequest->createRequestData($data);
 				
 		$sql = "INSERT INTO " . DB_PREFIX . "ms_request_withdrawal
 				SET request_id = " . (int)$request_id  . ",
 					seller_id = " . (int)$seller_id  . ",
+					request_type = " . (int)$data['request_type'] . ",
              		withdrawal_method_id = 0,
              		withdrawal_method_data = '',
              		amount = " . (float)$data['amount'] . ",

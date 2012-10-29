@@ -146,6 +146,7 @@ class ModelModuleMultisellerSettings extends Model {
              `request_withdrawal_id` int(11) NOT NULL AUTO_INCREMENT,
 			 `request_id` int(11) NOT NULL,
              `seller_id` int(11) NOT NULL,
+			 `request_type` TINYINT NOT NULL,
              `withdrawal_method_id` int(11) NOT NULL DEFAULT 0,
              `withdrawal_method_data` TEXT NOT NULL DEFAULT '',
              `amount` DECIMAL(15,4) NOT NULL,
@@ -161,6 +162,7 @@ class ModelModuleMultisellerSettings extends Model {
              `request_seller_id` int(11) NOT NULL AUTO_INCREMENT,
 			 `request_id` int(11) NOT NULL,
              `seller_id` int(11) NOT NULL,
+			 `request_type` TINYINT NOT NULL
         	PRIMARY KEY (`request_seller_id`)) default CHARSET=utf8";
         
         $this->db->query($sql);
@@ -170,6 +172,7 @@ class ModelModuleMultisellerSettings extends Model {
              `request_product_id` int(11) NOT NULL AUTO_INCREMENT,
 			 `request_id` int(11) NOT NULL,
              `product_id` int(11) NOT NULL,
+			 `request_type` TINYINT NOT NULL
         	PRIMARY KEY (`request_product_id`)) default CHARSET=utf8";
         
         $this->db->query($sql);
@@ -177,8 +180,8 @@ class ModelModuleMultisellerSettings extends Model {
 		$sql = "
 			CREATE TABLE `" . DB_PREFIX . "ms_request_data` (
              `request_id` int(11) NOT NULL AUTO_INCREMENT,
-			 `request_type` TINYINT NOT NULL,
 			 `request_status` TINYINT NOT NULL,
+			 `resolution_type` TINYINT DEFAULT NULL,
              `processed_by` int(11) DEFAULT NULL,
 			 `date_created` DATETIME NOT NULL,
 			 `date_processed` DATETIME DEFAULT NULL,

@@ -32,7 +32,7 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 					// enable
 					case 1:
 						$data['seller_status_id'] = MsSeller::MS_SELLER_STATUS_ACTIVE;
-						$request_status = MsRequest::MS_REQUEST_STATUS_APPROVED;
+						$resolution_type = MsRequest::RESOLUTION_APPROVED;
 						$mails[] = array(
 							'type' => MsMail::SMT_SELLER_ACCOUNT_ENABLED,
 							'data' => array(
@@ -46,7 +46,7 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 					// disable
 					case 2:
 						$data['seller_status_id'] = MsSeller::MS_SELLER_STATUS_DISABLED;
-						$request_status = MsRequest::MS_REQUEST_STATUS_DECLINED;
+						$resolution_type = MsRequest::RESOLUTION_DECLINED;
 						$mails[] = array(
 							'type' => MsMail::SMT_SELLER_ACCOUNT_DISABLED,
 							'data' => array(
@@ -60,7 +60,7 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 					// approve
 					case 3:
 						$data['seller_status_id'] = MsSeller::MS_SELLER_STATUS_ACTIVE;
-						$request_status = MsRequest::MS_REQUEST_STATUS_APPROVED;						
+						$resolution_type = MsRequest::RESOLUTION_APPROVED;					
 						$mails[] = array(
 							'type' => MsMail::SMT_SELLER_ACCOUNT_APPROVED,
 							'data' => array(
@@ -74,7 +74,7 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 					// decline
 					case 4:
 						$data['seller_status_id'] = MsSeller::MS_SELLER_STATUS_INACTIVE;
-						$request_status = MsRequest::MS_REQUEST_STATUS_DECLINED;
+						$resolution_type = MsRequest::RESOLUTION_DECLINED;
 						$mails[] = array(
 							'type' => MsMail::SMT_SELLER_ACCOUNT_DECLINED,
 							'data' => array(
@@ -88,13 +88,13 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 				
 				$requests = $this->MsLoader->MsRequestSeller->getSellerRequests(array(
 					'seller_id' => $data['seller_id'],
-					'request_type' => array(MsRequest::MS_REQUEST_TYPE_SELLER_CREATE, MsRequest::MS_REQUEST_TYPE_SELLER_UPDATE),
-					'request_status' => array(MsRequest::MS_REQUEST_STATUS_PENDING)
+					'request_type' => array(MsRequestSeller::TYPE_SELLER_CREATE, MsRequestSeller::TYPE_SELLER_UPDATE),
+					'request_status' => array(MsRequest::STATUS_PENDING)
 				));
 				
 				foreach($requests as $r) {
 					$this->MsLoader->MsRequest->processRequest($r['request_id'], array(
-						'request_status' => $request_status,
+						'resolution_type' => $resolution_type,
 						'processed_by' => $this->user->getId(),
 						'message_processed' => $data['sellerinfo_message']
 					));
