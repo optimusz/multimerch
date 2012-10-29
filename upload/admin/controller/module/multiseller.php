@@ -106,8 +106,6 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 	public function saveSettings() {
 		$this->validate(__FUNCTION__);
 		
-		$
-		
 		/*magic
 		if ($this->request->post['msconf_image_preview_width'] > 200)
 			$this->request->post['msconf_image_preview_width'] = 200;
