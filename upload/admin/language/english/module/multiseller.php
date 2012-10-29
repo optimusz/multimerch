@@ -18,6 +18,7 @@ $_['ms_seller_status_activation'] = 'Waiting for activation';
 $_['ms_seller_status_approval'] = 'Waiting for approval';
 $_['ms_seller_status_active'] = 'Active';
 $_['ms_seller_status_disabled']      = 'Disabled';
+$_['ms_seller_status_inactive']      = 'Inactive';
 
 
 $_['heading_title']    = '[ffct.cc] Digital Multiseller Marketplace';

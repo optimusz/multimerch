@@ -91,6 +91,7 @@ final class MsSeller extends Model {
 			self::MS_SELLER_STATUS_TOBEACTIVATED => $this->language->get('ms_seller_status_activation'),
 			self::MS_SELLER_STATUS_TOBEAPPROVED => $this->language->get('ms_seller_status_approval'),
 			self::MS_SELLER_STATUS_DISABLED => $this->language->get('ms_seller_status_disabled'),
+			self::MS_SELLER_STATUS_INACTIVE => $this->language->get('ms_seller_status_inactive'),
 		);		
 		
 		if ($seller_status_id) {
