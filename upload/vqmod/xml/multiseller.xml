@@ -379,7 +379,7 @@ if (in_array($order_status_id, $this->config->get('msconf_credit_order_statuses'
 			if ($product_info) {
 			]]></search>
 			<add><![CDATA[
-			$this->document->addScript('catalog/view/javascript/ms-contactseller.js');
+			$this->document->addScript('catalog/view/javascript/dialog-sellercontact.js');
 			$this->document->addStyle('catalog/view/theme/' . $this->config->get('config_template') . '/stylesheet/multiseller.css');
 			$this->data = array_merge($this->data, $this->load->language('module/multiseller'));
 			$this->load->model('localisation/country');
