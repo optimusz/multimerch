@@ -19,7 +19,7 @@ class MsRequestSeller extends Model {
 	
 	public function getSellerRequests($data, $sort = array()) {
 		$sql = "SELECT *
-				FROM " . DB_PREFIX . "ms_request_data mrd
+				FROM " . DB_PREFIX . "ms_request mr
 				INNER JOIN " . DB_PREFIX . "ms_request_seller mrs
 					USING (request_id)
 				INNER JOIN " . DB_PREFIX . "ms_seller ms

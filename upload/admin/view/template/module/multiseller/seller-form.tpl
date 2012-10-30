@@ -15,15 +15,15 @@
     	<input type="hidden" id="seller_id" name="seller_id" value="<?php echo $seller['seller_id']; ?>" />
       <table class="ms-product form" id="ms-sellerinfo">
         <tr>
-			<?php if (!empty($seller['nickname'])) { ?>
+			<?php if (!empty($seller['ms.nickname'])) { ?>
 	          <td><?php echo $ms_catalog_sellerinfo_nickname; ?></td>
 	          <td style="padding-top: 5px">
-	          	<b><?php echo $seller['nickname']; ?></b>
+	          	<b><?php echo $seller['ms.nickname']; ?></b>
 	          </td>			
 			<?php } else { ?>
 	          <td><span class="required">*</span> <?php echo $ms_catalog_sellerinfo_nickname; ?></td>
 	          <td>
-	          	<input type="text" name="sellerinfo_nickname" value="<?php echo $seller['nickname']; ?>" />
+	          	<input type="text" name="sellerinfo_nickname" value="<?php echo $seller['ms.nickname']; ?>" />
 	          	<p class="error" id="error_sellerinfo_nickname"></p>
 	          </td>          		
           	<?php } ?>
@@ -31,8 +31,8 @@
         <tr>
           <td><?php echo $ms_catalog_sellerinfo_commission; ?></td>
           <td>
-          	<input size="3" type="text" name="sellerinfo_commission_flat" value="<?php echo $this->currency->format($seller['commission_flat'], $this->config->get('config_currency'), '', FALSE); ?>" /><?php echo $currency_code; ?>
-			+<input size="3" type="text" name="sellerinfo_commission" value="<?php echo $seller['commission']; ?>" size="3"/>%          	
+          	<input size="3" type="text" name="sellerinfo_commission_flat" value="<?php echo $this->currency->format($seller['ms.commission_flat'], $this->config->get('config_currency'), '', FALSE); ?>" /><?php echo $currency_code; ?>
+			+<input size="3" type="text" name="sellerinfo_commission" value="<?php echo $seller['ms.commission']; ?>" size="3"/>%          	
           	<p class="error" id="error_sellerinfo_commission"></p>
           </td>
         </tr>
@@ -44,8 +44,8 @@
 			</td>
 			<td>
               	<select name="sellerinfo_product_validation">
-              	  <option value="1" <?php if($seller['product_validation'] == 1) { ?> selected="selected" <?php } ?>><?php echo $ms_config_product_validation_none; ?></option>
-                  <option value="2" <?php if($seller['product_validation'] == 2) { ?> selected="selected" <?php } ?>><?php echo $ms_config_product_validation_approval; ?></option>
+              	  <option value="1" <?php if($seller['ms.product_validation'] == 1) { ?> selected="selected" <?php } ?>><?php echo $ms_config_product_validation_none; ?></option>
+                  <option value="2" <?php if($seller['ms.product_validation'] == 2) { ?> selected="selected" <?php } ?>><?php echo $ms_config_product_validation_approval; ?></option>
                 </select>
 			</td>
 		</tr>        
@@ -53,14 +53,14 @@
         <tr>
           <td><?php echo $ms_catalog_sellerinfo_description; ?></td>
           <td>
-          	<textarea name="sellerinfo_description"><?php echo $seller['description']; ?></textarea>
+          	<textarea name="sellerinfo_description"><?php echo $seller['ms.description']; ?></textarea>
           	<p class="error" id="error_sellerinfo_description"></p>
           </td>
         </tr>
         <tr>
           <td><?php echo $ms_catalog_sellerinfo_company; ?></td>
           <td>
-          	<input type="text" name="sellerinfo_company" value="<?php echo $seller['company']; ?>" />
+          	<input type="text" name="sellerinfo_company" value="<?php echo $seller['ms.company']; ?>" />
           	<p class="error" id="error_sellerinfo_company"></p>
           </td>
         </tr>
@@ -74,7 +74,7 @@
               <?php } ?>
               
               <?php foreach ($countries as $country) { ?>
-              <?php if ($seller['country_id'] == $country['country_id']) { ?>
+              <?php if ($seller['ms.country_id'] == $country['country_id']) { ?>
               <option value="<?php echo $country['country_id']; ?>" selected="selected"><?php echo $country['name']; ?></option>
               <?php } else { ?>
               <option value="<?php echo $country['country_id']; ?>"><?php echo $country['name']; ?></option>
@@ -88,7 +88,7 @@
         <tr>
           <td><?php echo $ms_catalog_sellerinfo_paypal; ?></td>
           <td>
-          	<input type="text" name="sellerinfo_paypal" value="<?php echo $seller['paypal']; ?>" />
+          	<input type="text" name="sellerinfo_paypal" value="<?php echo $seller['ms.paypal']; ?>" />
           	<p class="error" id="error_sellerinfo_paypal"></p>
           </td>
         </tr>
@@ -109,7 +109,7 @@
         <tr>
           <td><?php echo $ms_status; ?></td>
           <td style="padding-top: 5px">
-          	<b><?php echo $seller['status']; ?></b>
+          	<b><?php echo $seller['ms.seller_status']; ?></b>
           </td>
         </tr>        
         

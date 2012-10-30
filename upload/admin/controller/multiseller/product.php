@@ -11,19 +11,21 @@ class ControllerMultisellerProduct extends ControllerMultisellerBase {
 		
 		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
 
-		$sort = array(
-			'order_by'  => 'pr.date_modified',
-			'order_way' => 'DESC',
-			'page' => $page,
-			'limit' => 5
+		$results = $this->MsLoader->MsProduct->getProducts(
+			array(),
+			array (
+				'order_by'  => 'p.date_modified',
+				'order_way' => 'DESC',
+				'offset' => ($page - 1) * $this->config->get('config_admin_limit'),
+				'limit' => $this->config->get('config_admin_limit')
+			)
 		);
-
-		$results = $this->MsLoader->MsProduct->getProducts($sort, true);
-		$total_products = $this->MsLoader->MsProduct->getTotalProducts(true);
+		
+		$total_products = $this->MsLoader->MsProduct->getTotalProducts(array());
 
 		foreach ($results as $result) {
-			if ($result['prd.image'] && file_exists(DIR_IMAGE . $result['prd.image'])) {
-				$image = $this->MsLoader->MsFile->resizeImage($result['prd.image'], 40, 40);
+			if ($result['p.image'] && file_exists(DIR_IMAGE . $result['p.image'])) {
+				$image = $this->MsLoader->MsFile->resizeImage($result['p.image'], 40, 40);
 			} else {
 				$image = $this->MsLoader->MsFile->resizeImage('no_image.jpg', 40, 40);
 			}		
@@ -31,18 +33,18 @@ class ControllerMultisellerProduct extends ControllerMultisellerBase {
 			$action = array();
 			$action[] = array(
 				'text' => $this->language->get('ms_edit'),
-				'href' => $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $result['prd.product_id'], 'SSL')
+				'href' => $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $result['product_id'], 'SSL')
 			);
 			
 			$this->data['products'][] = array(
-				'image' => $image,
-				'name' => $result['prd.name'],
-				'seller' => $result['sel.nickname'],
-				'date_created' => date($this->language->get('date_format_short'), strtotime($result['prd.date_created'])),
-				'date_modified' => date($this->language->get('date_format_short'), strtotime($result['prd.date_modified'])),
-				'status' => $result['prd.status'],
+				'p.image' => $image,
+				'pd.name' => $result['pd.name'],
+				'ms.nickname' => $result['ms.nickname'],
+				'p.date_created' => date($this->language->get('date_format_short'), strtotime($result['p.date_created'])),
+				'p.date_modified' => date($this->language->get('date_format_short'), strtotime($result['p.date_modified'])),
+				'mp.product_status' => $result['mp.product_status'],
 				'action' => $action,
-				'product_id' => $result['prd.product_id']
+				'product_id' => $result['product_id']
 			);
 		}
 		

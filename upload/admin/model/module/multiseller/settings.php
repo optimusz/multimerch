@@ -6,7 +6,7 @@ class ModelModuleMultisellerSettings extends Model {
              `product_id` int(11) NOT NULL,
              `seller_id` int(11) DEFAULT NULL,
              `number_sold` int(11) UNSIGNED NOT NULL DEFAULT '0',
-             `review_status_id` tinyint UNSIGNED NOT NULL DEFAULT '1',
+			 `product_status` TINYINT NOT NULL DEFAULT '1',
         	PRIMARY KEY (`product_id`)) default CHARSET=utf8";
         
         $this->db->query($sql);
@@ -22,62 +22,11 @@ class ModelModuleMultisellerSettings extends Model {
 			 `avatar_path` VARCHAR(255) DEFAULT NULL,
 			 `paypal` VARCHAR(255) DEFAULT NULL,
 			 `date_created` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-			 `seller_status_id` TINYINT UNSIGNED NOT NULL DEFAULT '1',
+			 `seller_status` TINYINT NOT NULL DEFAULT '1',
 			 `commission` DECIMAL(4,2) NOT NULL DEFAULT '0',
 			 `commission_flat` decimal(15,4) NOT NULL DEFAULT '0.0000',
 			 `product_validation` tinyint(4) NOT NULL DEFAULT '1',
         	PRIMARY KEY (`seller_id`)) default CHARSET=utf8";
-        
-        $this->db->query($sql);
-        
-        /*
-		$sql = "
-			CREATE TABLE `" . DB_PREFIX . "ms_product_rating` (
-             `product_id` int(11) NOT NULL,
-             `seller_id` int(11) DEFAULT NULL,
-             `customer_id` int(11) NOT NULL,
-             `rating_value` TINYINT NOT NULL,
-			 `date_created` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-        	PRIMARY KEY (`product_id`,`seller_id`,`customer_id`)) default CHARSET=utf8";
-        
-        $this->db->query($sql);
-        */
-        
-		$sql = "
-			CREATE TABLE `" . DB_PREFIX . "ms_transaction` (
-             `transaction_id` int(11) NOT NULL AUTO_INCREMENT,
-			 `type` TINYINT NOT NULL DEFAULT '0',			
-			 `parent_transaction_id` int(11) NOT NULL DEFAULT '0',
-             `amount` DECIMAL(15,4) NOT NULL DEFAULT '0',
-             `seller_id` int(11) NOT NULL,
-             `order_id` int(11) NOT NULL DEFAULT '0',
-             `product_id` int(11) NOT NULL DEFAULT '0',
-             `transaction_status_id` TINYINT UNSIGNED NOT NULL DEFAULT '1',
-             `currency_id` int(11) NOT NULL,
-             `currency_code` VARCHAR(3) NOT NULL,
-             `currency_value` DECIMAL(15,8) NOT NULL,
-             `commission` DECIMAL(4,2) NOT NULL DEFAULT '0',
-			 `commission_flat` DECIMAL(15,4) NOT NULL DEFAULT '0.0000',
-             `description` TEXT NOT NULL DEFAULT '',			              
-			 `date_created` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-			 `date_modified` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-        	PRIMARY KEY (`transaction_id`)) default CHARSET=utf8";
-        
-        $this->db->query($sql);
-        
-		$sql = "
-			CREATE TABLE `" . DB_PREFIX . "ms_request` (
-             `request_id` int(11) NOT NULL AUTO_INCREMENT,
-             `seller_id` int(11) NOT NULL DEFAULT '0',
-             `product_id` int(11) NOT NULL DEFAULT '0',
-             `transaction_id` int(11) NOT NULL DEFAULT '0',
-			 `request_type` TINYINT NOT NULL DEFAULT '1',
-			 `date_created` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-			 `date_processed` DATETIME DEFAULT NULL,
-             `processed_by_user_id` int(11) NOT NULL DEFAULT '0',
-             `created_message` TEXT NOT NULL DEFAULT '',
-             `processed_message` TEXT NOT NULL DEFAULT '',
-        	PRIMARY KEY (`request_id`)) default CHARSET=utf8";
         
         $this->db->query($sql);
         
@@ -94,7 +43,6 @@ class ModelModuleMultisellerSettings extends Model {
         	PRIMARY KEY (`id`)) default CHARSET=utf8";
         
         $this->db->query($createTable);        
-	
 	
 		$createTable = "
 			CREATE TABLE " . DB_PREFIX . "ms_product_attribute (
@@ -135,6 +83,7 @@ class ModelModuleMultisellerSettings extends Model {
         
         $this->db->query($sql);
         
+        // todo payouts
 		$sql = "
 			CREATE TABLE `" . DB_PREFIX . "ms_payout_method` (
              `payout_method_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -162,7 +111,7 @@ class ModelModuleMultisellerSettings extends Model {
              `request_seller_id` int(11) NOT NULL AUTO_INCREMENT,
 			 `request_id` int(11) NOT NULL,
              `seller_id` int(11) NOT NULL,
-			 `request_type` TINYINT NOT NULL
+			 `request_type` TINYINT NOT NULL,
         	PRIMARY KEY (`request_seller_id`)) default CHARSET=utf8";
         
         $this->db->query($sql);
@@ -172,13 +121,13 @@ class ModelModuleMultisellerSettings extends Model {
              `request_product_id` int(11) NOT NULL AUTO_INCREMENT,
 			 `request_id` int(11) NOT NULL,
              `product_id` int(11) NOT NULL,
-			 `request_type` TINYINT NOT NULL
+			 `request_type` TINYINT NOT NULL,
         	PRIMARY KEY (`request_product_id`)) default CHARSET=utf8";
         
         $this->db->query($sql);
 
 		$sql = "
-			CREATE TABLE `" . DB_PREFIX . "ms_request_data` (
+			CREATE TABLE `" . DB_PREFIX . "ms_request` (
              `request_id` int(11) NOT NULL AUTO_INCREMENT,
 			 `request_status` TINYINT NOT NULL,
 			 `resolution_type` TINYINT DEFAULT NULL,
@@ -193,12 +142,16 @@ class ModelModuleMultisellerSettings extends Model {
 
 	}
 	
+	//todo drop dbses
 	public function dropTable() {
 		$sql = "DROP TABLE IF EXISTS
 				`" . DB_PREFIX . "ms_product`,
 				`" . DB_PREFIX . "ms_seller`,
-				`" . DB_PREFIX . "ms_transaction`,
 				`" . DB_PREFIX . "ms_request`,
+				`" . DB_PREFIX . "ms_request_product`,
+				`" . DB_PREFIX . "ms_request_seller`,
+				`" . DB_PREFIX . "ms_order_product_data`,
+				`" . DB_PREFIX . "ms_request_withdrawal`,
 				`" . DB_PREFIX . "ms_product_attribute`,
 				`" . DB_PREFIX . "ms_comments`,
 				`" . DB_PREFIX . "ms_balance`";

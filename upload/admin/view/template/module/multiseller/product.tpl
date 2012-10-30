@@ -48,12 +48,12 @@
               <td style="text-align: center;">
                 <input type="checkbox" name="selected[]" value="<?php echo $product['product_id']; ?>" />
               </td>
-              <td><img src="<?php echo $product['image']; ?>" /></td>
-              <td><?php echo $product['name']; ?></td>
-              <td><?php echo $product['seller']; ?></td>
-              <td><?php echo $product['status']; ?></td>
-              <td><?php echo $product['date_created']; ?></td>
-              <td><?php echo $product['date_modified']; ?></td>
+              <td><img src="<?php echo $product['p.image']; ?>" /></td>
+              <td><?php echo $product['pd.name']; ?></td>
+              <td><?php echo $product['ms.nickname']; ?></td>
+              <td><?php echo $product['mp.product_status']; ?></td>
+              <td><?php echo $product['p.date_created']; ?></td>
+              <td><?php echo $product['p.date_modified']; ?></td>
               <td>
               	<?php foreach ($product['action'] as $action) { ?>
                 [ <a href="<?php echo $action['href']; ?>"><?php echo $action['text']; ?></a> ]

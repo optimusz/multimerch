@@ -6,7 +6,7 @@ class ControllerMultisellerRequestWithdrawal extends ControllerMultisellerBase {
 		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
 		
 		$sort = array(
-			'order_by'  => 'mrd.date_created',
+			'order_by'  => 'mr.date_created',
 			'order_way' => 'DESC',
 			'page' => ($page - 1) * $this->config->get('config_admin_limit'),
 			'limit' => $this->config->get('config_admin_limit')
@@ -20,10 +20,10 @@ class ControllerMultisellerRequestWithdrawal extends ControllerMultisellerBase {
 				'request_id' => $result['request_id'],
 				'seller' => $result['nickname'],
 				'amount' => $this->currency->format(abs($result['mrw.amount']),$result['mrw.currency_code']),
-				'date_created' => date($this->language->get('date_format_short'), strtotime($result['mrd.date_created'])),
-				'status' => empty($result['mrd.date_processed']) ? 'Pending' : 'Completed',
+				'date_created' => date($this->language->get('date_format_short'), strtotime($result['mr.date_created'])),
+				'status' => empty($result['mr.date_processed']) ? 'Pending' : 'Completed',
 				'processed_by' => $result['u.username'],
-				'date_processed' => $result['mrd.date_processed'] ? date($this->language->get('date_format_short'), strtotime($result['mrd.date_processed'])) : ''
+				'date_processed' => $result['mr.date_processed'] ? date($this->language->get('date_format_short'), strtotime($result['mr.date_processed'])) : ''
 			);
 		}
 		
@@ -90,7 +90,7 @@ class ControllerMultisellerRequestWithdrawal extends ControllerMultisellerBase {
 					)
 				);
 
-				if (!empty($result) && ($result['mrd.date_processed'] == NULL)) {
+				if (!empty($result) && ($result['mr.date_processed'] == NULL)) {
 					$total += abs($result['mrw.amount']);
 					$payments[] = array (
 						'nickname' => $result['ms.nickname'],
@@ -132,7 +132,7 @@ class ControllerMultisellerRequestWithdrawal extends ControllerMultisellerBase {
 					)
 				);
 				
-				if (!empty($result) && ($result['mrd.date_processed'] == NULL)) {
+				if (!empty($result) && ($result['mr.date_processed'] == NULL)) {
 					$payments[] = array (
 						'nickname' => $result['ms.nickname'],
 						'amount' => $this->currency->format(abs($result['mrw.amount']),$result['mrw.currency_code'])
@@ -184,7 +184,7 @@ class ControllerMultisellerRequestWithdrawal extends ControllerMultisellerBase {
 					'limit' => 1
 				)
 			);
-			if (!empty($result) && ($result['mrd.date_processed'] == NULL)) {
+			if (!empty($result) && ($result['mr.date_processed'] == NULL)) {
 				$paymentParams['L_EMAIL' . $i] = $result['ms.paypal'];
 				$paymentParams['L_AMT' . $i] = abs($result['mrw.amount']);
 				$i++;
@@ -230,7 +230,7 @@ class ControllerMultisellerRequestWithdrawal extends ControllerMultisellerBase {
 				);
 				
 				$this->MsLoader->MsBalance->addBalanceEntry(
-					$result['ms.seller_id'],
+					$result['seller_id'],
 					array(
 						'withdrawal_id' => $request_id,
 						'balance_type' => MsBalance::MS_BALANCE_TYPE_WITHDRAWAL,
@@ -275,7 +275,7 @@ class ControllerMultisellerRequestWithdrawal extends ControllerMultisellerBase {
 			);
 			
 			$this->MsLoader->MsBalance->addBalanceEntry(
-				$result['ms.seller_id'],
+				$result['seller_id'],
 				array(
 					'withdrawal_id' => $request_id,
 					'balance_type' => MsBalance::MS_BALANCE_TYPE_WITHDRAWAL,

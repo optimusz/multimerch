@@ -37,32 +37,39 @@ class ControllerSellerCatalogSeller extends ControllerSellerCatalog {
 		
 		$this->data['products'] = array();
 		
-		$data = array(
-			//'filter_category_id' => $category_id, 
-			'order_by'               => $order_by,
-			'order_way'              => $order_way,
-			'page'              => $page,
-			'limit'              => $limit
+		$total_sellers = $this->MsLoader->MsSeller->getTotalSellers(array(
+			'seller_status' => array(MsSeller::STATUS_ACTIVE) 
+		));
+		
+		$results = $this->MsLoader->MsSeller->getSellers(
+			array(
+				'seller_status' => array(MsSeller::STATUS_ACTIVE)
+			),
+			array(
+				'order_by'	=> $order_by,
+				'order_way'	=> $order_way,
+				'offset'	=> ($page - 1) * $limit,
+				'limit'		=> $limit
+			)
 		);
 		
-		$total_sellers = $this->MsLoader->MsSeller->getTotalSellers(TRUE);
-		$results = $this->MsLoader->MsSeller->getSellers($data, TRUE);
-		
 		foreach ($results as $result) {
-			if ($result['avatar_path'] && file_exists(DIR_IMAGE . $result['avatar_path'])) {
-				$image = $this->MsLoader->MsFile->resizeImage($result['avatar_path'], $this->config->get('config_image_category_width'), $this->config->get('config_image_category_height'));
+			if ($result['ms.avatar_path'] && file_exists(DIR_IMAGE . $result['ms.avatar_path'])) {
+				$image = $this->MsLoader->MsFile->resizeImage($result['ms.avatar_path'], $this->config->get('config_image_category_width'), $this->config->get('config_image_category_height'));
 			} else {
 				$image = $this->MsLoader->MsFile->resizeImage('no_image.jpg', $this->config->get('config_image_category_width'), $this->config->get('config_image_category_height'));
 			}
 
-			$country = $this->model_localisation_country->getCountry($result['country_id']);
+			$country = $this->model_localisation_country->getCountry($result['ms.country_id']);
 			$this->data['sellers'][] = array(
 				'seller_id'  => $result['seller_id'],
 				'thumb'       => $image,
-				'nickname'        => $result['nickname'],
-				'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, 200) . '..',
+				'nickname'        => $result['ms.nickname'],
+				'description' => utf8_substr(strip_tags(html_entity_decode($result['ms.description'], ENT_QUOTES, 'UTF-8')), 0, 200) . '..',
 				//'rating'      => $result['rating'],
 				'country' => ($country ? $country['name'] : NULL),
+				'company' => ($result['ms.company'] ? $result['ms.company'] : NULL),
+				'website' => ($result['ms.website'] ? $result['ms.website'] : NULL),
 				'country_flag' => ($country ? 'image/flags/' . strtolower($country['iso_code_2']) . '.png' : NULL),
 				'total_sales' => $this->MsLoader->MsSeller->getSalesForSeller($result['seller_id']),
 				'total_products' => $this->MsLoader->MsSeller->getTotalSellerProducts($result['seller_id'], TRUE),
@@ -191,27 +198,28 @@ class ControllerSellerCatalogSeller extends ControllerSellerCatalog {
 		$this->load->model('localisation/country');
 		$this->load->model('catalog/product');
     	
-		$seller = $this->MsLoader->MsSeller->getSellerData($this->request->get['seller_id']);
+		$seller = $this->MsLoader->MsSeller->getSeller($this->request->get['seller_id']);
+		
 		$this->document->addScript('catalog/view/javascript/dialog-sellercontact.js');
-
-		if (empty($seller) || $seller['seller_status_id'] != MsSeller::MS_SELLER_STATUS_ACTIVE) {
+		
+		if (empty($seller) || $seller['ms.seller_status'] != MsSeller::STATUS_ACTIVE) {
 			$this->redirect($this->url->link('seller/catalog-seller', '', 'SSL'));
 			return;
 		}
 			
-		if ($seller['avatar_path'] && file_exists(DIR_IMAGE . $seller['avatar_path'])) {
-			$image = $this->MsLoader->MsFile->resizeImage($seller['avatar_path'], $this->config->get('config_image_category_width'), $this->config->get('config_image_category_height'));
+		if ($seller['ms.avatar_path'] && file_exists(DIR_IMAGE . $seller['ms.avatar_path'])) {
+			$image = $this->MsLoader->MsFile->resizeImage($seller['ms.avatar_path'], $this->config->get('config_image_category_width'), $this->config->get('config_image_category_height'));
 		} else {
 			$image = $this->MsLoader->MsFile->resizeImage('no_image.jpg', $this->config->get('config_image_category_width'), $this->config->get('config_image_category_height'));
 		}
 		
-		$this->data['seller']['nickname'] = $seller['nickname'];
-		$this->data['seller']['description'] = $seller['description'];
+		$this->data['seller']['nickname'] = $seller['ms.nickname'];
+		$this->data['seller']['description'] = $seller['ms.description'];
 		$this->data['seller']['thumb'] = $image;
 		$this->data['seller']['href'] = $this->url->link('seller/catalog-seller/products', 'seller_id=' . $seller['seller_id']);
 		$this->data['seller_id'] = $this->request->get['seller_id'];
 		
-		$country = $this->model_localisation_country->getCountry($seller['country_id']);
+		$country = $this->model_localisation_country->getCountry($seller['ms.country_id']);
 		
 		if (!empty($country)) {			
 			$this->data['seller']['country'] = $country['name'];
@@ -219,29 +227,37 @@ class ControllerSellerCatalogSeller extends ControllerSellerCatalog {
 			$this->data['seller']['country'] = NULL;
 		}
 		
-		if (!empty($seller['company'])) {
-			$this->data['seller']['company'] = $seller['company'];
+		if (!empty($seller['ms.company'])) {
+			$this->data['seller']['company'] = $seller['ms.company'];
 		} else {
 			$this->data['seller']['company'] = NULL;
 		}
 		
-		if (!empty($seller['website'])) {
-			$this->data['seller']['website'] = $seller['website'];
+		if (!empty($seller['ms.website'])) {
+			$this->data['seller']['website'] = $seller['ms.website'];
 		} else {
 			$this->data['seller']['website'] = NULL;
 		}
 		
 		$this->data['seller']['total_sales'] = $this->MsLoader->MsSeller->getSalesForSeller($seller['seller_id']);
-		$this->data['seller']['total_products'] = $this->MsLoader->MsSeller->getTotalSellerProducts($seller['seller_id'], TRUE);
+		$this->data['seller']['total_products'] = $this->MsLoader->MsProduct->getTotalProducts(array(
+			'seller_id' => $seller['seller_id'],
+			'product_status' => array(MsProduct::STATUS_ACTIVE)
+		));
 				
-		$sort = array(
-			'order_by'  => 'pd.name',
-			'order_way' => 'ASC',
-			'page'              => 1,
-			'limit'              => 5
+		$products = $this->MsLoader->MsProduct->getProducts(
+			array(
+				'seller_id' => $seller['seller_id'],
+				'language_id' => $this->config->get('config_language_id'),
+				'product_status' => array(MsProduct::STATUS_ACTIVE)
+			),
+			array(
+				'order_by'	=> 'pd.name',
+				'order_way'	=> 'ASC',
+				'offset'	=> 0,
+				'limit'		=> 5
+			)
 		);
-		
-		$products = $this->MsLoader->MsSeller->getSellerProducts($seller['seller_id'], $sort, TRUE);
 
 		if (!empty($products)) {
 			foreach ($products as $product) {
@@ -311,24 +327,24 @@ class ControllerSellerCatalogSeller extends ControllerSellerCatalog {
     	
 		$seller = $this->MsLoader->MsSeller->getSellerData($this->request->get['seller_id']);
 
-		if (empty($seller) || $seller['seller_status_id'] != MsSeller::MS_SELLER_STATUS_ACTIVE) {
+		if (empty($seller) || $seller['ms.seller_status'] != MsSeller::STATUS_ACTIVE) {
 			$this->redirect($this->url->link('seller/catalog-seller', '', 'SSL'));
 			return;
 		}
 		
 		/* seller info part */	
-		if ($seller['avatar_path'] && file_exists(DIR_IMAGE . $seller['avatar_path'])) {
-			$image = $this->MsLoader->MsFile->resizeImage($seller['avatar_path'], $this->config->get('config_image_category_width'), $this->config->get('config_image_category_height'));
+		if ($seller['ms.avatar_path'] && file_exists(DIR_IMAGE . $seller['ms.avatar_path'])) {
+			$image = $this->MsLoader->MsFile->resizeImage($seller['ms.avatar_path'], $this->config->get('config_image_category_width'), $this->config->get('config_image_category_height'));
 		} else {
 			$image = $this->MsLoader->MsFile->resizeImage('no_image.jpg', $this->config->get('config_image_category_width'), $this->config->get('config_image_category_height'));
 		}
 		
-		$this->data['seller']['nickname'] = $seller['nickname'];
-		$this->data['seller']['description'] = $seller['description'];
+		$this->data['seller']['nickname'] = $seller['ms.nickname'];
+		$this->data['seller']['description'] = $seller['ms.description'];
 		$this->data['seller']['thumb'] = $image;
 		$this->data['seller']['href'] = $this->url->link('seller/catalog-seller/profile', 'seller_id=' . $seller['seller_id']);
 		
-		$country = $this->model_localisation_country->getCountry($seller['country_id']);
+		$country = $this->model_localisation_country->getCountry($seller['ms.country_id']);
 		
 		if (!empty($country)) {			
 			$this->data['seller']['country'] = $country['name'];
@@ -336,20 +352,23 @@ class ControllerSellerCatalogSeller extends ControllerSellerCatalog {
 			$this->data['seller']['country'] = NULL;
 		}
 		
-		if (!empty($seller['company'])) {
-			$this->data['seller']['company'] = $seller['company'];
+		if (!empty($seller['ms.company'])) {
+			$this->data['seller']['company'] = $seller['ms.company'];
 		} else {
 			$this->data['seller']['company'] = NULL;
 		}
 		
-		if (!empty($seller['website'])) {
-			$this->data['seller']['website'] = $seller['website'];
+		if (!empty($seller['ms.website'])) {
+			$this->data['seller']['website'] = $seller['ms.website'];
 		} else {
 			$this->data['seller']['website'] = NULL;
 		}
 		
 		$this->data['seller']['total_sales'] = $this->MsLoader->MsSeller->getSalesForSeller($seller['seller_id']);
-		$this->data['seller']['total_products'] = $this->MsLoader->MsSeller->getTotalSellerProducts($seller['seller_id'], TRUE);
+		$this->data['seller']['total_products'] = $this->MsLoader->MsProduct->getTotalProducts(array(
+			'seller_id' => $seller['seller_id'],
+			'product_status' => array(MsProduct::STATUS_ACTIVE)
+		));
 
 		/* seller products part */
 		$this->data['text_display'] = $this->language->get('text_display');
@@ -432,7 +451,7 @@ class ControllerSellerCatalogSeller extends ControllerSellerCatalog {
 					'tax' => $tax,
 					'special' => $special,
 					'rating' => $rating,
-					'description' => utf8_substr(strip_tags(html_entity_decode($product_data['description'], ENT_QUOTES, 'UTF-8')), 0, 100) . '..',					
+					'description' => utf8_substr(strip_tags(html_entity_decode($product_data['ms.description'], ENT_QUOTES, 'UTF-8')), 0, 100) . '..',					
 					'reviews'    => sprintf($this->language->get('text_reviews'), (int)$product_data['reviews']),
 					'href'    	 => $this->url->link('product/product', 'product_id=' . $product_data['product_id']),						
 				);				
@@ -545,8 +564,8 @@ class ControllerSellerCatalogSeller extends ControllerSellerCatalog {
 		$this->data['order'] = $order_way;
 		$this->data['limit'] = $limit;		
 		
-		$this->data['ms_catalog_seller_products'] = sprintf($this->language->get('ms_catalog_seller_products_heading'), $seller['nickname']);
-		$this->document->setTitle(sprintf($this->language->get('ms_catalog_seller_products_heading'), $seller['nickname']));
+		$this->data['ms_catalog_seller_products'] = sprintf($this->language->get('ms_catalog_seller_products_heading'), $seller['ms.nickname']);
+		$this->document->setTitle(sprintf($this->language->get('ms_catalog_seller_products_heading'), $seller['ms.nickname']));
 		
 		$this->data['breadcrumbs'] = $this->MsLoader->MsHelper->setBreadcrumbs(array(
 			array(
@@ -554,7 +573,7 @@ class ControllerSellerCatalogSeller extends ControllerSellerCatalog {
 				'href' => $this->url->link('account/account', '', 'SSL'),
 			),
 			array(
-				'text' => sprintf($this->language->get('ms_catalog_seller_products_breadcrumbs'), $seller['nickname']),
+				'text' => sprintf($this->language->get('ms_catalog_seller_products_breadcrumbs'), $seller['ms.nickname']),
 				'href' => $this->url->link('seller/catalog-seller/profile', '&seller_id='.$seller['seller_id'], 'SSL'),
 			)
 		));
@@ -631,11 +650,11 @@ class ControllerSellerCatalogSeller extends ControllerSellerCatalog {
 		$this->data['customer_email'] = $this->customer->getEmail();
 		$this->data['customer_name'] = $this->customer->getFirstname() . ' ' . $this->customer->getLastname();
 		
-		if (!empty($seller['avatar_path']))
-			$this->data['seller_thumb'] = $this->MsLoader->MsFile->resizeImage($seller['avatar_path'], $this->config->get('config_image_category_width'), $this->config->get('config_image_category_height'));
+		if (!empty($seller['ms.avatar_path']))
+			$this->data['seller_thumb'] = $this->MsLoader->MsFile->resizeImage($seller['ms.avatar_path'], $this->config->get('config_image_category_width'), $this->config->get('config_image_category_height'));
 			
 		$this->data['seller_href'] = $this->url->link('seller/catalog-seller/profile', 'seller_id=' . $seller['seller_id']);
-		$this->data['ms_sellercontact_sendmessage'] = sprintf($this->language->get('ms_sellercontact_sendmessage'), $seller['nickname']);
+		$this->data['ms_sellercontact_sendmessage'] = sprintf($this->language->get('ms_sellercontact_sendmessage'), $seller['ms.nickname']);
 		
 		list($this->template, $this->children) = $this->MsLoader->MsHelper->loadTemplate('dialog-sellercontact');
 		return $this->response->setOutput($this->render());

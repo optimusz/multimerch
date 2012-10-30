@@ -4,7 +4,7 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 	public function jxSaveSellerInfo() {
 		$this->validate(__FUNCTION__);
 		$data = $this->request->post;
-		$seller = $this->MsLoader->MsSeller->getSellerData($data['seller_id']);
+		$seller = $this->MsLoader->MsSeller->getSeller($data['seller_id']);
 		$json = array();
 		
 		if (empty($seller)) {
@@ -31,7 +31,7 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 				switch ($data['sellerinfo_action']) {
 					// enable
 					case 1:
-						$data['seller_status_id'] = MsSeller::MS_SELLER_STATUS_ACTIVE;
+						$data['ms.seller_status'] = MsSeller::STATUS_ACTIVE;
 						$resolution_type = MsRequest::RESOLUTION_APPROVED;
 						$mails[] = array(
 							'type' => MsMail::SMT_SELLER_ACCOUNT_ENABLED,
@@ -45,7 +45,7 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 					
 					// disable
 					case 2:
-						$data['seller_status_id'] = MsSeller::MS_SELLER_STATUS_DISABLED;
+						$data['ms.seller_status'] = MsSeller::STATUS_DISABLED;
 						$resolution_type = MsRequest::RESOLUTION_DECLINED;
 						$mails[] = array(
 							'type' => MsMail::SMT_SELLER_ACCOUNT_DISABLED,
@@ -59,7 +59,7 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 						
 					// approve
 					case 3:
-						$data['seller_status_id'] = MsSeller::MS_SELLER_STATUS_ACTIVE;
+						$data['ms.seller_status'] = MsSeller::STATUS_ACTIVE;
 						$resolution_type = MsRequest::RESOLUTION_APPROVED;					
 						$mails[] = array(
 							'type' => MsMail::SMT_SELLER_ACCOUNT_APPROVED,
@@ -73,7 +73,7 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 						
 					// decline
 					case 4:
-						$data['seller_status_id'] = MsSeller::MS_SELLER_STATUS_INACTIVE;
+						$data['ms.seller_status'] = MsSeller::STATUS_INACTIVE;
 						$resolution_type = MsRequest::RESOLUTION_DECLINED;
 						$mails[] = array(
 							'type' => MsMail::SMT_SELLER_ACCOUNT_DECLINED,
@@ -100,7 +100,7 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 					));
 				}
 			} else {
-				$data['seller_status_id'] = $seller['seller_status_id'];
+				$data['ms.seller_status'] = $seller['ms.seller_status'];
 				$mails[] = array(
 					'type' => MsMail::SMT_SELLER_ACCOUNT_MODIFIED,
 					'data' => array(
@@ -135,7 +135,7 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 			'total_sales',
 			'total_earnings',	
 			'current_balance',
-			'seller_status_id',
+			'seller_status',
 			'date_created',
 		);
 		*/
@@ -147,24 +147,26 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 		
 		$orderway = isset($this->request->get['orderway']) ? $this->request->get['orderway'] : 'DESC';
 		
-		$sort = array(
-			'order_by'  => $orderby,
-			'order_way' => $orderway,
-			'page' => $page,
-			'limit' => $this->config->get('config_admin_limit')
+		$results = $this->MsLoader->MsSeller->getSellers(
+			array(),
+			array(
+				'order_by'  => $orderby,
+				'order_way' => $orderway,
+				'offset' => ($page - 1) * $this->config->get('config_admin_limit'),
+				'limit' => $this->config->get('config_admin_limit')
+			)
 		);
-
-		$results = $this->MsLoader->MsSeller->getSellers($sort);
-		$total_sellers = $this->MsLoader->MsSeller->getTotalSellers($sort);
+			
+		$total_sellers = $this->MsLoader->MsSeller->getTotalSellers();
 
     	foreach ($results as &$result) {
-    		$result['date_created'] = date($this->language->get('date_format_short'), strtotime($result['date_created']));
+    		$result['date_created'] = date($this->language->get('date_format_short'), strtotime($result['ms.date_created']));
     		$result['total_products'] = $this->MsLoader->MsSeller->getTotalSellerProducts($result['seller_id']);
 			//$result['total_earnings'] = $this->currency->format($this->MsLoader->MsSeller->getEarningsForSeller($result['seller_id']), $this->config->get('config_currency'));
 			$result['current_balance'] = $this->currency->format($this->MsLoader->MsBalance->getSellerBalance($result['seller_id']), $this->config->get('config_currency'));
 			$result['total_sales'] = $this->MsLoader->MsSeller->getSalesForSeller($result['seller_id']);
-			$result['status'] = $this->MsLoader->MsSeller->getSellerStatus($result['seller_status_id']);
-			$result['action'][] = array(
+			$result['status'] = $this->MsLoader->MsSeller->getSellerStatus($result['ms.seller_status']);
+			$result['actions'][] = array(
 				'text' => $this->language->get('text_view'),
 				'href' => $this->url->link('multiseller/seller/update', 'token=' . $this->session->data['token'] . '&seller_id=' . $result['seller_id'], 'SSL')
 			);
@@ -226,11 +228,11 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 		$this->load->model('localisation/country');
     	$this->data['countries'] = $this->model_localisation_country->getCountries();		
 
-		$seller = $this->MsLoader->MsSeller->getSellerData($this->request->get['seller_id']);
+		$seller = $this->MsLoader->MsSeller->getSeller($this->request->get['seller_id']);
 
 		if (!empty($seller)) {
 			$this->data['seller'] = $seller;
-			$this->data['seller']['status'] = $this->MsLoader->MsSeller->getSellerStatus($seller['seller_status_id']);
+			$this->data['seller']['status'] = $this->MsLoader->MsSeller->getSellerStatus($seller['ms.seller_status']);
 			if (!empty($seller['avatar_path'])) {
 				$this->data['seller']['avatar']['name'] = $seller['avatar_path'];
 				$this->data['seller']['avatar']['thumb'] = $this->MsLoader->MsFile->resizeImage($seller['avatar_path'], $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'));
@@ -238,10 +240,9 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 			}
 			
 			// seller status action selector
-			if (in_array($seller['seller_status_id'], array(
-					MsSeller::MS_SELLER_STATUS_INACTIVE,
-					MsSeller::MS_SELLER_STATUS_DISABLED,
-					MsSeller::MS_SELLER_STATUS_TOBEACTIVATED
+			if (in_array($seller['ms.seller_status'], array(
+					MsSeller::STATUS_INACTIVE,
+					MsSeller::STATUS_DISABLED,
 			))) {			
 				$this->data['actions'][] = array(
 					'text' => $this->language->get('ms_enable'),
@@ -249,9 +250,9 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 				);
 			}
 			
-			if (in_array($seller['seller_status_id'], array(
-					MsSeller::MS_SELLER_STATUS_ACTIVE,
-					MsSeller::MS_SELLER_STATUS_TOBEACTIVATED
+			if (in_array($seller['ms.seller_status'], array(
+					MsSeller::STATUS_ACTIVE,
+					MsSeller::STATUS_INACTIVE
 			))) {			
 				$this->data['actions'][] = array(
 					'text' => $this->language->get('ms_disable'),
@@ -259,7 +260,7 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 				);
 			}
 			
-			if ($seller['seller_status_id'] == MsSeller::MS_SELLER_STATUS_TOBEAPPROVED) {
+			if ($seller['ms.seller_status'] == MsSeller::STATUS_INACTIVE) {
 				$this->data['actions'][] = array(
 					'text' => $this->language->get('ms_approve'),
 					'value' => 3
@@ -287,7 +288,7 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 				'href' => $this->url->link('multiseller/seller', '', 'SSL'),
 			),			
 			array(
-				'text' => $seller['nickname'],
+				'text' => $seller['ms.nickname'],
 				'href' => $this->url->link('multiseller/seller/update', '&seller_id=' . $seller['seller_id'], 'SSL'),
 			)
 		));		

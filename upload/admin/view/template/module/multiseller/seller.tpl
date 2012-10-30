@@ -41,15 +41,15 @@
                 <input type="checkbox" name="selected[]" value="<?php echo $seller['seller_id']; ?>" />
               </td>
               -->
-              <td><a href="<?php echo $seller['customer_link']; ?>"><?php echo $seller['name'] . ' (' . $seller['nickname'] . ')'; ?></a></td>
-              <td><?php echo $seller['email']; ?></td>
+              <td><a href="<?php echo $seller['customer_link']; ?>"><?php echo $seller['c.name'] . ' (' . $seller['ms.nickname'] . ')'; ?></a></td>
+              <td><?php echo $seller['c.email']; ?></td>
               <td><?php echo $seller['total_products']; ?></td>
               <td><?php echo $seller['total_sales']; ?></td>
               <?php /*<td><?php echo $seller['total_earnings']; ?></td>*/ ?>
               <td><?php echo $seller['current_balance']; ?></td>
-              <td><?php echo $seller['status']; ?></td>
-              <td><?php echo $seller['date_created']; ?></td>
-              <td class="left"><?php foreach ($seller['action'] as $action) { ?>
+              <td><?php echo $seller['ms.seller_status']; ?></td>
+              <td><?php echo $seller['ms.date_created']; ?></td>
+              <td class="left"><?php foreach ($seller['actions'] as $action) { ?>
                 [ <a href="<?php echo $action['href']; ?>"><?php echo $action['text']; ?></a> ]
                 <?php } ?></td>                            
             </tr>

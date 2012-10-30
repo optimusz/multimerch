@@ -25,20 +25,20 @@ class MsRequestWithdrawal extends Model {
 		$sql = "SELECT *,
 						mrw.amount as 'mrw.amount',
 						mrw.currency_code as 'mrw.currency_code',
-						mrd.message_created as 'mrd.message_created',
-						mrd.date_created as 'mrd.date_created',
-						mrd.date_processed as 'mrd.date_processed',
-						ms.seller_id as 'ms.seller_id',
+						mr.message_created as 'mr.message_created',
+						mr.date_created as 'mr.date_created',
+						mr.date_processed as 'mr.date_processed',
+						ms.seller_id as 'seller_id',
 						ms.nickname as 'ms.nickname',
 						ms.paypal as 'ms.paypal',
 						u.username as 'u.username'
-				FROM " . DB_PREFIX . "ms_request_data mrd
+				FROM " . DB_PREFIX . "ms_request mr
 				INNER JOIN " . DB_PREFIX . "ms_request_withdrawal mrw
 					USING (request_id)
 				INNER JOIN " . DB_PREFIX . "ms_seller ms
 					USING (seller_id)
 				LEFT JOIN " . DB_PREFIX . "user u
-					ON (u.user_id = mrd.processed_by)
+					ON (u.user_id = mr.processed_by)
 				WHERE 1 = 1 "
 				. (isset($data['seller_id']) ? " AND seller_id =  " .  (int)$data['seller_id'] : '')
 				. (isset($data['request_id']) ? " AND request_id =  " .  (int)$data['request_id'] : '')				

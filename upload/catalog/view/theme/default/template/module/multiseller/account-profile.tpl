@@ -20,7 +20,7 @@
   <form id="ms-sellerinfo" class="ms-form">
   	<input type="hidden" name="action" id="ms_action" />
     <div class="content">
-    	<?php if ( isset($seller['seller_status_id']) && !in_array($seller['seller_status_id'], array(MsSeller::MS_SELLER_STATUS_ACTIVE, MsSeller::MS_SELLER_STATUS_INACTIVE))) { ?>
+    	<?php if ( isset($seller['seller_status']) && !in_array($seller['seller_status'], array(MsSeller::SELLER_ACTIVE, MsSeller::STATUS_INACTIVE))) { ?>
   	  <div class="ms-overlay"></div>    
   	  	<?php } ?>
       <table class="ms-product">
@@ -117,7 +117,7 @@
     </div>
     <div class="buttons">
       <div class="left"><a href="<?php echo $back; ?>" class="button"><span><?php echo $button_back; ?></span></a></div>
-    	<?php if (in_array($seller['seller_status_id'], array(MsSeller::MS_SELLER_STATUS_ACTIVE, MsSeller::MS_SELLER_STATUS_INACTIVE)) || !isset($seller['seller_status_id'])) { ?>
+    	<?php if (in_array($seller['seller_status'], array(MsSeller::STATUS_ACTIVE, MsSeller::STATUS_INACTIVE)) || !isset($seller['seller_status'])) { ?>
       	<div class="right"><a class="button" id="ms-submit-button"><span><?php echo $ms_button_save; ?></span></a></div>
 		<?php } ?>
     </div>

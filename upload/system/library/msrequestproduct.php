@@ -20,7 +20,7 @@ class MsRequestProduct extends Model {
 	public function getProductRequests($data, $sort) {
 		$sql = "
 			SELECT *
-			FROM " . DB_PREFIX . "ms_request_data mrd
+			FROM " . DB_PREFIX . "ms_request mr
 			INNER JOIN " . DB_PREFIX . "ms_request_product mrp
 				USING (request_id)
 			INNER JOIN " . DB_PREFIX . "ms_product mp

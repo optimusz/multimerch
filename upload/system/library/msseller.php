@@ -1,10 +1,9 @@
 <?php
 final class MsSeller extends Model {
-	const MS_SELLER_STATUS_ACTIVE = 1;
-	const MS_SELLER_STATUS_TOBEACTIVATED = 2;
-	const MS_SELLER_STATUS_TOBEAPPROVED = 3;
-	const MS_SELLER_STATUS_DISABLED = 4;
-	const MS_SELLER_STATUS_INACTIVE = 5;
+	const STATUS_ACTIVE = 1;
+	const STATUS_INACTIVE = 2;
+	const STATUS_DISABLED = 3;
+	const STATUS_DELETED = 4;
 		
 	const MS_SELLER_VALIDATION_NONE = 1;
 	const MS_SELLER_VALIDATION_ACTIVATION = 2;
@@ -16,7 +15,7 @@ final class MsSeller extends Model {
 	private $company;
 	private $country_id;
 	private $avatar_path;
-	private $seller_status_id;
+	private $seller_status;
 	private $paypal;
 	
   	public function __construct($registry) {
@@ -25,7 +24,7 @@ final class MsSeller extends Model {
   		//$this->log->write('creating seller object: ' . $this->session->data['customer_id']);
 		if (isset($this->session->data['customer_id'])) {
 			//TODO 
-			//$seller_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "ms_seller WHERE seller_id = '" . (int)$this->session->data['customer_id'] . "' AND seller_status_id = '1'");
+			//$seller_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "ms_seller WHERE seller_id = '" . (int)$this->session->data['customer_id'] . "' AND seller_status = '1'");
 			$seller_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "ms_seller WHERE seller_id = '" . (int)$this->session->data['customer_id'] . "'");			
 			
 			if ($seller_query->num_rows) {
@@ -35,7 +34,7 @@ final class MsSeller extends Model {
 				$this->company = $seller_query->row['company'];
 				$this->country_id = $seller_query->row['country_id'];
 				$this->avatar_path = $seller_query->row['avatar_path'];
-				$this->seller_status_id = $seller_query->row['seller_status_id'];
+				$this->seller_status = $seller_query->row['seller_status'];
 				$this->paypal = $seller_query->row['paypal'];
 			}
   		}
@@ -54,16 +53,6 @@ final class MsSeller extends Model {
 			return TRUE;	  		
   	}
   	
-	public function getSellerData($seller_id) {
-		$sql = "SELECT * 
-				FROM `" . DB_PREFIX . "ms_seller`
-				WHERE seller_id = " . (int)$seller_id;
-		
-		$res = $this->db->query($sql);
-		
-		return $res->row;
-	}
-	
 	public function getSellerName($seller_id) {
 		$sql = "SELECT firstname as 'firstname'
 				FROM `" . DB_PREFIX . "customer`
@@ -85,17 +74,15 @@ final class MsSeller extends Model {
 	}
 		
 	//TODO
-	public function getSellerStatus($seller_status_id = NULL) {
+	public function getSellerStatus($seller_status = NULL) {
 		$result = array(
-			self::MS_SELLER_STATUS_ACTIVE => $this->language->get('ms_seller_status_active'),
-			self::MS_SELLER_STATUS_TOBEACTIVATED => $this->language->get('ms_seller_status_activation'),
-			self::MS_SELLER_STATUS_TOBEAPPROVED => $this->language->get('ms_seller_status_approval'),
-			self::MS_SELLER_STATUS_DISABLED => $this->language->get('ms_seller_status_disabled'),
-			self::MS_SELLER_STATUS_INACTIVE => $this->language->get('ms_seller_status_inactive'),
+			self::STATUS_ACTIVE => $this->language->get('STATUS_active'),
+			self::STATUS_DISABLED => $this->language->get('STATUS_disabled'),
+			self::STATUS_INACTIVE => $this->language->get('STATUS_inactive'),
 		);		
 		
-		if ($seller_status_id) {
-			return $result[$seller_status_id];
+		if ($seller_status) {
+			return $result[$seller_status];
 		} else {
 			return $result;
 		}
@@ -112,8 +99,9 @@ final class MsSeller extends Model {
 		
 		return $res->row['total'];		
 	}		
-		
-	public function getSellerProducts($seller_id, $sort, $onlyActive = FALSE) {
+	
+	
+	public function _getSellerProducts($seller_id, $sort, $onlyActive = FALSE) {
 		$orders = array(
 			'pd.name'
 		);
@@ -211,7 +199,7 @@ final class MsSeller extends Model {
 		
 		$sql = "INSERT INTO " . DB_PREFIX . "ms_seller
 				SET seller_id = " . (int)$data['seller_id'] . ",
-					seller_status_id = " . (int)$data['seller_status_id'] . ",
+					seller_status = " . (int)$data['seller_status'] . ",
 					commission = " . (float)$this->config->get('msconf_seller_commission') . ",
 					commission_flat = " . (float)$this->config->get('msconf_seller_commission_flat') . ",
 					nickname = '" . $this->db->escape($data['sellerinfo_nickname']) . "',
@@ -330,7 +318,7 @@ final class MsSeller extends Model {
   	}
   	
   	public function getStatus() {
-  		return $this->seller_status_id;
+  		return $this->seller_status;
   	}
 
   	public function getPaypal() {
@@ -341,84 +329,6 @@ final class MsSeller extends Model {
   		return $this->isSeller;
   	}
   	
-	public function getSellerDataForProduct($product_id) {
-		$sql = "SELECT 	p.date_added,
-						mp.seller_id,
-						mp.number_sold as sales,
-						ms.nickname,
-						ms.country_id,
-						ms.avatar_path
-				FROM `" . DB_PREFIX . "product` p
-				INNER JOIN `" . DB_PREFIX . "ms_product` mp
-					ON p.product_id = mp.product_id
-				INNER JOIN `" . DB_PREFIX . "ms_seller` ms
-					ON mp.seller_id = ms.seller_id
-				WHERE p.product_id = " . (int)$product_id; 
-
-		$res = $this->db->query($sql);
-
-		return $res->row;		
-	}
-
-	public function getSellers($sort, $onlyActive = FALSE) {
-		$sql = "SELECT  CONCAT(c.firstname, ' ', c.lastname) as name,
-						c.email as email,
-						ms.seller_id,
-						ms.nickname,
-						ms.seller_status_id,
-						ms.date_created as date_created,
-						ms.commission,
-						ms.avatar_path,
-						ms.country_id,
-						ms.description
-				FROM `" . DB_PREFIX . "customer` c
-				INNER JOIN `" . DB_PREFIX . "ms_seller` ms
-					ON c.customer_id = ms.seller_id "
-        		. ($onlyActive ? " WHERE ms.seller_status_id = " . self::MS_SELLER_STATUS_ACTIVE : '') . "
-        		ORDER BY {$sort['order_by']} {$sort['order_way']}" 
-        		. (isset($sort['limit']) ? " LIMIT ".(int)(($sort['page'] - 1) * $sort['limit']).', '.(int)($sort['limit']) : '');
-
-		$res = $this->db->query($sql);
-		return $res->rows;
-	}
-
-	public function getTopSellers($sort, $onlyActive = FALSE) {
-		$sql = "SELECT  CONCAT(c.firstname, ' ', c.lastname) as name,
-						c.email as email,
-						ms.seller_id,
-						ms.nickname,
-						ms.seller_status_id,
-						ms.date_created as date_created,
-						ms.commission,
-						ms.avatar_path,
-						ms.country_id,
-						ms.description,
-						mp.*,
-						IFNULL(SUM(mp.number_sold), 0) as total_sales
-				FROM `" . DB_PREFIX . "customer` c
-				INNER JOIN `" . DB_PREFIX . "ms_seller` ms
-					ON c.customer_id = ms.seller_id
-				LEFT JOIN `" . DB_PREFIX . "ms_product` mp
-					ON c.customer_id = mp.seller_id "
-        		. ($onlyActive ? " WHERE ms.seller_status_id = " . self::MS_SELLER_STATUS_ACTIVE : '') . "
-				GROUP BY ms.seller_id        		
-				ORDER BY {$sort['order_by']} {$sort['order_way']} "
-        		. (isset($sort['limit']) ? " LIMIT ".(int)(($sort['page'] - 1) * $sort['limit']).', '.(int)($sort['limit']) : '');
-		
-		$res = $this->db->query($sql);
-		return $res->rows;
-	}
-	
-	public function getTotalSellers($onlyActive = FALSE) {
-		$sql = "SELECT COUNT(*) as 'total'
-				FROM `" . DB_PREFIX . "ms_seller` "
-        		. ($onlyActive ? " WHERE seller_status_id = " . self::MS_SELLER_STATUS_ACTIVE : '');				
-		
-		$res = $this->db->query($sql);
-		
-		return $res->row['total'];		
-	}
-	
 	//
 	public function getEarningsForSeller($seller_id) {
 		$sql = "SELECT SUM(amount) as total
@@ -461,13 +371,98 @@ final class MsSeller extends Model {
 					company = '" . $this->db->escape($data['sellerinfo_company']) . "',
 					country_id = " . (int)$data['sellerinfo_country'] . ",
 					paypal = '" . $this->db->escape($data['sellerinfo_paypal']) . "',
-					seller_status_id = '" .  (int)$data['seller_status_id'] .  "',
+					seller_status = '" .  (int)$data['seller_status'] .  "',
 					product_validation = '" .  (int)$data['sellerinfo_product_validation'] .  "',
 					commission = '" .  (float)$data['sellerinfo_commission'] .  "',
 					commission_flat = '" .  (float)$data['sellerinfo_commission_flat'] .  "'
 				WHERE seller_id = " . (int)$seller_id;
 		
 		$this->db->query($sql);	
+	}
+	
+	
+	
+	
+	
+	
+	/********************************************************/
+	
+	
+	public function getTotalSellers($data = array()) {
+		$sql = "
+			SELECT COUNT(*) as total
+			FROM " . DB_PREFIX . "ms_seller ms
+			WHERE 1 = 1 "
+			. (isset($data['seller_status']) ? " AND seller_status IN  (" .  $this->db->escape(implode(',', $data['seller_status'])) . ")" : '');
+
+		$res = $this->db->query($sql);
+
+		return $res->row['total'];
+	}
+	
+	public function getSeller($seller_id, $data = array()) {
+		$sql = "SELECT	CONCAT(c.firstname, ' ', c.lastname) as name,
+						c.email as 'c.email',
+						ms.seller_id as 'seller_id',
+						ms.nickname as 'ms.nickname',
+						ms.company as 'ms.company',
+						ms.website as 'ms.website',
+						ms.paypal as 'ms.paypal',
+						ms.seller_status as 'ms.seller_status',
+						ms.date_created as 'ms.date_created',
+						ms.commission as 'ms.commission',
+						ms.commission_flat as 'ms.commission_flat',
+						ms.product_validation as 'ms.product_validation',
+						ms.avatar_path as 'ms.avatar_path',
+						ms.country_id as 'ms.country_id',
+						ms.description as 'ms.description',
+						IFNULL(SUM(mp.number_sold), 0) as 'total_sales'
+				FROM `" . DB_PREFIX . "customer` c
+				INNER JOIN `" . DB_PREFIX . "ms_seller` ms
+					ON (c.customer_id = ms.seller_id)
+				LEFT JOIN `" . DB_PREFIX . "ms_product` mp
+					ON (c.customer_id = mp.seller_id)
+				WHERE ms.seller_id = " .  (int)$seller_id
+				. (isset($data['product_id']) ? " AND mp.product_id =  " .  (int)$data['product_id'] : '')
+				. (isset($data['seller_status']) ? " AND seller_status IN  (" .  $this->db->escape(implode(',', $data['seller_status'])) . ")" : '')
+				. " LIMIT 1";
+				
+		$res = $this->db->query($sql);
+
+		return $res->row;
+	}	
+	
+	public function getSellers($data, $sort = array()) {
+		$sql = "SELECT  
+						CONCAT(c.firstname, ' ', c.lastname) as 'c.name',
+						c.email as 'c.email',
+						ms.seller_id as 'seller_id',
+						ms.nickname as 'ms.nickname',
+						ms.company as 'ms.company',
+						ms.website as 'ms.website',
+						ms.seller_status as 'ms.seller_status',
+						ms.date_created as 'ms.date_created',
+						ms.commission as 'ms.commission',
+						ms.commission_flat as 'ms.commission_flat',
+						ms.avatar_path as 'ms.avatar_path',
+						ms.country_id as 'ms.country_id',
+						ms.description as 'ms.description',
+						IFNULL(SUM(mp.number_sold), 0) as 'total_sales'
+				FROM `" . DB_PREFIX . "customer` c
+				INNER JOIN `" . DB_PREFIX . "ms_seller` ms
+					ON (c.customer_id = ms.seller_id)
+				LEFT JOIN `" . DB_PREFIX . "ms_product` mp
+					ON (c.customer_id = mp.seller_id)
+				WHERE 1 = 1 "
+				. (isset($data['seller_id']) ? " AND ms.seller_id =  " .  (int)$data['seller_id'] : '')
+				. (isset($data['seller_status']) ? " AND seller_status IN  (" .  $this->db->escape(implode(',', $data['seller_status'])) . ")" : '')
+				. " GROUP BY ms.seller_id"
+				. (isset($sort['order_by']) ? " ORDER BY {$sort['order_by']} {$sort['order_way']}" : '')
+    			. (isset($sort['limit']) ? " LIMIT ".(int)$sort['offset'].', '.(int)($sort['limit']) : '');
+
+		$res = $this->db->query($sql);
+		
+		return $res->rows;
 	}
 }
 

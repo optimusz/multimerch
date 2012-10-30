@@ -65,8 +65,14 @@
 			]]></search>
 			<add><![CDATA[
 				$this->data = array_merge($this->data, $this->load->language('module/multiseller'));
-				$this->data['ms_total_products'] = $this->MsLoader->MsProduct->getTotalProducts(TRUE, FALSE);
-				$this->data['ms_total_sellers'] = $this->MsLoader->MsSeller->getTotalSellers(TRUE);
+				$this->data['ms_total_products'] = $this->MsLoader->MsProduct->getTotalProducts(array(
+					'enabled' => 1,
+					//'product_status' => array(MsProduct::STATUS_ACTIVE),
+				));
+				
+				$this->data['ms_total_sellers'] = $this->MsLoader->MsSeller->getTotalSellers(array(
+					'seller_status' => array(MsSeller::STATUS_ACTIVE) 
+				));
 			]]></add>
 		</operation>
 	</file>
@@ -385,7 +391,7 @@ if (in_array($order_status_id, $this->config->get('msconf_credit_order_statuses'
 			$this->load->model('localisation/country');
 			
 			$seller_id = $this->MsLoader->MsProduct->getSellerId($this->request->get['product_id']);
-			$seller = $this->MsLoader->MsSeller->getSellerData($seller_id);
+			$seller = $this->MsLoader->MsSeller->getSeller($seller_id);
 			
 			if (empty($seller)) {
 				$this->data['seller'] = NULL;
@@ -603,7 +609,13 @@ if (in_array($order_status_id, $this->config->get('msconf_credit_order_statuses'
 			<add><![CDATA[
 			$this->language->load('module/multiseller');
 			$this->data['column_seller'] = $this->language->get('ms_seller');
-			$seller = $this->MsLoader->MsSeller->getSellerDataForProduct($product['product_id']);
+			// todo check
+			$seller = $this->MsLoader->MsSeller->getSeller(
+				$this->MsLoader->MsProduct->getSellerId($product['product_id']),
+				array(
+					'product_id' => $product['product_id']
+				)
+			);
 			]]></add>
 		</operation>	
 	
@@ -614,7 +626,7 @@ if (in_array($order_status_id, $this->config->get('msconf_credit_order_statuses'
 			<add><![CDATA[
 			'seller' => array(
 				'seller_id' => isset($seller['seller_id']) ? $seller['seller_id'] : '',
-				'nickname' => isset($seller['nickname']) ? $seller['nickname'] : ''
+				'nickname' => isset($seller['ms.nickname']) ? $seller['ms.nickname'] : ''
 			),
 			]]></add>
 		</operation>
@@ -679,16 +691,23 @@ if (in_array($order_status_id, $this->config->get('msconf_credit_order_statuses'
 		]]></search>
 		<add><![CDATA[
 			case 'seller_all':
-				$sort = array(
-					'order_by'               => 'ms.nickname',
-					'order_way'              => 'ASC',
-					'page'					 => $page,
-					'limit'					 => 10,
+				$sort = ;
+				
+				$email_total = $this->MsLoader->MsSeller->getTotalSellers(array(
+					'seller_status' => array(MsSeller::STATUS_ACTIVE)
+				));
+				
+				$results = $this->MsLoader->MsSeller->getSellers(
+					array(
+						'seller_status' => array(MsSeller::STATUS_ACTIVE)
+					),
+					array(
+						'order_by'	=> 'ms.nickname',
+						'order_way'	=> 'ASC',
+						'offset'		=> ($page - 1) * 10,
+						'limit'		=> 10,
+					)
 				);
-				
-				$email_total = $this->MsLoader->MsSeller->getTotalSellers(TRUE);
-				
-				$results = $this->MsLoader->MsSeller->getSellers($sort, TRUE);
 				
 				foreach ($results as $result) {
 					$emails[] = $result['email'];

@@ -1,10 +1,9 @@
 <?php
 class MsProduct extends Model {
-	const MS_PRODUCT_STATUS_APPROVED = 1;
-	const MS_PRODUCT_STATUS_PENDING = 2;
-	const MS_PRODUCT_STATUS_DECLINED = 3;
-	const MS_PRODUCT_STATUS_DRAFT = 4;
-	const MS_PRODUCT_STATUS_SELLER_DELETED = 5;
+	const STATUS_ACTIVE = 1;
+	const STATUS_INACTIVE = 2;
+	const STATUS_DISABLED = 3;
+	const STATUS_DELETED = 4;
 	
 	const MS_PRODUCT_VALIDATION_NONE = 1;
 	const MS_PRODUCT_VALIDATION_APPROVAL = 2;
@@ -16,14 +15,16 @@ class MsProduct extends Model {
 	}
 	
 	public function getProductStatusArray() {
+		/*
 		$this->load->language('module/multiseller');
 		return array(
-			MsProduct::MS_PRODUCT_STATUS_DRAFT => $this->language->get('ms_product_review_status_draft'),
-			MsProduct::MS_PRODUCT_STATUS_PENDING => $this->language->get('ms_product_review_status_pending'),
-			MsProduct::MS_PRODUCT_STATUS_APPROVED => $this->language->get('ms_product_review_status_approved'),
-			MsProduct::MS_PRODUCT_STATUS_DECLINED => $this->language->get('ms_product_review_status_declined'),
-			MsProduct::MS_PRODUCT_STATUS_SELLER_DELETED => $this->language->get('ms_product_status_seller_deleted'),
-		);		
+			MsProduct::STATUS_DRAFT => $this->language->get('ms_product_review_status_draft'),
+			MsProduct::STATUS_PENDING => $this->language->get('ms_product_review_status_pending'),
+			MsProduct::STATUS_APPROVED => $this->language->get('ms_product_review_status_approved'),
+			MsProduct::STATUS_DECLINED => $this->language->get('ms_product_review_status_declined'),
+			MsProduct::STATUS_SELLER_DELETED => $this->language->get('STATUS_seller_deleted'),
+		);
+		*/		
 	}	
 	
 	private function _getDepth($a, $eid) {
@@ -36,40 +37,6 @@ class MsProduct extends Model {
 				}
 			}
 		}
-	}
-	
-	public function getProducts($sort, $nodrafts = false) {
-		$sql = "SELECT  pr.product_id as 'prd.product_id',
-						pr.image as 'prd.image',
-						pd.name as 'prd.name',
-						ms.nickname as 'sel.nickname',
-						mp.review_status_id as 'prd.status_id',
-						pr.date_added as 'prd.date_created',
-						pr.date_modified  as 'prd.date_modified'
-				FROM " . DB_PREFIX . "product pr
-				INNER JOIN " . DB_PREFIX . "product_description pd
-					USING(product_id)
-				INNER JOIN " . DB_PREFIX . "ms_product mp
-					USING(product_id)
-				INNER JOIN " . DB_PREFIX . "ms_seller ms
-					ON (mp.seller_id = ms.seller_id)
-				WHERE pd.language_id = " . (int)$this->config->get('config_language_id')
-				. ($nodrafts ? " AND (ISNULL(mp.review_status_id) OR mp.review_status_id != " . (int)self::MS_PRODUCT_STATUS_DRAFT . ")" : '') . "
-    			ORDER BY {$sort['order_by']} {$sort['order_way']}" 
-    			. ($sort['limit'] ? " LIMIT ".(int)(($sort['page'] - 1) * $sort['limit']).', '.(int)($sort['limit']) : '');
-        
-		$res = $this->db->query($sql);
-		
-		$product_statuses = $this->getProductStatusArray();
-		
-		foreach ($res->rows as &$row) {
-			if (isset($product_statuses[$row['prd.status_id']]))
-				$row['prd.status'] = $product_statuses[$row['prd.status_id']];
-			else
-				$row['prd.status'] = '';
-		}
-		
-		return $res->rows;
 	}
 	
 	public function getCategories($parent_id = 0) {
@@ -202,7 +169,7 @@ class MsProduct extends Model {
 	
 	public function getProduct($product_id) {
 		$sql = "SELECT 	p.price,
-						p.product_id,
+						p.product_id as 'product_id',
 						p.status as enabled,
 						p.image as thumbnail,
 						p.shipping as shipping,
@@ -331,21 +298,9 @@ class MsProduct extends Model {
 		return $query->row;
 	}		
 		
-	public function getTotalProducts($nodrafts = false, $hasSeller = true) {
-		$sql = "SELECT COUNT(*) as total FROM " . DB_PREFIX . "product "
-				. ($hasSeller ? "INNER JOIN " : "LEFT JOIN ") . DB_PREFIX . "ms_product mp
-					USING(product_id) "
-				. ($hasSeller ? "INNER JOIN " : "LEFT JOIN ") . DB_PREFIX . "ms_seller ms
-					ON (mp.seller_id = ms.seller_id)"
-				. ($nodrafts ? " WHERE (ISNULL(mp.review_status_id) OR mp.review_status_id != " . (int)self::MS_PRODUCT_STATUS_DRAFT . ")" : '');
-
-		$res = $this->db->query($sql);
-		return $res->row['total'];
-	}
-	
 	public function hideProduct($product_id) {
 		$sql = "UPDATE " . DB_PREFIX . "ms_product
-				SET review_status_id = " . self::MS_PRODUCT_STATUS_SELLER_DELETED . "
+				SET review_status_id = " . self::STATUS_SELLER_DELETED . "
 				WHERE product_id = " . (int)$product_id;
 		$res = $this->db->query($sql);
 		
@@ -357,7 +312,7 @@ class MsProduct extends Model {
 	
 	public function disableProduct($product_id) {
 		$sql = "UPDATE " . DB_PREFIX . "ms_product
-				SET review_status_id = " . self::MS_PRODUCT_STATUS_DECLINED . "
+				SET review_status_id = " . self::STATUS_DECLINED . "
 				WHERE product_id = " . (int)$product_id;
 		$res = $this->db->query($sql);
 
@@ -369,7 +324,7 @@ class MsProduct extends Model {
 	
 	public function enableProduct($product_id) {
 		$sql = "UPDATE " . DB_PREFIX . "ms_product
-				SET review_status_id = " . self::MS_PRODUCT_STATUS_APPROVED . "
+				SET review_status_id = " . self::STATUS_APPROVED . "
 				WHERE product_id = " . (int)$product_id;
 		$res = $this->db->query($sql);
 
@@ -749,6 +704,114 @@ class MsProduct extends Model {
 		$this->db->query("DELETE FROM " . DB_PREFIX . "url_alias WHERE query = 'product_id=" . (int)$product_id. "'");
 		
 		$this->registry->get('cache')->delete('product');		
+	}
+	
+	
+	
+	
+	/*****************************************/
+	
+	
+	public function _getTotalProducts($nodrafts = false, $hasSeller = true) {
+		$sql = "SELECT COUNT(*) as total FROM " . DB_PREFIX . "product "
+				. ($hasSeller ? "INNER JOIN " : "LEFT JOIN ") . DB_PREFIX . "ms_product mp
+					USING(product_id) "
+				. ($hasSeller ? "INNER JOIN " : "LEFT JOIN ") . DB_PREFIX . "ms_seller ms
+					ON (mp.seller_id = ms.seller_id)"
+				. ($nodrafts ? " WHERE (ISNULL(mp.review_status_id) OR mp.review_status_id != " . (int)self::STATUS_DRAFT . ")" : '');
+
+		$res = $this->db->query($sql);
+		return $res->row['total'];
+	}	
+	
+	public function getTotalProducts($data) {
+		$sql = "
+			SELECT COUNT(*) as total
+			FROM " . DB_PREFIX . "product p
+			LEFT JOIN " . DB_PREFIX . "ms_product mp
+				USING (product_id)
+			LEFT JOIN " . DB_PREFIX . "ms_seller ms
+				USING (seller_id)
+			WHERE 1 = 1 "
+			. (isset($data['seller_id']) ? " AND seller_id =  " .  (int)$data['seller_id'] : '')
+			. (isset($data['product_status']) ? " AND product_status IN  (" .  $this->db->escape(implode(',', $data['product_status'])) . ")" : '')
+			. (isset($data['enabled']) ? " AND status =  " .  (int)$data['enabled'] : '');
+
+		$res = $this->db->query($sql);
+
+		return $res->row['total'];
+	}
+	
+	public function _getProducts($sort) {
+		$sql = "SELECT  pr.product_id as 'prd.product_id',
+						pr.image as 'prd.image',
+						pd.name as 'prd.name',
+						ms.nickname as 'sel.nickname',
+						mp.review_status_id as 'prd.status_id',
+						pr.date_added as 'prd.date_created',
+						pr.date_modified  as 'prd.date_modified'
+				FROM " . DB_PREFIX . "product pr
+				INNER JOIN " . DB_PREFIX . "product_description pd
+					USING(product_id)
+				INNER JOIN " . DB_PREFIX . "ms_product mp
+					USING(product_id)
+				INNER JOIN " . DB_PREFIX . "ms_seller ms
+					ON (mp.seller_id = ms.seller_id)
+				WHERE pd.language_id = " . (int)$this->config->get('config_language_id') . "
+    			ORDER BY {$sort['order_by']} {$sort['order_way']}" 
+    			. ($sort['limit'] ? " LIMIT ".(int)(($sort['page'] - 1) * $sort['limit']).', '.(int)($sort['limit']) : '');
+        
+		$res = $this->db->query($sql);
+		
+		$product_statuses = $this->getProductStatusArray();
+		
+		foreach ($res->rows as &$row) {
+			if (isset($product_statuses[$row['prd.status_id']]))
+				$row['prd.status'] = $product_statuses[$row['prd.status_id']];
+			else
+				$row['prd.status'] = '';
+		}
+		
+		return $res->rows;
+	}
+	
+	public function getProducts($data, $sort) {
+		$sql = "SELECT  p.product_id as 'product_id',
+						p.image as 'p.image',
+						pd.name as 'pd.name',
+						ms.nickname as 'ms.nickname',
+						mp.product_status as 'mp.product_status',
+						p.date_added as 'p.date_created',
+						p.date_modified  as 'p.date_modified'
+				FROM " . DB_PREFIX . "product p
+				INNER JOIN " . DB_PREFIX . "product_description pd
+					USING(product_id)
+				LEFT JOIN " . DB_PREFIX . "ms_product mp
+					USING(product_id)
+				LEFT JOIN " . DB_PREFIX . "ms_seller ms
+					USING (seller_id)
+				WHERE 1 = 1"
+
+				. (isset($data['seller_id']) ? " AND ms.seller_id =  " .  (int)$data['seller_id'] : '')
+				. (isset($data['language_id']) ? " AND pd.language_id =  " .  (int)$data['language_id'] : '')				
+				. (isset($data['product_status']) ? " AND product_status IN  (" .  $this->db->escape(implode(',', $data['product_status'])) . ")" : '')
+				. " GROUP BY p.product_id"
+				. (isset($sort['order_by']) ? " ORDER BY {$sort['order_by']} {$sort['order_way']}" : '')
+    			. (isset($sort['limit']) ? " LIMIT ".(int)$sort['offset'].', '.(int)($sort['limit']) : '');
+
+		$res = $this->db->query($sql);
+		
+		/*
+		$product_statuses = $this->getProductStatusArray();
+		
+		foreach ($res->rows as &$row) {
+			if (isset($product_statuses[$row['prd.status_id']]))
+				$row['prd.status'] = $product_statuses[$row['prd.status_id']];
+			else
+				$row['prd.status'] = '';
+		}
+		*/
+		return $res->rows;
 	}	
 }
 ?>

@@ -9,7 +9,7 @@ class MsRequest extends Model {
 	const RESOLUTION_REVOKED = 4;
 	
 	public function createRequestData($data) {
-		$sql = "INSERT INTO " . DB_PREFIX . "ms_request_data
+		$sql = "INSERT INTO " . DB_PREFIX . "ms_request
 				SET request_status = " . (int)self::STATUS_PENDING . ",
 					date_created = NOW(),
 		            message_created = '" . (isset($data['message']) ? $this->db->escape($data['message']) : '') . "'";
@@ -23,7 +23,7 @@ class MsRequest extends Model {
 	
 	public function getTotalRequests($request_type) {
 		$sql = "SELECT COUNT(*) as 'total'
-				FROM " . DB_PREFIX . "ms_request_data
+				FROM " . DB_PREFIX . "ms_request
 				WHERE request_type = " . (int)$request_type;
 
 		$res = $this->db->query($sql);
@@ -34,16 +34,16 @@ class MsRequest extends Model {
 	/*
 	public function getWithdrawalRequestPaymentData($request_id) {
 		$sql = "SELECT 	*,
-						mrd.request_id as 'mrd.request_id',
+						mr.request_id as 'mr.request_id',
 						mrw.amount as 'mrw.amount',
 						ms.nickname as 'ms.nickname',
 						ms.paypal as 'ms.paypal'
-				FROM " . DB_PREFIX . "ms_request_data mrd
+				FROM " . DB_PREFIX . "ms_request mr
 				INNER JOIN	" . DB_PREFIX . "ms_request_withdrawal mrw
 					USING(request_id)
 				INNER JOIN	" . DB_PREFIX . "ms_seller ms
 					USING(seller_id)
-				WHERE mrd.request_id = " . (int)$request_id;
+				WHERE mr.request_id = " . (int)$request_id;
 		
 		$res = $this->db->query($sql);
 		return $res->row;
@@ -53,7 +53,7 @@ class MsRequest extends Model {
 	/* PROCESS */
 	
 	public function processRequest($request_id, $data) {
-		$sql = "UPDATE " . DB_PREFIX . "ms_request_data
+		$sql = "UPDATE " . DB_PREFIX . "ms_request
 				SET message_processed = '" . (isset($data['message']) ? $this->db->escape($data['message']) : '') . "',
 			 		request_status = " . (int)self::STATUS_PROCESSED . ",
 			 		resolution_type = " . (int)$data['resolution_type'] . ",
@@ -66,7 +66,7 @@ class MsRequest extends Model {
 	
 	//todo
 	public function revokeRequest($request_id, $data) {
-		$sql = "UPDATE " . DB_PREFIX . "ms_request_data
+		$sql = "UPDATE " . DB_PREFIX . "ms_request
 				SET message_processed = '" . $this->db->escape('Revoked by user') . "',
 			 		request_status = " . (int)self::MS_REQUEST_STATUS_REVOKED . ",
 			 		date_processed = NOW()
@@ -78,7 +78,7 @@ class MsRequest extends Model {
 	//todo
 	public function getRequests($data, $sort) {
 		$sql = "SELECT *
-				FROM " . DB_PREFIX . "ms_request_data mrd
+				FROM " . DB_PREFIX . "ms_request mr
 				INNER JOIN " . DB_PREFIX . "ms_seller ms
 					ON (mb.seller_id = ms.seller_id)
     			ORDER BY {$sort['order_by']} {$sort['order_way']}"

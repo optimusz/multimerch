@@ -34,7 +34,7 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 		$seller = $this->MsLoader->MsSeller->getSellerData($this->customer->getId());
 		$json = array();
 		
-		if (!empty($seller) && ($seller['seller_status_id'] != MsSeller::MS_SELLER_STATUS_ACTIVE)) {
+		if (!empty($seller) && ($seller['seller_status'] != MsSeller::STATUS_ACTIVE)) {
 			return $this->response->setOutput(json_encode($json));
 		}
 		
@@ -76,7 +76,7 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 				switch ($this->config->get('msconf_seller_validation')) {
 					/*
 					case MsSeller::MS_SELLER_VALIDATION_ACTIVATION:
-						$data['seller_status_id'] = MsSeller::MS_SELLER_STATUS_TOBEACTIVATED;
+						$data['seller_status'] = MsSeller::STATUS_TOBEACTIVATED;
 						break;
 					*/
 					
@@ -90,7 +90,7 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 								'message' => $data['sellerinfo_reviewer_message']
 							)
 						);
-						$data['seller_status_id'] = MsSeller::MS_SELLER_STATUS_TOBEAPPROVED;
+						$data['seller_status'] = MsSeller::STATUS_INACTIVE;
 
 						$this->MsLoader->MsRequestSeller->createSellerRequest($this->customer->getId(),
 							array(
@@ -108,7 +108,7 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 						$mails[] = array(
 							'type' => MsMail::AMT_SELLER_ACCOUNT_CREATED
 						);					
-						$data['seller_status_id'] = MsSeller::MS_SELLER_STATUS_ACTIVE;
+						$data['seller_status'] = MsSeller::STATUS_ACTIVE;
 						break;
 				}
 				
@@ -148,7 +148,16 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 		$this->load->model('localisation/country');
     	$this->data['countries'] = $this->model_localisation_country->getCountries();		
 
-		$seller = $this->MsLoader->MsSeller->getSellerData($this->customer->getId());
+		$seller = $this->MsLoader->MsSeller->getSellers(
+			array(
+				'seller_id' => $this->customer->getId()
+			),
+			array(
+				'offset' => 0,			
+				'limit' => 1
+			)
+		);
+		
 		$this->data['salt'] = $this->MsLoader->MsSeller->getSalt($this->customer->getId());
 		
 		if (!empty($seller)) {
@@ -159,17 +168,17 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 				$this->session->data['multiseller']['files'][] = $seller['avatar_path'];
 			}
 			
-			switch ($seller['seller_status_id']) {
-				case MsSeller::MS_SELLER_STATUS_TOBEACTIVATED:
+			switch ($seller['seller_status']) {
+				case MsSeller::STATUS_INACTIVE:
 					$this->data['statustext'] = $this->language->get('ms_account_status') . $this->language->get('ms_account_status_activation');
 					break;
-				case MsSeller::MS_SELLER_STATUS_TOBEAPPROVED:
+				case MsSeller::STATUS_INACTIVE:
 					$this->data['statustext'] = $this->language->get('ms_account_status') . $this->language->get('ms_account_status_approval');
 					break;
-				case MsSeller::MS_SELLER_STATUS_DISABLED:
+				case MsSeller::STATUS_DISABLED:
 					$this->data['statustext'] = $this->language->get('ms_account_status') . $this->language->get('ms_account_status_disabled');
 					break;					
-				case MsSeller::MS_SELLER_STATUS_ACTIVE:
+				case MsSeller::STATUS_ACTIVE:
 				default:
 					//$this->data['statustext'] = $this->language->get('ms_account_status') . $this->language->get('ms_account_status_active');
 					//$this->data['statustext'] .= '<br />' . $this->language->get('ms_account_status_fullaccess');

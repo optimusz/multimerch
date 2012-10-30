@@ -36,7 +36,7 @@ class ControllerSellerAccount extends Controller {
     		if (isset($parts[2]) && !in_array($parts[2], array('sellerinfo','jxsavesellerinfo','jxUploadSellerAvatar'))) {
     			$this->redirect($this->url->link('seller/account-profile', '', 'SSL'));
     		}
-    	} else if ($this->MsLoader->MsSeller->getStatus() != MsSeller::MS_SELLER_STATUS_ACTIVE) {
+    	} else if ($this->MsLoader->MsSeller->getStatus() != MsSeller::STATUS_ACTIVE) {
     		if (isset($parts[2]) && !in_array($parts[2], array('sellerinfo'))) {
     			$this->redirect($this->url->link('seller/account-profile', '', 'SSL'));
     		}
