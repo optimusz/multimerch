@@ -109,7 +109,7 @@ class MsFile extends Model {
 
   		$key = array_search($fileName, $this->session->data['multiseller']['files']);
   		//strip nonce and timestamp
-  		$original_file_name = substr($fileName,strpos($fileName,'.')+1,mb_strlen($fileName));
+  		$original_file_name = substr($fileName, strpos($fileName, '.') + 1, mb_strlen($fileName));
   		
 		if ($this->_isNewUpload($fileName)) {
 			$newpath = $original_file_name . '.' . md5(rand());
@@ -122,7 +122,6 @@ class MsFile extends Model {
   	}
 	
   	public function moveImage($fileName) {
-  		$newpath = $fileName;
 		$imageDir = $this->config->get('msconf_product_image_directory');
 		
 		// Check if folder exists and create if not
@@ -132,10 +131,10 @@ class MsFile extends Model {
   		
   		$key = array_search($fileName, $this->session->data['multiseller']['files']);
   		//strip nonce and timestamp
-  		$original_file_name = substr($fileName,strpos($fileName,'.')+1,mb_strlen($fileName));
+  		$original_file_name = substr($fileName, strpos($fileName, '.') + 1, mb_strlen($fileName));
 
 		if ($this->_isNewUpload($fileName)) {
-			$newpath = $imageDir . "/" . $this->customer->getId() . "/" . $fileName;
+			$newpath = $imageDir . "/" . $this->customer->getId() . "/" . $original_file_name;
 			rename(DIR_IMAGE . $this->tmpPath . $fileName,  DIR_IMAGE . $newpath);
 		}
 		
