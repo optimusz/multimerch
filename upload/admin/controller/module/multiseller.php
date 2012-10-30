@@ -38,7 +38,8 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		"msconf_enable_seo_urls" => 0,
 		"msconf_enable_update_seo_urls" => 0,
 		"msconf_enable_non_alphanumeric_seo" => 0,
-		"msconf_product_image_directory" => 'sellers'
+		"msconf_product_image_path" => 'sellers/',
+		"msconf_temp_upload_path" => 'tmp/'
 	);
 	
 	public function __construct($registry) {
@@ -50,7 +51,7 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		$this->load->model('setting/setting');
 		$this->load->model('setting/extension');
 		
-		$set = $this->model_setting_setting->getSetting($this->name);
+		$set = $this->model_setting_setting->getSetting('multiseller');
 		$installed_extensions = $this->model_setting_extension->getInstalled('module');
 
 		$extensions_to_be_installed = array();
@@ -84,7 +85,7 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 			}
 		}
 		
-		$this->model_setting_setting->editSetting($this->name, $set);
+		$this->model_setting_setting->editSetting('multiseller', $set);
 
 		foreach ($extensions_to_be_installed as $ext) {
 			$this->model_setting_extension->install('module',$ext);	
@@ -95,7 +96,12 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		$this->load->model("module/multiseller/settings");
 		$this->load->model('setting/setting');
 		$this->model_module_multiseller_settings->createTable();
-		$this->model_setting_setting->editSetting($this->name, $this->settings);
+		$this->model_setting_setting->editSetting('multiseller', $this->settings);
+		
+		@mkdir(DIR_IMAGE . $this->config->get('msconf_product_image_path'));
+		@touch(DIR_IMAGE . $this->config->get('msconf_product_image_path') . 'index.html');
+		@mkdir(DIR_IMAGE . $this->config->get('msconf_temp_upload_path'));
+		@touch(DIR_IMAGE . $this->config->get('msconf_temp_upload_path') . 'index.html');
 	}
 
 	public function uninstall() {
@@ -138,7 +144,7 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		$this->load->model("catalog/option");
 		$this->data['options'] = $this->model_catalog_option->getOptions();
 
-        $this->data['action'] = $this->url->link("module/{$this->name}/settings", 'token=' . $this->session->data['token'], 'SSL');
+        $this->data['action'] = $this->url->link("module/multiseller/settings", 'token=' . $this->session->data['token'], 'SSL');
 		$this->data['cancel'] = $this->url->link('extension/module', 'token=' . $this->session->data['token'], 'SSL');
 		
 		$this->load->model('design/layout');

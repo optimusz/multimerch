@@ -18,7 +18,7 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 				$json['errors'] = array_merge($json['errors'], $errors);
 			} else {
 				$fileName = $this->MsLoader->MsFile->uploadImage($file);
-				$thumbUrl = $this->MsLoader->MsFile->resizeImage($this->MsLoader->MsFile->getTmpPath() . $fileName, $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'));
+				$thumbUrl = $this->MsLoader->MsFile->resizeImage($this->config->get('msconf_temp_upload_path') . $fileName, $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'));
 				$json['files'][] = array(
 					'name' => $fileName,
 					'thumb' => $thumbUrl

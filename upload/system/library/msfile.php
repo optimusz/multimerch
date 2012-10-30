@@ -1,16 +1,25 @@
 <?php
 class MsFile extends Model {
-	private $tmpPath;
-	
 	private function _isNewUpload($fileName) {
-		return file_exists(DIR_IMAGE . $this->tmpPath . $fileName);
+		return file_exists(DIR_IMAGE . $this->config->get('msconf_temp_upload_path') . $fileName);
 	}
+
+	// ***FUNCTION***: checks whether file already exists and proposes a new name for a file
+	private function _checkExistingFiles($path) {
+		$newPath = $path;
 		
-  	public function __construct($registry) {
-  		parent::__construct($registry);
-		$this->tmpPath = 'tmp/';
+		if (file_exists($newPath)) {
+			$i = 1;
+			$newPath = substr($path, 0, strrpos($path, '.')) . "-" . $i . substr($path, strrpos($path, '.'));
+			
+			while ( file_exists( $newPath ) ) {
+				$i++;
+				$newPath = substr($path, 0, strrpos($path, '.')) . "-" . $i . substr($path, strrpos($path, '.'));
+			}
+		}
+		return $newPath;
 	}
-	
+
 	public function checkPostMax($post, $files) {
 		$errors = array();
 		
@@ -56,7 +65,7 @@ class MsFile extends Model {
 	public function checkDownload($file) {
 		return $this->checkFile($file, $this->config->get('msconf_allowed_download_types'));
 	}
-		
+
 	public function checkImage($file) {
 		$errors = $this->checkFile($file, $this->config->get('msconf_allowed_image_types'));
 		
@@ -75,7 +84,7 @@ class MsFile extends Model {
 	
 	public function uploadImage($file) {
 		$filename =   time() . '_' . md5(rand()) . '.' . $file["name"];
-		move_uploaded_file($file["tmp_name"], DIR_IMAGE . $this->tmpPath .  $filename);
+		move_uploaded_file($file["tmp_name"], DIR_IMAGE . $this->config->get('msconf_temp_upload_path') .  $filename);
 
 		if (!in_array($filename, $this->session->data['multiseller']['files'])) {
 			$this->session->data['multiseller']['files'][] = $filename;
@@ -85,7 +94,7 @@ class MsFile extends Model {
 	
 	public function uploadDownload($file) {
 		$filename =   time() . '_' . md5(rand()) . '.' . $this->MsLoader->MsSeller->getNickname() . '_' . $file["name"];
-		move_uploaded_file($file["tmp_name"], DIR_IMAGE . $this->tmpPath .  $filename);
+		move_uploaded_file($file["tmp_name"], DIR_IMAGE . $this->config->get('msconf_temp_upload_path') .  $filename);
 		
 		if (!in_array($filename, $this->session->data['multiseller']['files']))
 			$this->session->data['multiseller']['files'][] = $filename;
@@ -113,7 +122,7 @@ class MsFile extends Model {
   		
 		if ($this->_isNewUpload($fileName)) {
 			$newpath = $original_file_name . '.' . md5(rand());
-			rename(DIR_IMAGE . $this->tmpPath . $fileName, DIR_DOWNLOAD . $newpath);
+			rename(DIR_IMAGE . $this->config->get('msconf_temp_upload_path') . $fileName, DIR_DOWNLOAD . $newpath);
 		}
 		
   		unset ($this->session->data['multiseller']['files'][$key]);
@@ -122,11 +131,12 @@ class MsFile extends Model {
   	}
 	
   	public function moveImage($fileName) {
-		$imageDir = $this->config->get('msconf_product_image_directory');
+		$imageDir = $this->config->get('msconf_product_image_path');
 		
 		// Check if folder exists and create if not
-		if (!is_dir(DIR_IMAGE . $imageDir . "/" . $this->customer->getId() . "/")) {
-			mkdir(DIR_IMAGE . $imageDir . "/" . $this->customer->getId() . "/", 0755);
+		if (!is_dir(DIR_IMAGE . $imageDir . $this->customer->getId() . "/")) {
+			mkdir(DIR_IMAGE . $imageDir . $this->customer->getId() . "/", 0755);
+			@touch(DIR_IMAGE . $imageDir . $this->customer->getId() . "/" . 'index.html');
 		}
   		
   		$key = array_search($fileName, $this->session->data['multiseller']['files']);
@@ -134,31 +144,15 @@ class MsFile extends Model {
   		$original_file_name = substr($fileName, strpos($fileName, '.') + 1, mb_strlen($fileName));
 
 		if ($this->_isNewUpload($fileName)) {
-			$newpath = $imageDir . "/" . $this->customer->getId() . "/" . $original_file_name;
-			$checkedNewPath = $this->checkExistingFiles(DIR_IMAGE . $newpath);
-			rename(DIR_IMAGE . $this->tmpPath . $fileName, $checkedNewPath);
+			$newpath = $imageDir . $this->customer->getId() . "/" . $original_file_name;
+			$checkedNewPath = $this->_checkExistingFiles(DIR_IMAGE . $newpath);
+			rename(DIR_IMAGE . $this->config->get('msconf_temp_upload_path') . $fileName, $checkedNewPath);
 		}
 		
   		unset ($this->session->data['multiseller']['files'][$key]);
   		
   		return $newpath;
   	}
-	
-	// ***FUNCTION***: checks whether file already exists and proposes a new name for a file
-	private function checkExistingFiles($path) {
-		$newPath = $path;
-		
-		if (file_exists($newPath)) {
-			$i = 1;
-			$newPath = substr($path, 0, strrpos($path, '.')) . "-" . $i . substr($path, strrpos($path, '.'));
-			
-			while ( file_exists( $newPath ) ) {
-				$i++;
-				$newPath = substr($path, 0, strrpos($path, '.')) . "-" . $i . substr($path, strrpos($path, '.'));
-			}
-		}
-		return $newPath;
-	}
 	
   	public function deleteDownload($fileName) {
   		if (empty($fileName))
@@ -191,8 +185,8 @@ class MsFile extends Model {
   		
   		//var_dump(DIR_DOWNLOAD . $fileName);
   		//var_dump(file_exists(DIR_DOWNLOAD . $fileName));
-  		if (file_exists(DIR_IMAGE . $this->tmpPath . $fileName)) {
-  			$filePath = DIR_IMAGE . $this->tmpPath . $fileName;
+  		if (file_exists(DIR_IMAGE . $this->config->get('msconf_temp_upload_path') . $fileName)) {
+  			$filePath = DIR_IMAGE . $this->config->get('msconf_temp_upload_path') . $fileName;
   		} else if (file_exists(DIR_DOWNLOAD . $fileName)) {
   			$filePath = DIR_DOWNLOAD . $fileName;
   		} else {
@@ -213,7 +207,7 @@ class MsFile extends Model {
   		$pages = 0;
   		$json = array();
   		
-  		if (file_exists(DIR_IMAGE . $this->tmpPath . $fileName)) {
+  		if (file_exists(DIR_IMAGE . $this->config->get('msconf_temp_upload_path') . $fileName)) {
 			if (preg_match('/[^-0-9,]/', $filePages)) {
 				$json['errors'][] = $this->language->get('ms_error_product_invalid_pdf_range');
 			} else {
@@ -230,31 +224,31 @@ class MsFile extends Model {
 				return $json;
 			}
 			
-			$pathinfo = pathinfo(DIR_IMAGE . $this->tmpPath . $fileName);
-			$list = glob(DIR_IMAGE . $this->tmpPath . $pathinfo['filename'] . '*\.png');
+			$pathinfo = pathinfo(DIR_IMAGE . $this->config->get('msconf_temp_upload_path') . $fileName);
+			$list = glob(DIR_IMAGE . $this->config->get('msconf_temp_upload_path') . $pathinfo['filename'] . '*\.png');
 			//var_dump($list);
 			foreach ($list as $pagePreview) {
 				//var_dump('unlinking ' . $pagePreview);
 				@unlink($pagePreview);
 			}
 
-			$name = DIR_IMAGE . $this->tmpPath . $fileName . "[" . $filePages . "]";
+			$name = DIR_IMAGE . $this->config->get('msconf_temp_upload_path') . $fileName . "[" . $filePages . "]";
 			$im = new imagick($name);
 			$pages = $im->getNumberImages();
 
 			$im->setImageFormat( "png" );
 			$im->setImageCompressionQuality(100);
 
-			$pathinfo = pathinfo(DIR_IMAGE . $this->tmpPath . $fileName);
+			$pathinfo = pathinfo(DIR_IMAGE . $this->config->get('msconf_temp_upload_path') . $fileName);
 			$json['token'] = substr($pathinfo['basename'], 0, strrpos($pathinfo['basename'], '.'));
 	
-			if ($im->writeImages(DIR_IMAGE . $this->tmpPath . $pathinfo['filename'] . '.png', false)) {
-				$list = glob(DIR_IMAGE . $this->tmpPath . $pathinfo['filename'] . '*\.png');
+			if ($im->writeImages(DIR_IMAGE . $this->config->get('msconf_temp_upload_path') . $pathinfo['filename'] . '.png', false)) {
+				$list = glob(DIR_IMAGE . $this->config->get('msconf_temp_upload_path') . $pathinfo['filename'] . '*\.png');
 				foreach ($list as $pagePreview) {
 					$pathinfo = pathinfo($pagePreview);
 					$this->session->data['multiseller']['files'][] = $pathinfo['basename'];
 					
-					$thumb = $this->resizeImage($this->tmpPath . $pathinfo['basename'], $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'));
+					$thumb = $this->resizeImage($this->config->get('msconf_temp_upload_path') . $pathinfo['basename'], $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'));
 					$json['images'][] = array(
 						'name' => $pathinfo['basename'],
 						'thumb' => $thumb
@@ -277,17 +271,13 @@ class MsFile extends Model {
 		$new_image = substr($info['basename'], 0, strrpos($info['basename'], '.')) . '-' . $width . 'x' . $height . '.' . $extension;
 		$image = new Image(DIR_IMAGE . $filename);
 		$image->resize($width, $height);
-		$image->save(DIR_IMAGE . $this->tmpPath . $new_image);
+		$image->save(DIR_IMAGE . $this->config->get('msconf_temp_upload_path') . $new_image);
 		
 		if (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) {
-			return HTTPS_IMAGE . $this->tmpPath . $new_image;
+			return HTTPS_IMAGE . $this->config->get('msconf_temp_upload_path') . $new_image;
 		} else {
-			return HTTP_IMAGE . $this->tmpPath . $new_image;
+			return HTTP_IMAGE . $this->config->get('msconf_temp_upload_path') . $new_image;
 		}
   	}
-	
-  	public function getTmpPath () {
-  		return $this->tmpPath;
-  	}  	
 }
 ?>
