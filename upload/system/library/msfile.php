@@ -113,7 +113,7 @@ class MsFile extends Model {
   		
 		if ($this->_isNewUpload($fileName)) {
 			$newpath = $original_file_name . '.' . md5(rand());
-			rename(DIR_IMAGE . $this->tmpPath . $fileName,  DIR_DOWNLOAD . $newpath);
+			rename(DIR_IMAGE . $this->tmpPath . $fileName, DIR_DOWNLOAD . $newpath);
 		}
 		
   		unset ($this->session->data['multiseller']['files'][$key]);
@@ -135,13 +135,30 @@ class MsFile extends Model {
 
 		if ($this->_isNewUpload($fileName)) {
 			$newpath = $imageDir . "/" . $this->customer->getId() . "/" . $original_file_name;
-			rename(DIR_IMAGE . $this->tmpPath . $fileName,  DIR_IMAGE . $newpath);
+			$checkedNewPath = $this->checkExistingFiles(DIR_IMAGE . $newpath);
+			rename(DIR_IMAGE . $this->tmpPath . $fileName, $checkedNewPath);
 		}
 		
   		unset ($this->session->data['multiseller']['files'][$key]);
   		
   		return $newpath;
-  	}	
+  	}
+	
+	// ***FUNCTION***: checks whether file already exists and proposes a new name for a file
+	private function checkExistingFiles($path) {
+		$newPath = $path;
+		
+		if (file_exists($newPath)) {
+			$i = 1;
+			$newPath = substr($path, 0, strrpos($path, '.')) . "-" . $i . substr($path, strrpos($path, '.'));
+			
+			while ( file_exists( $newPath ) ) {
+				$i++;
+				$newPath = substr($path, 0, strrpos($path, '.')) . "-" . $i . substr($path, strrpos($path, '.'));
+			}
+		}
+		return $newPath;
+	}
 	
   	public function deleteDownload($fileName) {
   		if (empty($fileName))
