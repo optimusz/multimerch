@@ -20,20 +20,21 @@
   <form id="ms-sellerinfo" class="ms-form">
   	<input type="hidden" name="action" id="ms_action" />
     <div class="content">
-    	<?php if ( isset($seller['seller_status']) && !in_array($seller['seller_status'], array(MsSeller::SELLER_ACTIVE, MsSeller::STATUS_INACTIVE))) { ?>
+    	<!-- todo status check update -->
+    	<?php if ($seller['ms.seller_status'] != MsSeller::STATUS_ACTIVE) { ?>
   	  <div class="ms-overlay"></div>    
   	  	<?php } ?>
       <table class="ms-product">
         <tr>
-			<?php if (!empty($seller['nickname'])) { ?>
+			<?php if (!empty($seller['ms.nickname'])) { ?>
 	          <td><?php echo $ms_account_sellerinfo_nickname; ?></td>
 	          <td style="padding-top: 5px">
-	          	<b><?php echo $seller['nickname']; ?></b>
+	          	<b><?php echo $seller['ms.nickname']; ?></b>
 	          </td>			
 			<?php } else { ?>
 	          <td><span class="required">*</span> <?php echo $ms_account_sellerinfo_nickname; ?></td>
 	          <td>
-	          	<input type="text" name="sellerinfo_nickname" value="<?php echo $seller['nickname']; ?>" />
+	          	<input type="text" name="sellerinfo_nickname" value="<?php echo $seller['ms.nickname']; ?>" />
 	          	<p class="ms-note"><?php echo $ms_account_sellerinfo_nickname_note; ?></p>
 	          	<p class="error" id="error_sellerinfo_nickname"></p>
 	          </td>          		
@@ -43,7 +44,7 @@
         <tr>
           <td><?php echo $ms_account_sellerinfo_description; ?></td>
           <td>
-          	<textarea name="sellerinfo_description"><?php echo $seller['description']; ?></textarea>
+          	<textarea name="sellerinfo_description"><?php echo $seller['ms.description']; ?></textarea>
           	<p class="ms-note"><?php echo $ms_account_sellerinfo_description_note; ?></p>
           	<p class="error" id="error_sellerinfo_description"></p>
           </td>
@@ -51,7 +52,7 @@
         <tr>
           <td><?php echo $ms_account_sellerinfo_company; ?></td>
           <td>
-          	<input type="text" name="sellerinfo_company" value="<?php echo $seller['company']; ?>" />
+          	<input type="text" name="sellerinfo_company" value="<?php echo $seller['ms.company']; ?>" />
           	<p class="ms-note"><?php echo $ms_account_sellerinfo_company_note; ?></p>
           	<p class="error" id="error_sellerinfo_company"></p>
           </td>
@@ -66,7 +67,7 @@
               <?php } ?>
               
               <?php foreach ($countries as $country) { ?>
-              <?php if ($seller['country_id'] == $country['country_id']) { ?>
+              <?php if ($seller['ms.country_id'] == $country['country_id']) { ?>
               <option value="<?php echo $country['country_id']; ?>" selected="selected"><?php echo $country['name']; ?></option>
               <?php } else { ?>
               <option value="<?php echo $country['country_id']; ?>"><?php echo $country['name']; ?></option>
@@ -80,7 +81,7 @@
         <tr>
           <td><?php echo $ms_account_sellerinfo_paypal; ?></td>
           <td>
-          	<input type="text" name="sellerinfo_paypal" value="<?php echo $seller['paypal']; ?>" />
+          	<input type="text" name="sellerinfo_paypal" value="<?php echo $seller['ms.paypal']; ?>" />
           	<p class="ms-note"><?php echo $ms_account_sellerinfo_paypal_note; ?></p>
           	<p class="error" id="error_sellerinfo_paypal"></p>
           </td>
@@ -117,7 +118,7 @@
     </div>
     <div class="buttons">
       <div class="left"><a href="<?php echo $back; ?>" class="button"><span><?php echo $button_back; ?></span></a></div>
-    	<?php if (in_array($seller['seller_status'], array(MsSeller::STATUS_ACTIVE, MsSeller::STATUS_INACTIVE)) || !isset($seller['seller_status'])) { ?>
+    	<?php if ($seller['ms.seller_status'] == MsSeller::STATUS_ACTIVE) { ?>
       	<div class="right"><a class="button" id="ms-submit-button"><span><?php echo $ms_button_save; ?></span></a></div>
 		<?php } ?>
     </div>

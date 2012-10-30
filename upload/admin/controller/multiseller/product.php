@@ -36,6 +36,7 @@ class ControllerMultisellerProduct extends ControllerMultisellerBase {
 				'href' => $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $result['product_id'], 'SSL')
 			);
 			
+			$status_data = $this->MsLoader->MsProduct->getStatusData($result['product_id']);
 			$this->data['products'][] = array(
 				'p.image' => $image,
 				'pd.name' => $result['pd.name'],
@@ -43,6 +44,7 @@ class ControllerMultisellerProduct extends ControllerMultisellerBase {
 				'p.date_created' => date($this->language->get('date_format_short'), strtotime($result['p.date_created'])),
 				'p.date_modified' => date($this->language->get('date_format_short'), strtotime($result['p.date_modified'])),
 				'mp.product_status' => $result['mp.product_status'],
+				'status_text' => $status_data['text'],
 				'action' => $action,
 				'product_id' => $result['product_id']
 			);

@@ -109,7 +109,7 @@
         <tr>
           <td><?php echo $ms_status; ?></td>
           <td style="padding-top: 5px">
-          	<b><?php echo $seller['ms.seller_status']; ?></b>
+          	<b><?php echo $seller['status']; ?></b>
           </td>
         </tr>        
         

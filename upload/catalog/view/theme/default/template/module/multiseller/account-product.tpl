@@ -18,7 +18,6 @@
 		<tr>
 			<td class="left"><?php echo $ms_account_products_product; ?></td>
 			<td class="left"><?php echo $ms_account_products_sales; ?></td>
-			<td class="left"><?php echo $ms_account_products_publish; ?></td>
 			<td class="left"><?php echo $ms_account_products_status; ?></td>
 			<td class="left"><?php echo $ms_account_products_date; ?></td>
 			<td class="center"><?php echo $ms_account_products_action; ?></td>
@@ -27,13 +26,12 @@
 	<tbody>
 		<?php if (isset($products)) { ?>
 		<?php foreach ($products  as $product) { ?>
-			<?php if ((int)$product['review_status'] != MsProduct::MS_PRODUCT_STATUS_SELLER_DELETED) { ?>
+			<?php if ((int)$product['mp.product_status'] != MsProduct::STATUS_DELETED) { ?>
 				<tr>
-					<td class="left"><?php echo $product['name']; ?></td>
-					<td class="left"><?php echo $product['number_sold']; ?></td>
-					<td class="left"><?php echo $product['status']; ?></td>
-					<td class="left"><?php echo $product['review_status']; ?></td>
-					<td class="left"><?php echo $product['date_added']; ?></td>
+					<td class="left"><?php echo $product['pd.name']; ?></td>
+					<td class="left"><?php echo $product['mp.number_sold']; ?></td>
+					<td class="left"><?php echo $product['status_text']; ?></td>
+					<td class="left"><?php echo $product['p.date_created']; ?></td>
 					<td class="center">
 						<!--<a href="#">View</a>-->
 						[ <a href="<?php echo $product['edit_link']; ?>"><?php echo $ms_account_products_action_edit; ?></a> ]

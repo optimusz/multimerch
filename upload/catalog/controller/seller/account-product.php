@@ -142,7 +142,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 	
 	public function jxSubmitProduct() {
 		$data = $this->request->post;
-		$seller = $this->MsLoader->MsSeller->getSellerData($this->customer->getId());
+		$seller = $this->MsLoader->MsSeller->getSeller($this->customer->getId());
 
 		if (isset($data['product_id']) && !empty($data['product_id'])) {
 			if  ($this->MsLoader->MsProduct->productOwnedBySeller($data['product_id'], $this->customer->getId())) {
@@ -355,18 +355,18 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		if (empty($json['errors'])) {
 			$mails = array();
 			// set product status
-			switch ($seller['product_validation']) {
+			switch ($seller['ms.product_validation']) {
 				case MsProduct::MS_PRODUCT_VALIDATION_APPROVAL:
 					$data['enabled'] = 0;
-					$data['review_status_id'] = MsProduct::MS_PRODUCT_STATUS_PENDING;
+					$data['product_status'] = MsProduct::STATUS_INACTIVE;
 					
 					if (isset($data['product_id']) && !empty($data['product_id'])) {
-						$request_type = MsRequestProduct::TYPE_PRODUCT_UPDATE;
+						//$request_type = MsRequestProduct::TYPE_PRODUCT_UPDATE;
 					} else {
 						$request_type = MsRequestProduct::TYPE_PRODUCT_CREATE;
 					}
 					
-					if (!isset($data['product_id']) || empty($data['product_id']) || ($product['review_status_id'] == MsProduct::MS_PRODUCT_STATUS_DRAFT)) {
+					if (!isset($data['product_id']) || empty($data['product_id']) || ($product['mp.product_status'] == MsProduct::MS_PRODUCT_STATUS_DRAFT)) {
 						$mails[] = array(
 							'type' => MsMail::SMT_PRODUCT_AWAITING_MODERATION
 						);
@@ -392,7 +392,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 				case MsProduct::MS_PRODUCT_VALIDATION_NONE:
 				default:
 					$data['enabled'] = 1;
-					$data['review_status_id'] = MsProduct::MS_PRODUCT_STATUS_APPROVED;
+					$data['product_status'] = MsProduct::STATUS_ACTIVE;
 					
 					if (!isset($data['product_id']) || empty($data['product_id'])) {		
 						$mails[] = array(
@@ -411,9 +411,8 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 			}
 
 			if (isset($request_type)) {
-				$this->MsLoader->MsRequestProduct->createProductRequest($this->customer->getId(),
+				$this->MsLoader->MsRequestProduct->createProductRequest($product_id,
 					array(
-						'product_id' => $product_id,
 						'message' => isset($data['product_message']) ? $data['product_message'] : '',
 						'request_type' => $request_type
 					)
@@ -477,7 +476,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		
 		$this->document->addScript('catalog/view/javascript/account-product-form.js');
 		
-		$this->data['seller'] = $this->MsLoader->MsSeller->getSellerData($this->customer->getId());
+		$this->data['seller'] = $this->MsLoader->MsSeller->getSeller($this->customer->getId());
 		$this->data['salt'] = $this->MsLoader->MsSeller->getSalt($this->customer->getId());
 		if (!$this->config->get('msconf_allow_multiple_categories'))
 			$this->data['categories'] = $this->MsLoader->MsProduct->getCategories();		
@@ -532,24 +531,30 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 
 		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
 
-		$sort = array(
-			'order_by'  => 'date_added',
-			'order_way' => 'DESC',
-			'page' => $page,
-			'limit' => 5
-		);
-
 		$seller_id = $this->customer->getId();
 		
-		$products = $this->MsLoader->MsSeller->getSellerProducts($seller_id, $sort);
+		$products = $this->MsLoader->MsProduct->getProducts(
+			array(
+				'seller_id' => $seller_id,
+				'language_id' => $this->config->get('config_language_id'),
+				//'product_status' => array(MsProduct::STATUS_ACTIVE)
+			),
+			array(
+			'order_by'  => 'date_added',
+			'order_way' => 'DESC',
+			'offset' => ($page - 1) * 5,
+			'limit' => 5
+			)
+		);
 		
 		foreach ($products as $product) {
+			$status_data = $this->MsLoader->MsProduct->getStatusData($product['product_id']);
 			$this->data['products'][] = Array(
-			'name' => $product['name'],
-			'number_sold' => $product['number_sold'],
-			'status' => $product['status'],
-			'review_status' => $product['review_status'],
-			'date_added' => date($this->language->get('date_format_short'), strtotime($product['date_added'])),
+			'pd.name' => $product['pd.name'],
+			'mp.number_sold' => $product['mp.number_sold'],
+			'mp.product_status' => $product['mp.product_status'],
+			'status_text' => $status_data['text'],
+			'p.date_created' => date($this->language->get('date_format_short'), strtotime($product['p.date_created'])),
 			'edit_link' => $this->url->link('seller/account-product/update', 'product_id=' . $product['product_id'], 'SSL'),
 			'delete_link' => $this->url->link('seller/account-product/delete', 'product_id=' . $product['product_id'], 'SSL')
 			);
@@ -557,8 +562,8 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		
 		$pagination = new Pagination();
 		$pagination->total = $this->MsLoader->MsSeller->getTotalSellerProducts($seller_id);
-		$pagination->page = $sort['page'];
-		$pagination->limit = $sort['limit']; 
+		$pagination->page = ($page - 1) * 5;
+		$pagination->limit = 5;
 		$pagination->text = $this->language->get('text_pagination');
 		$pagination->url = $this->url->link('seller/account-product', 'page={page}', 'SSL');
 		

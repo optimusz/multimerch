@@ -6,10 +6,12 @@ $_['ms_product_status_enabled']      = 'Enabled';
 $_['ms_product_status_disabled']      = 'Disabled';
 $_['ms_product_status_seller_deleted']       = 'Deleted by seller';
 
-$_['ms_product_review_status_draft']       = 'Draft';
-$_['ms_product_review_status_pending']       = 'Pending';
-$_['ms_product_review_status_approved']       = 'Approved';
-$_['ms_product_review_status_declined']       = 'Declined';
+$_['ms_status_active'] = 'Active';
+$_['ms_status_inactive'] = 'Inactive';
+$_['ms_status_disabled'] = 'Disabled';
+$_['ms_status_deleted'] = 'Deleted';
+$_['ms_status_pending_approval'] = 'Pending approval';
+$_['ms_status_pending_deletion'] = 'Pending deletion';
 
 $_['ms_button_submit']      = 'Submit';
 $_['ms_button_generate']      = 'Generate images from PDF';
@@ -304,26 +306,26 @@ $_['ms_account_sellerinfo_saved'] = 'Seller account data saved.';
 // Account - Seller account status
 $_['ms_account_status'] = 'Your seller account status is: ';
 
-$_['ms_account_status_activation'] = <<<EOT
+$_['ms_seller_status_activation'] = <<<EOT
 Waiting for activation
 
 Please visit the link contained in the email we sent you to complete the activation process.
 EOT;
 
-$_['ms_account_status_approval'] = <<<EOT
+/*
+$_['ms_seller_status_approval'] = <<<EOT
 <b>Waiting for approval</b>
 <br />
 As soon as your account is approved, you will receive a confirmation email.
 EOT;
 
-$_['ms_account_status_active'] = <<<EOT
+$_['ms_seller_status_active'] = <<<EOT
 <b>Active</b>
 <br />
 You have full access to your seller account.
 EOT;
-
-$_['ms_account_status_disabled'] = <<<EOT
-<b>Disabled</b>
+*/
+$_['ms_seller_status_disabled'] = <<<EOT
 <br />
 Your seller account has been disabled by the administrator.
 EOT;
@@ -339,7 +341,7 @@ $_['ms_account_products_breadcrumbs']       = 'Your Products';
 $_['ms_account_products_product']      = 'Product';
 $_['ms_account_products_publish']       = 'Published';
 $_['ms_account_products_sales']      = 'Sales';
-$_['ms_account_products_status']       = 'Review status';
+$_['ms_account_products_status']       = 'Status';
 $_['ms_account_products_date']       = 'Date added';
 $_['ms_account_products_action']       = 'Action';
 $_['ms_account_products_action_edit']       = 'Edit';

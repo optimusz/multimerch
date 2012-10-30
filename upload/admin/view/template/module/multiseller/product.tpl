@@ -51,7 +51,7 @@
               <td><img src="<?php echo $product['p.image']; ?>" /></td>
               <td><?php echo $product['pd.name']; ?></td>
               <td><?php echo $product['ms.nickname']; ?></td>
-              <td><?php echo $product['mp.product_status']; ?></td>
+              <td><?php echo $product['status_text']; ?></td>
               <td><?php echo $product['p.date_created']; ?></td>
               <td><?php echo $product['p.date_modified']; ?></td>
               <td>
@@ -100,7 +100,7 @@ $(document).ready(function() {
 							type: "POST",
 							//async: false,
 							dataType: "json",
-							url: 'index.php?route=module/multiseller/jxProductStatus&token=<?php echo $token; ?>',
+							url: 'index.php?route=multiseller/product/jxProductStatus&token=<?php echo $token; ?>',
 							data: data,
 							success: function(jsonData) {
 								window.location.reload();

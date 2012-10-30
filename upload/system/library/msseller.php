@@ -73,21 +73,6 @@ final class MsSeller extends Model {
 		return $res->row['email'];
 	}
 		
-	//TODO
-	public function getSellerStatus($seller_status = NULL) {
-		$result = array(
-			self::STATUS_ACTIVE => $this->language->get('STATUS_active'),
-			self::STATUS_DISABLED => $this->language->get('STATUS_disabled'),
-			self::STATUS_INACTIVE => $this->language->get('STATUS_inactive'),
-		);		
-		
-		if ($seller_status) {
-			return $result[$seller_status];
-		} else {
-			return $result;
-		}
-	}		
-		
 	public function getTotalSellerProducts($seller_id, $onlyActive = FALSE) {
 		$sql = "SELECT COUNT(*) as 'total'
 				FROM `" . DB_PREFIX . "ms_product` mp"
@@ -463,6 +448,67 @@ final class MsSeller extends Model {
 		$res = $this->db->query($sql);
 		
 		return $res->rows;
+	}
+	
+	//TODO
+	public function getStatusData($seller_id) {
+		$sql = "SELECT ms.seller_status as 'ms.seller_status',
+					   IFNULL(mrs.request_type, 0) as 'mrs.request_type'
+				FROM `" . DB_PREFIX . "ms_seller` ms
+				LEFT JOIN `" . DB_PREFIX . "ms_request_seller` mrs
+					USING (seller_id)
+				LEFT JOIN `" . DB_PREFIX . "ms_request` mr
+					ON (mr.request_id = mrs.request_id) AND mr.request_status = " . (int)MsRequest::STATUS_PENDING. "
+				WHERE seller_id = " . (int)$seller_id . "
+				ORDER BY mr.request_id DESC
+				LIMIT 1";
+		
+		$res = $this->db->query($sql);
+		
+		$result = $res->row;
+
+		$status_text = '';
+		$type_text = '';
+		
+		switch($result['mrs.request_type']) {
+			case MsRequestSeller::TYPE_SELLER_CREATE:
+			case MsRequestSeller::TYPE_SELLER_UPDATE:	
+				$type_text = $this->language->get('ms_status_pending_approval');
+				break;
+			case MsRequestSeller::TYPE_SELLER_DELETE:
+				$type_text = $this->language->get('ms_status_pending_deletion');
+				break;
+			default:
+				break;
+		}
+				
+		switch($result['ms.seller_status']) {
+			case MsSeller::STATUS_ACTIVE:
+				$status_text = $this->language->get('ms_status_active');
+				$type_text = '';
+				break;
+			case MsSeller::STATUS_INACTIVE:
+				$status_text = $this->language->get('ms_status_inactive');
+				break;
+			case MsSeller::STATUS_DISABLED:
+				$status_text = $this->language->get('ms_status_disabled');
+				break;
+			case MsSeller::STATUS_DELETED:
+				$status_text = $this->language->get('ms_status_deleted');
+				break;
+		}
+
+		return array(
+			'seller_status' => array(
+				'id' => $result['ms.seller_status'],
+				'text' => $status_text
+			),
+			'request_type' => array(
+				'id' => $result['mrs.request_type'],
+				'text' => $type_text
+			),
+			'text' => $status_text . '. ' . $type_text
+		);
 	}
 }
 

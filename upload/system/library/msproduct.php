@@ -157,16 +157,6 @@ class MsProduct extends Model {
 		return $res->row;		
 	}	
 	
-	public function getStatus($product_id) {
-		$sql = "SELECT	review_status_id as 'status'
-				FROM `" . DB_PREFIX . "ms_product`
-				WHERE product_id = " . (int)$product_id;
-
-		$res = $this->db->query($sql);		
-		
-		return ($res->row['status']);
-	}
-	
 	public function getProduct($product_id) {
 		$sql = "SELECT 	p.price,
 						p.product_id as 'product_id',
@@ -175,7 +165,7 @@ class MsProduct extends Model {
 						p.shipping as shipping,
 						p.quantity as quantity,
 						group_concat(ptc.category_id separator ',') as category_id,
-						mp.review_status_id
+						mp.product_status
 				FROM `" . DB_PREFIX . "product` p
 				INNER JOIN `" . DB_PREFIX . "product_to_category` ptc
 					ON p.product_id = ptc.product_id
@@ -300,7 +290,7 @@ class MsProduct extends Model {
 		
 	public function hideProduct($product_id) {
 		$sql = "UPDATE " . DB_PREFIX . "ms_product
-				SET review_status_id = " . self::STATUS_SELLER_DELETED . "
+				SET product_status = " . self::STATUS_SELLER_DELETED . "
 				WHERE product_id = " . (int)$product_id;
 		$res = $this->db->query($sql);
 		
@@ -308,30 +298,6 @@ class MsProduct extends Model {
 				SET status = 0 WHERE product_id = " . (int)$product_id;
 				
 		$res = $this->db->query($sql);
-	}
-	
-	public function disableProduct($product_id) {
-		$sql = "UPDATE " . DB_PREFIX . "ms_product
-				SET review_status_id = " . self::STATUS_DECLINED . "
-				WHERE product_id = " . (int)$product_id;
-		$res = $this->db->query($sql);
-
-		$sql = "UPDATE " . DB_PREFIX . "product
-				SET status = 0 WHERE product_id = " . (int)$product_id;
-				
-		$res = $this->db->query($sql);
-	}
-	
-	public function enableProduct($product_id) {
-		$sql = "UPDATE " . DB_PREFIX . "ms_product
-				SET review_status_id = " . self::STATUS_APPROVED . "
-				WHERE product_id = " . (int)$product_id;
-		$res = $this->db->query($sql);
-
-		$sql = "UPDATE " . DB_PREFIX . "product
-				SET status = 1 WHERE product_id = " . (int)$product_id;
-				
-		$res = $this->db->query($sql);		
 	}
 	
 	public function saveProduct($data) {
@@ -400,7 +366,7 @@ class MsProduct extends Model {
 		$sql = "INSERT INTO " . DB_PREFIX . "ms_product
 				SET product_id = " . (int)$product_id . ",
 					seller_id = " . (int)$this->registry->get('customer')->getId() . ",
-					review_status_id = " . (int)$data['review_status_id'];
+					product_status = " . (int)$data['product_status'];
 		$this->db->query($sql);
 		
 		foreach ($data['product_category'] as $id => $category_id) {
@@ -520,7 +486,7 @@ class MsProduct extends Model {
 		}		
 		
 		$sql = "UPDATE " . DB_PREFIX . "ms_product
-				SET review_status_id = " . (int)$data['review_status_id'] . "
+				SET product_status = " . (int)$data['product_status'] . "
 				WHERE product_id = " . (int)$product_id; 
 		
 		$this->db->query($sql);
@@ -718,7 +684,7 @@ class MsProduct extends Model {
 					USING(product_id) "
 				. ($hasSeller ? "INNER JOIN " : "LEFT JOIN ") . DB_PREFIX . "ms_seller ms
 					ON (mp.seller_id = ms.seller_id)"
-				. ($nodrafts ? " WHERE (ISNULL(mp.review_status_id) OR mp.review_status_id != " . (int)self::STATUS_DRAFT . ")" : '');
+				. ($nodrafts ? " WHERE (ISNULL(mp.product_status) OR mp.product_status != " . (int)self::STATUS_DRAFT . ")" : '');
 
 		$res = $this->db->query($sql);
 		return $res->row['total'];
@@ -747,7 +713,7 @@ class MsProduct extends Model {
 						pr.image as 'prd.image',
 						pd.name as 'prd.name',
 						ms.nickname as 'sel.nickname',
-						mp.review_status_id as 'prd.status_id',
+						mp.product_status as 'prd.status_id',
 						pr.date_added as 'prd.date_created',
 						pr.date_modified  as 'prd.date_modified'
 				FROM " . DB_PREFIX . "product pr
@@ -776,11 +742,14 @@ class MsProduct extends Model {
 	}
 	
 	public function getProducts($data, $sort) {
+		// todo validate order parameters		
+		
 		$sql = "SELECT  p.product_id as 'product_id',
 						p.image as 'p.image',
 						pd.name as 'pd.name',
 						ms.nickname as 'ms.nickname',
 						mp.product_status as 'mp.product_status',
+						mp.number_sold as 'mp.number_sold',
 						p.date_added as 'p.date_created',
 						p.date_modified  as 'p.date_modified'
 				FROM " . DB_PREFIX . "product p
@@ -812,6 +781,107 @@ class MsProduct extends Model {
 		}
 		*/
 		return $res->rows;
-	}	
+	}
+	
+	public function getStatusData($product_id) {
+		$sql = "SELECT mp.product_status as 'mp.product_status',
+					   IFNULL(mrp.request_type, 0) as 'mrp.request_type'
+				FROM `" . DB_PREFIX . "product` p
+				LEFT JOIN `" . DB_PREFIX . "ms_product` mp
+					USING (product_id)
+				LEFT JOIN `" . DB_PREFIX . "ms_request_product` mrp
+					USING (product_id)
+				LEFT JOIN `" . DB_PREFIX . "ms_request` mr
+					ON (mr.request_id = mrp.request_id) AND mr.request_status = " . (int)MsRequest::STATUS_PENDING. "
+				WHERE product_id = " . (int)$product_id . "
+				ORDER BY mr.request_id DESC
+				LIMIT 1";
+		
+		$res = $this->db->query($sql);
+		
+		$result = $res->row;
+		$status_text = '';
+		$type_text = '';
+		
+		switch($result['mrp.request_type']) {
+			case MsRequestProduct::TYPE_PRODUCT_CREATE:
+			case MsRequestProduct::TYPE_PRODUCT_UPDATE:
+				$type_text = $this->language->get('ms_status_pending_approval');
+				break;
+			case MsRequestProduct::TYPE_PRODUCT_DELETE:
+				$type_text = $this->language->get('ms_status_pending_deletion');
+				break;
+			default:
+				$type_text = '';
+				break;
+		}
+				
+		switch($result['mp.product_status']) {
+			case MsProduct::STATUS_ACTIVE:
+				$status_text = $this->language->get('ms_status_active');
+				$type_text = '';
+				break;
+			case MsProduct::STATUS_INACTIVE:
+				$status_text = $this->language->get('ms_status_inactive');
+				break;
+			case MsProduct::STATUS_DISABLED:
+				$status_text = $this->language->get('ms_status_disabled');
+				break;
+			case MsProduct::STATUS_DELETED:
+				$status_text = $this->language->get('ms_status_deleted');
+				break;
+			default:
+				$status_text = '';
+				break;				
+		}
+
+		return array(
+			'product_status' => array(
+				'id' => $result['mp.product_status'],
+				'text' => $status_text
+			),
+			'request_type' => array(
+				'id' => $result['mrp.request_type'],
+				'text' => $type_text
+			),
+			'text' => $status_text . (!empty($type_text) ? ' (' . $type_text . ')' : '')
+		);
+	}
+
+	public function declineProduct($product_id) {
+		$sql = "UPDATE " . DB_PREFIX . "ms_product
+				SET product_status = " . self::STATUS_INACTIVE . "
+				WHERE product_id = " . (int)$product_id;
+		$res = $this->db->query($sql);
+
+		$sql = "UPDATE " . DB_PREFIX . "product
+				SET status = 0 WHERE product_id = " . (int)$product_id;
+
+		$res = $this->db->query($sql);
+	}
+	
+	public function disableProduct($product_id) {
+		$sql = "UPDATE " . DB_PREFIX . "ms_product
+				SET product_status = " . self::STATUS_DISABLED . "
+				WHERE product_id = " . (int)$product_id;
+		$res = $this->db->query($sql);
+
+		$sql = "UPDATE " . DB_PREFIX . "product
+				SET status = 0 WHERE product_id = " . (int)$product_id;
+				
+		$res = $this->db->query($sql);
+	}
+	
+	public function enableProduct($product_id) {
+		$sql = "UPDATE " . DB_PREFIX . "ms_product
+				SET product_status = " . self::STATUS_ACTIVE . "
+				WHERE product_id = " . (int)$product_id;
+		$res = $this->db->query($sql);
+
+		$sql = "UPDATE " . DB_PREFIX . "product
+				SET status = 1 WHERE product_id = " . (int)$product_id;
+
+		$res = $this->db->query($sql);		
+	}
 }
 ?>

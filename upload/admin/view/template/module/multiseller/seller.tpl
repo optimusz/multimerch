@@ -47,7 +47,7 @@
               <td><?php echo $seller['total_sales']; ?></td>
               <?php /*<td><?php echo $seller['total_earnings']; ?></td>*/ ?>
               <td><?php echo $seller['current_balance']; ?></td>
-              <td><?php echo $seller['ms.seller_status']; ?></td>
+              <td><?php echo $seller['status']; ?></td>
               <td><?php echo $seller['ms.date_created']; ?></td>
               <td class="left"><?php foreach ($seller['actions'] as $action) { ?>
                 [ <a href="<?php echo $action['href']; ?>"><?php echo $action['text']; ?></a> ]

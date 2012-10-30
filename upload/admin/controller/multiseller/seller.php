@@ -160,12 +160,13 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 		$total_sellers = $this->MsLoader->MsSeller->getTotalSellers();
 
     	foreach ($results as &$result) {
+    		$status_data = $this->MsLoader->MsSeller->getStatusData($result['ms.seller_status']);
     		$result['date_created'] = date($this->language->get('date_format_short'), strtotime($result['ms.date_created']));
     		$result['total_products'] = $this->MsLoader->MsSeller->getTotalSellerProducts($result['seller_id']);
 			//$result['total_earnings'] = $this->currency->format($this->MsLoader->MsSeller->getEarningsForSeller($result['seller_id']), $this->config->get('config_currency'));
 			$result['current_balance'] = $this->currency->format($this->MsLoader->MsBalance->getSellerBalance($result['seller_id']), $this->config->get('config_currency'));
 			$result['total_sales'] = $this->MsLoader->MsSeller->getSalesForSeller($result['seller_id']);
-			$result['status'] = $this->MsLoader->MsSeller->getSellerStatus($result['ms.seller_status']);
+			$result['status'] = $status_data['text'];
 			$result['actions'][] = array(
 				'text' => $this->language->get('text_view'),
 				'href' => $this->url->link('multiseller/seller/update', 'token=' . $this->session->data['token'] . '&seller_id=' . $result['seller_id'], 'SSL')
@@ -232,7 +233,9 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 
 		if (!empty($seller)) {
 			$this->data['seller'] = $seller;
-			$this->data['seller']['status'] = $this->MsLoader->MsSeller->getSellerStatus($seller['ms.seller_status']);
+    		$status_data = $this->MsLoader->MsSeller->getStatusData($this->request->get['seller_id']);			
+			$this->data['seller']['status'] = $status_data['text'];
+			$this->data['seller']['status_id'] = $status_data['seller_status']['id'];
 			if (!empty($seller['avatar_path'])) {
 				$this->data['seller']['avatar']['name'] = $seller['avatar_path'];
 				$this->data['seller']['avatar']['thumb'] = $this->MsLoader->MsFile->resizeImage($seller['avatar_path'], $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'));

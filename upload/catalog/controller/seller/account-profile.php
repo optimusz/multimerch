@@ -31,10 +31,10 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 	
 	public function jxSaveSellerInfo() {
 		$data = $this->request->post;
-		$seller = $this->MsLoader->MsSeller->getSellerData($this->customer->getId());
+		$seller = $this->MsLoader->MsSeller->getSeller($this->customer->getId());
 		$json = array();
 		
-		if (!empty($seller) && ($seller['seller_status'] != MsSeller::STATUS_ACTIVE)) {
+		if (!empty($seller) && ($seller['ms.seller_status'] != MsSeller::STATUS_ACTIVE)) {
 			return $this->response->setOutput(json_encode($json));
 		}
 		
@@ -148,15 +148,7 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 		$this->load->model('localisation/country');
     	$this->data['countries'] = $this->model_localisation_country->getCountries();		
 
-		$seller = $this->MsLoader->MsSeller->getSellers(
-			array(
-				'seller_id' => $this->customer->getId()
-			),
-			array(
-				'offset' => 0,			
-				'limit' => 1
-			)
-		);
+		$seller = $this->MsLoader->MsSeller->getSeller($this->customer->getId());
 		
 		$this->data['salt'] = $this->MsLoader->MsSeller->getSalt($this->customer->getId());
 		
@@ -167,24 +159,31 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 				$this->data['seller']['avatar']['thumb'] = $this->MsLoader->MsFile->resizeImage($seller['avatar_path'], $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'));
 				$this->session->data['multiseller']['files'][] = $seller['avatar_path'];
 			}
+
+
+			$status_data = $this->MsLoader->MsSeller->getStatusData($this->customer->getId());
+			$this->data['status_data'] = $status_data;
+			$this->data['statustext'] = $this->language->get('ms_account_status') . $status_data['text'];
 			
-			switch ($seller['seller_status']) {
-				case MsSeller::STATUS_INACTIVE:
-					$this->data['statustext'] = $this->language->get('ms_account_status') . $this->language->get('ms_account_status_activation');
+			switch ($status_data['seller_status']['id']) {
+				case MsSeller::STATUS_DELETED:
+					 //$this->data['statustext'] .= $this->language->get('ms_account_status_activation');
 					break;
 				case MsSeller::STATUS_INACTIVE:
-					$this->data['statustext'] = $this->language->get('ms_account_status') . $this->language->get('ms_account_status_approval');
+					//$this->data['statustext'] .=  $this->language->get('ms_account_status') . $this->language->get('ms_account_status_approval');
 					break;
 				case MsSeller::STATUS_DISABLED:
-					$this->data['statustext'] = $this->language->get('ms_account_status') . $this->language->get('ms_account_status_disabled');
+					//$this->data['statustext'] .= $this->language->get('ms_account_status_disabled');
 					break;					
 				case MsSeller::STATUS_ACTIVE:
 				default:
+					$this->data['statustext'] = '';
 					//$this->data['statustext'] = $this->language->get('ms_account_status') . $this->language->get('ms_account_status_active');
 					//$this->data['statustext'] .= '<br />' . $this->language->get('ms_account_status_fullaccess');
 					break;
+			
 			}
-		} else { 		
+		} else {	
 			$this->data['seller'] = FALSE;
 			$this->data['statustext'] = $this->language->get('ms_account_status_please_fill_in');			
 		}
