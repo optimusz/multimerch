@@ -38,7 +38,7 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		"msconf_enable_seo_urls" => 0,
 		"msconf_enable_update_seo_urls" => 0,
 		"msconf_enable_non_alphanumeric_seo" => 0,
-		"msconf_product_image_directory" => 'seller'
+		"msconf_product_image_directory" => 'sellers'
 	);
 	
 	public function __construct($registry) {
