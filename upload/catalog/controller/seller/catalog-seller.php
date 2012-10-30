@@ -57,7 +57,7 @@ class ControllerSellerCatalogSeller extends ControllerSellerCatalog {
 			if ($result['ms.avatar_path'] && file_exists(DIR_IMAGE . $result['ms.avatar_path'])) {
 				$image = $this->MsLoader->MsFile->resizeImage($result['ms.avatar_path'], $this->config->get('config_image_category_width'), $this->config->get('config_image_category_height'));
 			} else {
-				$image = $this->MsLoader->MsFile->resizeImage('no_image.jpg', $this->config->get('config_image_category_width'), $this->config->get('config_image_category_height'));
+				$image = $this->MsLoader->MsFile->resizeImage('ms_no_image.jpg', $this->config->get('config_image_category_width'), $this->config->get('config_image_category_height'));
 			}
 
 			$country = $this->model_localisation_country->getCountry($result['ms.country_id']);
