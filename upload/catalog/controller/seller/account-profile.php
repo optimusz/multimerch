@@ -34,7 +34,7 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 		$seller = $this->MsLoader->MsSeller->getSeller($this->customer->getId());
 		$json = array();
 		
-		if (!empty($seller) && ($seller['ms.seller_status'] != MsSeller::STATUS_ACTIVE)) {
+		if (!empty($seller) && (in_array($seller['ms.seller_status'], array(MsSeller::STATUS_DISABLED, MsSeller::STATUS_DELETED)))) {
 			return $this->response->setOutput(json_encode($json));
 		}
 		

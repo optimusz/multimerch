@@ -141,14 +141,14 @@ final class MsSeller extends Model {
 		$sql = "UPDATE " . DB_PREFIX . "ms_seller
 				SET description = '" . $this->db->escape($data['sellerinfo_description']) . "',
 					company = '" . $this->db->escape($data['sellerinfo_company']) . "',
-					country_id = " . (int)$data['sellerinfo_country'] . ",
-					seller_status = " . (int)$data['seller_status'] . ",
-					seller_approved = " . (int)$data['seller_approved'] . ",
-					paypal = '" . $this->db->escape($data['sellerinfo_paypal']) . "',
+					country_id = " . (int)$data['sellerinfo_country'] . ","
+					. (isset($data['seller_status']) ? "seller_status=  " .  (int)$data['seller_status'] . "," : '')
+					. (isset($data['seller_approved']) ? "seller_approved=  " .  (int)$data['seller_approved'] . "," : '')					
+					. "paypal = '" . $this->db->escape($data['sellerinfo_paypal']) . "',
 					avatar = '" . $this->db->escape($avatar) . "'
 				WHERE seller_id = " . (int)$seller_id;
 		
-		$this->db->query($sql);	
+		$this->db->query($sql);
 	}		
 		
 	public function getCommissionPercentForSeller($seller_id) {

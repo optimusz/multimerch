@@ -6,7 +6,6 @@ class ControllerSellerAccount extends Controller {
 
 		$this->data = array_merge($this->data, $this->load->language('module/multiseller'),$this->load->language('account/account'));
 		$parts = explode('/', $this->request->request['route']);
-
 		// Uploadify checks
 		//$this->_log = new Log("uploadify.log");
 		if (isset($parts[2]) && in_array($parts[2], array('jxUpdateFile','jxUploadImages', 'jxUploadDownloads', 'jxUploadSellerAvatar'))) {
@@ -37,7 +36,7 @@ class ControllerSellerAccount extends Controller {
     			$this->redirect($this->url->link('seller/account-profile', '', 'SSL'));
     		}
     	} else if ($this->MsLoader->MsSeller->getStatus() != MsSeller::STATUS_ACTIVE) {
-    		if (isset($parts[2]) && !in_array($parts[2], array('sellerinfo'))) {
+    		if (isset($parts[2]) && !in_array($parts[2], array('sellerinfo', 'jxsavesellerinfo'))) {
     			$this->redirect($this->url->link('seller/account-profile', '', 'SSL'));
     		}
     	}
