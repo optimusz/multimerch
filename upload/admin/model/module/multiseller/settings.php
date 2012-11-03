@@ -5,8 +5,9 @@ class ModelModuleMultisellerSettings extends Model {
 			CREATE TABLE `" . DB_PREFIX . "ms_product` (
              `product_id` int(11) NOT NULL,
              `seller_id` int(11) DEFAULT NULL,
-             `number_sold` int(11) UNSIGNED NOT NULL DEFAULT '0',
-			 `product_status` TINYINT NOT NULL DEFAULT '1',
+             `number_sold` int(11) NOT NULL DEFAULT '0',
+			 `product_status` TINYINT NOT NULL,
+			 `product_approved` TINYINT NOT NULL,
         	PRIMARY KEY (`product_id`)) default CHARSET=utf8";
         
         $this->db->query($sql);
@@ -19,10 +20,11 @@ class ModelModuleMultisellerSettings extends Model {
              `website` VARCHAR(2083) NOT NULL DEFAULT '',
              `description` TEXT NOT NULL DEFAULT '',
 			 `country_id` INT(11) NOT NULL DEFAULT '0',
-			 `avatar_path` VARCHAR(255) DEFAULT NULL,
+			 `avatar` VARCHAR(255) DEFAULT NULL,
 			 `paypal` VARCHAR(255) DEFAULT NULL,
-			 `date_created` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-			 `seller_status` TINYINT NOT NULL DEFAULT '1',
+			 `date_created` DATETIME NOT NULL,
+			 `seller_status` TINYINT NOT NULL,
+			 `seller_approved` TINYINT NOT NULL,
 			 `commission` DECIMAL(4,2) NOT NULL DEFAULT '0',
 			 `commission_flat` decimal(15,4) NOT NULL DEFAULT '0.0000',
 			 `product_validation` tinyint(4) NOT NULL DEFAULT '1',
@@ -83,13 +85,14 @@ class ModelModuleMultisellerSettings extends Model {
         
         $this->db->query($sql);
         
+        /*
         // todo payouts
 		$sql = "
 			CREATE TABLE `" . DB_PREFIX . "ms_payout_method` (
              `payout_method_id` int(11) NOT NULL AUTO_INCREMENT,
              `payout_method_name` VARCHAR(96) NOT NULL,
         	PRIMARY KEY (`balance_id`)) default CHARSET=utf8";        
-        
+        */
 		$sql = "
 			CREATE TABLE `" . DB_PREFIX . "ms_request_withdrawal` (
              `request_withdrawal_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -105,7 +108,7 @@ class ModelModuleMultisellerSettings extends Model {
         	PRIMARY KEY (`request_withdrawal_id`)) default CHARSET=utf8";
         
         $this->db->query($sql);
-
+/*
 		$sql = "
 			CREATE TABLE `" . DB_PREFIX . "ms_request_seller` (
              `request_seller_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -125,7 +128,7 @@ class ModelModuleMultisellerSettings extends Model {
         	PRIMARY KEY (`request_product_id`)) default CHARSET=utf8";
         
         $this->db->query($sql);
-
+*/
 		$sql = "
 			CREATE TABLE `" . DB_PREFIX . "ms_request` (
              `request_id` int(11) NOT NULL AUTO_INCREMENT,

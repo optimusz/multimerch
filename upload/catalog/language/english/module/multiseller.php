@@ -8,6 +8,8 @@ $_['ms_product_status_seller_deleted']       = 'Deleted by seller';
 
 $_['ms_status_active'] = 'Active';
 $_['ms_status_inactive'] = 'Inactive';
+$_['ms_status_published'] = 'Published';
+$_['ms_status_notpublished'] = 'Not published';
 $_['ms_status_disabled'] = 'Disabled';
 $_['ms_status_deleted'] = 'Deleted';
 $_['ms_status_pending_approval'] = 'Pending approval';

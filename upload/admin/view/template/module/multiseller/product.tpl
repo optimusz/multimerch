@@ -15,8 +15,21 @@
     <div class="heading">
       <h1><img src="view/image/customer.png" alt="" /> <?php echo $ms_catalog_products_heading; ?></h1>
       <div class="buttons">
-      	<a class="ms-action button" id="ms-enable"><?php echo $ms_enable_approve; ?></a>
-      	<a class="ms-action button" id="ms-disable"><?php echo $ms_disable_decline; ?></a>
+      	<!--
+      	<select name="bulk_product_seller">
+      		<option>--Bulk seller change--</option>
+      		<?php for ($i = 1; $i<5; $i++) { ?>
+      		<option value="<?php echo $i; ?>"><?php echo $this->MsLoader->MsProduct->getStatusText($i); ?></option>
+      		<?php } ?>
+      	</select>
+      	-->      
+      	<select name="bulk_product_status">
+      		<option>--Bulk status change--</option>
+      		<?php for ($i = 1; $i<5; $i++) { ?>
+      		<option value="<?php echo $i; ?>"><?php echo $this->MsLoader->MsProduct->getStatusText($i); ?></option>
+      		<?php } ?>
+      	</select>
+      	<a class="ms-action button" id="ms-bulk-apply"><?php echo $ms_apply; ?></a>
 	  </div>
     </div>
     <div class="content">
@@ -51,7 +64,9 @@
               <td><img src="<?php echo $product['p.image']; ?>" /></td>
               <td><?php echo $product['pd.name']; ?></td>
               <td><?php echo $product['ms.nickname']; ?></td>
-              <td><?php echo $product['status_text']; ?></td>
+              <td>
+              	<?php echo $this->MsLoader->MsProduct->getStatusText($product['mp.product_status']); ?>
+              </td>
               <td><?php echo $product['p.date_created']; ?></td>
               <td><?php echo $product['p.date_modified']; ?></td>
               <td>
@@ -76,7 +91,25 @@
 <script type="text/javascript"><!--
 $(document).ready(function() {
 	$('#date').datepicker({dateFormat: 'yy-mm-dd'});
-	$(".ms-action").click(function() {
+	$("#ms-bulk-apply").click(function() {
+		if ($('#form tbody input:checkbox:checked').length == 0)
+			return;
+			
+		var data  = $('#form,#product_message,select').serialize();
+		$('#ms-bulk-apply').before('<img src="view/image/loading.gif" alt="" />');
+	    $.ajax({
+			type: "POST",
+			//async: false,
+			dataType: "json",
+			url: 'index.php?route=multiseller/product/jxProductStatus&token=<?php echo $token; ?>',
+			data: data,
+			success: function(jsonData) {
+				window.location.reload();
+			}
+		});
+	});	
+	
+	$("ms-action").click(function() {
 		if ($('#form tbody input:checkbox:checked').length == 0)
 			return;	
 		$('#ms-action').val($(this).attr('id'));

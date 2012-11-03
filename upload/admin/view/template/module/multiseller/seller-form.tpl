@@ -108,21 +108,22 @@
         
         <tr>
           <td><?php echo $ms_status; ?></td>
-          <td style="padding-top: 5px">
-          	<b><?php echo $seller['status']; ?></b>
-          </td>
-        </tr>        
-        
-        <tr>
-          <td><?php echo $ms_action; ?></td>
           <td>
-          	<select name="sellerinfo_action">
-			  <option value="0" selected="selected"></option>
-			  <?php foreach ($actions as $action) { ?>          	
-              <option value="<?php echo $action['value']; ?>"><?php echo $action['text']; ?></option>
+          	<select name="seller_status">
+			  <?php foreach ($seller_statuses as $id => $name) { ?>          	
+              <option value="<?php echo $id; ?>" <?php if ($id == $seller['ms.seller_status']) { ?>selected="selected"<?php } ?>><?php echo $name; ?></option>
               <?php } ?>
             </select>
-          	<p class="error" id="error_sellerinfo_country"></p>
+          </td>
+        </tr>
+
+        <tr>
+          <td><?php echo $ms_approved; ?></td>
+          <td>
+          	<select name="seller_approved">
+              	<option value="1" <?php if ($seller['ms.seller_approved'] == 1) { ?>selected="selected"<?php } ?>><?php echo $text_yes; ?></option>
+              	<option value="0" <?php if ($seller['ms.seller_approved'] == 0) { ?>selected="selected"<?php } ?>><?php echo $text_no; ?></option>
+            </select>
           </td>
         </tr>
 

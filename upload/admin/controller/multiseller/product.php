@@ -36,7 +36,6 @@ class ControllerMultisellerProduct extends ControllerMultisellerBase {
 				'href' => $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $result['product_id'], 'SSL')
 			);
 			
-			$status_data = $this->MsLoader->MsProduct->getStatusData($result['product_id']);
 			$this->data['products'][] = array(
 				'p.image' => $image,
 				'pd.name' => $result['pd.name'],
@@ -44,7 +43,7 @@ class ControllerMultisellerProduct extends ControllerMultisellerBase {
 				'p.date_created' => date($this->language->get('date_format_short'), strtotime($result['p.date_created'])),
 				'p.date_modified' => date($this->language->get('date_format_short'), strtotime($result['p.date_modified'])),
 				'mp.product_status' => $result['mp.product_status'],
-				'status_text' => $status_data['text'],
+				'status_text' => $this->MsLoader->MsProduct->getStatusText($result['mp.product_status']),
 				'action' => $action,
 				'product_id' => $result['product_id']
 			);
@@ -58,6 +57,8 @@ class ControllerMultisellerProduct extends ControllerMultisellerBase {
 		$pagination->url = $this->url->link("multiseller/product", 'token=' . $this->session->data['token'] . '&page={page}', 'SSL');
 		
 		$this->data['pagination'] = $pagination->render();
+
+		//$this->data['sellers'] = $this->MsLoader->MsSeller->getSellers();
 		
 		if (isset($this->session->data['error'])) {
 			$this->data['error_warning'] = $this->session->data['error'];
@@ -97,48 +98,30 @@ class ControllerMultisellerProduct extends ControllerMultisellerBase {
 		$mails = array();
 		if (isset($this->request->post['selected'])) {
 			foreach ($this->request->post['selected'] as $product_id) {
-				$seller_id = $this->MsLoader->MsProduct->getSellerId($product_id);
-				// todo
-				$result = $this->MsLoader->MsRequestProduct->getProductRequests(
-					array(
-						'product_id' => $product_id
-					),
-					array(
-						'page' => 0,
-						'limit' => 1
-					)
-				);			
-				
-				if ($this->request->post['ms-action'] == 'ms-enable') {
-					$this->MsLoader->MsProduct->enableProduct($product_id);
-					$mails[] = array(
-						'type' => $this->MsLoader->MsProduct->getStatus($product_id) == MsProduct::MS_PRODUCT_STATUS_PENDING ? MsMail::SMT_PRODUCT_APPROVED : MsMail::SMT_PRODUCT_ENABLED,
-						'data' => array(
-							'product_id' => $product_id,
-							'recipients' => $this->MsLoader->MsSeller->getSellerEmail($seller_id),
-							'addressee' => $this->MsLoader->MsSeller->getSellerName($seller_id),
-							'message' => $this->request->post['product_message']
-						)
-					);
-				} else {
-					$this->MsLoader->MsProduct->disableProduct($product_id);
-					$mails[] = array(
-						'type' => $this->MsLoader->MsProduct->getStatus($product_id) == MsProduct::MS_PRODUCT_STATUS_PENDING ? MsMail::SMT_PRODUCT_DECLINED : MsMail::SMT_PRODUCT_DISABLED,
-						'data' => array(
-							'product_id' => $product_id,
-							'recipients' => $this->MsLoader->MsSeller->getSellerEmail($seller_id),
-							'addressee' => $this->MsLoader->MsSeller->getSellerName($seller_id),
-							'message' => $this->request->post['product_message']
-						)
-					);					
+				$this->MsLoader->MsProduct->createRecord($product_id, array());
+				switch ($this->request->post['bulk_product_status']) {
+					case MsProduct::STATUS_ACTIVE:
+						$this->MsLoader->MsProduct->changeStatus($product_id, MsProduct::STATUS_ACTIVE);
+						$this->MsLoader->MsProduct->approve($product_id);
+						break;
+					case MsProduct::STATUS_INACTIVE:
+						$this->MsLoader->MsProduct->changeStatus($product_id, MsProduct::STATUS_INACTIVE);
+						$this->MsLoader->MsProduct->disapprove($product_id);
+						break;
+					case MsProduct::STATUS_DISABLED:
+						$this->MsLoader->MsProduct->changeStatus($product_id, MsProduct::STATUS_DISABLED);
+						$this->MsLoader->MsProduct->disapprove($product_id);
+						break;
+					case MsProduct::STATUS_DELETED:
+						$this->MsLoader->MsProduct->changeStatus($product_id, MsProduct::STATUS_DELETED);
+						$this->MsLoader->MsProduct->disapprove($product_id);
+						break;
 				}
-				$msRequest->processProductRequests($product_id,$this->user->getId(),$this->request->post['product_message']);
 			}
-
-			$this->MsLoader->MsMail->sendMails($mails);
-			$this->session->data['success'] = 'Successfully changed product status.';
+			//$this->MsLoader->MsMail->sendMails($mails);
+			//$this->session->data['success'] = 'Successfully changed product status.';
 		} else {
-			$this->session->data['error'] = 'Error changing product status.';
+			//$this->session->data['error'] = 'Error changing product status.';
 		}
 	}	
 }

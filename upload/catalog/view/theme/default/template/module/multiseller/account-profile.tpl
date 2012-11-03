@@ -21,9 +21,9 @@
   	<input type="hidden" name="action" id="ms_action" />
     <div class="content">
     	<!-- todo status check update -->
-    	<?php if ($seller['ms.seller_status'] != MsSeller::STATUS_ACTIVE) { ?>
-  	  <div class="ms-overlay"></div>    
-  	  	<?php } ?>
+		<?php if ($seller['ms.seller_status'] == MsSeller::STATUS_DISABLED) { ?>
+			<div class="ms-overlay"></div>    
+		<?php } ?>
       <table class="ms-product">
         <tr>
 			<?php if (!empty($seller['ms.nickname'])) { ?>
@@ -118,7 +118,7 @@
     </div>
     <div class="buttons">
       <div class="left"><a href="<?php echo $back; ?>" class="button"><span><?php echo $button_back; ?></span></a></div>
-    	<?php if ($seller['ms.seller_status'] == MsSeller::STATUS_ACTIVE) { ?>
+    	<?php if ($seller['ms.seller_status'] != MsSeller::STATUS_DISABLED) { ?>
       	<div class="right"><a class="button" id="ms-submit-button"><span><?php echo $ms_button_save; ?></span></a></div>
 		<?php } ?>
     </div>

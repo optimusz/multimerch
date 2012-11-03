@@ -14,7 +14,7 @@ final class MsSeller extends Model {
 	private $description;
 	private $company;
 	private $country_id;
-	private $avatar_path;
+	private $avatar;
 	private $seller_status;
 	private $paypal;
 	
@@ -33,7 +33,7 @@ final class MsSeller extends Model {
 				$this->description = $seller_query->row['description'];
 				$this->company = $seller_query->row['company'];
 				$this->country_id = $seller_query->row['country_id'];
-				$this->avatar_path = $seller_query->row['avatar_path'];
+				$this->avatar = $seller_query->row['avatar'];
 				$this->seller_status = $seller_query->row['seller_status'];
 				$this->paypal = $seller_query->row['paypal'];
 			}
@@ -185,6 +185,7 @@ final class MsSeller extends Model {
 		$sql = "INSERT INTO " . DB_PREFIX . "ms_seller
 				SET seller_id = " . (int)$data['seller_id'] . ",
 					seller_status = " . (int)$data['seller_status'] . ",
+					seller_approved = " . (int)$data['seller_approved'] . ",
 					commission = " . (float)$this->config->get('msconf_seller_commission') . ",
 					commission_flat = " . (float)$this->config->get('msconf_seller_commission_flat') . ",
 					nickname = '" . $this->db->escape($data['sellerinfo_nickname']) . "',
@@ -193,7 +194,7 @@ final class MsSeller extends Model {
 					country_id = " . (int)$data['sellerinfo_country'] . ",
 					product_validation = " . (int)$data['sellerinfo_product_validation'] . ",
 					paypal = '" . $this->db->escape($data['sellerinfo_paypal']) . "',
-					avatar_path = '" . $this->db->escape($avatar) . "',
+					avatar = '" . $this->db->escape($avatar) . "',
 					date_created = NOW()";
 		
 		$this->db->query($sql);
@@ -243,8 +244,10 @@ final class MsSeller extends Model {
 				SET description = '" . $this->db->escape($data['sellerinfo_description']) . "',
 					company = '" . $this->db->escape($data['sellerinfo_company']) . "',
 					country_id = " . (int)$data['sellerinfo_country'] . ",
+					seller_status = " . (int)$data['seller_status'] . ",
+					seller_approved = " . (int)$data['seller_approved'] . ",
 					paypal = '" . $this->db->escape($data['sellerinfo_paypal']) . "',
-					avatar_path = '" . $this->db->escape($avatar) . "'
+					avatar = '" . $this->db->escape($avatar) . "'
 				WHERE seller_id = " . (int)$seller_id;
 		
 		$this->db->query($sql);	
@@ -277,7 +280,7 @@ final class MsSeller extends Model {
 	}
 
 	public function getSellerAvatar($seller_id) {
-		$query = $this->db->query("SELECT avatar_path as avatar FROM " . DB_PREFIX . "ms_seller WHERE seller_id = '" . (int)$seller_id . "'");
+		$query = $this->db->query("SELECT avatar as avatar FROM " . DB_PREFIX . "ms_seller WHERE seller_id = '" . (int)$seller_id . "'");
 		
 		return $query->row;
 	}		
@@ -299,7 +302,7 @@ final class MsSeller extends Model {
   	}
   	
   	public function getAvatarPath() {
-  		return $this->avatar_path;
+  		return $this->avatar;
   	}
   	
   	public function getStatus() {
@@ -357,6 +360,7 @@ final class MsSeller extends Model {
 					country_id = " . (int)$data['sellerinfo_country'] . ",
 					paypal = '" . $this->db->escape($data['sellerinfo_paypal']) . "',
 					seller_status = '" .  (int)$data['seller_status'] .  "',
+					seller_approved = '" .  (int)$data['seller_approved'] .  "',
 					product_validation = '" .  (int)$data['sellerinfo_product_validation'] .  "',
 					commission = '" .  (float)$data['sellerinfo_commission'] .  "',
 					commission_flat = '" .  (float)$data['sellerinfo_commission_flat'] .  "'
@@ -394,11 +398,12 @@ final class MsSeller extends Model {
 						ms.website as 'ms.website',
 						ms.paypal as 'ms.paypal',
 						ms.seller_status as 'ms.seller_status',
+						ms.seller_approved as 'ms.seller_approved',
 						ms.date_created as 'ms.date_created',
 						ms.commission as 'ms.commission',
 						ms.commission_flat as 'ms.commission_flat',
 						ms.product_validation as 'ms.product_validation',
-						ms.avatar_path as 'ms.avatar_path',
+						ms.avatar as 'ms.avatar',
 						ms.country_id as 'ms.country_id',
 						ms.description as 'ms.description',
 						IFNULL(SUM(mp.number_sold), 0) as 'total_sales'
@@ -414,22 +419,25 @@ final class MsSeller extends Model {
 				
 		$res = $this->db->query($sql);
 
-		return $res->row;
+		if (!($res->row['seller_id']))
+			return FALSE;
+		else
+			return $res->row;
 	}	
 	
 	public function getSellers($data, $sort = array()) {
-		$sql = "SELECT  
-						CONCAT(c.firstname, ' ', c.lastname) as 'c.name',
+		$sql = "SELECT  CONCAT(c.firstname, ' ', c.lastname) as 'c.name',
 						c.email as 'c.email',
 						ms.seller_id as 'seller_id',
 						ms.nickname as 'ms.nickname',
 						ms.company as 'ms.company',
 						ms.website as 'ms.website',
 						ms.seller_status as 'ms.seller_status',
+						ms.seller_approved as 'ms.seller_approved',
 						ms.date_created as 'ms.date_created',
 						ms.commission as 'ms.commission',
 						ms.commission_flat as 'ms.commission_flat',
-						ms.avatar_path as 'ms.avatar_path',
+						ms.avatar as 'ms.avatar',
 						ms.country_id as 'ms.country_id',
 						ms.description as 'ms.description',
 						IFNULL(SUM(mp.number_sold), 0) as 'total_sales'
@@ -450,10 +458,41 @@ final class MsSeller extends Model {
 		return $res->rows;
 	}
 	
-	//TODO
-	public function getStatusData($seller_id) {
+	public function getStatusText($seller_status) {
+		$status_text = '';
+		switch ($seller_status) {
+			case MsSeller::STATUS_ACTIVE:
+				$status_text = $this->language->get('ms_status_active');
+				break;
+			case MsSeller::STATUS_INACTIVE:
+				$status_text = $this->language->get('ms_status_inactive');
+				break;
+			case MsSeller::STATUS_DISABLED:
+				$status_text = $this->language->get('ms_status_disabled');
+				break;
+			case MsSeller::STATUS_DELETED:
+				$status_text = $this->language->get('ms_status_deleted');
+				break;
+		}
+		
+		return $status_text;
+	}
+	
+	public function getStatuses() {
+		return array(
+			MsSeller::STATUS_ACTIVE =>  $this->language->get('ms_status_active'),
+			MsSeller::STATUS_INACTIVE => $this->language->get('ms_status_inactive'),
+			MsSeller::STATUS_DISABLED => $this->language->get('ms_status_disabled'),
+			MsSeller::STATUS_DELETED => $this->language->get('ms_status_deleted')
+		);
+	}	
+	
+	/*
+	public function getStatusText($seller_id) {
 		$sql = "SELECT ms.seller_status as 'ms.seller_status',
-					   IFNULL(mrs.request_type, 0) as 'mrs.request_type'
+					   ms.seller_approved as 'ms.seller_approved',
+
+IFNULL(mrs.request_type, 0) as 'mrs.request_type'
 				FROM `" . DB_PREFIX . "ms_seller` ms
 				LEFT JOIN `" . DB_PREFIX . "ms_request_seller` mrs
 					USING (seller_id)
@@ -509,7 +548,7 @@ final class MsSeller extends Model {
 			),
 			'text' => $status_text . '. ' . $type_text
 		);
-	}
+	}*/
 }
 
 ?>

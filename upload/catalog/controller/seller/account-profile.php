@@ -72,6 +72,7 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 		if (empty($json['errors'])) {
 			$mails = array();
 			if (empty($seller)) {
+				$data['seller_approved'] = 0;
 				// create new seller
 				switch ($this->config->get('msconf_seller_validation')) {
 					/*
@@ -91,13 +92,6 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 							)
 						);
 						$data['seller_status'] = MsSeller::STATUS_INACTIVE;
-
-						$this->MsLoader->MsRequestSeller->createSellerRequest($this->customer->getId(),
-							array(
-								'message' => $data['sellerinfo_reviewer_message'],
-								'request_type' => MsRequestSeller::TYPE_SELLER_CREATE
-							)
-						);
 						break;
 					
 					case MsSeller::MS_SELLER_VALIDATION_NONE:
@@ -109,6 +103,7 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 							'type' => MsMail::AMT_SELLER_ACCOUNT_CREATED
 						);					
 						$data['seller_status'] = MsSeller::STATUS_ACTIVE;
+						$data['seller_approved'] = 1;
 						break;
 				}
 				
@@ -141,7 +136,6 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 	}
 
 	public function index() {
-		$this->document->addScript('catalog/view/javascript/jquery.form.js');
 		$this->document->addScript('catalog/view/javascript/account-seller-profile.js');
 		$this->document->addScript('catalog/view/javascript/jquery.uploadify.js');
 		
@@ -151,20 +145,17 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 		$seller = $this->MsLoader->MsSeller->getSeller($this->customer->getId());
 		
 		$this->data['salt'] = $this->MsLoader->MsSeller->getSalt($this->customer->getId());
-		
-		if (!empty($seller)) {
+		if ($seller) {
 			$this->data['seller'] = $seller;
-			if (!empty($seller['avatar_path'])) {
-				$this->data['seller']['avatar']['name'] = $seller['avatar_path'];
-				$this->data['seller']['avatar']['thumb'] = $this->MsLoader->MsFile->resizeImage($seller['avatar_path'], $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'));
-				$this->session->data['multiseller']['files'][] = $seller['avatar_path'];
+			if (!empty($seller['ms.avatar'])) {
+				$this->data['seller']['avatar']['name'] = $seller['ms.avatar'];
+				$this->data['seller']['avatar']['thumb'] = $this->MsLoader->MsFile->resizeImage($seller['ms.avatar'], $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'));
+				$this->session->data['multiseller']['files'][] = $seller['ms.avatar'];
 			}
 
+			$this->data['statustext'] = $this->language->get('ms_account_status') . $this->MsLoader->MsSeller->getStatusText($seller['ms.seller_status']);
 
-			$status_data = $this->MsLoader->MsSeller->getStatusData($this->customer->getId());
-			$this->data['status_data'] = $status_data;
-			$this->data['statustext'] = $this->language->get('ms_account_status') . $status_data['text'];
-			
+			/*			
 			switch ($status_data['seller_status']['id']) {
 				case MsSeller::STATUS_DELETED:
 					 //$this->data['statustext'] .= $this->language->get('ms_account_status_activation');
@@ -183,9 +174,10 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 					break;
 			
 			}
-		} else {	
+			*/
+		} else {
 			$this->data['seller'] = FALSE;
-			$this->data['statustext'] = $this->language->get('ms_account_status_please_fill_in');			
+			$this->data['statustext'] = $this->language->get('ms_account_status_please_fill_in');
 		}
 
 		$this->data['seller_validation'] = $this->config->get('msconf_seller_validation');

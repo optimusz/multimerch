@@ -54,8 +54,8 @@ class ControllerSellerCatalogSeller extends ControllerSellerCatalog {
 		);
 		
 		foreach ($results as $result) {
-			if ($result['ms.avatar_path'] && file_exists(DIR_IMAGE . $result['ms.avatar_path'])) {
-				$image = $this->MsLoader->MsFile->resizeImage($result['ms.avatar_path'], $this->config->get('config_image_category_width'), $this->config->get('config_image_category_height'));
+			if ($result['ms.avatar'] && file_exists(DIR_IMAGE . $result['ms.avatar'])) {
+				$image = $this->MsLoader->MsFile->resizeImage($result['ms.avatar'], $this->config->get('config_image_category_width'), $this->config->get('config_image_category_height'));
 			} else {
 				$image = $this->MsLoader->MsFile->resizeImage('ms_no_image.jpg', $this->config->get('config_image_category_width'), $this->config->get('config_image_category_height'));
 			}
@@ -207,8 +207,8 @@ class ControllerSellerCatalogSeller extends ControllerSellerCatalog {
 			return;
 		}
 			
-		if ($seller['ms.avatar_path'] && file_exists(DIR_IMAGE . $seller['ms.avatar_path'])) {
-			$image = $this->MsLoader->MsFile->resizeImage($seller['ms.avatar_path'], $this->config->get('config_image_category_width'), $this->config->get('config_image_category_height'));
+		if ($seller['ms.avatar'] && file_exists(DIR_IMAGE . $seller['ms.avatar'])) {
+			$image = $this->MsLoader->MsFile->resizeImage($seller['ms.avatar'], $this->config->get('config_image_category_width'), $this->config->get('config_image_category_height'));
 		} else {
 			$image = $this->MsLoader->MsFile->resizeImage('no_image.jpg', $this->config->get('config_image_category_width'), $this->config->get('config_image_category_height'));
 		}
@@ -325,7 +325,7 @@ class ControllerSellerCatalogSeller extends ControllerSellerCatalog {
 		$this->load->model('localisation/country');
     	$this->language->load('product/category');
     	
-		$seller = $this->MsLoader->MsSeller->getSellerData($this->request->get['seller_id']);
+		$seller = $this->MsLoader->MsSeller->getSeller($this->request->get['seller_id']);
 
 		if (empty($seller) || $seller['ms.seller_status'] != MsSeller::STATUS_ACTIVE) {
 			$this->redirect($this->url->link('seller/catalog-seller', '', 'SSL'));
@@ -333,8 +333,8 @@ class ControllerSellerCatalogSeller extends ControllerSellerCatalog {
 		}
 		
 		/* seller info part */	
-		if ($seller['ms.avatar_path'] && file_exists(DIR_IMAGE . $seller['ms.avatar_path'])) {
-			$image = $this->MsLoader->MsFile->resizeImage($seller['ms.avatar_path'], $this->config->get('config_image_category_width'), $this->config->get('config_image_category_height'));
+		if ($seller['ms.avatar'] && file_exists(DIR_IMAGE . $seller['ms.avatar'])) {
+			$image = $this->MsLoader->MsFile->resizeImage($seller['ms.avatar'], $this->config->get('config_image_category_width'), $this->config->get('config_image_category_height'));
 		} else {
 			$image = $this->MsLoader->MsFile->resizeImage('no_image.jpg', $this->config->get('config_image_category_width'), $this->config->get('config_image_category_height'));
 		}
@@ -640,7 +640,7 @@ class ControllerSellerCatalogSeller extends ControllerSellerCatalog {
 			$seller_id = $this->request->get['seller_id'];
 			$this->data['product_id'] = 0;
   		}
-		$seller = $this->MsLoader->MsSeller->getSellerData($seller_id);
+		$seller = $this->MsLoader->MsSeller->getSeller($seller_id);
 		
 		if (empty($seller))
 			return false;
@@ -650,8 +650,8 @@ class ControllerSellerCatalogSeller extends ControllerSellerCatalog {
 		$this->data['customer_email'] = $this->customer->getEmail();
 		$this->data['customer_name'] = $this->customer->getFirstname() . ' ' . $this->customer->getLastname();
 		
-		if (!empty($seller['ms.avatar_path']))
-			$this->data['seller_thumb'] = $this->MsLoader->MsFile->resizeImage($seller['ms.avatar_path'], $this->config->get('config_image_category_width'), $this->config->get('config_image_category_height'));
+		if (!empty($seller['ms.avatar']))
+			$this->data['seller_thumb'] = $this->MsLoader->MsFile->resizeImage($seller['ms.avatar'], $this->config->get('config_image_category_width'), $this->config->get('config_image_category_height'));
 			
 		$this->data['seller_href'] = $this->url->link('seller/catalog-seller/profile', 'seller_id=' . $seller['seller_id']);
 		$this->data['ms_sellercontact_sendmessage'] = sprintf($this->language->get('ms_sellercontact_sendmessage'), $seller['ms.nickname']);

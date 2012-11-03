@@ -4,7 +4,7 @@ class ControllerSellerAccountWithdrawal extends ControllerSellerAccount {
 	public function jxRequestMoney() {
 		$data = $this->request->post;
 
-		$seller = $this->MsLoader->MsSeller->getSellerData($this->customer->getId());
+		$seller = $this->MsLoader->MsSeller->getSeller($this->customer->getId());
 		$balance = $this->MsLoader->MsBalance->getSellerBalance($this->customer->getId()) - $this->MsLoader->MsBalance->getReservedSellerFunds($this->customer->getId());
 
 		$json = array();

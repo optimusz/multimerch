@@ -3,18 +3,15 @@
 // General
 $_['ms_enabled']      = 'Enabled';
 $_['ms_disabled']      = 'Disabled';
-
-
-$_['ms_product_status_enabled']      = 'Enabled';
-$_['ms_product_status_disabled']      = 'Disabled';
-$_['ms_product_status_seller_deleted']       = 'Deleted by seller';
+$_['ms_apply']      = 'Apply';
+$_['ms_approved']      = 'Approved';
 
 $_['ms_status_active'] = 'Active';
 $_['ms_status_inactive'] = 'Inactive';
+$_['ms_status_published'] = 'Published';
+$_['ms_status_notpublished'] = 'Not published';
 $_['ms_status_disabled'] = 'Disabled';
 $_['ms_status_deleted'] = 'Deleted';
-$_['ms_status_pending_approval'] = 'Pending approval';
-$_['ms_status_pending_deletion'] = 'Pending deletion';
 
 $_['heading_title']    = '[ffct.cc] Digital Multiseller Marketplace';
 $_['text_module']         = 'Modules';
