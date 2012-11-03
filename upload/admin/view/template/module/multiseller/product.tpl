@@ -15,6 +15,7 @@
     <div class="heading">
       <h1><img src="view/image/customer.png" alt="" /> <?php echo $ms_catalog_products_heading; ?></h1>
       <div class="buttons">
+      	<form id="bulk" method="post" enctype="multipart/form-data">
       	<!--
       	<select name="bulk_product_seller">
       		<option>--Bulk seller change--</option>
@@ -29,7 +30,9 @@
       		<option value="<?php echo $i; ?>"><?php echo $this->MsLoader->MsProduct->getStatusText($i); ?></option>
       		<?php } ?>
       	</select>
+      	<input type="checkbox" name="bulk_mail" id="bulk_mail" />
       	<a class="ms-action button" id="ms-bulk-apply"><?php echo $ms_apply; ?></a>
+      	</form>
 	  </div>
     </div>
     <div class="content">
@@ -40,7 +43,6 @@
       	}
       </style>    
       <form action="" method="post" enctype="multipart/form-data" id="form">
-      	<input type="hidden" name="ms-action" id="ms-action" />
         <table class="list" style="text-align: center">
           <thead>
             <tr>
@@ -94,63 +96,60 @@ $(document).ready(function() {
 	$("#ms-bulk-apply").click(function() {
 		if ($('#form tbody input:checkbox:checked').length == 0)
 			return;
-			
-		var data  = $('#form,#product_message,select').serialize();
-		$('#ms-bulk-apply').before('<img src="view/image/loading.gif" alt="" />');
-	    $.ajax({
-			type: "POST",
-			//async: false,
-			dataType: "json",
-			url: 'index.php?route=multiseller/product/jxProductStatus&token=<?php echo $token; ?>',
-			data: data,
-			success: function(jsonData) {
-				window.location.reload();
-			}
-		});
-	});	
-	
-	$("ms-action").click(function() {
-		if ($('#form tbody input:checkbox:checked').length == 0)
-			return;	
-		$('#ms-action').val($(this).attr('id'));
-		$('<div />').html('<p>Message to the sellers:</p><textarea style="width:100%; height:70%" id="product_message" name="product_message"></textarea>').dialog({
-			resizable: false,
-			dialogClass: "msBlack",
-			width: 600,
-			height: 300,
-			title: 'Change product status',
-			modal: true,
-			buttons: [
-				{
-    				id: "button-submit",
-    				text: "Submit",
-					click: function() {
-						var data  = $('#form,#product_message').serialize();
-						var dialog = $(this);
-						$('#button-submit').before('<p style="text-align: center"><img src="view/image/loading.gif" alt="" /></p>');
-						$('#button-submit,#button-cancel').remove();
-					    $.ajax({
-							type: "POST",
-							//async: false,
-							dataType: "json",
-							url: 'index.php?route=multiseller/product/jxProductStatus&token=<?php echo $token; ?>',
-							data: data,
-							success: function(jsonData) {
-								window.location.reload();
-							}
-						});
+		
+		if ($("#bulk_mail").is(":checked")) {
+			$('<div />').html('<p>Optional note to the sellers:</p><textarea style="width:100%; height:70%" id="product_message" name="product_message"></textarea>').dialog({
+				resizable: false,
+				dialogClass: "msBlack",
+				width: 600,
+				height: 300,
+				title: 'Change product status',
+				modal: true,
+				buttons: [
+					{
+	    				id: "button-submit",
+	    				text: "Submit",
+						click: function() {
+							var data  = $('#form,#product_message,#bulk').serialize();
+							var dialog = $(this);
+							$('#button-submit').before('<p style="text-align: center"><img src="view/image/loading.gif" alt="" /></p>');
+							$('#button-submit,#button-cancel').remove();
+						    $.ajax({
+								type: "POST",
+								//async: false,
+								dataType: "json",
+								url: 'index.php?route=multiseller/product/jxProductStatus&token=<?php echo $token; ?>',
+								data: data,
+								success: function(jsonData) {
+									window.location.reload();
+								}
+							});
+						}
+					},
+					{
+	    				id: "button-cancel",
+	    				text: "Cancel",
+						click: function() {
+							$(this).dialog("close");
+						}
 					}
-				},
-				{
-    				id: "button-cancel",
-    				text: "Cancel",
-					click: function() {
-						$(this).dialog("close");
-					}
+				]
+			});
+		} else {
+			var data  = $('#form,#product_message,#bulk').serialize();
+			$('#ms-bulk-apply').before('<img src="view/image/loading.gif" alt="" />');
+		    $.ajax({
+				type: "POST",
+				//async: false,
+				dataType: "json",
+				url: 'index.php?route=multiseller/product/jxProductStatus&token=<?php echo $token; ?>',
+				data: data,
+				success: function(jsonData) {
+					window.location.reload();
 				}
-			]
-		});
-	});
+			});
+		}
+	});	
 });
 //--></script>
 <?php echo $footer; ?> 

@@ -72,7 +72,10 @@ class ControllerSellerCatalogSeller extends ControllerSellerCatalog {
 				'website' => ($result['ms.website'] ? $result['ms.website'] : NULL),
 				'country_flag' => ($country ? 'image/flags/' . strtolower($country['iso_code_2']) . '.png' : NULL),
 				'total_sales' => $this->MsLoader->MsSeller->getSalesForSeller($result['seller_id']),
-				'total_products' => $this->MsLoader->MsSeller->getTotalSellerProducts($result['seller_id'], TRUE),
+				'total_products' => $this->MsLoader->MsProduct->getTotalProducts(array(
+					'seller_id' => $result['seller_id'],
+					'product_status' => array(MsProduct::STATUS_ACTIVE)
+				)),
 				'href'        => $this->url->link('seller/catalog-seller/profile', '&seller_id=' . $result['seller_id'])
 			);
 		}
@@ -404,12 +407,23 @@ class ControllerSellerCatalogSeller extends ControllerSellerCatalog {
 			//'filter_category_id' => $category_id, 
 			'order_by'               => $order_by,
 			'order_way'              => $order_way,
-			'page'              => $page,
+			'offset'              => ($page - 1) * $limit,
 			'limit'              => $limit
 		);
 		
-		$total_products = $this->MsLoader->MsSeller->getTotalSellerProducts($seller['seller_id'], TRUE);
-		$products = $this->MsLoader->MsSeller->getSellerProducts($seller['seller_id'], $sort, TRUE);
+		$total_products = $this->MsLoader->MsProduct->getTotalProducts(array(
+			'seller_id' => $seller['seller_id'],
+			'product_status' => array(MsProduct::STATUS_ACTIVE)
+		));
+		
+		$products = $this->MsLoader->MsProduct->getProducts(
+			array(
+				'seller_id' => $seller['seller_id'],
+				'product_status' => array(MsProduct::STATUS_ACTIVE)
+			),
+			$sort
+		);
+		
 		if (!empty($products)) {
 			foreach ($products as $product) {
 				$product_data = $this->model_catalog_product->getProduct($product['product_id']);

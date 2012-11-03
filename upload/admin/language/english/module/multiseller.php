@@ -263,52 +263,19 @@ $_['ms_mail_greeting']      = "Hello %s,\n\n";
 $_['ms_mail_ending']      = "\n\nRegards,\n%s";
 $_['ms_mail_message']      = "\n\nMessage:\n%s";
 
-$_['ms_mail_subject_seller_account_approved']      = 'Seller account approved';
-$_['ms_mail_seller_account_approved'] = <<<EOT
-Your seller account at %s has been approved and activated.
-
-You can now start adding your products.
-EOT;
-
-$_['ms_mail_subject_seller_account_declined']      = 'Seller account declined';
-$_['ms_mail_seller_account_declined'] = <<<EOT
-Your seller account at %s has been declined.
-EOT;
-
-$_['ms_mail_subject_seller_account_disabled']      = 'Seller account disabled';
-$_['ms_mail_seller_account_disabled'] = <<<EOT
-Your seller account at %s has been disabled.
-EOT;
-
-$_['ms_mail_subject_seller_account_enabled']      = 'Seller account enabled';
-$_['ms_mail_seller_account_enabled'] = <<<EOT
-Your seller account at %s has been enabled.
-EOT;
 
 $_['ms_mail_subject_seller_account_modified']      = 'Seller account modified';
 $_['ms_mail_seller_account_modified'] = <<<EOT
 Your seller account at %s has been modified by the administrator.
+
+Account status: %s
 EOT;
 
+$_['ms_mail_subject_product_modified']      = 'Product modified';
+$_['ms_mail_product_modified'] = <<<EOT
+Your product %s at %s has been modified by the administrator.
 
-$_['ms_mail_subject_product_approved']      = 'Product approved';
-$_['ms_mail_product_approved'] = <<<EOT
-Your product %s at %s has been approved and is now active!
-EOT;
-
-$_['ms_mail_subject_product_declined']      = 'Product declined';
-$_['ms_mail_product_declined'] = <<<EOT
-Your product %s at %s has been declined.
-EOT;
-
-$_['ms_mail_subject_product_enabled']      = 'Product active';
-$_['ms_mail_product_enabled'] = <<<EOT
-Your product %s at %s is now active.
-EOT;
-
-$_['ms_mail_subject_product_disabled']      = 'Product disabled';
-$_['ms_mail_product_disabled'] = <<<EOT
-Your product %s at %s has been disabled.
+Product status: %s
 EOT;
 
 // Sales - Mail

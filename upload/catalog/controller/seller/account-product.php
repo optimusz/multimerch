@@ -529,7 +529,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 			array(
 				'seller_id' => $seller_id,
 				'language_id' => $this->config->get('config_language_id'),
-				//'product_status' => array(MsProduct::STATUS_ACTIVE)
+				'product_status' => array(MsProduct::STATUS_ACTIVE, MsProduct::STATUS_INACTIVE, MsProduct::STATUS_DISABLED)
 			),
 			array(
 				'order_by'  => 'date_added',
@@ -552,7 +552,10 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		}
 		
 		$pagination = new Pagination();
-		$pagination->total = $this->MsLoader->MsSeller->getTotalSellerProducts($seller_id);
+		$pagination->total = $this->MsLoader->MsProduct->getTotalProducts(array(
+			'seller_id' => $seller_id,
+			'product_status' => array(MsProduct::STATUS_ACTIVE, MsProduct::STATUS_INACTIVE, MsProduct::STATUS_DISABLED)
+		));
 		$pagination->page = ($page - 1) * 5;
 		$pagination->limit = 5;
 		$pagination->text = $this->language->get('text_pagination');
@@ -697,8 +700,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		$seller_id = (int)$this->customer->getId();
 		
 		if ($this->MsLoader->MsProduct->productOwnedBySeller($product_id, $seller_id)) {
-			//$this->MsLoader->MsProduct->deleteProduct($product_id);
-			$this->MsLoader->MsProduct->hideProduct($product_id);
+			$this->MsLoader->MsProduct->changeStatus($product_id, MsProduct::STATUS_DELETED);
 		}
 		
 		$this->redirect($this->url->link('seller/account-product', '', 'SSL'));		

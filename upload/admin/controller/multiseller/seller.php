@@ -20,32 +20,26 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 		}
 		
 		if (strlen($data['sellerinfo_company']) > 50 ) {
-			$json['errors']['sellerinfo_company'] = 'Company name cannot be longer than 50 characters';			
+			$json['errors']['sellerinfo_company'] = 'Company name cannot be longer than 50 characters';
 		}
 		
 		if (empty($json['errors'])) {
-			if (!isset($data['sellerinfo_message'])) $data['sellerinfo_message'] = '';
-				
 			$mails = array();
-			
-			/*
-			if ($data['sellerinfo_action'] != 0) {
-				$data['ms.seller_status'] = $seller['ms.seller_status'];
-				$mails[] = array(
-					'type' => MsMail::SMT_SELLER_ACCOUNT_MODIFIED,
-					'data' => array(
-						'recipients' => $this->MsLoader->MsSeller->getSellerEmail($data['seller_id']),
-						'addressee' => $this->MsLoader->MsSeller->getSellerName($data['seller_id']),
-						'message' => $data['sellerinfo_message']
-					)
-				);				
-			}
-			*/
+			$mails[] = array(
+				'type' => MsMail::SMT_SELLER_ACCOUNT_MODIFIED,
+				'data' => array(
+					'recipients' => $seller['c.email'],
+					'addressee' => $seller['ms.nickname'],
+					'message' => (isset($data['sellerinfo_message']) ? $data['sellerinfo_message'] : ''),
+					'seller_id' => $seller['seller_id']
+				)
+			);		
+
 			// edit seller
 			$this->MsLoader->MsSeller->adminEditSeller($data);
 			
 			if ($data['sellerinfo_notify']) {
-				//$this->MsLoader->MsMail->sendMails($mails);
+				$this->MsLoader->MsMail->sendMails($mails);
 			}
 			
 			$this->session->data['success'] = 'Seller account data saved.';
@@ -92,13 +86,16 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 
     	foreach ($results as &$result) {
     		$result['date_created'] = date($this->language->get('date_format_short'), strtotime($result['ms.date_created']));
-    		$result['total_products'] = $this->MsLoader->MsSeller->getTotalSellerProducts($result['seller_id']);
+    		$result['total_products'] = $this->MsLoader->MsProduct->getTotalProducts(array(
+				'seller_id' => $result['seller_id'],
+			));
+			
 			//$result['total_earnings'] = $this->currency->format($this->MsLoader->MsSeller->getEarningsForSeller($result['seller_id']), $this->config->get('config_currency'));
 			$result['current_balance'] = $this->currency->format($this->MsLoader->MsBalance->getSellerBalance($result['seller_id']), $this->config->get('config_currency'));
 			$result['total_sales'] = $this->MsLoader->MsSeller->getSalesForSeller($result['seller_id']);
 			$result['status'] = $this->MsLoader->MsSeller->getStatusText($result['ms.seller_status']);
 			$result['actions'][] = array(
-				'text' => $this->language->get('text_view'),
+				'text' => $this->language->get('text_edit'),
 				'href' => $this->url->link('multiseller/seller/update', 'token=' . $this->session->data['token'] . '&seller_id=' . $result['seller_id'], 'SSL')
 			);
 			

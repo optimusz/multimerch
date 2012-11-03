@@ -157,58 +157,6 @@ class MsProduct extends Model {
 		return $res->row;		
 	}	
 	
-	public function getProduct($product_id) {
-		$sql = "SELECT 	p.price,
-						p.product_id as 'product_id',
-						p.status as enabled,
-						p.image as thumbnail,
-						p.shipping as shipping,
-						p.quantity as quantity,
-						group_concat(ptc.category_id separator ',') as category_id,
-						mp.product_status
-				FROM `" . DB_PREFIX . "product` p
-				INNER JOIN `" . DB_PREFIX . "product_to_category` ptc
-					ON p.product_id = ptc.product_id
-				INNER JOIN `" . DB_PREFIX . "ms_product` mp
-					ON ptc.product_id = mp.product_id
-				WHERE p.product_id = " . (int)$product_id;
-		$res = $this->db->query($sql);
-
-		if (strcmp(VERSION,'1.5.4') >= 0) {
-			$sql = "SELECT pd.*
-					FROM " . DB_PREFIX . "product_description pd
-					WHERE pd.product_id = " . (int)$product_id . "
-					GROUP BY language_id";
-
-		} else {
-			$sql = "SELECT pd.*,
-						   group_concat(pt.tag separator ', ') as tag
-					FROM " . DB_PREFIX . "product_description pd
-					LEFT JOIN `" . DB_PREFIX . "product_tag` pt
-						ON pd.product_id = pt.product_id
-						AND pd.language_id = pt.language_id
-					WHERE pd.product_id = " . (int)$product_id . "
-					GROUP BY language_id";
-		}
-		
-
-
-		$descriptions = $this->db->query($sql);
-		$product_description_data = array();
-		foreach ($descriptions->rows as $result) {
-			$product_description_data[$result['language_id']] = array(
-				'name'             => $result['name'],
-				'description'      => $result['description'],
-				'tags'      => $result['tag']
-				//'meta_keyword'     => $result['meta_keyword'],
-				//'meta_description' => $result['meta_description']
-			);
-		}
-
-		$res->row['languages'] = $product_description_data;
-		return $res->row;
-	}
-		
 	public function getProductImages($product_id) {
 		$sql = "SELECT * FROM " . DB_PREFIX . "product_image WHERE product_id = '" . (int)$product_id . "'";
 		$res = $this->db->query($sql);
@@ -697,6 +645,60 @@ class MsProduct extends Model {
 
 		return $res->row['total'];
 	}
+	
+	//todo
+	public function getProduct($product_id) {
+		$sql = "SELECT 	p.price,
+						p.product_id as 'product_id',
+						mp.product_status as 'mp.product_status',
+						p.status as enabled,
+						p.image as thumbnail,
+						p.shipping as shipping,
+						p.quantity as quantity,
+						group_concat(ptc.category_id separator ',') as category_id,
+						mp.product_status
+				FROM `" . DB_PREFIX . "product` p
+				INNER JOIN `" . DB_PREFIX . "product_to_category` ptc
+					ON p.product_id = ptc.product_id
+				INNER JOIN `" . DB_PREFIX . "ms_product` mp
+					ON ptc.product_id = mp.product_id
+				WHERE p.product_id = " . (int)$product_id;
+		$res = $this->db->query($sql);
+
+		if (strcmp(VERSION,'1.5.4') >= 0) {
+			$sql = "SELECT pd.*
+					FROM " . DB_PREFIX . "product_description pd
+					WHERE pd.product_id = " . (int)$product_id . "
+					GROUP BY language_id";
+
+		} else {
+			$sql = "SELECT pd.*,
+						   group_concat(pt.tag separator ', ') as tag
+					FROM " . DB_PREFIX . "product_description pd
+					LEFT JOIN `" . DB_PREFIX . "product_tag` pt
+						ON pd.product_id = pt.product_id
+						AND pd.language_id = pt.language_id
+					WHERE pd.product_id = " . (int)$product_id . "
+					GROUP BY language_id";
+		}
+		
+
+
+		$descriptions = $this->db->query($sql);
+		$product_description_data = array();
+		foreach ($descriptions->rows as $result) {
+			$product_description_data[$result['language_id']] = array(
+				'name'             => $result['name'],
+				'description'      => $result['description'],
+				'tags'      => $result['tag']
+				//'meta_keyword'     => $result['meta_keyword'],
+				//'meta_description' => $result['meta_description']
+			);
+		}
+
+		$res->row['languages'] = $product_description_data;
+		return $res->row;
+	}	
 	
 	public function getProducts($data, $sort) {
 		// todo validate order parameters

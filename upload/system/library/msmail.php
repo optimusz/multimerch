@@ -10,11 +10,8 @@ class MsMail extends Model {
 	
 	const SMT_PRODUCT_CREATED = 5;
 	const SMT_PRODUCT_AWAITING_MODERATION = 6;
-	const SMT_PRODUCT_APPROVED = 7;
-	const SMT_PRODUCT_DECLINED = 8;
-	const SMT_PRODUCT_ENABLED = 9;
-	const SMT_PRODUCT_DISABLED = 10;
-	
+	const SMT_PRODUCT_MODIFIED = 21;
+		
 	const SMT_PRODUCT_PURCHASED = 11;
 	
 	const SMT_WITHDRAW_REQUEST_SUBMITTED = 12;
@@ -119,6 +116,10 @@ class MsMail extends Model {
 			$this->load->model('checkout/order');
 			$model_checkout_order = $this->registry->get('model_checkout_order'); 
 			$order_info = $model_checkout_order->getOrder($data['order_id']);
+		}
+		
+		if (isset($data['seller_id'])) {
+			$seller = $this->MsLoader->MsSeller->getSeller($data['seller_id']);
 		}		
 		
 		//$message .= sprintf($this->language->get('ms_mail_regards'), HTTP_SERVER) . "\n" . $this->config->get('config_name');
@@ -161,25 +162,9 @@ class MsMail extends Model {
 				$mail_subject .= $this->language->get('ms_mail_subject_seller_account_awaiting_moderation');
 				$mail_text .= sprintf($this->language->get('ms_mail_seller_account_awaiting_moderation'), $this->config->get('config_name'));
 				break;
-			case self::SMT_SELLER_ACCOUNT_APPROVED:
-				$mail_subject .= $this->language->get('ms_mail_subject_seller_account_approved');
-				$mail_text .= sprintf($this->language->get('ms_mail_seller_account_approved'), $this->config->get('config_name'));
-				break;
-			case self::SMT_SELLER_ACCOUNT_DECLINED:
-				$mail_subject .= $this->language->get('ms_mail_subject_seller_account_declined');
-				$mail_text .= sprintf($this->language->get('ms_mail_seller_account_declined'), $this->config->get('config_name'));
-				break;
-			case self::SMT_SELLER_ACCOUNT_DISABLED:
-				$mail_subject .= $this->language->get('ms_mail_subject_seller_account_disabled');
-				$mail_text .= sprintf($this->language->get('ms_mail_seller_account_disabled'), $this->config->get('config_name'));
-				break;
-			case self::SMT_SELLER_ACCOUNT_ENABLED:
-				$mail_subject .= $this->language->get('ms_mail_subject_seller_account_enabled');
-				$mail_text .= sprintf($this->language->get('ms_mail_seller_account_enabled'), $this->config->get('config_name'));
-				break;
 			case self::SMT_SELLER_ACCOUNT_MODIFIED:
 				$mail_subject .= $this->language->get('ms_mail_subject_seller_account_modified');
-				$mail_text .= sprintf($this->language->get('ms_mail_seller_account_modified'), $this->config->get('config_name'));
+				$mail_text .= sprintf($this->language->get('ms_mail_seller_account_modified'), $this->config->get('config_name'), $this->MsLoader->MsSeller->getStatusText($seller['ms.seller_status']));
 				break;
 				
 				
@@ -187,21 +172,10 @@ class MsMail extends Model {
 				$mail_subject .= $this->language->get('ms_mail_subject_product_awaiting_moderation');
 				$mail_text .= sprintf($this->language->get('ms_mail_product_awaiting_moderation'), $product['name'], $this->config->get('config_name'));
 				break;
-			case self::SMT_PRODUCT_APPROVED:
-				$mail_subject .= $this->language->get('ms_mail_subject_product_approved');
-				$mail_text .= sprintf($this->language->get('ms_mail_product_approved'), $product['name'], $this->config->get('config_name'));
-				break;
-			case self::SMT_PRODUCT_DECLINED:
-				$mail_subject .= $this->language->get('ms_mail_subject_product_declined');
-				$mail_text .= sprintf($this->language->get('ms_mail_product_declined'), $product['name'], $this->config->get('config_name'));
-				break;
-			case self::SMT_PRODUCT_ENABLED:
-				$mail_subject .= $this->language->get('ms_mail_subject_product_enabled');
-				$mail_text .= sprintf($this->language->get('ms_mail_product_enabled'), $product['name'], $this->config->get('config_name'));
-				break;
-			case self::SMT_PRODUCT_DISABLED:
-				$mail_subject .= $this->language->get('ms_mail_subject_product_disabled');
-				$mail_text .= sprintf($this->language->get('ms_mail_product_disabled'), $product['name'], $this->config->get('config_name'));
+				
+			case self::SMT_PRODUCT_MODIFIED:
+				$mail_subject .= $this->language->get('ms_mail_subject_product_modified');
+				$mail_text .= sprintf($this->language->get('ms_mail_product_modified'), $product['name'], $this->config->get('config_name'), $this->MsLoader->MsProduct->getStatusText($product['mp.product_status']));
 				break;
 			
 			case self::SMT_PRODUCT_PURCHASED:
@@ -215,7 +189,6 @@ class MsMail extends Model {
 						$mail_text .= sprintf($this->language->get('ms_mail_product_purchased_comment'), $order_info['comment']);
 					}
 				}
-				
 				break;				
 			
 			case self::SMT_WITHDRAW_REQUEST_SUBMITTED:

@@ -96,30 +96,48 @@ class ControllerMultisellerProduct extends ControllerMultisellerBase {
 	public function jxProductStatus() {
 		$this->validate(__FUNCTION__);
 		$mails = array();
+		
 		if (isset($this->request->post['selected'])) {
 			foreach ($this->request->post['selected'] as $product_id) {
-				$this->MsLoader->MsProduct->createRecord($product_id, array());
-				switch ($this->request->post['bulk_product_status']) {
-					case MsProduct::STATUS_ACTIVE:
-						$this->MsLoader->MsProduct->changeStatus($product_id, MsProduct::STATUS_ACTIVE);
-						$this->MsLoader->MsProduct->approve($product_id);
-						break;
-					case MsProduct::STATUS_INACTIVE:
-						$this->MsLoader->MsProduct->changeStatus($product_id, MsProduct::STATUS_INACTIVE);
-						$this->MsLoader->MsProduct->disapprove($product_id);
-						break;
-					case MsProduct::STATUS_DISABLED:
-						$this->MsLoader->MsProduct->changeStatus($product_id, MsProduct::STATUS_DISABLED);
-						$this->MsLoader->MsProduct->disapprove($product_id);
-						break;
-					case MsProduct::STATUS_DELETED:
-						$this->MsLoader->MsProduct->changeStatus($product_id, MsProduct::STATUS_DELETED);
-						$this->MsLoader->MsProduct->disapprove($product_id);
-						break;
+				$seller = $this->MsLoader->MsSeller->getSeller($this->MsLoader->MsProduct->getSellerId($product_id));
+				
+				if ((int)$this->request->post['bulk_product_status'] > 0) {
+					$this->MsLoader->MsProduct->createRecord($product_id, array());
+					switch ($this->request->post['bulk_product_status']) {
+						case MsProduct::STATUS_ACTIVE:
+							$this->MsLoader->MsProduct->changeStatus($product_id, MsProduct::STATUS_ACTIVE);
+							$this->MsLoader->MsProduct->approve($product_id);
+							break;
+						case MsProduct::STATUS_INACTIVE:
+							$this->MsLoader->MsProduct->changeStatus($product_id, MsProduct::STATUS_INACTIVE);
+							$this->MsLoader->MsProduct->disapprove($product_id);
+							break;
+						case MsProduct::STATUS_DISABLED:
+							$this->MsLoader->MsProduct->changeStatus($product_id, MsProduct::STATUS_DISABLED);
+							$this->MsLoader->MsProduct->disapprove($product_id);
+							break;
+						case MsProduct::STATUS_DELETED:
+							$this->MsLoader->MsProduct->changeStatus($product_id, MsProduct::STATUS_DELETED);
+							$this->MsLoader->MsProduct->disapprove($product_id);
+							break;
+					}
+					$this->session->data['success'] = 'Successfully changed product status.';
 				}
+				
+				$mails[] = array(
+					'type' => MsMail::SMT_PRODUCT_MODIFIED,
+					'data' => array(
+						'recipients' => $seller['c.email'],
+						'addressee' => $seller['ms.nickname'],
+						'message' => $this->request->post['product_message'],
+						'product_id' => $product_id
+					)
+				);
 			}
-			//$this->MsLoader->MsMail->sendMails($mails);
-			//$this->session->data['success'] = 'Successfully changed product status.';
+			
+			if (isset($this->request->post['bulk_mail'])) {
+				$this->MsLoader->MsMail->sendMails($mails);
+			}
 		} else {
 			//$this->session->data['error'] = 'Error changing product status.';
 		}
