@@ -190,7 +190,7 @@ class MsProduct extends Model {
 		
 		if (isset($data['option_ids'])) {
 			if (!empty($data['option_ids']))
-				$sql .= " AND o.option_id IN (" . $data['option_ids'] . ")";
+				$sql .= " AND o.option_id IN (" . implode(',', $data['option_ids']) . ")";
 			else
 				$sql .= " AND o.option_id IN (NULL)";
 		}
