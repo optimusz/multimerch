@@ -27,7 +27,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		<?php if ($transactions) { ?>
+		<?php if (isset($transactions) && $transactions) { ?>
 		<?php foreach ($transactions  as $transaction) { ?>
 		<tr>
 			<td class="left"><?php echo $transaction['date_created']; ?></td>
