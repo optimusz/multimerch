@@ -666,13 +666,15 @@ class MsProduct extends Model {
 		$res = $this->db->query($sql);
 
 		if (strcmp(VERSION,'1.5.4') >= 0) {
-			$sql = "SELECT pd.*
+			$sql = "SELECT pd.*,
+						   pd.description as 'pd.description'
 					FROM " . DB_PREFIX . "product_description pd
 					WHERE pd.product_id = " . (int)$product_id . "
 					GROUP BY language_id";
 
 		} else {
 			$sql = "SELECT pd.*,
+						   pd.description as 'pd.description'
 						   group_concat(pt.tag separator ', ') as tag
 					FROM " . DB_PREFIX . "product_description pd
 					LEFT JOIN `" . DB_PREFIX . "product_tag` pt
@@ -710,7 +712,8 @@ class MsProduct extends Model {
 						mp.product_approved as 'mp.product_approved',
 						mp.number_sold as 'mp.number_sold',
 						p.date_added as 'p.date_created',
-						p.date_modified  as 'p.date_modified'
+						p.date_modified  as 'p.date_modified',
+						pd.description as 'pd.description'
 				FROM " . DB_PREFIX . "product p
 				INNER JOIN " . DB_PREFIX . "product_description pd
 					USING(product_id)
