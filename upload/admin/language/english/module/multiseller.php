@@ -190,6 +190,9 @@ $_['ms_config_enable_quantities_note'] = 'Allow sellers to specify quantities fo
 $_['ms_config_product_options'] = 'Product options';
 $_['ms_config_product_options_note'] = 'Enable product options on new product page';
 
+$_['ms_config_seller_terms_page'] = 'Seller account terms';
+$_['ms_config_seller_terms_page_note'] = 'Sellers have to agree to the terms when creating a seller account.';
+
 $_['ms_config_carousel']       = 'Seller carousel';
 $_['ms_config_topsellers']       = 'Top sellers';
 $_['ms_config_modules']       = 'Modules';

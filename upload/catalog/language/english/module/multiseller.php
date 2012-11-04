@@ -175,7 +175,7 @@ $_['ms_error_sellerinfo_nickname_taken'] = 'This username is already taken';
 $_['ms_error_sellerinfo_company_length'] = 'Company name cannot be longer than 50 characters';
 $_['ms_error_sellerinfo_description_length'] = 'Description cannot be longer than 1000 characters';
 $_['ms_error_sellerinfo_paypal'] = 'Invalid PayPal address';
-
+$_['ms_error_sellerinfo_terms'] = 'Warning: You must agree to the %s!';
 $_['ms_error_file_extension'] = 'Invalid extension';
 $_['ms_error_file_type'] = 'Invalid file type';
 $_['ms_error_file_size'] = 'File too big';
@@ -290,6 +290,8 @@ $_['ms_account_sellerinfo_paypal_note']    = 'Specify your PayPal address';
 $_['ms_account_sellerinfo_reviewer_message']    = 'Message to the reviewer';
 $_['ms_account_sellerinfo_reviewer_message_note']    = 'Your message to the reviewer';
 
+$_['ms_account_sellerinfo_terms']     = 'Accept terms';
+$_['ms_account_sellerinfo_terms_note']     = 'I have read and agree to the <a class="colorbox" href="%s" alt="%s"><b>%s</b></a>';
 
 $_['ms_account_sellerinfo_mail_account_thankyou']	= 'Thank you for signing up as a seller at %s!';
 $_['ms_account_sellerinfo_mail_account_created_subject']    = '[%s] Seller account created';
@@ -302,7 +304,6 @@ $_['ms_account_sellerinfo_mail_account_needsapproval_subject']    = '[%s] Seller
 $_['ms_account_sellerinfo_mail_account_needsapproval_message']    = "As soon as your account is approved, you will receive a confirmation email.";
 
 $_['ms_account_sellerinfo_saved'] = 'Seller account data saved.';
-
 
 
 // Account - Seller account status

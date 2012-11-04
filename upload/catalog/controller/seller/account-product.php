@@ -47,7 +47,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 				$json['errors'] = array_merge($json['errors'], $errors);
 			} else {
 				$fileName = $this->MsLoader->MsFile->uploadImage($file);
-				$thumbUrl = $this->MsLoader->MsFile->resizeImage($this->config->get('msconf_temp_upload_path') . $fileName, $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'));
+				$thumbUrl = $this->MsLoader->MsFile->resizeImage($this->config->get('msconf_temp_image_path') . $fileName, $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'));
 				$json['files'][] = array(
 					'name' => $fileName,
 					'thumb' => $thumbUrl
@@ -82,7 +82,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 					$json['errors'] = array_merge($json['errors'], $errors);
 				} else {
 					$fileName = $this->MsLoader->MsFile->uploadImage($file);
-					$thumbUrl = $this->MsLoader->MsFile->resizeImage($this->config->get('msconf_temp_upload_path') . $fileName, $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'));
+					$thumbUrl = $this->MsLoader->MsFile->resizeImage($this->config->get('msconf_temp_image_path') . $fileName, $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'));
 					$json['files'][] = array(
 						'name' => $fileName,
 						'thumb' => $thumbUrl
@@ -123,7 +123,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 					if ($this->config->get('msconf_enable_pdf_generator') && extension_loaded('imagick')) {
 						$ext = explode('.', $file['name']); $ext = end($ext);
 						if (strtolower($ext) == 'pdf') {
-							$im = new imagick(DIR_IMAGE . $this->config->get('msconf_temp_upload_path') . $fileData['fileName']);
+							$im = new imagick(DIR_IMAGE . $this->config->get('msconf_temp_image_path') . $fileData['fileName']);
 							$pages = $im->getNumberImages() - 1;
 						}
 					}

@@ -18,7 +18,7 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 				$json['errors'] = array_merge($json['errors'], $errors);
 			} else {
 				$fileName = $this->MsLoader->MsFile->uploadImage($file);
-				$thumbUrl = $this->MsLoader->MsFile->resizeImage($this->config->get('msconf_temp_upload_path') . $fileName, $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'));
+				$thumbUrl = $this->MsLoader->MsFile->resizeImage($this->config->get('msconf_temp_image_path') . $fileName, $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'));
 				$json['files'][] = array(
 					'name' => $fileName,
 					'thumb' => $thumbUrl
@@ -49,6 +49,15 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 			} else if ($this->MsLoader->MsSeller->nicknameTaken($data['sellerinfo_nickname'])) {
 				$json['errors']['sellerinfo_nickname'] = $this->language->get('ms_error_sellerinfo_nickname_taken');
 			}
+			
+			if ($this->config->get('msconf_seller_terms_page')) {
+				$this->load->model('catalog/information');
+				$information_info = $this->model_catalog_information->getInformation($this->config->get('msconf_seller_terms_page'));
+				
+				if ($information_info && !isset($data['accept_terms'])) {
+	      			$json['errors']['sellerinfo_terms'] = htmlspecialchars_decode(sprintf($this->language->get('ms_error_sellerinfo_terms'), $information_info['title']));
+				}
+			}			
 		}
 		
 		if (mb_strlen($data['sellerinfo_company']) > 50 ) {
@@ -154,7 +163,7 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 			}
 
 			$this->data['statustext'] = $this->language->get('ms_account_status') . $this->MsLoader->MsSeller->getStatusText($seller['ms.seller_status']);
-
+			$this->data['ms_account_sellerinfo_terms_note'] = '';
 			/*			
 			switch ($status_data['seller_status']['id']) {
 				case MsSeller::STATUS_DELETED:
@@ -178,6 +187,20 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 		} else {
 			$this->data['seller'] = FALSE;
 			$this->data['statustext'] = $this->language->get('ms_account_status_please_fill_in');
+			
+			if ($this->config->get('msconf_seller_terms_page')) {
+				$this->load->model('catalog/information');
+				
+				$information_info = $this->model_catalog_information->getInformation($this->config->get('msconf_seller_terms_page'));
+				
+				if ($information_info) {
+					$this->data['ms_account_sellerinfo_terms_note'] = sprintf($this->language->get('ms_account_sellerinfo_terms_note'), $this->url->link('information/information/info', 'information_id=' . $this->config->get('msconf_seller_terms_page'), 'SSL'), $information_info['title'], $information_info['title']);
+				} else {
+					$this->data['ms_account_sellerinfo_terms_note'] = '';
+				}
+			} else {
+				$this->data['ms_account_sellerinfo_terms_note'] = '';
+			}
 		}
 
 		$this->data['seller_validation'] = $this->config->get('msconf_seller_validation');

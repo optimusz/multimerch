@@ -39,7 +39,9 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		"msconf_enable_update_seo_urls" => 0,
 		"msconf_enable_non_alphanumeric_seo" => 0,
 		"msconf_product_image_path" => 'sellers/',
-		"msconf_temp_upload_path" => 'tmp/'
+		"msconf_temp_image_path" => 'tmp/',
+		"msconf_temp_download_path" => 'tmp/',
+		"msconf_seller_terms_page" => ""
 	);
 	
 	public function __construct($registry) {
@@ -100,8 +102,10 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		
 		@mkdir(DIR_IMAGE . $this->config->get('msconf_product_image_path'));
 		@touch(DIR_IMAGE . $this->config->get('msconf_product_image_path') . 'index.html');
-		@mkdir(DIR_IMAGE . $this->config->get('msconf_temp_upload_path'));
-		@touch(DIR_IMAGE . $this->config->get('msconf_temp_upload_path') . 'index.html');
+		@mkdir(DIR_IMAGE . $this->config->get('msconf_temp_image_path'));
+		@touch(DIR_IMAGE . $this->config->get('msconf_temp_image_path') . 'index.html');
+		@mkdir(DIR_DOWNLOAD . $this->config->get('msconf_temp_download_path'));
+		@touch(DIR_DOWNLOAD . $this->config->get('msconf_temp_download_path') . 'index.html');		
 	}
 
 	public function uninstall() {
@@ -159,6 +163,9 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		} else {
 			$this->data['error_image'] = array();
 		}
+
+		$this->load->model('catalog/information');
+		$this->data['informations'] = $this->model_catalog_information->getInformations();
 
 		$this->document->setTitle($this->language->get('ms_settings_heading'));
 

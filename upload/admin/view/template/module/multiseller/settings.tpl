@@ -126,6 +126,25 @@
 		            </tr>
 
 		            <tr>
+						<td>
+							<span><?php echo $ms_config_seller_terms_page; ?></span>
+							<span class="help"><?php echo $ms_config_seller_terms_page_note; ?></span>
+						</td>
+						<td>
+							<select name="msconf_seller_terms_page">
+								<option value="0"><?php echo $text_none; ?></option>
+								<?php foreach ($informations as $information) { ?>
+								<?php if ($information['information_id'] == $msconf_seller_terms_page) { ?>
+								<option value="<?php echo $information['information_id']; ?>" selected="selected"><?php echo $information['title']; ?></option>
+								<?php } else { ?>
+								<option value="<?php echo $information['information_id']; ?>"><?php echo $information['title']; ?></option>
+								<?php } ?>
+								<?php } ?>
+							</select>
+						</td>
+					</tr>
+
+		            <tr>
 			              <td>
 			              		<span><?php echo $ms_config_credit_order_statuses; ?></span>
 								<span class="help"><?php echo $ms_config_credit_order_statuses_note; ?></span>

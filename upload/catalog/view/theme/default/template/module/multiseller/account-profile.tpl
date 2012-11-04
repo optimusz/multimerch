@@ -104,6 +104,18 @@
           	</div>
           </td>
         </tr>
+
+        <?php if ($ms_account_sellerinfo_terms_note) { ?>
+        <tr>
+          <td><?php echo $ms_account_sellerinfo_terms; ?></td>
+          <td>        
+	        <p style="margin-bottom: 0"><input type="checkbox" name="accept_terms" value="1" />
+	        <?php echo $ms_account_sellerinfo_terms_note; ?></p>
+	        <p class="error" id="error_sellerinfo_terms"></p>
+	      </td>
+	    </tr>
+        <?php } ?>
+        
         <?php if (!isset($seller['seller_id']) &&  $seller_validation != MsSeller::MS_SELLER_VALIDATION_NONE) { ?>
         <tr>
           <td><?php echo $ms_account_sellerinfo_reviewer_message; ?></td>
