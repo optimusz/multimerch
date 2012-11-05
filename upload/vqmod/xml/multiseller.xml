@@ -573,6 +573,7 @@ if (in_array($order_status_id, $this->config->get('msconf_credit_order_statuses'
 		      <li id="multiseller"><a class="top"><?php echo $ms_menu_multiseller; ?></a>
 		        <ul>
 		           	  <li><a href="<?php echo $ms_link_sellers; ?>"><?php echo $ms_menu_sellers; ?></a></li>
+					  <li><a href="<?php echo $ms_link_seller_groups; ?>"><?php echo $ms_menu_seller_groups; ?></a></li>
 		           	  <li><a href="<?php echo $ms_link_products; ?>"><?php echo $ms_menu_products; ?></a></li>
 		              <li><a href="<?php echo $ms_link_transactions; ?>"><?php echo $ms_menu_transactions; ?></a></li>
 		              <li><a href="<?php echo $ms_link_requests; ?>"><?php echo $ms_menu_requests; ?></a></li>
@@ -599,6 +600,7 @@ if (in_array($order_status_id, $this->config->get('msconf_credit_order_statuses'
 			]]></search>
 			<add><![CDATA[
 			$this->data['ms_link_sellers'] = $this->url->link('multiseller/seller', 'token=' . $this->session->data['token'], 'SSL');
+			$this->data['ms_link_seller_groups'] = $this->url->link('multiseller/seller-group', 'token=' . $this->session->data['token'], 'SSL');			
 			$this->data['ms_link_products'] = $this->url->link('multiseller/product', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['ms_link_requests'] = $this->url->link('multiseller/request-withdrawal', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['ms_link_transactions'] = $this->url->link('multiseller/transaction', 'token=' . $this->session->data['token'], 'SSL');

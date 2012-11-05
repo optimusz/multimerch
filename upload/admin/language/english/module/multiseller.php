@@ -17,6 +17,7 @@ $_['heading_title']    = '[ffct.cc] Digital Multiseller Marketplace';
 $_['text_module']         = 'Modules';
 $_['text_seller_select']         = 'Seller select';
 $_['text_shipping_dependent']         = 'Shipping dependent';
+$_['text_no_results'] = 'No results';
 $_['error_permission'] = 'Warning: You do not have permission to modify module!';
 $_['ms_error_withdraw_norequests'] = 'Error: no requests to process';
 $_['ms_error_withdraw_response'] = 'Error: no response';
@@ -25,7 +26,6 @@ $_['ms_success'] = 'Success';
 $_['ms_success_transactions'] = 'Transactions successfully completed';
 $_['ms_success_withdrawals_marked'] = 'Withdrawal requests marked as paid';
 $_['ms_transaction_withdrawal']      = 'Withdrawal: %s';
-
 
 $_['ms_seller'] = 'Seller';
 $_['ms_all_sellers'] = 'All sellers';
@@ -47,32 +47,30 @@ $_['ms_disable'] = 'Disable';
 $_['ms_approve'] = 'Approve';
 $_['ms_decline'] = 'Decline';
 $_['ms_edit'] = 'Edit';
+$_['ms_delete'] = 'Delete';
 $_['ms_change_status'] = 'Change status';
 $_['ms_enable_approve'] = 'Enable/Approve';
 $_['ms_disable_decline'] = 'Disable/Decline';
-
 
 $_['ms_edit_process'] = 'Edit/Process';
 $_['ms_button_pay'] = 'Pay';
 $_['ms_button_mark_paid'] = 'Mark as paid';
 
-// Menu
 
+// Menu
 $_['ms_menu_multiseller'] = 'Multiseller';
 $_['ms_menu_dashboard'] = 'Dashboard';
 $_['ms_menu_sellers'] = 'Sellers';
+$_['ms_menu_seller_groups'] = 'Seller groups';
 $_['ms_menu_products'] = 'Products';
-
 $_['ms_menu_transactions'] = 'Transactions';
 $_['ms_menu_requests'] = 'Withdrawals';
-
 $_['ms_menu_settings'] = 'Settings';
 $_['ms_menu_reports'] = 'Reports';
 $_['ms_menu_reports_sales'] = 'Sales';
 
 
 // Seller - List
-
 $_['ms_catalog_sellers_heading'] = 'Sellers';
 $_['ms_catalog_sellers_breadcrumbs'] = 'Sellers';
 
@@ -217,7 +215,6 @@ $_['ms_config_carousel_image']        = 'Image width &amp; height dimensions req
 
 
 
-
 // Customer-seller form
 $_['ms_catalog_sellerinfo_heading'] = 'Seller';
 $_['ms_catalog_sellerinfo_breadcrumbs'] = 'Seller';
@@ -238,21 +235,35 @@ $_['ms_catalog_sellerinfo_product_validation'] = 'Product validation';
 $_['ms_catalog_sellerinfo_product_validation_note'] = 'Product validation for this seller';
 
 
-
 // Catalog - Products
-
 $_['ms_catalog_products_heading'] = 'Products';
 $_['ms_catalog_products_breadcrumbs'] = 'Products';
 
 
-// Finances - Withdrawals
+// Catalog - Seller Groups
+$_['ms_catalog_seller_groups_heading'] = 'Seller groups';
+$_['ms_catalog_seller_groups_breadcrumbs'] = 'Seller Groups';
 
+$_['ms_seller_groups_column_id'] = 'ID';
+$_['ms_seller_groups_column_name'] = 'Name';
+$_['ms_seller_groups_column_action'] = 'Actions';
+
+$_['ms_catalog_insert_seller_group_heading'] = 'New Seller Group';
+$_['ms_catalog_edit_seller_group_heading'] = 'Edit Seller Group';
+
+$_['ms_seller_group_entry_name'] = 'Name';
+$_['ms_seller_group_entry_description'] = 'Description';
+$_['ms_seller_group_entry_language'] = 'Language';
+
+$_['ms_error_seller_group_name'] = 'Error: name is not entered';
+$_['ms_error_seller_group_language'] = 'Error: language not selected';
+
+// Finances - Withdrawals
 $_['ms_finances_withdrawals_heading'] = 'Withdrawals';
 $_['ms_finances_withdrawals_breadcrumbs'] = 'Withdrawals';
 
 
 // Finances - Transactions
-
 $_['ms_finances_transactions_heading'] = 'Transactions';
 $_['ms_finances_transactions_breadcrumbs'] = 'Transactions';
 

@@ -141,6 +141,26 @@ class ModelModuleMultisellerSettings extends Model {
              `message_processed` TEXT NOT NULL DEFAULT '',
         	PRIMARY KEY (`request_id`)) default CHARSET=utf8";
         
+		// ms_seller_group - table with seller groups
+        $this->db->query($sql);
+		
+		$sql = "
+			CREATE TABLE `" . DB_PREFIX . "ms_seller_group` (
+             `seller_group_id` int(11) NOT NULL AUTO_INCREMENT,
+        	PRIMARY KEY (`seller_group_id`)) default CHARSET=utf8";
+        
+		// ms_seller_group_description - table with seller group information
+        $this->db->query($sql);
+		
+		$sql = "
+			CREATE TABLE `" . DB_PREFIX . "ms_seller_group_description` (
+             `seller_group_description_id` int(11) NOT NULL AUTO_INCREMENT,
+			 `seller_group_id` int(11) NOT NULL,
+			 `name` VARCHAR(32) NOT NULL DEFAULT '',
+             `description` TEXT NOT NULL DEFAULT '',
+			 `language_id` int(11) DEFAULT NULL,
+        	PRIMARY KEY (`seller_group_description_id`)) default CHARSET=utf8";
+        
         $this->db->query($sql);
 
 	}
@@ -157,7 +177,9 @@ class ModelModuleMultisellerSettings extends Model {
 				`" . DB_PREFIX . "ms_request_withdrawal`,
 				`" . DB_PREFIX . "ms_product_attribute`,
 				`" . DB_PREFIX . "ms_comments`,
-				`" . DB_PREFIX . "ms_balance`";
+				`" . DB_PREFIX . "ms_balance`,
+				`" . DB_PREFIX . "ms_seller_group`,
+				`" . DB_PREFIX . "ms_seller_group_description`";
 								
 		$this->db->query($sql);
     }
