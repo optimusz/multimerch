@@ -22,14 +22,14 @@ class MsLoader {
 		return $this->$class;		
 	}
 	*/
-	private function _autoloadLibrary($class) {
+	private static function _autoloadLibrary($class) {
 	    $file = DIR_SYSTEM . 'library/' . strtolower($class) . '.php';
 	    if (file_exists($file)) {
 	    	require($file);
 	    }
 	}
 
-	private function _autoloadController($class) {
+	private static function _autoloadController($class) {
 		preg_match_all('/((?:^|[A-Z])[a-z]+)/',$class,$matches);
 	    $file = DIR_APPLICATION . 'controller/' . strtolower($matches[0][1]) . '/' . strtolower($matches[0][2]) . '.php';
 	    if (file_exists($file)) {

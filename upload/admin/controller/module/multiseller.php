@@ -100,12 +100,23 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		$this->model_module_multiseller_settings->createTable();
 		$this->model_setting_setting->editSetting('multiseller', $this->settings);
 		
-		@mkdir(DIR_IMAGE . $this->config->get('msconf_product_image_path'));
-		@touch(DIR_IMAGE . $this->config->get('msconf_product_image_path') . 'index.html');
-		@mkdir(DIR_IMAGE . $this->config->get('msconf_temp_image_path'));
-		@touch(DIR_IMAGE . $this->config->get('msconf_temp_image_path') . 'index.html');
-		@mkdir(DIR_DOWNLOAD . $this->config->get('msconf_temp_download_path'));
-		@touch(DIR_DOWNLOAD . $this->config->get('msconf_temp_download_path') . 'index.html');		
+		$dirs = array(
+			DIR_IMAGE . $this->settings['msconf_product_image_path'],
+			DIR_IMAGE . $this->settings['msconf_temp_image_path'],
+			DIR_DOWNLOAD . $this->settings['msconf_temp_download_path']
+		);
+		
+		foreach ($dirs as $dir) {
+			if (!file_exists($dir)) {
+				if (!mkdir($dir, 755)) {
+					$this->session->data['warning'] .= "Could not create directory: $dir<br />";
+				}
+			} else {
+				if (!is_writable($dir)) {
+					$this->session->data['warning'] .= "Directory not writable: $dir<br />";
+				}
+			}
+		}
 	}
 
 	public function uninstall() {

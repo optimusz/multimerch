@@ -72,7 +72,7 @@ class MsBalance extends Model {
 	}
 
 	public function getSellerBalance($seller_id) {
-		$sql = "SELECT COALESCE (
+		$sql = "SELECT COALESCE(
 					(SELECT balance FROM " . DB_PREFIX . "ms_balance
 						WHERE seller_id = " . (int)$seller_id . " 
 						ORDER BY balance_id DESC
@@ -108,7 +108,7 @@ class MsBalance extends Model {
 					amount = ". (float)$data['amount'] . ",
 					balance = amount + (
 						SELECT balance FROM (
-							SELECT COALESCE (
+							SELECT COALESCE(
 								(SELECT balance FROM " . DB_PREFIX . "ms_balance
 						  			WHERE seller_id = " . (int)$seller_id . "
 						  			ORDER BY balance_id DESC LIMIT 1),
