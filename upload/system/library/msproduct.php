@@ -10,23 +10,6 @@ class MsProduct extends Model {
 	
 	private $errors;
 		
-  	public function __construct($registry) {
-  		parent::__construct($registry);
-	}
-	
-	public function getProductStatusArray() {
-		/*
-		$this->load->language('module/multiseller');
-		return array(
-			MsProduct::STATUS_DRAFT => $this->language->get('ms_product_review_status_draft'),
-			MsProduct::STATUS_PENDING => $this->language->get('ms_product_review_status_pending'),
-			MsProduct::STATUS_APPROVED => $this->language->get('ms_product_review_status_approved'),
-			MsProduct::STATUS_DECLINED => $this->language->get('ms_product_review_status_declined'),
-			MsProduct::STATUS_SELLER_DELETED => $this->language->get('STATUS_seller_deleted'),
-		);
-		*/		
-	}	
-	
 	private function _getDepth($a, $eid) {
 		foreach ($a as $key => $val) {
 			if ($val['category_id'] == $eid) {
@@ -36,6 +19,17 @@ class MsProduct extends Model {
 					return 1+$this->_getDepth($a, $val['parent_id']);
 				}
 			}
+		}
+	}
+	
+	
+	private function _getPath($category_id) {
+		$query = $this->db->query("SELECT name, parent_id FROM " . DB_PREFIX . "category c LEFT JOIN " . DB_PREFIX . "category_description cd ON (c.category_id = cd.category_id) WHERE c.category_id = '" . (int)$category_id . "' AND cd.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY c.sort_order, cd.name ASC");
+		
+		if ($query->row['parent_id']) {
+			return $this->getPath($query->row['parent_id'], $this->config->get('config_language_id')) . $this->language->get('text_separator') . $query->row['name'];
+		} else {
+			return $query->row['name'];
 		}
 	}
 	
@@ -76,16 +70,6 @@ class MsProduct extends Model {
 		}
 		
 		return $category_data;
-	}	
-	
-	private function _getPath($category_id) {
-		$query = $this->db->query("SELECT name, parent_id FROM " . DB_PREFIX . "category c LEFT JOIN " . DB_PREFIX . "category_description cd ON (c.category_id = cd.category_id) WHERE c.category_id = '" . (int)$category_id . "' AND cd.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY c.sort_order, cd.name ASC");
-		
-		if ($query->row['parent_id']) {
-			return $this->getPath($query->row['parent_id'], $this->config->get('config_language_id')) . $this->language->get('text_separator') . $query->row['name'];
-		} else {
-			return $query->row['name'];
-		}
 	}	
 	
 	public function getMultipleCategories($parent_id = 0) {
@@ -136,25 +120,6 @@ class MsProduct extends Model {
 			return false;
 		else
 			return true;
-	}	
-	
-	public function getStatsForProduct($product_id) {
-		$sql = "SELECT 	p.date_added,
-						mp.seller_id,
-						mp.number_sold as sales,
-						ms.nickname,
-						ms.country_id,
-						ms.avatar
-				FROM `" . DB_PREFIX . "product` p
-				INNER JOIN `" . DB_PREFIX . "ms_product` mp
-					ON p.product_id = mp.product_id
-				INNER JOIN `" . DB_PREFIX . "ms_seller` ms
-					ON mp.seller_id = ms.seller_id
-				WHERE p.product_id = " . (int)$product_id; 
-
-		$res = $this->db->query($sql);
-
-		return $res->row;		
 	}	
 	
 	public function getProductImages($product_id) {
@@ -236,18 +201,6 @@ class MsProduct extends Model {
 		return $query->row;
 	}		
 		
-	public function hideProduct($product_id) {
-		$sql = "UPDATE " . DB_PREFIX . "ms_product
-				SET product_status = " . self::STATUS_SELLER_DELETED . "
-				WHERE product_id = " . (int)$product_id;
-		$res = $this->db->query($sql);
-		
-		$sql = "UPDATE " . DB_PREFIX . "product
-				SET status = 0 WHERE product_id = " . (int)$product_id;
-				
-		$res = $this->db->query($sql);
-	}
-	
 	public function saveProduct($data) {
 		reset($data['languages']); $first = key($data['languages']);
 		$store_id = $this->config->get('config_store_id');

@@ -86,28 +86,23 @@ class ModelModuleMultisellerSettings extends Model {
         
         $this->db->query($sql);
         
-        /*
-        // todo payouts
 		$sql = "
-			CREATE TABLE `" . DB_PREFIX . "ms_payout_method` (
-             `payout_method_id` int(11) NOT NULL AUTO_INCREMENT,
-             `payout_method_name` VARCHAR(96) NOT NULL,
-        	PRIMARY KEY (`balance_id`)) default CHARSET=utf8";        
-        */
-		$sql = "
-			CREATE TABLE `" . DB_PREFIX . "ms_request_withdrawal` (
-             `request_withdrawal_id` int(11) NOT NULL AUTO_INCREMENT,
-			 `request_id` int(11) NOT NULL,
+			CREATE TABLE `" . DB_PREFIX . "ms_withdrawal` (
+             `withdrawal_id` int(11) NOT NULL AUTO_INCREMENT,
              `seller_id` int(11) NOT NULL,
-			 `request_type` TINYINT NOT NULL,
-             `withdrawal_method_id` int(11) NOT NULL DEFAULT 0,
-             `withdrawal_method_data` TEXT NOT NULL DEFAULT '',
              `amount` DECIMAL(15,4) NOT NULL,
+             `withdrawal_method_id` int(11) DEFAULT NULL,
+             `withdrawal_method_data` TEXT NOT NULL DEFAULT '',
+			 `withdrawal_status` TINYINT NOT NULL,
              `currency_id` int(11) NOT NULL,
              `currency_code` VARCHAR(3) NOT NULL,
              `currency_value` DECIMAL(15,8) NOT NULL,
-        	PRIMARY KEY (`request_withdrawal_id`)) default CHARSET=utf8";
-        
+			 `description` TEXT NOT NULL DEFAULT '',
+             `processed_by` int(11) DEFAULT NULL,
+			 `date_created` DATETIME NOT NULL,
+			 `date_processed` DATETIME DEFAULT NULL,
+        	PRIMARY KEY (`withdrawal_id`)) default CHARSET=utf8";
+        	
         $this->db->query($sql);
 /*
 		$sql = "
@@ -129,7 +124,7 @@ class ModelModuleMultisellerSettings extends Model {
         	PRIMARY KEY (`request_product_id`)) default CHARSET=utf8";
         
         $this->db->query($sql);
-*/
+
 		$sql = "
 			CREATE TABLE `" . DB_PREFIX . "ms_request` (
              `request_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -175,16 +170,14 @@ class ModelModuleMultisellerSettings extends Model {
 
 	}
 	
+	
 	//todo drop dbses
 	public function dropTable() {
 		$sql = "DROP TABLE IF EXISTS
 				`" . DB_PREFIX . "ms_product`,
 				`" . DB_PREFIX . "ms_seller`,
-				`" . DB_PREFIX . "ms_request`,
-				`" . DB_PREFIX . "ms_request_product`,
-				`" . DB_PREFIX . "ms_request_seller`,
 				`" . DB_PREFIX . "ms_order_product_data`,
-				`" . DB_PREFIX . "ms_request_withdrawal`,
+				`" . DB_PREFIX . "ms_withdrawal`,
 				`" . DB_PREFIX . "ms_product_attribute`,
 				`" . DB_PREFIX . "ms_comments`,
 				`" . DB_PREFIX . "ms_balance`,
@@ -192,5 +185,5 @@ class ModelModuleMultisellerSettings extends Model {
 				`" . DB_PREFIX . "ms_seller_group_description`";
 								
 		$this->db->query($sql);
-    }
+	}
 }

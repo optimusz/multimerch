@@ -107,14 +107,18 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 			DIR_DOWNLOAD . $this->settings['msconf_temp_download_path']
 		);
 		
+		$this->session->data['success'] = $this->language->get('ms_success_installed');
+		
 		foreach ($dirs as $dir) {
 			if (!file_exists($dir)) {
 				if (!mkdir($dir, 755)) {
-					$this->session->data['warning'] .= "Could not create directory: $dir<br />";
+					$this->session->data['error'] .= sprintf($this->language->get('ms_error_directory'), $dir);
 				}
 			} else {
 				if (!is_writable($dir)) {
-					$this->session->data['warning'] .= "Directory not writable: $dir<br />";
+					$this->session->data['error'] .= sprintf($this->language->get('ms_error_directory_notwritable'), $dir);
+				} else {
+					$this->session->data['error'] .= sprintf($this->language->get('ms_error_directory_exists'), $dir);
 				}
 			}
 		}

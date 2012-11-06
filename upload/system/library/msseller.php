@@ -215,19 +215,6 @@ final class MsSeller extends Model {
   		return $this->isSeller;
   	}
   	
-	//
-	public function getEarningsForSeller($seller_id) {
-		$sql = "SELECT SUM(amount) as total
-				FROM `" . DB_PREFIX . "ms_transaction`
-				WHERE seller_id = " . (int)$seller_id . "
-				AND	amount > 0
-				AND transaction_status_id != " . MsTransaction::MS_TRANSACTION_STATUS_CLOSED;				
-		
-		$res = $this->db->query($sql);
-		
-		return $res->row['total'];
-	}
-	
 	public function getSalesForSeller($seller_id) {
 		$sql = "SELECT IFNULL(SUM(number_sold),0) as total
 				FROM `" . DB_PREFIX . "ms_product`

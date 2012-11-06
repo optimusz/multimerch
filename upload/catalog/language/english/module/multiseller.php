@@ -113,7 +113,7 @@ EOT;
 
 $_['ms_mail_subject_withdraw_request_submitted']      = 'Withdrawal request submitted';
 $_['ms_mail_withdraw_request_submitted'] = <<<EOT
-We have received your withdrawal request. You will be notified when it is processed.
+We have received your withdrawal request. You will receive your earnings as soon as it is processed.
 EOT;
 
 $_['ms_mail_subject_withdraw_request_completed']      = 'Withdrawal completed';

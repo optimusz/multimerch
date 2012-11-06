@@ -31,14 +31,12 @@ class ControllerSellerAccountWithdrawal extends ControllerSellerAccount {
 		}
 		
 		if (empty($json['errors'])) {
-			$this->MsLoader->MsRequestWithdrawal->createWithdrawalRequest($this->customer->getId(),
+			$this->MsLoader->MsWithdrawal->createWithdrawal($this->customer->getId(),
 				array(
-					'request_type' => MsRequestWithdrawal::TYPE_WITHDRAWAL_CREATE,
 					'amount' => $data['withdraw_amount'],
 					'currency_id' => $this->currency->getId($this->config->get('config_currency')),
 					'currency_code' => $this->currency->getCode($this->config->get('config_currency')),
 					'currency_value' => "1",
-					'message' => ''
 				)
 			);
 			

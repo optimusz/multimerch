@@ -40,18 +40,18 @@
             </tr>
           </thead>
           <tbody>
-            <?php if (isset($requests) && $requests) { ?>
-            <?php foreach ($requests as $request) { ?>
+            <?php if (isset($withdrawals) && $withdrawals) { ?>
+            <?php foreach ($withdrawals as $withdrawal) { ?>
             <tr>
               <td style="text-align: center;">
-                <input type="checkbox" name="selected[]" <?php if($request['date_processed'] !== NULL) { ?>  <?php } ?> value="<?php echo $request['request_id']; ?>" />
+                <input type="checkbox" name="selected[]" <?php if($withdrawal['date_processed'] !== NULL) { ?>  <?php } ?> value="<?php echo $withdrawal['withdrawal_id']; ?>" />
               </td>
-              <td><?php echo $request['seller']; ?></td>
-              <td><?php echo $request['amount']; ?></td>
-              <td><?php echo $request['date_created']; ?></td>
-              <td><?php echo $request['status']; ?></td>
-              <td><?php echo $request['processed_by']; ?></td>
-              <td><?php echo $request['date_processed']; ?></td>
+              <td><?php echo $withdrawal['seller']; ?></td>
+              <td><?php echo $withdrawal['amount']; ?></td>
+              <td><?php echo $withdrawal['date_created']; ?></td>
+              <td><?php echo $withdrawal['status']; ?></td>
+              <td><?php echo $withdrawal['processed_by']; ?></td>
+              <td><?php echo $withdrawal['date_processed']; ?></td>
             </tr>
             <?php } ?>
             <?php } else { ?>
