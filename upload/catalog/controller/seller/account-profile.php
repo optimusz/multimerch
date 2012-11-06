@@ -204,7 +204,7 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 		}
 
 		$this->data['seller_validation'] = $this->config->get('msconf_seller_validation');
-		$this->data['back'] = $this->url->link('account/account', '', 'SSL');
+		$this->data['link_back'] = $this->url->link('account/account', '', 'SSL');
 		$this->document->setTitle($this->language->get('ms_account_sellerinfo_heading'));
 		
 		$this->data['breadcrumbs'] = $this->MsLoader->MsHelper->setBreadcrumbs(array(

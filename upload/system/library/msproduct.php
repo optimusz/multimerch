@@ -485,7 +485,7 @@ class MsProduct extends Model {
 			foreach ($data['product_downloads'] as $key => $dl) {
 				if (!empty($dl['download_id'])) {
 					if (!empty($dl['filename'])) {
-						var_dump('updating ' . $dl['download_id'] . ' with ' . $dl['filename']);
+						//var_dump('updating ' . $dl['download_id'] . ' with ' . $dl['filename']);
 						// update download #download_id:
 						$newFile = $this->MsLoader->MsFile->moveDownload($dl['filename']);
 						$fileMask = substr($newFile,0,strrpos($newFile,'.'));
@@ -493,7 +493,7 @@ class MsProduct extends Model {
 						$this->db->query("UPDATE " . DB_PREFIX . "download SET remaining = 5, filename = '" . $this->db->escape($newFile) . "', mask = '" . $this->db->escape($fileMask) . "' WHERE download_id = '" . (int)$dl['download_id'] . "'");
 						
 			        	if (isset($data['push_downloads'])) {
-			        		var_dump('pushing download ' . $dl['download_id']);
+			        		//var_dump('pushing download ' . $dl['download_id']);
 			      			$this->db->query("UPDATE " . DB_PREFIX . "order_download SET remaining = 5, `filename` = '" . $this->db->escape($newFile) . "', mask = '" . $this->db->escape($fileMask) . "', name = '" . $this->db->escape($fileMask) . "' WHERE `filename` = '" . $this->db->escape($old_downloads[$dl['download_id']]['filename']) . "'");
 			      		}
 						
@@ -509,7 +509,7 @@ class MsProduct extends Model {
 					// don't remove the download
 					unset($old_downloads[$dl['download_id']]);
 				} else if (!empty($dl['filename'])) {
-					var_dump('adding ' . $dl['filename']);
+					//var_dump('adding ' . $dl['filename']);
 					// add new download
 					$newFile = $this->MsLoader->MsFile->moveDownload($dl['filename']);
 					$fileMask = substr($newFile,0,strrpos($newFile,'.'));					
@@ -524,8 +524,8 @@ class MsProduct extends Model {
 					
 		        	if (isset($data['push_downloads'])) {
 		        		$orders = $this->db->query("SELECT order_product_id, order_id FROM " . DB_PREFIX . "order_product WHERE product_id = '"  . (int)$product_id . "'");
-		        		var_dump($orders);
-		        		var_dump("SELECT order_product_id, order_id FROM " . DB_PREFIX . "order_product WHERE product_id = '"  . (int)$product_id . "'");
+		        		//var_dump($orders);
+		        		//var_dump("SELECT order_product_id, order_id FROM " . DB_PREFIX . "order_product WHERE product_id = '"  . (int)$product_id . "'");
 		        		foreach ($orders->rows as $row) {
 							//var_dump('pushing download ' . $newFile . ' for ' . $row['order_product_id']);
 							//var_dump("INSERT INTO " . DB_PREFIX . "order_download SET order_id = '" . (int)$row['order_id'] . "', order_product_id = '" . (int)$row['order_product_id'] . "', remaining = 5, `filename` = '" . $this->db->escape($newFile) . "', mask = '" . $this->db->escape($fileMask) . "', name = '" . $this->db->escape($fileMask) . "'");
@@ -538,7 +538,7 @@ class MsProduct extends Model {
 
 		if (!empty($old_downloads)) {
 			foreach($old_downloads as $old_download) {
-				var_dump('deleting ' . $old_download['filename']);
+				//var_dump('deleting ' . $old_download['filename']);
 				$this->db->query("DELETE FROM " . DB_PREFIX . "download WHERE download_id ='" . (int)$old_download['download_id'] . "'");
 				$this->db->query("DELETE FROM " . DB_PREFIX . "download_description WHERE download_id ='" . (int)$old_download['download_id'] . "'");
 				$this->db->query("DELETE FROM " . DB_PREFIX . "product_to_download WHERE download_id ='" . (int)$old_download['download_id'] . "'");
@@ -735,6 +735,15 @@ class MsProduct extends Model {
 		return $res->rows;
 	}
 	
+	public function getStatus($product_id) {
+		$sql = "SELECT mp.product_status AS status
+				FROM `" . DB_PREFIX . "ms_product` mp
+				WHERE product_id = " . (int)$product_id;
+		
+		$res = $this->db->query($sql);
+		
+		return $res->row['status'];
+	}
 
 	public function getStatusText($product_status) {
 		switch($product_status) {

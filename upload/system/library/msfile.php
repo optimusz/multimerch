@@ -1,7 +1,7 @@
 <?php
 class MsFile extends Model {
 	private function _isNewUpload($fileName) {
-		return file_exists(DIR_IMAGE . $this->config->get('msconf_temp_image_path') . $fileName);
+		return file_exists(DIR_IMAGE . $this->config->get('msconf_temp_image_path') . $fileName) || file_exists(DIR_DOWNLOAD . $this->config->get('msconf_temp_download_path') . $fileName);
 	}
 
 	// ***FUNCTION***: checks whether file already exists and proposes a new name for a file
@@ -74,7 +74,7 @@ class MsFile extends Model {
 			//@TODO? Flash reports all files as octet-stream
 			//if(!isset($size) || stripos($file['type'],'image/') === FALSE || stripos($size['mime'],'image/') === FALSE) {
 			if(!isset($size)) {
-				var_dump('error');
+				//var_dump('error');
 		        $errors[] = $this->language->get('ms_error_file_type');
 			}		
 		}
@@ -117,11 +117,13 @@ class MsFile extends Model {
   		$newpath = $fileName;  		
 
   		$key = array_search($fileName, $this->session->data['multiseller']['files']);
+  	
   		//strip nonce and timestamp
   		$original_file_name = substr($fileName, strpos($fileName, '.') + 1, mb_strlen($fileName));
-  		
+  		//var_dump($original_file_name);
 		if ($this->_isNewUpload($fileName)) {
 			$newpath = $original_file_name . '.' . md5(rand());
+			//var_dump($newpath);
 			rename(DIR_DOWNLOAD . $this->config->get('msconf_temp_download_path') . $fileName, DIR_DOWNLOAD . $newpath);
 		}
 		

@@ -1,53 +1,65 @@
 <?php echo $header; ?><?php echo $column_left; ?><?php echo $column_right; ?>
 
-<div id="content"><?php echo $content_top; ?>
-
-  <div class="breadcrumb">
-    <?php foreach ($breadcrumbs as $breadcrumb) { ?>
-    <?php echo $breadcrumb['separator']; ?><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a>
-    <?php } ?>
-  </div>
-  
-  <h1><?php echo $ms_account_transactions_heading; ?></h1>
-  
-  <?php if (isset($success) && ($success)) { ?>
-  <div class="success"><?php echo $success; ?></div>
-  <?php } ?>  
-  
-  <?php if (isset($error_warning) && ($error_warning)) { ?>
-  	<div class="warning"><?php echo $error_warning; ?></div>
-  <?php } ?>
-  <?php echo $ms_account_transactions_balance; ?> <b><?php echo $balance; ?></b>
+<div id="content" class="ms-account-transaction">
+	<?php echo $content_top; ?>
+	
+	<div class="breadcrumb">
+		<?php foreach ($breadcrumbs as $breadcrumb) { ?>
+		<?php echo $breadcrumb['separator']; ?><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a>
+		<?php } ?>
+	</div>
+	
+	<h1><?php echo $ms_account_transactions_heading; ?></h1>
+	
+	<?php if (isset($success) && ($success)) { ?>
+		<div class="success"><?php echo $success; ?></div>
+	<?php } ?>
+	
+	<?php if (isset($error_warning) && ($error_warning)) { ?>
+		<div class="warning"><?php echo $error_warning; ?></div>
+	<?php } ?>
+	
+	<?php echo $ms_account_transactions_balance; ?> <b><?php echo $balance; ?></b>
+	
 	<table class="list">
-	<thead>
-		<tr>
-			<td class="left"><?php echo $ms_account_transactions_date_created; ?></td>
-			<td class="left"><?php echo $ms_account_transactions_description; ?></td>
-			<td class="left"><?php echo $ms_account_transactions_amount; ?></td>
-		</tr>
-	</thead>
-	<tbody>
+		<thead>
+			<tr>
+				<td class="left"><?php echo $ms_account_transactions_date_created; ?></td>
+				<td class="left"><?php echo $ms_account_transactions_description; ?></td>
+				<td class="left"><?php echo $ms_account_transactions_amount; ?></td>
+			</tr>
+		</thead>
+		
+		<tbody>
 		<?php if (isset($transactions) && $transactions) { ?>
-		<?php foreach ($transactions  as $transaction) { ?>
-		<tr>
-			<td class="left"><?php echo $transaction['date_created']; ?></td>
-			<td class="left"><?php echo $transaction['description']; ?></td>
-			<td class="left"><?php echo $transaction['amount']; ?></td>
-		</tr>
-		<?php } ?>
+			<?php foreach ($transactions as $transaction) { ?>
+			<tr>
+				<td class="left"><?php echo $transaction['date_created']; ?></td>
+				<td class="left"><?php echo $transaction['description']; ?></td>
+				<td class="left"><?php echo $transaction['amount']; ?></td>
+			</tr>
+			<?php } ?>
 		<?php } else { ?>
-		<tr>
-			<td class="center" colspan="3"><?php echo $ms_account_transactions_notransactions; ?></td>
-		</tr>
+			<tr>
+				<td class="center" colspan="3"><?php echo $ms_account_transactions_notransactions; ?></td>
+			</tr>
 		<?php } ?>
-	</tbody>
+		</tbody>
 	</table>
+	
 	<br />
+	
 	<div class="pagination"><?php echo $pagination; ?></div>		
-  
-    <div class="buttons">
-    	<div class="right"><a href="<?php echo $continue; ?>" class="button"><span><?php echo $button_continue; ?></span></a></div>
-    </div>
-  
-  <?php echo $content_bottom; ?></div>
+	
+	<div class="buttons">
+		<div class="left">
+			<a href="<?php echo $link_back; ?>" class="button">
+				<span><?php echo $button_back; ?></span>
+			</a>
+		</div>
+	</div>
+	
+	<?php echo $content_bottom; ?>
+</div>
+
 <?php echo $footer; ?>

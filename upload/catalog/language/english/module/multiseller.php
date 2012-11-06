@@ -15,6 +15,16 @@ $_['ms_status_deleted'] = 'Deleted';
 $_['ms_status_pending_approval'] = 'Pending approval';
 $_['ms_status_pending_deletion'] = 'Pending deletion';
 
+$_['ms_viewinstore'] = 'View in store';
+$_['ms_publish'] = 'Publish';
+$_['ms_unpublish'] = 'Unpublish';
+$_['ms_edit'] = 'Edit';
+$_['ms_download']      = 'Download';
+$_['ms_create_product'] = 'Create product';
+$_['ms_delete']      = 'Delete';
+$_['ms_update']      = 'Update';
+
+
 $_['ms_button_submit']      = 'Submit';
 $_['ms_button_generate']      = 'Generate images from PDF';
 $_['ms_button_regenerate']      = 'Regenerate images';
@@ -23,9 +33,7 @@ $_['ms_button_save']      = 'Save';
 $_['ms_button_save_draft']      = 'Save draft';
 $_['ms_button_save_draft_unpublish']      = 'This product will be unpublished';
 $_['ms_button_cancel']      = 'Cancel';
-$_['ms_download']      = 'Download';
-$_['ms_delete']      = 'Delete';
-$_['ms_update']      = 'Update';
+
 
 $_['ms_transaction_sale']      = 'Sale: %s (-%s commission)';
 $_['ms_transaction_pending_withdrawal']      = 'Pending withdrawal request: %s';
@@ -167,6 +175,13 @@ You can process it in the Multiseller - Finances section in back office.
 EOT;
 
 
+// Success
+$_['ms_success_product_published'] = 'Product published';
+$_['ms_success_product_unpublished'] = 'Product unpublished';
+$_['ms_success_product_created'] = 'Product created';
+$_['ms_success_product_updated'] = 'Product updated';
+$_['ms_success_product_created_approval'] = 'Product created. It will be published as soon as it is approved';
+$_['ms_success_product_deleted'] = 'Product deleted';
 // Errors
 $_['ms_error_sellerinfo_nickname_empty'] = 'Username cannot be empty';
 $_['ms_error_sellerinfo_nickname_alphanumeric'] = 'Username can only contain alphanumeric characters';

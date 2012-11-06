@@ -407,8 +407,10 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 
 			if (isset($data['product_id']) && !empty($data['product_id'])) {
 				$product_id = $this->MsLoader->MsProduct->editProduct($data);
+				$this->session->data['success'] = $this->language->get('ms_success_product_updated');
 			} else {
 				$product_id = $this->MsLoader->MsProduct->saveProduct($data);
+				$this->session->data['success'] = $this->language->get('ms_success_product_created');
 			}
 
 			foreach ($mails as &$mail) {
@@ -508,6 +510,10 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 				'href' => $this->url->link('account/account', '', 'SSL'),
 			),
 			array(
+				'text' => $this->language->get('ms_account_products_breadcrumbs'),
+				'href' => $this->url->link('seller/account-product', '', 'SSL'),
+			),
+			array(
 				'text' => $this->language->get('ms_account_newproduct_breadcrumbs'),
 				'href' => $this->url->link('seller/account-product/create', '', 'SSL'),
 			)
@@ -518,11 +524,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 	}
 	
 	public function index() {
-		$this->load->model('localisation/language');
-		$this->data['languages'] = $this->model_localisation_language->getLanguages();
-
 		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
-
 		$seller_id = $this->customer->getId();
 		
 		$products = $this->MsLoader->MsProduct->getProducts(
@@ -540,17 +542,39 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		);
 		
 		foreach ($products as $product) {
+			$links = array();
+			
+			if ($product['mp.product_status'] != MsProduct::STATUS_DISABLED) {
+				if ($product['mp.product_status'] == MsProduct::STATUS_ACTIVE)
+					$links['view'] = $this->url->link('product/product', 'product_id=' . $product['product_id'], 'SSL');
+	
+				if ($product['mp.product_approved']) {
+					if ($product['mp.product_status'] == MsProduct::STATUS_INACTIVE)
+						$links['publish'] = $this->url->link('seller/account-product/publish', 'product_id=' . $product['product_id'], 'SSL');
+		
+					if ($product['mp.product_status'] == MsProduct::STATUS_ACTIVE)
+						$links['unpublish'] = $this->url->link('seller/account-product/unpublish', 'product_id=' . $product['product_id'], 'SSL');
+				}
+				
+				$links['edit'] = $this->url->link('seller/account-product/update', 'product_id=' . $product['product_id'], 'SSL');
+				$links['delete'] = $this->url->link('seller/account-product/delete', 'product_id=' . $product['product_id'], 'SSL');
+			}
+			
 			$this->data['products'][] = Array(
-				'pd.name' => $product['pd.name'],
+				'pd.name' => $product['pd.name'],  
 				'mp.number_sold' => $product['mp.number_sold'],
 				'mp.product_status' => $product['mp.product_status'],
 				'status_text' => $this->MsLoader->MsProduct->getStatusText($product['mp.product_status']),
 				'p.date_created' => date($this->language->get('date_format_short'), strtotime($product['p.date_created'])),
-				'edit_link' => $this->url->link('seller/account-product/update', 'product_id=' . $product['product_id'], 'SSL'),
-				'delete_link' => $this->url->link('seller/account-product/delete', 'product_id=' . $product['product_id'], 'SSL')
+				'view_link' => isset($links['view']) ? $links['view'] : NULL,
+				'publish_link' => isset($links['publish']) ? $links['publish'] : NULL,
+				'unpublish_link' => isset($links['unpublish']) ? $links['unpublish'] : NULL,
+				'edit_link' => isset($links['edit']) ? $links['edit'] : NULL,
+				'delete_link' => isset($links['delete']) ? $links['delete'] : NULL,
 			);
 		}
 		
+		// Pagination
 		$pagination = new Pagination();
 		$pagination->total = $this->MsLoader->MsProduct->getTotalProducts(array(
 			'seller_id' => $seller_id,
@@ -560,12 +584,14 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		$pagination->limit = 5;
 		$pagination->text = $this->language->get('text_pagination');
 		$pagination->url = $this->url->link('seller/account-product', 'page={page}', 'SSL');
-		
 		$this->data['pagination'] = $pagination->render();
-		$this->data['continue'] = $this->url->link('account/account', '', 'SSL');
-		
-		$this->document->setTitle($this->language->get('ms_account_products_heading'));
-		
+
+		// Links
+		$this->data['link_back'] = $this->url->link('account/account', '', 'SSL');
+		$this->data['link_create_product'] = $this->url->link('seller/account-product/create', '', 'SSL');
+
+		// Title and friends
+		$this->document->setTitle($this->language->get('ms_account_products_heading'));		
 		$this->data['breadcrumbs'] = $this->MsLoader->MsHelper->setBreadcrumbs(array(
 			array(
 				'text' => $this->language->get('text_account'),
@@ -701,6 +727,33 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		
 		if ($this->MsLoader->MsProduct->productOwnedBySeller($product_id, $seller_id)) {
 			$this->MsLoader->MsProduct->changeStatus($product_id, MsProduct::STATUS_DELETED);
+			$this->session->data['success'] = $this->language->get('ms_success_product_deleted');			
+		}
+		
+		$this->redirect($this->url->link('seller/account-product', '', 'SSL'));		
+	}
+	
+	public function publish() {
+		$product_id = (int)$this->request->get['product_id'];
+		$seller_id = (int)$this->customer->getId();
+		
+		if ($this->MsLoader->MsProduct->productOwnedBySeller($product_id, $seller_id)
+			&& $this->MsLoader->MsProduct->getStatus($product_id) == MsProduct::STATUS_INACTIVE) {
+			$this->MsLoader->MsProduct->changeStatus($product_id, MsProduct::STATUS_ACTIVE);
+			$this->session->data['success'] = $this->language->get('ms_success_product_published');
+		}
+		
+		$this->redirect($this->url->link('seller/account-product', '', 'SSL'));		
+	}	
+	
+	public function unpublish() {
+		$product_id = (int)$this->request->get['product_id'];
+		$seller_id = (int)$this->customer->getId();
+		
+		if ($this->MsLoader->MsProduct->productOwnedBySeller($product_id, $seller_id)
+			&& $this->MsLoader->MsProduct->getStatus($product_id) == MsProduct::STATUS_ACTIVE) {
+			$this->MsLoader->MsProduct->changeStatus($product_id, MsProduct::STATUS_INACTIVE);
+			$this->session->data['success'] = $this->language->get('ms_success_product_unpublished');
 		}
 		
 		$this->redirect($this->url->link('seller/account-product', '', 'SSL'));		

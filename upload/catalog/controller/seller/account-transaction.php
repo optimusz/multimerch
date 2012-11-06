@@ -32,7 +32,7 @@ class ControllerSellerAccountTransaction extends ControllerSellerAccount {
 		$pagination->url = $this->url->link('seller/account-transaction', 'page={page}', 'SSL');
 		
 		$this->data['pagination'] = $pagination->render();
-		$this->data['continue'] = $this->url->link('account/account', '', 'SSL');
+		$this->data['link_back'] = $this->url->link('account/account', '', 'SSL');
 		
 		$this->document->setTitle($this->language->get('ms_account_transactions_heading'));
 		

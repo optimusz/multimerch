@@ -524,3 +524,36 @@ div.ms-jquery-dialog.ui-widget-content,
 	display: inline-block;
 	margin: 3px 0;
 }
+
+
+/* seller account product list*/
+.ms-account-product .ms-button {
+	display: inline-block;
+	width: 30px;
+	height: 30px;
+	margin: 0 2px;
+}
+
+.ms-account-product table.list tbody td {
+	vertical-align: middle;
+}
+
+.ms-button-view {
+	background-image: url(../image/ms-view-30px.png);
+}
+
+.ms-button-publish {
+	background-image: url(../image/ms-publish-30px.png);
+}
+
+.ms-button-unpublish {
+	background-image: url(../image/ms-unpublish-30px.png);
+}
+
+.ms-button-edit {
+	background-image: url(../image/ms-edit-30px.png);
+}
+
+.ms-button-delete {
+	background-image: url(../image/ms-delete-30px.png);
+}
