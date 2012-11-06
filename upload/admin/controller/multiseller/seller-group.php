@@ -150,25 +150,20 @@ class ControllerMultisellerSellerGroup extends ControllerMultisellerBase {
 		
 		$this->load->model('sale/customer_group');
 		
-		if ($this->user->hasPermission('modify', 'multiseller/seller-group')) {
-			if (isset($this->request->post['selected'])) {
-				foreach ($this->request->post['selected'] as $seller_group_id) {
-					$this->MsLoader->MsSellerGroup->deleteSellerGroup($seller_group_id);
-				}
-				
-				$this->session->data['success'] = $this->language->get('ms_success');
-				
-				$url = '';
-				
-				$url .= isset($this->request->get['sort']) ? '&sort=' . $this->request->get['sort'] : '';
-				$url .= isset($this->request->get['order']) ? '&order=' . $this->request->get['order'] : '';
-				$url .= isset($this->request->get['page']) ? '&page=' . $this->request->get['page'] : '';
-				
-				$this->redirect($this->url->link('multiseller/seller-group', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+		if (isset($this->request->post['selected']) && $this->validateDelete()) {
+			foreach ($this->request->post['selected'] as $seller_group_id) {
+				$this->MsLoader->MsSellerGroup->deleteSellerGroup($seller_group_id);
 			}
-		}
-		else {
-			$this->error['warning'] = $this->language->get('error_permission');
+			
+			$this->session->data['success'] = $this->language->get('ms_success');
+			
+			$url = '';
+			
+			$url .= isset($this->request->get['sort']) ? '&sort=' . $this->request->get['sort'] : '';
+			$url .= isset($this->request->get['order']) ? '&order=' . $this->request->get['order'] : '';
+			$url .= isset($this->request->get['page']) ? '&page=' . $this->request->get['page'] : '';
+			
+			$this->redirect($this->url->link('multiseller/seller-group', 'token=' . $this->session->data['token'] . $url, 'SSL'));
 		}
 		
 		$this->index();
@@ -261,6 +256,25 @@ class ControllerMultisellerSellerGroup extends ControllerMultisellerBase {
 			}
 		}
 
+		if (!$this->error) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	// Validate delete of the seller group
+	private function validateDelete() {
+		if (!$this->user->hasPermission('modify', 'multiseller/seller-group')) {
+			$this->error['warning'] = $this->language->get('error_permission');
+		}
+      	
+		foreach ($this->request->post['selected'] as $seller_group_id) {
+    		if ($this->config->get('msconf_default_seller_group_id') == $seller_group_id) {
+	  			$this->error['warning'] = $this->language->get('error_default');
+			}
+		}
+		
 		if (!$this->error) {
 			return true;
 		} else {

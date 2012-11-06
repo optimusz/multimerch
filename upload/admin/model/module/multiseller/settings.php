@@ -28,6 +28,7 @@ class ModelModuleMultisellerSettings extends Model {
 			 `commission` DECIMAL(4,2) NOT NULL DEFAULT '0',
 			 `commission_flat` decimal(15,4) NOT NULL DEFAULT '0.0000',
 			 `product_validation` tinyint(4) NOT NULL DEFAULT '1',
+			 `seller_group` int(11) NOT NULL DEFAULT '1',
         	PRIMARY KEY (`seller_id`)) default CHARSET=utf8";
         
         $this->db->query($sql);
@@ -162,6 +163,15 @@ class ModelModuleMultisellerSettings extends Model {
         	PRIMARY KEY (`seller_group_description_id`)) default CHARSET=utf8";
         
         $this->db->query($sql);
+		
+		// Create default seller group
+		$this->db->query("INSERT INTO " . DB_PREFIX . "ms_seller_group () VALUES()");
+        $seller_group_id = $this->db->getLastId();
+		$this->load->model('localisation/language');
+		$languages = $this->model_localisation_language->getLanguages();
+		foreach ($languages as $language_id => $value) {
+			$this->db->query("INSERT INTO " . DB_PREFIX . "ms_seller_group_description SET seller_group_id = '" . (int)$seller_group_id . "', language_id = '" . (int)$language_id . "', name = 'Default', description = 'Default seller group'");
+		}
 
 	}
 	

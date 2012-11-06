@@ -41,7 +41,8 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		"msconf_product_image_path" => 'sellers/',
 		"msconf_temp_image_path" => 'tmp/',
 		"msconf_temp_download_path" => 'tmp/',
-		"msconf_seller_terms_page" => ""
+		"msconf_seller_terms_page" => "",
+		"msconf_default_seller_group_id" => 1
 	);
 	
 	public function __construct($registry) {
