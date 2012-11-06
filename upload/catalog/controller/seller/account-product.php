@@ -462,7 +462,6 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 	
 	public function create() {
 		$this->load->model('catalog/category');
-		$this->document->addScript('catalog/view/javascript/jquery.form.js');
 		$this->document->addScript('catalog/view/javascript/jquery.uploadify.js');
 		if ($this->config->get('msconf_enable_pdf_generator') && extension_loaded('imagick')) {
 			$this->document->addScript('catalog/view/javascript/dialog-pdf.js');
@@ -610,7 +609,6 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 	public function update() {
 		$this->load->model('tool/image');
 		$this->load->model('catalog/category');
-		$this->document->addScript('catalog/view/javascript/jquery.form.js');
 		$this->document->addScript('catalog/view/javascript/jquery.uploadify.js');
 		
 		if ($this->config->get('msconf_enable_pdf_generator') && extension_loaded('imagick')) {

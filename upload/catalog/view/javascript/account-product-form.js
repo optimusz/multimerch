@@ -67,7 +67,7 @@ $(function() {
 			'hideButton'   : true,
 			'buttonClass'  : 'ms-button-upload',
 			'height': 25,
-			'debug' : true,
+			//'debug' : true,
 			'method'   : 'post',
 			//'buttonImage' : 'catalog/view/theme/default/image/ms-update-30px.png',
 			'formData'     : {
@@ -131,7 +131,7 @@ $(function() {
 			'buttonClass'  : 'ms-button-update',
 			'width': 30,
 			'height': 30,
-			'debug' : true,
+			//'debug' : true,
 			'method'   : 'post',
 			'wmode'      : 'transparent',
 			'buttonImage' : 'catalog/view/theme/default/image/ms-update-30px.png',
@@ -186,7 +186,7 @@ $(function() {
 			'hideButton'   : true,
 			'buttonClass'  : 'ms-button-upload',
 			'height': 25,
-			'debug' : true,
+			//'debug' : true,
 			'method'   : 'post',
 			//'buttonImage' : 'catalog/view/theme/default/image/ms-update-30px.png',
 			'formData'     : {
