@@ -1,6 +1,15 @@
 <?php
 
 class ControllerModuleMultiseller extends ControllerMultisellerBase {
+	private $_controllers = array(
+		"multiseller/base",
+		"multiseller/product",
+		"multiseller/request-withdrawal",
+		"multiseller/seller",
+		"multiseller/transaction",
+		"multiseller/seller-group"		
+	);
+		
 	private $settings = array(
 		"msconf_seller_validation" => MsSeller::MS_SELLER_VALIDATION_NONE,
 		"msconf_product_validation" => MsProduct::MS_PRODUCT_VALIDATION_NONE,
@@ -101,6 +110,13 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		$this->model_module_multiseller_settings->createTable();
 		$this->model_setting_setting->editSetting('multiseller', $this->settings);
 		
+		$this->load->model('user/user_group');
+		
+		foreach ($this->_controllers as $c) {
+			$this->model_user_user_group->addPermission($this->user->getId(), 'access', $c);
+			$this->model_user_user_group->addPermission($this->user->getId(), 'modify', $c);
+		} 
+
 		$dirs = array(
 			DIR_IMAGE . $this->settings['msconf_product_image_path'],
 			DIR_IMAGE . $this->settings['msconf_temp_image_path'],
