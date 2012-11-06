@@ -139,7 +139,7 @@ class ModelModuleMultisellerSettings extends Model {
         
 		// ms_seller_group - table with seller groups
         $this->db->query($sql);
-		
+*/
 		$sql = "
 			CREATE TABLE `" . DB_PREFIX . "ms_seller_group` (
              `seller_group_id` int(11) NOT NULL AUTO_INCREMENT,
