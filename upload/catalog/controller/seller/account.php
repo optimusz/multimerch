@@ -32,11 +32,11 @@ class ControllerSellerAccount extends Controller {
 	  		$this->session->data['redirect'] = $this->url->link('account/account', '', 'SSL');
 	  		$this->redirect($this->url->link('account/login', '', 'SSL')); 
     	} else if (!$this->MsLoader->MsSeller->isSeller()) {
-    		if (isset($parts[2]) && !in_array($parts[2], array('sellerinfo','jxsavesellerinfo','jxUploadSellerAvatar'))) {
+    		if (!array_intersect($parts, array('account-profile', 'jxsavesellerinfo', 'jxUploadSellerAvatar'))) {
     			$this->redirect($this->url->link('seller/account-profile', '', 'SSL'));
     		}
     	} else if ($this->MsLoader->MsSeller->getStatus() != MsSeller::STATUS_ACTIVE) {
-    		if (isset($parts[2]) && !in_array($parts[2], array('sellerinfo', 'jxsavesellerinfo'))) {
+    		if (!array_intersect($parts, array('account-profile', 'jxsavesellerinfo', 'jxUploadSellerAvatar'))) {
     			$this->redirect($this->url->link('seller/account-profile', '', 'SSL'));
     		}
     	}

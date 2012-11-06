@@ -20,7 +20,7 @@
 	<?php } ?>
 	
 	<?php if (isset($statustext) && ($statustext)) { ?>
-		<div class="attention"><?php echo $statustext; ?></div>
+		<div class="<?php echo $statusclass; ?>"><?php echo $statustext; ?></div>
 	<?php } ?>
 	
 	<form id="ms-sellerinfo" class="ms-form">

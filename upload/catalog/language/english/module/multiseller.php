@@ -323,6 +323,8 @@ $_['ms_account_sellerinfo_saved'] = 'Seller account data saved.';
 
 // Account - Seller account status
 $_['ms_account_status'] = 'Your seller account status is: ';
+$_['ms_account_status_tobeapproved'] = '<br />You will be able to use your account as soon as it is approved by the store owner.';
+
 
 $_['ms_seller_status_activation'] = <<<EOT
 Waiting for activation

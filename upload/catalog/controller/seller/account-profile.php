@@ -154,7 +154,18 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 		$seller = $this->MsLoader->MsSeller->getSeller($this->customer->getId());
 		
 		$this->data['salt'] = $this->MsLoader->MsSeller->getSalt($this->customer->getId());
+		$this->data['statusclass'] = 'attention';
 		if ($seller) {
+			switch ($seller['ms.seller_status']) {
+				case MsSeller::STATUS_ACTIVE:
+					$this->data['statusclass'] = 'success';
+					break;
+				case MsSeller::STATUS_DISABLED:
+				case MsSeller::STATUS_DELETED:
+					$this->data['statusclass'] = 'warning';
+					break;
+			}
+			
 			$this->data['seller'] = $seller;
 			if (!empty($seller['ms.avatar'])) {
 				$this->data['seller']['avatar']['name'] = $seller['ms.avatar'];
@@ -163,6 +174,11 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 			}
 
 			$this->data['statustext'] = $this->language->get('ms_account_status') . $this->MsLoader->MsSeller->getStatusText($seller['ms.seller_status']);
+			
+			if ($seller['ms.seller_status'] == MsSeller::STATUS_INACTIVE && !$seller['ms.seller_approved']) {
+				$this->data['statustext'] .= $this->language->get('ms_account_status_tobeapproved');
+			}
+			
 			$this->data['ms_account_sellerinfo_terms_note'] = '';
 			/*			
 			switch ($status_data['seller_status']['id']) {
