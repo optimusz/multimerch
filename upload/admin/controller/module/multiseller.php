@@ -127,7 +127,7 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		
 		foreach ($dirs as $dir) {
 			if (!file_exists($dir)) {
-				if (!mkdir($dir, 755)) {
+				if (!mkdir($dir, 0755)) {
 					$this->session->data['error'] .= sprintf($this->language->get('ms_error_directory'), $dir);
 				}
 			} else {

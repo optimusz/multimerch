@@ -1,5 +1,5 @@
 <?php
-class ModelModuleMultisellerSettings extends Model {
+class ModelMultisellerSettings extends Model {
 	public function createTable() {
 		$sql = "
 			CREATE TABLE `" . DB_PREFIX . "ms_product` (

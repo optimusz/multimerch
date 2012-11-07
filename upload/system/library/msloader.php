@@ -31,10 +31,13 @@ class MsLoader {
 
 	private static function _autoloadController($class) {
 		preg_match_all('/((?:^|[A-Z])[a-z]+)/',$class,$matches);
-	    $file = DIR_APPLICATION . 'controller/' . strtolower($matches[0][1]) . '/' . strtolower($matches[0][2]) . '.php';
-	    if (file_exists($file)) {
-	    	require($file);
-	    }
+		
+		if (isset($matches[0][1]) && isset($matches[0][2])) {
+		    $file = DIR_APPLICATION . 'controller/' . strtolower($matches[0][1]) . '/' . strtolower($matches[0][2]) . '.php';
+		    if (file_exists($file)) {
+		    	require($file);
+		    }
+		}
 	}
 /*
 	public function get($class) {
