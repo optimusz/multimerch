@@ -142,8 +142,8 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 
 	public function uninstall() {
 		$this->validate(__FUNCTION__);
-		$this->load->model("module/multiseller/settings");
-		$this->model_module_multiseller_settings->dropTable();
+		$this->load->model("multiseller/settings");
+		$this->model_multiseller_settings->dropTable();
 	}	
 
 	public function saveSettings() {
@@ -180,7 +180,6 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		$this->load->model("catalog/option");
 		$this->data['options'] = $this->model_catalog_option->getOptions();
 
-        $this->data['action'] = $this->url->link("module/multiseller/settings", 'token=' . $this->session->data['token'], 'SSL');
 		$this->data['cancel'] = $this->url->link('extension/module', 'token=' . $this->session->data['token'], 'SSL');
 		
 		$this->load->model('design/layout');
