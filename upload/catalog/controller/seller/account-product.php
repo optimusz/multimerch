@@ -709,6 +709,10 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 					'href' => $this->url->link('account/account', '', 'SSL'),
 				),
 				array(
+					'text' => $this->language->get('ms_account_products_breadcrumbs'),
+					'href' => $this->url->link('seller/account-product', '', 'SSL'),
+				),				
+				array(
 					'text' => $this->language->get('ms_account_editproduct_breadcrumbs'),
 					'href' => $this->url->link('seller/account-product/update', '', 'SSL'),
 				)

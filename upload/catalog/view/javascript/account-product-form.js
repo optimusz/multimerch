@@ -222,7 +222,6 @@ $(function() {
 
 				if (!$.isEmptyObject(data.files)) {
 					var lastFileTag = $('#product_download_files .ms-download:last').find('input:hidden[name$="[filename]"]').attr('name');
-					console.log(lastFileTag)
 					if (typeof lastFileTag == "undefined") {
 						var newFileNum = 0;
 					} else {
@@ -245,7 +244,9 @@ $(function() {
 		        		$("#product_download_files").append(downloadTag).children(':last').hide().fadeIn(1000);
 					}
 					
-					$("#push_downloads").parent('div').fadeIn(1000);
+					if (msGlobals.product_id.length > 0) {
+						$("#push_downloads").parent('div').fadeIn(1000);
+					}
 				}
 				
 				if (data.cancel) {

@@ -60,7 +60,7 @@ class ControllerMultisellerSellerGroup extends ControllerMultisellerBase {
 			$this->data['seller_groups'][] = array(
 				'seller_group_id' => $result['seller_group_id'],
 				'name'              => $result['name'],
-				'selected'          => isset($this->request->post['selected']) && in_array($result['customer_group_id'], $this->request->post['selected']),
+				'selected'          => isset($this->request->post['selected']) && in_array($result['seller_group_id'], $this->request->post['selected']),
 				'action'            => $actions
 			);
 		}
@@ -144,11 +144,7 @@ class ControllerMultisellerSellerGroup extends ControllerMultisellerBase {
 	
 	// Bulk delete of seller groups
 	public function delete() { 
-		$this->load->language('sale/customer_group');
-		
 		$this->document->setTitle($this->language->get('heading_title'));
-		
-		$this->load->model('sale/customer_group');
 		
 		if (isset($this->request->post['selected']) && $this->validateDelete()) {
 			foreach ($this->request->post['selected'] as $seller_group_id) {
@@ -271,7 +267,7 @@ class ControllerMultisellerSellerGroup extends ControllerMultisellerBase {
       	
 		foreach ($this->request->post['selected'] as $seller_group_id) {
     		if ($this->config->get('msconf_default_seller_group_id') == $seller_group_id) {
-	  			$this->error['warning'] = $this->language->get('error_default');
+	  			$this->error['warning'] = $this->language->get('ms_error_seller_group_default');
 			}
 		}
 		

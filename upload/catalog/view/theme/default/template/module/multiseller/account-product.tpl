@@ -89,4 +89,12 @@
 
 	<?php echo $content_bottom; ?>
 </div>
+
+<script>
+	$(function() {
+		$(".ms-button-delete").click(function() {
+			if (!confirm('<?php echo $ms_account_products_confirmdelete; ?>')) return false;
+		});
+	});
+</script>
 <?php echo $footer; ?>

@@ -36,7 +36,7 @@ $_['ms_button_cancel']      = 'Cancel';
 
 
 $_['ms_transaction_sale']      = 'Sale: %s (-%s commission)';
-$_['ms_transaction_pending_withdrawal']      = 'Pending withdrawal request: %s';
+$_['ms_transaction_refund']      = 'Refund: %s';
 $_['ms_request_submitted']      = 'Your request is submitted';
 
 $_['ms_totals_line']      = 'Currently %s sellers and %s products for sale!';
@@ -367,7 +367,7 @@ $_['ms_account_products_action']       = 'Action';
 $_['ms_account_products_action_edit']       = 'Edit';
 $_['ms_account_products_action_delete']       = 'Delete';
 $_['ms_account_products_noproducts']       = 'You don\'t have any products yet!';
-
+$_['ms_account_products_confirmdelete']       = 'Are you sure you want to delete your product?';
 
 // Account - Transactions
 

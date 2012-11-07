@@ -16,7 +16,13 @@ $_['ms_status_deleted'] = 'Deleted';
 $_['ms_error_directory'] = "Warning: Could not create directory: %s. Please create it manually and make it server-writable before proceeding. <br />";
 $_['ms_error_directory_notwritable'] = "Warning: Directory already exists and is not writable: %s. Please make sure it's empty and make it server-writable before proceeding. <br />";
 $_['ms_error_directory_exists'] = "Warning: Directory already exists: %s. Please make sure it's empty before proceeding. <br />";
+$_['ms_error_product_publish'] = 'Failed to publish some products: seller account not active.'
+
+
+
 $_['ms_success_installed']      = 'Extension successfully installed';
+$_['ms_success_product_status']      = 'Successfully changed product status.';
+
 
 $_['heading_title']    = '[ffct.cc] Digital Multiseller Marketplace';
 $_['text_module']         = 'Modules';
@@ -24,7 +30,7 @@ $_['text_seller_select']         = 'Seller select';
 $_['text_shipping_dependent']         = 'Shipping dependent';
 $_['text_no_results'] = 'No results';
 $_['error_permission'] = 'Warning: You do not have permission to modify module!';
-$_['ms_error_withdraw_norequests'] = 'Error: no requests to process';
+$_['ms_error_withdraw_norequests'] = 'Error: no withdrawals to process';
 $_['ms_error_withdraw_response'] = 'Error: no response';
 $_['ms_error_withdraw_status'] = 'Error: unsuccessful transaction';
 $_['ms_success'] = 'Success';
@@ -54,10 +60,7 @@ $_['ms_decline'] = 'Decline';
 $_['ms_edit'] = 'Edit';
 $_['ms_delete'] = 'Delete';
 $_['ms_change_status'] = 'Change status';
-$_['ms_enable_approve'] = 'Enable/Approve';
-$_['ms_disable_decline'] = 'Disable/Decline';
 
-$_['ms_edit_process'] = 'Edit/Process';
 $_['ms_button_pay'] = 'Pay';
 $_['ms_button_mark_paid'] = 'Mark as paid';
 
@@ -260,8 +263,10 @@ $_['ms_seller_group_entry_name'] = 'Name';
 $_['ms_seller_group_entry_description'] = 'Description';
 $_['ms_seller_group_entry_language'] = 'Language';
 
-$_['ms_error_seller_group_name'] = 'Error: name is not entered';
-$_['ms_error_seller_group_language'] = 'Error: language not selected';
+$_['ms_error_seller_group_name'] = 'Error: Name is not entered';
+$_['ms_error_seller_group_language'] = 'Error: Language not selected';
+$_['ms_error_seller_group_default'] = 'Error: Default seller group can not be deleted!';
+
 
 // Finances - Withdrawals
 $_['ms_finances_withdrawals_heading'] = 'Withdrawals';

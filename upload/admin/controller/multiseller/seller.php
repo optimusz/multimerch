@@ -35,6 +35,20 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 				)
 			);		
 
+			switch ($data['seller_status']) {
+				case MsSeller::STATUS_INACTIVE:
+				case MsSeller::STATUS_DISABLED:
+				case MsSeller::STATUS_DELETED:
+					$products = $this->MsLoader->MsProduct->getProducts(array(
+						'seller_id' => $seller['seller_id']
+					));
+					
+					foreach ($products as $p) {
+						$this->MsLoader->MsProduct->changeStatus($p['product_id'], $data['seller_status']);
+					}
+					break;
+			}
+
 			// edit seller
 			$this->MsLoader->MsSeller->adminEditSeller($data);
 			

@@ -655,7 +655,7 @@ class MsProduct extends Model {
 		return $res->row;
 	}	
 	
-	public function getProducts($data, $sort) {
+	public function getProducts($data, $sort = array()) {
 		// todo validate order parameters
 		$sql = "SELECT  p.product_id as 'product_id',
 						p.image as 'p.image',

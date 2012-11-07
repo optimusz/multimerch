@@ -105,8 +105,12 @@ class ControllerMultisellerProduct extends ControllerMultisellerBase {
 					$this->MsLoader->MsProduct->createRecord($product_id, array());
 					switch ($this->request->post['bulk_product_status']) {
 						case MsProduct::STATUS_ACTIVE:
-							$this->MsLoader->MsProduct->changeStatus($product_id, MsProduct::STATUS_ACTIVE);
-							$this->MsLoader->MsProduct->approve($product_id);
+							if ($seller['ms.seller_status'] != MsSeller::STATUS_ACTIVE) {
+								$this->session->data['error'] = $this->language->get('ms_error_product_publish');
+							} else {
+								$this->MsLoader->MsProduct->changeStatus($product_id, MsProduct::STATUS_ACTIVE);
+								$this->MsLoader->MsProduct->approve($product_id);
+							}
 							break;
 						case MsProduct::STATUS_INACTIVE:
 							$this->MsLoader->MsProduct->changeStatus($product_id, MsProduct::STATUS_INACTIVE);
@@ -121,18 +125,22 @@ class ControllerMultisellerProduct extends ControllerMultisellerBase {
 							$this->MsLoader->MsProduct->disapprove($product_id);
 							break;
 					}
-					$this->session->data['success'] = 'Successfully changed product status.';
+					
+					if (!isset($this->session->data['error']))
+						$this->session->data['success'] = $this->language->get('ms_success_product_status');
 				}
 				
-				$mails[] = array(
-					'type' => MsMail::SMT_PRODUCT_MODIFIED,
-					'data' => array(
-						'recipients' => $seller['c.email'],
-						'addressee' => $seller['ms.nickname'],
-						'message' => $this->request->post['product_message'],
-						'product_id' => $product_id
-					)
-				);
+				if ($seller['ms.seller_status'] == MsSeller::STATUS_ACTIVE) {
+					$mails[] = array(
+						'type' => MsMail::SMT_PRODUCT_MODIFIED,
+						'data' => array(
+							'recipients' => $seller['c.email'],
+							'addressee' => $seller['ms.nickname'],
+							'message' => isset($this->request->post['product_message']) ? $this->request->post['product_message'] : '',
+							'product_id' => $product_id
+						)
+					);
+				}
 			}
 			
 			if (isset($this->request->post['bulk_mail'])) {

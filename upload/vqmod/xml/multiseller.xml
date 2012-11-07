@@ -199,89 +199,90 @@
 				$order_product_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int)$order_id . "'");
 			]]></search>
 			<add><![CDATA[
-if (in_array($order_status_id, $this->config->get('msconf_credit_order_statuses'))) {
-	foreach ($order_product_query->rows as $order_product) {
-		$balance_entry = $this->MsLoader->MsBalance->getBalanceEntry(
-			array(
-				'seller_id' => $this->MsLoader->MsProduct->getSellerId($order_product['product_id']),
-				'product_id' => $order_product['product_id'],
-				'order_id' => $order_id,
-				'balance_type' => MsBalance::MS_BALANCE_TYPE_SALE
-			)
-		);
-	
-		if (!$balance_entry) {
-			$seller_id = $this->MsLoader->MsProduct->getSellerId($order_product['product_id']);
-			$store_commission_flat = $this->MsLoader->MsSeller->getCommissionFlatForSeller($seller_id);
-			$store_commission_pct = $order_product['total'] * $this->MsLoader->MsSeller->getCommissionPercentForSeller($seller_id) / 100;
-			$seller_net_amt = $order_product['total'] - ($store_commission_flat + $store_commission_pct);
-			$this->MsLoader->MsOrderData->addOrderProductData(
-				$order_product['order_id'],
-				$order_product['product_id'],								
-				array(
-					'seller_id' => $seller_id,
-             		'store_commission_flat' => $store_commission_flat,
-             		'store_commission_pct' => $store_commission_pct,
-             		'seller_net_amt' => $seller_net_amt									
-				)
-			);
-			
-			$this->MsLoader->MsBalance->addBalanceEntry(
-				$seller_id,
-				array(
-					'order_id' => $order_product['order_id'],
-					'product_id' => $order_product['product_id'],
-					'balance_type' => MsBalance::MS_BALANCE_TYPE_SALE,
-					'amount' => $seller_net_amt,
-					'description' => 'Sale'
-				)
-			);
-			
-			//$this->MsLoader->MsMail->sendOrderMails($order_id);
-		} else {
-			// send order status change mails
-		}
-	}
-} else if (in_array($order_status_id, $this->config->get('msconf_debit_order_statuses'))) {
-	$refund_balance_entry = $this->MsLoader->MsBalance->getBalanceEntry(
-		array(
-			'seller_id' => $this->MsLoader->MsProduct->getSellerId($order_product['product_id']),
-			'product_id' => $order_product['product_id'],
-			'order_id' => $order_id,
-			'balance_type' => MsBalance::MS_BALANCE_TYPE_REFUND
-		)
-	);
-	
-	if (!$refund_balance_entry) {
-		$balance_entry = $this->MsLoader->MsBalance->getBalanceEntry(
-			array(
-				'seller_id' => $this->MsLoader->MsProduct->getSellerId($order_product['product_id']),
-				'product_id' => $order_product['product_id'],
-				'order_id' => $order_id,
-				'balance_type' => MsBalance::MS_BALANCE_TYPE_SALE
-			)
-		);
-
-		if ($balance_entry) {
-			$this->MsLoader->MsBalance->addBalanceEntry(
-				$balance_entry['seller_id'],
-				array(
-					'order_id' => $balance_entry['order_id'],
-					'product_id' => $balance_entry['product_id'],
-					'balance_type' => MsBalance::MS_BALANCE_TYPE_REFUND,
-					'amount' => -1 * $balance_entry['amount'],
-					'description' => 'Refund'
-				)
-			);
-			
-			// send refund mails
-			//$this->MsLoader->MsMail->sendOrderMails($order_id);
-		} else {
-			// send order status change mails
-		}
-		
-	}
-}
+				$this->language->load('module/multiseller');
+				if (in_array($order_status_id, $this->config->get('msconf_credit_order_statuses'))) {
+					foreach ($order_product_query->rows as $order_product) {
+						$balance_entry = $this->MsLoader->MsBalance->getBalanceEntry(
+							array(
+								'seller_id' => $this->MsLoader->MsProduct->getSellerId($order_product['product_id']),
+								'product_id' => $order_product['product_id'],
+								'order_id' => $order_id,
+								'balance_type' => MsBalance::MS_BALANCE_TYPE_SALE
+							)
+						);
+						
+						if (!$balance_entry) {
+							$seller_id = $this->MsLoader->MsProduct->getSellerId($order_product['product_id']);
+							$store_commission_flat = $this->MsLoader->MsSeller->getCommissionFlatForSeller($seller_id);
+							$store_commission_pct = $order_product['total'] * $this->MsLoader->MsSeller->getCommissionPercentForSeller($seller_id) / 100;
+							$seller_net_amt = $order_product['total'] - ($store_commission_flat + $store_commission_pct);
+							$this->MsLoader->MsOrderData->addOrderProductData(
+								$order_product['order_id'],
+								$order_product['product_id'],								
+								array(
+									'seller_id' => $seller_id,
+				             		'store_commission_flat' => $store_commission_flat,
+				             		'store_commission_pct' => $store_commission_pct,
+				             		'seller_net_amt' => $seller_net_amt									
+								)
+							);
+							
+							$this->MsLoader->MsBalance->addBalanceEntry(
+								$seller_id,
+								array(
+									'order_id' => $order_product['order_id'],
+									'product_id' => $order_product['product_id'],
+									'balance_type' => MsBalance::MS_BALANCE_TYPE_SALE,
+									'amount' => $seller_net_amt,
+									'description' => sprintf($this->language->get('ms_transaction_sale'),  ($order_product['quantity'] > 1 ? $order_product['quantity'] . ' x ' : '')  . $order_product['name'], $this->currency->format($store_commission_flat + $store_commission_pct, $this->config->get('config_currency')))
+								)
+							);
+							
+							//$this->MsLoader->MsMail->sendOrderMails($order_id);
+						} else {
+							// send order status change mails
+						}
+					}
+				} else if (in_array($order_status_id, $this->config->get('msconf_debit_order_statuses'))) {
+					$refund_balance_entry = $this->MsLoader->MsBalance->getBalanceEntry(
+						array(
+							'seller_id' => $this->MsLoader->MsProduct->getSellerId($order_product['product_id']),
+							'product_id' => $order_product['product_id'],
+							'order_id' => $order_id,
+							'balance_type' => MsBalance::MS_BALANCE_TYPE_REFUND
+						)
+					);
+					
+					if (!$refund_balance_entry) {
+						$balance_entry = $this->MsLoader->MsBalance->getBalanceEntry(
+							array(
+								'seller_id' => $this->MsLoader->MsProduct->getSellerId($order_product['product_id']),
+								'product_id' => $order_product['product_id'],
+								'order_id' => $order_id,
+								'balance_type' => MsBalance::MS_BALANCE_TYPE_SALE
+							)
+						);
+				
+						if ($balance_entry) {
+							$this->MsLoader->MsBalance->addBalanceEntry(
+								$balance_entry['seller_id'],
+								array(
+									'order_id' => $balance_entry['order_id'],
+									'product_id' => $balance_entry['product_id'],
+									'balance_type' => MsBalance::MS_BALANCE_TYPE_REFUND,
+									'amount' => -1 * $balance_entry['amount'],
+									'description' => sprintf($this->language->get('ms_transaction_refund'),  ($order_product['quantity'] > 1 ? $order_product['quantity'] . ' x ' : '')  . $order_product['name'])
+								)
+							);
+							
+							// send refund mails
+							//$this->MsLoader->MsMail->sendOrderMails($order_id);
+						} else {
+							// send order status change mails
+						}
+						
+					}
+				}
 			]]></add>
 		</operation>
 			
@@ -514,52 +515,14 @@ if (in_array($order_status_id, $this->config->get('msconf_credit_order_statuses'
 	<!-- ************************ -->	
 	<!-- ************************ -->
 
-	<file name="&adminFolder;/model/sale/order.php">
-		<!-- 1.5.2 -->
+	<file name="&adminFolder;/controller/sale/order.php">
 		<operation error="log">
 			<search position="after"><![CDATA[
-				$this->db->query("UPDATE `" . DB_PREFIX . "order` SET total = '" . (float)$total . "' WHERE order_id = '" . (int)$order_id . "'");
+				$this->model_sale_order->addOrderHistory($this->request->get['order_id'], $this->request->post);
 			]]></search>
 			<add><![CDATA[
-				require_once(DIR_SYSTEM . 'library/ms-transaction.php');
-				$msTransaction = new MsTransaction($this->registry);
-				if (in_array($data['order_status_id'], explode(',',$this->config->get('msconf_credit_order_statuses')))) {
-					$msTransaction->addTransactionsForOrder($order_id);
-				} else if (in_array($data['order_status_id'], explode(',',$this->config->get('msconf_debit_order_statuses')))) {
-					$msTransaction->addTransactionsForOrder($order_id, TRUE);
-				}
 			]]></add>
-		</operation>
-
-		<!-- 1.5.3 -->
-		<operation error="log">
-			<search position="after"><![CDATA[
-				$this->db->query("UPDATE `" . DB_PREFIX . "order` SET total = '" . (float)$total . "', affiliate_id = '" . (int)$affiliate_id . "', commission = '" . (float)$commission . "' WHERE order_id = '" . (int)$order_id . "'");
-			]]></search>
-			<add><![CDATA[
-				require_once(DIR_SYSTEM . 'library/ms-transaction.php');
-				$msTransaction = new MsTransaction($this->registry);
-				if (in_array($data['order_status_id'], explode(',',$this->config->get('msconf_credit_order_statuses')))) {
-					$msTransaction->addTransactionsForOrder($order_id);
-				} else if (in_array($data['order_status_id'], explode(',',$this->config->get('msconf_debit_order_statuses')))) {
-					$msTransaction->addTransactionsForOrder($order_id, TRUE);
-				}
-			]]></add>
-		</operation>
-		
-		<operation>
-			<search position="after"><![CDATA[
-				$this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int)$data['order_status_id'] . "', date_modified = NOW() WHERE order_id = '" . (int)$order_id . "'");
-			]]></search>
-			<add><![CDATA[
-				require_once(DIR_SYSTEM . 'library/ms-transaction.php');
-				$msTransaction = new MsTransaction($this->registry);
-				if (in_array($data['order_status_id'], explode(',',$this->config->get('msconf_credit_order_statuses')))) {
-					$msTransaction->addTransactionsForOrder($order_id);
-				} else if (in_array($data['order_status_id'], explode(',',$this->config->get('msconf_debit_order_statuses')))) {
-					$msTransaction->addTransactionsForOrder($order_id, TRUE);
-				}
-			]]></add>
+			// todo order balance entries
 		</operation>
 	</file>	
 
