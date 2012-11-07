@@ -236,12 +236,7 @@ class ControllerMultisellerSellerGroup extends ControllerMultisellerBase {
 			$this->data['seller_group_description'] = array();
 		}
 		
-		$this->template = 'module/multiseller/seller-group-form.tpl';
-		$this->children = array(
-			'common/header',
-			'common/footer'
-		);
-				
+		list($this->template, $this->children) = $this->MsLoader->MsHelper->admLoadTemplate('seller-group-form'); 
 		$this->response->setOutput($this->render());
 	}
 	
