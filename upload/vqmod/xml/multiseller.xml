@@ -618,7 +618,7 @@
 			<td class="left"><a href="<?php echo $product['href']; ?>"><?php echo $product['name']; ?></a>
 			]]></search>
 			<add><![CDATA[
-			<td class="left"><?php if (!empty($product['seller']['seller_id'])) { ?><a href="<?php echo $this->url->link('module/multiseller/sellerinfo', 'token=' . $this->session->data['token'] . '&seller_id=' . $product['seller']['seller_id'], 'SSL');?>"><?php echo $product['seller']['nickname']; ?></a> <?php } ?></td>
+			<td class="left"><?php if (!empty($product['seller']['seller_id'])) { ?><a href="<?php echo $this->url->link('multiseller/seller/update', 'token=' . $this->session->data['token'] . '&seller_id=' . $product['seller']['seller_id'], 'SSL');?>"><?php echo $product['seller']['nickname']; ?></a> <?php } ?></td>
 			]]></add>
 		</operation>
 		
