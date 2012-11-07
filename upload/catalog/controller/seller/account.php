@@ -4,7 +4,7 @@ class ControllerSellerAccount extends Controller {
 	public function __construct($registry) {
 		parent::__construct($registry);
 
-		$this->data = array_merge($this->data, $this->load->language('module/multiseller'),$this->load->language('account/account'));
+		$this->data = array_merge($this->data, $this->load->language('multiseller/multiseller'),$this->load->language('account/account'));
 		$parts = explode('/', $this->request->request['route']);
 		// Uploadify checks
 		//$this->_log = new Log("uploadify.log");

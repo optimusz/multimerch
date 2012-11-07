@@ -2,7 +2,7 @@
 class ControllerModuleMsComments extends Controller {
 	public function submitComment() {
 		$this->load->model('module/multiseller/comments');
-		$this->data = array_merge($this->data, $this->load->language('module/multiseller'));
+		$this->data = array_merge($this->data, $this->load->language('multiseller/multiseller'));
 
 	    $comment['name'] = trim(strip_tags(htmlspecialchars_decode($this->request->post['pcName'])));
 	    $comment['email'] = trim(strip_tags(htmlspecialchars_decode($this->request->post['pcEmail'])));
@@ -52,7 +52,7 @@ class ControllerModuleMsComments extends Controller {
 	public function loadComments() {
 		$this->load->model('module/multiseller/comments');		
 		$this->document->addStyle('catalog/view/theme/' . $this->config->get('config_template') . '/stylesheet/multiseller.css');		
-		$this->data = array_merge($this->data, $this->load->language('module/multiseller'));
+		$this->data = array_merge($this->data, $this->load->language('multiseller/multiseller'));
 
 		$comments = $this->model_module_multiseller_comments->getComments($this->request->get['product_id'], 1);
 		
@@ -75,7 +75,7 @@ class ControllerModuleMsComments extends Controller {
 	
 	public function getComments() {
 		$this->load->model('module/multiseller/comments');
-		$this->data = array_merge($this->data, $this->load->language('module/multiseller'));
+		$this->data = array_merge($this->data, $this->load->language('multiseller/multiseller'));
 		
 		$this->data['product_id'] = $this->request->get['product_id'];
 		$this->data['pcComments'] = $this->model_module_multiseller_comments->getComments($this->request->get['product_id'], 1);

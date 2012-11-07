@@ -42,10 +42,10 @@ class MsHelper extends Model {
 	}	
 	
 	public function loadTemplate($templateName, $children = FALSE) {
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . "/template/module/multiseller/$templateName.tpl")) {
-			$template = $this->config->get('config_template') . "/template/module/multiseller/$templateName.tpl";
+		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . "/template/multiseller/$templateName.tpl")) {
+			$template = $this->config->get('config_template') . "/template/multiseller/$templateName.tpl";
 		} else {
-			$template = "default/template/module/multiseller/$templateName.tpl";
+			$template = "default/template/multiseller/$templateName.tpl";
 		}
 		
 		if ($children === FALSE) {

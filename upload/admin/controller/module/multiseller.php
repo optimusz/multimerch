@@ -105,9 +105,9 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 	}
 	public function install() {
 		$this->validate(__FUNCTION__);		
-		$this->load->model("module/multiseller/settings");
+		$this->load->model("multiseller/settings");
 		$this->load->model('setting/setting');
-		$this->model_module_multiseller_settings->createTable();
+		$this->model_multiseller_settings->createTable();
 		$this->model_setting_setting->editSetting('multiseller', $this->settings);
 		
 		$this->load->model('user/user_group');

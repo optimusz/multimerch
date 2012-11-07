@@ -63,7 +63,7 @@
 				protected function index() {
 			]]></search>
 			<add><![CDATA[
-				$this->data = array_merge($this->data, $this->load->language('module/multiseller'));
+				$this->data = array_merge($this->data, $this->load->language('multiseller/multiseller'));
 				$this->data['ms_total_products'] = $this->MsLoader->MsProduct->getTotalProducts(array(
 					'enabled' => 1,
 					//'product_status' => array(MsProduct::STATUS_ACTIVE),
@@ -109,7 +109,7 @@
 			]]></search>
 			<add><![CDATA[
 				$this->data['ms_seller_created'] = $this->MsLoader->MsSeller->isCustomerSeller($this->customer->getId());
-				$this->data = array_merge($this->data, $this->load->language('module/multiseller'));			
+				$this->data = array_merge($this->data, $this->load->language('multiseller/multiseller'));			
 				$this->data['ms_link_sellerinfo'] = $this->url->link('seller/account-profile', '', 'SSL');
 				$this->data['ms_link_newproduct'] = $this->url->link('seller/account-product/create', '', 'SSL');
 				$this->data['ms_link_products'] = $this->url->link('seller/account-product', '', 'SSL');
@@ -149,7 +149,7 @@
 				protected function index() {
 			]]></search>
 			<add><![CDATA[
-				$this->data = array_merge($this->data, $this->load->language('module/multiseller'));
+				$this->data = array_merge($this->data, $this->load->language('multiseller/multiseller'));
 			]]></add>
 		</operation>
 	</file>
@@ -172,7 +172,7 @@
 			]]></search>
 			<add><![CDATA[
 				$this->data['ms_seller_created'] = $this->MsLoader->MsSeller->isCustomerSeller($this->customer->getId());			
-				$this->data = array_merge($this->data, $this->load->language('module/multiseller'));			
+				$this->data = array_merge($this->data, $this->load->language('multiseller/multiseller'));			
 				$this->data['ms_link_sellerinfo'] = $this->url->link('seller/account-profile', '', 'SSL');
 				$this->data['ms_link_newproduct'] = $this->url->link('seller/account-product/create', '', 'SSL');
 				$this->data['ms_link_products'] = $this->url->link('seller/account-product', '', 'SSL');
@@ -199,7 +199,7 @@
 				$order_product_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int)$order_id . "'");
 			]]></search>
 			<add><![CDATA[
-				$this->language->load('module/multiseller');
+				$this->language->load('multiseller/multiseller');
 				if (in_array($order_status_id, $this->config->get('msconf_credit_order_statuses'))) {
 					foreach ($order_product_query->rows as $order_product) {
 						$balance_entry = $this->MsLoader->MsBalance->getBalanceEntry(
@@ -387,7 +387,7 @@
 			<add><![CDATA[
 			$this->document->addScript('catalog/view/javascript/dialog-sellercontact.js');
 			$this->document->addStyle('catalog/view/theme/' . $this->config->get('config_template') . '/stylesheet/multiseller.css');
-			$this->data = array_merge($this->data, $this->load->language('module/multiseller'));
+			$this->data = array_merge($this->data, $this->load->language('multiseller/multiseller'));
 			$this->load->model('localisation/country');
 			
 			$seller_id = $this->MsLoader->MsProduct->getSellerId($this->request->get['product_id']);
@@ -446,7 +446,7 @@
 			]]></search>
 			<add><![CDATA[
 				$this->load->model('module/multiseller/comments');
-				$this->language->load('module/multiseller');
+				$this->language->load('multiseller/multiseller');
 				$this->data['tab_comments'] = sprintf($this->language->get('ms_comments_tab_comments'), $this->model_module_multiseller_comments->getCommentsCount($this->request->get['product_id']));
 			]]></add>
 		</operation>
@@ -553,7 +553,7 @@
 			protected function index() {
 			]]></search>
 			<add><![CDATA[
-			$this->data = array_merge($this->data, $this->load->language('module/multiseller'));
+			$this->data = array_merge($this->data, $this->load->language('multiseller/multiseller'));
 			]]></add>
 		</operation>
 		
@@ -578,7 +578,7 @@
 			$this->data['products'][] = array(
 			]]></search>
 			<add><![CDATA[
-			$this->language->load('module/multiseller');
+			$this->language->load('multiseller/multiseller');
 			$this->data['column_seller'] = $this->language->get('ms_seller');
 			// todo check
 			$seller = $this->MsLoader->MsSeller->getSeller(
@@ -651,7 +651,7 @@
 			$this->data['cancel'] = $this->url->link('sale/contact', 'token=' . $this->session->data['token'], 'SSL');
 		]]></search>
 		<add><![CDATA[
-			$this->language->load('module/multiseller');
+			$this->language->load('multiseller/multiseller');
 			$this->data['text_seller_all'] = $this->language->get('ms_all_sellers');
 		]]></add>
 	</operation>

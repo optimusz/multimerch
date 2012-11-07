@@ -11,7 +11,7 @@ class ControllerMultisellerBase extends Controller {
 		if (!isset($parts[2]) || !in_array($parts[2], array('install','uninstall'))) {
 		}
 		
-		$this->data = array_merge($this->data, $this->load->language('module/multiseller'));
+		$this->data = array_merge($this->data, $this->load->language('multiseller/multiseller'));
 		$this->data['token'] = $this->session->data['token'];
 		$this->document->addStyle('view/stylesheet/multiseller.css');
 	}
