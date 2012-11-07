@@ -16,7 +16,7 @@ $_['ms_status_deleted'] = 'Deleted';
 $_['ms_error_directory'] = "Warning: Could not create directory: %s. Please create it manually and make it server-writable before proceeding. <br />";
 $_['ms_error_directory_notwritable'] = "Warning: Directory already exists and is not writable: %s. Please make sure it's empty and make it server-writable before proceeding. <br />";
 $_['ms_error_directory_exists'] = "Warning: Directory already exists: %s. Please make sure it's empty before proceeding. <br />";
-$_['ms_error_product_publish'] = 'Failed to publish some products: seller account not active.'
+$_['ms_error_product_publish'] = 'Failed to publish some products: seller account not active.';
 
 
 
