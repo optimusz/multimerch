@@ -662,8 +662,6 @@
 		]]></search>
 		<add><![CDATA[
 			case 'seller_all':
-				$sort = ;
-				
 				$email_total = $this->MsLoader->MsSeller->getTotalSellers(array(
 					'seller_status' => array(MsSeller::STATUS_ACTIVE)
 				));

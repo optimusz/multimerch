@@ -309,8 +309,8 @@ class ControllerSellerCatalogSeller extends ControllerSellerCatalog {
 		
 		$this->data['breadcrumbs'] = $this->MsLoader->MsHelper->setBreadcrumbs(array(
 			array(
-				'text' => $this->language->get('text_account'),
-				'href' => $this->url->link('account/account', '', 'SSL'),
+				'text' => $this->language->get('ms_catalog_sellers'),
+				'href' => $this->url->link('seller/catalog-seller', '', 'SSL'), 
 			),
 			array(
 				'text' => sprintf($this->language->get('ms_catalog_seller_profile_breadcrumbs'), $this->data['seller']['nickname']),
