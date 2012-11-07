@@ -219,12 +219,12 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 				foreach ($data['product_downloads'] as $key => $download) {
 					if (!empty($download['filename'])) {
 						if (!$this->MsLoader->MsFile->checkFileAgainstSession($download['filename'])) {
-							var_dump($download);
+							//var_dump($download);
 							$json['errors']['product_download'] = $this->language->get('ms_error_file_upload_error');
 						}						
 					} else if (!empty($download['download_id']) && !empty($product['product_id'])) {
 						if (!$this->MsLoader->MsProduct->hasDownload($product['product_id'],$download['download_id'])) {
-							var_dump($download);
+							//var_dump($download);
 							$json['errors']['product_download'] = $this->language->get('ms_error_file_upload_error');
 						}
 					} else {

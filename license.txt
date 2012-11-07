@@ -1,4 +1,4 @@
-ffct.cc software license for Digital Multiseller Marketplace OpenCart Extension
+ffct.cc software license for OpenCart Digital Marketplace Extension
 
 This is a legal agreement between you and ffct.cc software.
 
@@ -7,7 +7,7 @@ This is a legal agreement between you and ffct.cc software.
 
 1.1. 'ffct.cc software' means ffct.cc software and its licensors, if any. 
 
-1.2. 'Software' means the Digital Multiseller Marketplace OpenCart Extension
+1.2. 'Software' means the OpenCart Digital Marketplace Extension
 software program and any third party software programs contained therein, in each
 case supplied by ffct.cc software herewith, and corresponding documentation
 and all updates or upgrades of the above that are provided to you. 

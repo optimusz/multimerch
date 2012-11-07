@@ -18,7 +18,7 @@ class ControllerMultisellerBase extends Controller {
 			
 	public function validate($action, $level = 'access') {
 		return true;
-		var_dump($this->user->hasPermission($level, 'module/multiseller'));
+		//var_dump($this->user->hasPermission($level, 'module/multiseller'));
 //		if (in_array(strtolower($action), array('sellers', 'install','uninstall','jxsavesellerinfo', 'savesettings', 'jxconfirmpayment', 'jxcompletepayment', 'jxproductstatus'))
 		if (!$this->user->hasPermission($level, 'module/multiseller')) {
 			return $this->forward('error/permission');

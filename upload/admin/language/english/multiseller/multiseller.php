@@ -24,7 +24,7 @@ $_['ms_success_installed']      = 'Extension successfully installed';
 $_['ms_success_product_status']      = 'Successfully changed product status.';
 
 
-$_['heading_title']    = '[ffct.cc] Digital Multiseller Marketplace';
+$_['heading_title']    = '[ffct.cc] OpenCart Digital Marketplace';
 $_['text_module']         = 'Modules';
 $_['text_seller_select']         = 'Seller select';
 $_['text_shipping_dependent']         = 'Shipping dependent';
@@ -118,8 +118,8 @@ $_['ms_config_enable_update_seo_urls_note'] = 'This setting enables new SEO URLs
 $_['ms_config_enable_non_alphanumeric_seo'] = 'Enable non-alphanumeric and non-latin characters in SEO URLs';
 $_['ms_config_enable_non_alphanumeric_seo_note'] = 'This setting enables all non-alphanumeric and non-latin characters in SEO URLs. Use at your own risk.';
 
-$_['ms_config_seller_commission'] = 'Default seller commission';
-$_['ms_config_seller_commission_note'] = 'Default seller commission (flat fee + %)';
+$_['ms_config_seller_commission'] = 'Default store commission';
+$_['ms_config_seller_commission_note'] = 'Default store commission (flat fee + %)';
 
 $_['ms_config_minimum_product_price'] = 'Minimum product price';
 $_['ms_config_minimum_product_price_note'] = 'Minimum product price';
@@ -145,11 +145,11 @@ $_['ms_config_allowed_download_types_note'] = 'Allowed download extensions';
 $_['ms_config_image_preview_size'] = 'Image preview size';
 $_['ms_config_image_preview_size_note'] = 'Seller area image preview size';
 
-$_['ms_config_credit_order_statuses'] = 'Credit statuses';
-$_['ms_config_credit_order_statuses_note'] = 'Order statuses to credit seller balance';
+$_['ms_config_credit_order_statuses'] = 'Fund statuses';
+$_['ms_config_credit_order_statuses_note'] = 'Seller balance will be funded for orders with fund statuses';
 
-$_['ms_config_debit_order_statuses'] = 'Debit statuses';
-$_['ms_config_debit_order_statuses_note'] = 'Order statuses to debit seller balance';
+$_['ms_config_debit_order_statuses'] = 'Charge statuses';
+$_['ms_config_debit_order_statuses_note'] = 'Seller balance will be charged for orders with charge statuses';
 
 $_['ms_config_minimum_withdrawal'] = 'Minimum withdrawal amount';
 $_['ms_config_minimum_withdrawal_note'] = 'Minimum withdrawal amount note';
