@@ -82,7 +82,8 @@ class ControllerMultisellerRequestWithdrawal extends ControllerMultisellerBase {
 			foreach ($this->request->post['selected'] as $withdrawal_id) {
 				$result = $this->MsLoader->MsWithdrawal->getWithdrawals(
 					array(
-						'withdrawal_id' => $withdrawal_id
+						'withdrawal_id' => $withdrawal_id,
+						'withdrawal_status' => array(MsWithdrawal::STATUS_PENDING)
 					)
 				);
 				
@@ -122,7 +123,8 @@ class ControllerMultisellerRequestWithdrawal extends ControllerMultisellerBase {
 			foreach ($this->request->post['selected'] as $withdrawal_id) {
 				$result = $this->MsLoader->MsWithdrawal->getWithdrawals(
 					array(
-						'withdrawal_id' => $withdrawal_id
+						'withdrawal_id' => $withdrawal_id,
+						'withdrawal_status' => array(MsWithdrawal::STATUS_PENDING)
 					)
 				);
 				
@@ -173,13 +175,14 @@ class ControllerMultisellerRequestWithdrawal extends ControllerMultisellerBase {
 		foreach ($this->request->post['selected'] as $withdrawal_id) {
 			$result = $this->MsLoader->MsWithdrawal->getWithdrawals(
 				array(
-					'withdrawal_id' => $withdrawal_id
+					'withdrawal_id' => $withdrawal_id,
+					'withdrawal_status' => array(MsWithdrawal::STATUS_PENDING)
 				)
 			);
 			
 			$result = array_shift($result);
 			
-			if (!empty($result) && ($result['mw.date_processed'] == NULL)) {
+			if (!empty($result)) {
 				$paymentParams['L_EMAIL' . $i] = $result['ms.paypal'];
 				$paymentParams['L_AMT' . $i] = abs($result['mw.amount']);
 				$i++;
@@ -208,7 +211,8 @@ class ControllerMultisellerRequestWithdrawal extends ControllerMultisellerBase {
 			foreach ($this->request->post['selected'] as $withdrawal_id) {
 				$result = array_shift($this->MsLoader->MsWithdrawal->getWithdrawals(
 					array(
-						'withdrawal_id' => $withdrawal_id
+						'withdrawal_id' => $withdrawal_id,
+						'withdrawal_status' => array(MsWithdrawal::STATUS_PENDING)						
 					)
 				));
 				
@@ -251,9 +255,10 @@ class ControllerMultisellerRequestWithdrawal extends ControllerMultisellerBase {
 		foreach ($this->request->post['selected'] as $withdrawal_id) {
 			$result = $this->MsLoader->MsWithdrawal->getWithdrawals(
 				array(
-					'withdrawal_id' => $withdrawal_id
+					'withdrawal_id' => $withdrawal_id,
+					'withdrawal_status' => array(MsWithdrawal::STATUS_PENDING)					
 				)
-			);			
+			);
 			
 			$result = array_shift($result);
 			
