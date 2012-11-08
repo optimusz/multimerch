@@ -141,7 +141,6 @@ class MsMail extends Model {
 		
 		$mail->setFrom($this->config->get('config_email'));
 		$mail->setSender($this->config->get('config_name'));
-				var_dump($mail);		
 		if (!isset($data['addressee'])) {
 			$mail_text = 	sprintf($this->language->get('ms_mail_greeting'), $this->_getAddressee($mail_type));
 		} else {

@@ -280,6 +280,7 @@ class ControllerMultisellerRequestWithdrawal extends ControllerMultisellerBase {
 				)
 			);
 		}
+		
 		$json['success'] = $this->language->get('ms_success_withdrawals_marked');
 		return $this->response->setOutput(json_encode($json));
 	}
