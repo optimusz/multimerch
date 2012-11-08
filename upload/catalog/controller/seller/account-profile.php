@@ -119,7 +119,7 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 				// SEO urls generation for sellers
 				if ($this->config->get('msconf_enable_seo_urls')) {
 					$latin_check = '/[^\x{0030}-\x{007f}]/u';
-					$non_latin_chars = preg_match($latin_check, $_POST['full_name']);
+					$non_latin_chars = preg_match($latin_check, $data['sellerinfo_nickname']);
 					if ($this->config->get('msconf_enable_non_alphanumeric_seo') && $non_latin_chars) {
 						$data['keyword'] = implode("-", str_replace("-", "", explode(" ", strtolower($data['sellerinfo_nickname']))));
 					}
