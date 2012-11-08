@@ -80,17 +80,13 @@ class ControllerModuleMsComments extends Controller {
 		$this->data['product_id'] = $this->request->get['product_id'];
 		$this->data['pcComments'] = $this->model_module_multiseller_comments->getComments($this->request->get['product_id'], 1);
 		
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/multiseller/ms-comments.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/module/multiseller/ms-comments.tpl';
-		} else {
-			$this->template = 'default/template/module/multiseller/ms-comments.tpl';
-		}			
-		
 		$this->data['msconf_comments_maxlen'] = $this->config->get('msconf_comments_maxlen');
 		$this->data['pcName'] = $this->customer->getFirstname();
 		$this->data['pcEmail'] = $this->customer->getEmail();
 		$this->data['pcLogged'] = $this->customer->isLogged();
-		$this->response->setOutput($this->render(TRUE), $this->config->get('config_compression'));		
+		
+		list($this->template, $this->children) = $this->MsLoader->MsHelper->loadTemplate('ms-comments', array());
+		$this->response->setOutput($this->render());		
 	}
 }
 ?>

@@ -132,7 +132,7 @@ class MsMail extends Model {
 		$mail->password = $this->config->get('config_smtp_password');
 		$mail->port = $this->config->get('config_smtp_port');
 		$mail->timeout = $this->config->get('config_smtp_timeout');
-						
+		
 		if (!isset($data['recipients'])) {
 			$mail->setTo($this->_getRecipients($mail_type));
 		} else {
@@ -141,7 +141,7 @@ class MsMail extends Model {
 		
 		$mail->setFrom($this->config->get('config_email'));
 		$mail->setSender($this->config->get('config_name'));
-		
+				var_dump($mail);		
 		if (!isset($data['addressee'])) {
 			$mail_text = 	sprintf($this->language->get('ms_mail_greeting'), $this->_getAddressee($mail_type));
 		} else {

@@ -83,7 +83,7 @@ class ControllerSellerAccountWithdrawal extends ControllerSellerAccount {
 			$this->data['withdrawal_minimum_reached'] = FALSE;
 		}
 			
-		$this->data['back'] = $this->url->link('account/account', '', 'SSL');
+		$this->data['link_back'] = $this->url->link('account/account', '', 'SSL');
 		$this->document->setTitle($this->language->get('ms_account_withdraw_heading'));
 		
 		$this->data['breadcrumbs'] = $this->MsLoader->MsHelper->setBreadcrumbs(array(
