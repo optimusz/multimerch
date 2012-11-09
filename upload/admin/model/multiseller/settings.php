@@ -29,6 +29,7 @@ class ModelMultisellerSettings extends Model {
 			 `commission_flat` decimal(15,4) NOT NULL DEFAULT '0.0000',
 			 `product_validation` tinyint(4) NOT NULL DEFAULT '1',
 			 `seller_group` int(11) NOT NULL DEFAULT '1',
+			 `commission_id` int(11) DEFAULT NULL,
         	PRIMARY KEY (`seller_id`)) default CHARSET=utf8";
         
         $this->db->query($sql);
@@ -143,6 +144,7 @@ class ModelMultisellerSettings extends Model {
 		$sql = "
 			CREATE TABLE `" . DB_PREFIX . "ms_seller_group` (
              `seller_group_id` int(11) NOT NULL AUTO_INCREMENT,
+			 `commission_id` int(11) DEFAULT NULL,
         	PRIMARY KEY (`seller_group_id`)) default CHARSET=utf8";
         
 		// ms_seller_group_description - table with seller group information
@@ -167,11 +169,83 @@ class ModelMultisellerSettings extends Model {
 		foreach ($languages as $language_id => $value) {
 			$this->db->query("INSERT INTO " . DB_PREFIX . "ms_seller_group_description SET seller_group_id = '" . (int)$seller_group_id . "', language_id = '" . (int)$language_id . "', name = 'Default', description = 'Default seller group'");
 		}
-
+		
+		// ms_commission_rate - table with concrete commission rates consisting of flat rate and percentage each
+		$sql = "
+			CREATE TABLE `" . DB_PREFIX . "ms_commission_rate` (
+             `commission_rate_id` int(11) NOT NULL AUTO_INCREMENT,
+			 `flat_rate` DECIMAL(15,4) NOT NULL,
+			 `percentage_rate` DECIMAL(4,2) NOT NULL,
+        	PRIMARY KEY (`commission_rate_id`)) default CHARSET=utf8";
+        
+        $this->db->query($sql);
+		
+		// ms_commission - table with commissions
+		$sql = "
+			CREATE TABLE `" . DB_PREFIX . "ms_commission` (
+             `commission_id` int(11) NOT NULL AUTO_INCREMENT,
+			 `registration_rate_id` int(11) DEFAULT NULL,
+			 `monthly_rate_id` int(11) DEFAULT NULL,
+			 `listing_rate_id` int(11) DEFAULT NULL,
+			 `sale_rate_id` int(11) DEFAULT NULL,
+        	PRIMARY KEY (`commission_id`)) default CHARSET=utf8";
+        
+        $this->db->query($sql);
+		
+		// ms_criteria - criterias table
+		$sql = "
+			CREATE TABLE `" . DB_PREFIX . "ms_criteria` (
+             `criteria_id` int(11) NOT NULL AUTO_INCREMENT,
+			 `criteria_type` TINYINT NOT NULL,
+			 `criteria_value_id` int(11) NOT NULL,
+        	PRIMARY KEY (`criteria_id`)) default CHARSET=utf8";
+        
+        $this->db->query($sql);
+		
+		// ms_range_int - int criteria range table
+		$sql = "
+			CREATE TABLE `" . DB_PREFIX . "ms_range_int` (
+             `criteria_value_id` int(11) NOT NULL AUTO_INCREMENT,
+			 `from` int(11) NOT NULL,
+			 `to` int(11) NOT NULL,
+        	PRIMARY KEY (`criteria_value_id`)) default CHARSET=utf8";
+        
+        $this->db->query($sql);
+		
+		// ms_range_decimal - decimal criteria range table
+		$sql = "
+			CREATE TABLE `" . DB_PREFIX . "ms_range_decimal` (
+             `criteria_value_id` int(11) NOT NULL AUTO_INCREMENT,
+			 `from` DECIMAL(15,4) NOT NULL,
+			 `to` DECIMAL(15,4) NOT NULL,
+        	PRIMARY KEY (`criteria_value_id`)) default CHARSET=utf8";
+        
+        $this->db->query($sql);
+		
+		// ms_range_periodic - periodic criteria range table
+		$sql = "
+			CREATE TABLE `" . DB_PREFIX . "ms_range_periodic` (
+             `criteria_value_id` int(11) NOT NULL AUTO_INCREMENT,
+			 `from` DATETIME,
+			 `to` DATETIME NOT NULL,
+        	PRIMARY KEY (`criteria_value_id`)) default CHARSET=utf8";
+        
+        $this->db->query($sql);
+		
+		// ms_seller_group_criteria - table, which connects concrete commissions for criterias in the seller groups
+		$sql = "
+			CREATE TABLE `" . DB_PREFIX . "ms_seller_group_criteria` (
+             `seller_group_criteria_id` int(11) NOT NULL AUTO_INCREMENT,
+			 `commission_id` int(11) NOT NULL,
+			 `criteria_value_id` int(11) NOT NULL,
+        	PRIMARY KEY (`seller_group_criteria_id`)) default CHARSET=utf8";
+        
+        $this->db->query($sql);
+		
 	}
 	
 	
-	//todo drop dbses
+	// ToDo: drop databases
 	public function dropTable() {
 		$sql = "DROP TABLE IF EXISTS
 				`" . DB_PREFIX . "ms_product`,
@@ -182,8 +256,15 @@ class ModelMultisellerSettings extends Model {
 				`" . DB_PREFIX . "ms_comments`,
 				`" . DB_PREFIX . "ms_balance`,
 				`" . DB_PREFIX . "ms_seller_group`,
-				`" . DB_PREFIX . "ms_seller_group_description`";
-								
+				`" . DB_PREFIX . "ms_seller_group_description`,
+				`" . DB_PREFIX . "ms_commission_rate`,
+				`" . DB_PREFIX . "ms_commission`,
+				`" . DB_PREFIX . "ms_criteria`,
+				`" . DB_PREFIX . "ms_range_int`,
+				`" . DB_PREFIX . "ms_range_decimal`,
+				`" . DB_PREFIX . "ms_range_periodic`,
+				`" . DB_PREFIX . "ms_seller_group_criteria`";
+				
 		$this->db->query($sql);
 	}
 }
