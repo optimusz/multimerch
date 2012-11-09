@@ -1,17 +1,15 @@
 <?php
 class MsSellerGroup extends Model {
-	
-	// Get seller group
-	public function getSellerGroup($seller_group_id) {
-		$query = $this->db->query("SELECT DISTINCT *
-										FROM " . DB_PREFIX . "ms_seller_group msg
-										LEFT JOIN " . DB_PREFIX . "ms_seller_group_description msgd
-											ON (msg.seller_group_id = msgd.seller_group_id) 
-										WHERE msg.seller_group_id = '" . (int)$seller_group_id . "' AND msgd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
-		return $query->row;
+	public function getSellerGroup($seller_group_id, $data = array()) {
+		$sql = "SELECT *
+				FROM " . DB_PREFIX . "ms_seller_group msg
+				WHERE msg.seller_group_id = '" . (int)$seller_group_id . "'";
+		
+		$res = $this->db->query($sql);
+		
+		return $res->row;
 	}
 	
-	// Get all seller groups
 	public function getSellerGroups($data = array()) {
 		$sql = "SELECT * 
 					FROM " . DB_PREFIX . "ms_seller_group msg 
@@ -52,15 +50,16 @@ class MsSellerGroup extends Model {
 		return $query->rows;
 	}
 	
-	// Get seller group descriptions of all the languages
 	public function getSellerGroupDescriptions($seller_group_id) {
 		$seller_group_data = array();
 	
-		$query = $this->db->query("SELECT * 
-										FROM " . DB_PREFIX . "ms_seller_group_description 
-										WHERE seller_group_id = '" . (int)$seller_group_id . "'");
+		$sql = "SELECT * 
+				FROM " . DB_PREFIX . "ms_seller_group_description 
+				WHERE seller_group_id = '" . (int)$seller_group_id . "'";
 	
-		foreach ($query->rows as $result) {
+		$res = $this->db->query($sql);
+	
+		foreach ($res->rows as $result) {
 			$seller_group_data[$result['language_id']] = array(
 				'name'        => $result['name'],
 				'description' => $result['description']
@@ -70,7 +69,6 @@ class MsSellerGroup extends Model {
 		return $seller_group_data;
 	}
 	
-	// Get total number of seller groups
 	public function getTotalSellerGroups() {
 		$sql = "SELECT COUNT(*) as total 
 					FROM " . DB_PREFIX . "ms_seller_group";
@@ -79,13 +77,6 @@ class MsSellerGroup extends Model {
 		return $res->row['total'];
 	}
 	
-	// Get badge image for the seller group
-	/*public function getSellerGroupBadge($seller_group_id) {
-		$query = $this->db->query("SELECT badge FROM " . DB_PREFIX . "ms_seller_group_description WHERE seller_group_id = '" . (int)$seller_group_id . "'");
-		return $query->row;
-	}*/
-	
-	// Save seller group
 	public function saveSellerGroup($data) {
 		$this->db->query("INSERT INTO " . DB_PREFIX . "ms_seller_group () VALUES()");
 	

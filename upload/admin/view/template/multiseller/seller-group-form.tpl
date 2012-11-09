@@ -5,9 +5,6 @@
 		<?php echo $breadcrumb['separator']; ?><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a>
 		<?php } ?>
 	</div>
-	<?php if ($error_warning) { ?>
-		<div class="warning"><?php echo $error_warning; ?></div>
-	<?php } ?>
 	<div class="box">
 		<div class="heading">
 			<h1><img src="view/image/user-group.png" alt="" /> <?php echo $heading; ?></h1>
@@ -15,13 +12,17 @@
 		</div>
 		<div class="content">
 			<form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
+		     	<div id="tabs" class="htabs">
+		     		<a href="#tab-general"><?php echo $tab_general; ?></a>
+		     		<a href="#tab-commission"><?php echo $ms_commission; ?></a>
+		     	</div>
+		     	<div id="tab-general">				
 				<table class="form">
-				
 					<tr>
-						<td><span class="required">*</span> <?php echo $entry_name; ?></td>
+						<td><span class="required">*</span> <?php echo $ms_name; ?></td>
 						<td>
 						<?php foreach ($languages as $language) { ?>
-							<input type="text" name="seller_group_description[<?php echo $language['language_id']; ?>][name]" value="<?php echo isset($seller_group_description[$language['language_id']]) ? $seller_group_description[$language['language_id']]['name'] : ''; ?>" />
+							<input type="text" name="seller_group[description][<?php echo $language['language_id']; ?>][name]" value="<?php echo $seller_group['description'][$language['language_id']]['name']; ?>" />
 							<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />
 							<?php if (isset($error_name[$language['language_id']])) { ?>
 								<span class="error"><?php echo $error_name[$language['language_id']]; ?></span><br />
@@ -32,17 +33,34 @@
 					
 					<?php foreach ($languages as $language) { ?>
 					<tr>
-						<td><?php echo $entry_description; ?></td>
+						<td><?php echo $ms_description; ?></td>
 						<td>
-							<textarea name="seller_group_description[<?php echo $language['language_id']; ?>][description]" cols="40" rows="5"><?php echo isset($seller_group_description[$language['language_id']]) ? $seller_group_description[$language['language_id']]['description'] : ''; ?></textarea>
+							<textarea name="seller_group[description][<?php echo $language['language_id']; ?>][description]" cols="40" rows="5"><?php echo $seller_group['description'][$language['language_id']]['description']; ?></textarea>
 							<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" align="top" />
 						</td>
 					</tr>
 					<?php } ?>
 					
 				</table>
+				</div>
+				
+				<div id="tab-commission">
+				<table class="form">
+					<tr>
+						<td><span class="required">*</span> <?php echo $ms_commission_sale; ?></td>
+						<td>
+							<input type="text" name="seller_group[commission][sale][flat]" value="<?php echo isset($seller_group['commission']['sale']['flat']) ? $this->currency->format($seller_group['commission']['sale']['flat'], $this->config->get('config_currency'), '', FALSE) : '' ?>" size="3"/><?php echo $this->config->get('config_currency'); ?>
+							+<input type="text" name="seller_group[commission][sale][pct]" value="<?php echo $seller_group['commission']['sale']['pct']; ?>" size="3"/>%						
+						</td>
+					</tr>
+				</table>
+				</div>
 			</form>
 		</div>
 	</div>
 </div>
+
+<script>
+$('#tabs a').tabs();
+</script>
 <?php echo $footer; ?> 

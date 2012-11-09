@@ -52,6 +52,10 @@ $_['ms_date_processed'] = 'Date processed';
 $_['ms_date_modified'] = 'Date modified';
 $_['ms_date'] = 'Date';
 $_['ms_description'] = 'Description';
+$_['ms_commission'] = 'Commission';
+$_['ms_commission_sale'] = 'Per sale';
+$_['ms_name'] = 'Name';
+$_['ms_description'] = 'Description';
 
 $_['ms_enable'] = 'Enable';
 $_['ms_disable'] = 'Disable';

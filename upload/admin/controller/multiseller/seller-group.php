@@ -56,7 +56,6 @@ class ControllerMultisellerSellerGroup extends ControllerMultisellerBase {
 				'text' => $this->language->get('ms_delete'),
 				'href' => $this->url->link('multiseller/seller-group/delete', 'token=' . $this->session->data['token'] . '&seller_group_id=' . $result['seller_group_id'] . $url, 'SSL')
 			);*/
-		
 			$this->data['seller_groups'][] = array(
 				'seller_group_id' => $result['seller_group_id'],
 				'name'              => $result['name'],
@@ -101,21 +100,34 @@ class ControllerMultisellerSellerGroup extends ControllerMultisellerBase {
 	public function insert() {
 		$this->document->setTitle($this->language->get('ms_catalog_insert_seller_group_heading'));
 		
+		$this->load->model('localisation/language');
+		$this->data['languages'] = $this->model_localisation_language->getLanguages();		
+		
+		
+		$this->data['seller_group'] = NULL;
+		/*
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
 			$this->MsLoader->MsSellerGroup->saveSellerGroup($this->request->post);
 			
 			$this->session->data['success'] = $this->language->get('ms_success');
 
-			$url = '';
-
-			$url .= isset($this->request->get['sort']) ? '&sort=' . $this->request->get['sort'] : '';
-			$url .= isset($this->request->get['order']) ? '&order=' . $this->request->get['order'] : '';
-			$url .= isset($this->request->get['page']) ? '&page=' . $this->request->get['page'] : '';
-			
 			$this->redirect($this->url->link('multiseller/seller-group', 'token=' . $this->session->data['token'] . $url, 'SSL'));
 		}
-
-		$this->getEditForm();
+		*/
+		
+		$this->data['breadcrumbs'] = $this->MsLoader->MsHelper->admSetBreadcrumbs(array(
+			array(
+				'text' => $this->language->get('ms_menu_multiseller'),
+				'href' => $this->url->link('multiseller/dashboard', '', 'SSL'),
+			),
+			array(
+				'text' => $this->language->get('ms_catalog_seller_groups_breadcrumbs'),
+				'href' => $this->url->link('multiseller/seller-group', '', 'SSL'),
+			)
+		));		
+		
+		list($this->template, $this->children) = $this->MsLoader->MsHelper->admLoadTemplate('seller-group-form'); 
+		$this->response->setOutput($this->render());
 	}
 	
 	// Update a seller group
@@ -126,20 +138,39 @@ class ControllerMultisellerSellerGroup extends ControllerMultisellerBase {
 		$this->data['heading'] = $this->language->get('ms_catalog_edit_seller_group_heading');
 		$this->document->setTitle($this->language->get('ms_catalog_edit_seller_group_heading'));
 		
+		$this->load->model('localisation/language');
+		$this->data['languages'] = $this->model_localisation_language->getLanguages();		
+		
+		$this->data['seller_group'] = array(
+			'description' => $this->MsLoader->MsSellerGroup->getSellerGroupDescriptions($this->request->get['seller_group_id']),
+			'commission' => NULL
+		);
+		
+		
+		$this->data['breadcrumbs'] = $this->MsLoader->MsHelper->admSetBreadcrumbs(array(
+			array(
+				'text' => $this->language->get('ms_menu_multiseller'),
+				'href' => $this->url->link('multiseller/dashboard', '', 'SSL'),
+			),
+			array(
+				'text' => $this->language->get('ms_catalog_seller_groups_breadcrumbs'),
+				'href' => $this->url->link('multiseller/seller-group', '', 'SSL'),
+			)
+		));		
+		
+		list($this->template, $this->children) = $this->MsLoader->MsHelper->admLoadTemplate('seller-group-form'); 
+		$this->response->setOutput($this->render());		
+		
+		/*
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
 			$this->MsLoader->MsSellerGroup->editSellerGroup($this->request->get['seller_group_id'], $this->request->post);
 			
 			$this->session->data['success'] = $this->language->get('ms_success');
 			
-			$url = '';
-
-			$url .= isset($this->request->get['sort']) ? '&sort=' . $this->request->get['sort'] : '';
-			$url .= isset($this->request->get['order']) ? '&order=' . $this->request->get['order'] : '';
-			$url .= isset($this->request->get['page']) ? '&page=' . $this->request->get['page'] : '';
-			
 			$this->redirect($this->url->link('multiseller/seller-group', 'token=' . $this->session->data['token'] . $url, 'SSL'));
 		}
 		$this->getEditForm();
+		*/
 	}
 	
 	// Bulk delete of seller groups
@@ -168,51 +199,7 @@ class ControllerMultisellerSellerGroup extends ControllerMultisellerBase {
 	// Get form for adding/editing seller groups
 	private function getEditForm() {
 		$this->data['heading'] = $this->language->get('ms_catalog_insert_seller_group_heading');
-				
-		$this->data['entry_name'] = $this->language->get('ms_seller_group_entry_name');
-		$this->data['entry_description'] = $this->language->get('ms_seller_group_entry_description');
-		$this->data['entry_language'] = $this->language->get('ms_seller_group_entry_language');
 		
-		$this->data['button_save'] = $this->language->get('button_save');
-		$this->data['button_cancel'] = $this->language->get('button_cancel');
-
- 		if (isset($this->error['warning'])) {
-			$this->data['error_warning'] = $this->error['warning'];
-		} else {
-			$this->data['error_warning'] = '';
-		}
-		
- 		if (isset($this->error['name'])) {
-			$this->data['error_name'] = $this->error['name'];
-		} else {
-			$this->data['error_name'] = '';
-		}
-
-		$url = '';
-
-		if (isset($this->request->get['sort'])) {
-			$url .= '&sort=' . $this->request->get['sort'];
-		}
-
-		if (isset($this->request->get['order'])) {
-			$url .= '&order=' . $this->request->get['order'];
-		}
-			
-		if (isset($this->request->get['page'])) {
-			$url .= '&page=' . $this->request->get['page'];
-		}
-		
-		$this->data['breadcrumbs'] = $this->MsLoader->MsHelper->admSetBreadcrumbs(array(
-			array(
-				'text' => $this->language->get('ms_menu_multiseller'),
-				'href' => $this->url->link('multiseller/dashboard', '', 'SSL'),
-			),
-			array(
-				'text' => $this->language->get('ms_catalog_seller_groups_breadcrumbs'),
-				'href' => $this->url->link('multiseller/seller-group', '', 'SSL'),
-			)
-		));
-			
 		if (!isset($this->request->get['seller_group_id'])) {
 			$this->data['action'] = $this->url->link('multiseller/seller-group/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
 		} else {
@@ -222,16 +209,16 @@ class ControllerMultisellerSellerGroup extends ControllerMultisellerBase {
     	$this->data['cancel'] = $this->url->link('multiseller/seller-group', 'token=' . $this->session->data['token'] . $url, 'SSL');
 		
 		if (isset($this->request->get['seller_group_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-			$seller_group_info = $this->MsLoader->MsSellerGroup->getSellerGroup($this->request->get['seller_group_id']);
+			//$seller_group_info = $this->MsLoader->MsSellerGroup->getSellerGroup($this->request->get['seller_group_id']);
 		}
 		
-		$this->load->model('localisation/language');
-		$this->data['languages'] = $this->model_localisation_language->getLanguages();
+		//$this->MsLoader->MsSellerGroup->getSellerGroupDescriptions($this->request->get['seller_group_id']);
+
 		
 		if (isset($this->request->post['seller_group_description'])) {
 			$this->data['seller_group_description'] = $this->request->post['seller_group_description'];
 		} elseif (isset($this->request->get['seller_group_id'])) {
-			$this->data['seller_group_description'] = $this->MsLoader->MsSellerGroup->getSellerGroupDescriptions($this->request->get['seller_group_id']);
+			$this->data['seller_group_description'] = 'a';
 		} else {
 			$this->data['seller_group_description'] = array();
 		}

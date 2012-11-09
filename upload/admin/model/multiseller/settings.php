@@ -197,7 +197,7 @@ class ModelMultisellerSettings extends Model {
 			CREATE TABLE `" . DB_PREFIX . "ms_criteria` (
              `criteria_id` int(11) NOT NULL AUTO_INCREMENT,
 			 `criteria_type` TINYINT NOT NULL,
-			 `criteria_value_id` int(11) NOT NULL,
+			 `range_id` int(11) NOT NULL,
         	PRIMARY KEY (`criteria_id`)) default CHARSET=utf8";
         
         $this->db->query($sql);
@@ -205,30 +205,30 @@ class ModelMultisellerSettings extends Model {
 		// ms_range_int - int criteria range table
 		$sql = "
 			CREATE TABLE `" . DB_PREFIX . "ms_range_int` (
-             `criteria_value_id` int(11) NOT NULL AUTO_INCREMENT,
+             `range_id` int(11) NOT NULL AUTO_INCREMENT,
 			 `from` int(11) NOT NULL,
 			 `to` int(11) NOT NULL,
-        	PRIMARY KEY (`criteria_value_id`)) default CHARSET=utf8";
+        	PRIMARY KEY (`range_id`)) default CHARSET=utf8";
         
         $this->db->query($sql);
 		
 		// ms_range_decimal - decimal criteria range table
 		$sql = "
 			CREATE TABLE `" . DB_PREFIX . "ms_range_decimal` (
-             `criteria_value_id` int(11) NOT NULL AUTO_INCREMENT,
+             `range_id` int(11) NOT NULL AUTO_INCREMENT,
 			 `from` DECIMAL(15,4) NOT NULL,
 			 `to` DECIMAL(15,4) NOT NULL,
-        	PRIMARY KEY (`criteria_value_id`)) default CHARSET=utf8";
+        	PRIMARY KEY (`range_id`)) default CHARSET=utf8";
         
         $this->db->query($sql);
 		
 		// ms_range_periodic - periodic criteria range table
 		$sql = "
-			CREATE TABLE `" . DB_PREFIX . "ms_range_periodic` (
-             `criteria_value_id` int(11) NOT NULL AUTO_INCREMENT,
+			CREATE TABLE `" . DB_PREFIX . "ms_range_date` (
+             `range_id` int(11) NOT NULL AUTO_INCREMENT,
 			 `from` DATETIME,
 			 `to` DATETIME NOT NULL,
-        	PRIMARY KEY (`criteria_value_id`)) default CHARSET=utf8";
+        	PRIMARY KEY (`range_id`)) default CHARSET=utf8";
         
         $this->db->query($sql);
 		
@@ -237,7 +237,7 @@ class ModelMultisellerSettings extends Model {
 			CREATE TABLE `" . DB_PREFIX . "ms_seller_group_criteria` (
              `seller_group_criteria_id` int(11) NOT NULL AUTO_INCREMENT,
 			 `commission_id` int(11) NOT NULL,
-			 `criteria_value_id` int(11) NOT NULL,
+			 `criteria_id` int(11) NOT NULL,
         	PRIMARY KEY (`seller_group_criteria_id`)) default CHARSET=utf8";
         
         $this->db->query($sql);
