@@ -22,13 +22,8 @@ $(function() {
 		return false;
 	});
 
-	$("#ms-savedraft-button, #ms-submit-button").click(function() {
+	$("#ms-submit-button").click(function() {
 		var button = $(this);
-		if ($(this).attr('id') == 'ms-savedraft-button') {
-			var url = 'jxsaveproductdraft';
-		} else {
-			var url = 'jxsubmitproduct';
-		}
 		
 	    $.ajax({
 			type: "POST",
