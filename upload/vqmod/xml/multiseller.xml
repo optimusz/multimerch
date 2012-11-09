@@ -213,8 +213,9 @@
 						
 						if (!$balance_entry) {
 							$seller_id = $this->MsLoader->MsProduct->getSellerId($order_product['product_id']);
-							$store_commission_flat = $this->MsLoader->MsSeller->getCommissionFlatForSeller($seller_id);
-							$store_commission_pct = $order_product['total'] * $this->MsLoader->MsSeller->getCommissionPercentForSeller($seller_id) / 100;
+							$commissions = $this->MsLoader->MsCommission->betterCalculateCommissions($seller_id);
+							$store_commission_flat = $commissions['sale_rate']['flat'];
+							$store_commission_pct = $commissions['sale_rate']['percent'];
 							$seller_net_amt = $order_product['total'] - ($store_commission_flat + $store_commission_pct);
 							$this->MsLoader->MsOrderData->addOrderProductData(
 								$order_product['order_id'],

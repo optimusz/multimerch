@@ -24,6 +24,7 @@ $(function() {
 
 	$("#ms-submit-button").click(function() {
 		var button = $(this);
+		var url = 'jxsubmitproduct';
 		
 	    $.ajax({
 			type: "POST",
