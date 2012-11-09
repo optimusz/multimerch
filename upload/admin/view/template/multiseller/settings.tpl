@@ -102,17 +102,6 @@
 		              	</td>
 		            </tr>
 					
-					<tr>
-						<td>
-							<span><?php echo $ms_config_seller_commission; ?></span>
-							<span class="help"><?php echo $ms_config_seller_commission_note; ?></span>
-						</td>
-						<td>
-							<input type="text" name="msconf_seller_commission_flat" value="<?php echo $this->currency->format($msconf_seller_commission_flat, $this->config->get('config_currency'), '', FALSE); ?>" size="3"/><?php echo $currency_code; ?>
-							+<input type="text" name="msconf_seller_commission" value="<?php echo $msconf_seller_commission; ?>" size="3"/>%
-						</td>
-					</tr>
-		            
 		            <tr>
 			              <td>
 			              		<span><?php echo $ms_config_image_preview_size; ?></span>

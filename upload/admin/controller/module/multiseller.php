@@ -13,7 +13,6 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 	private $settings = array(
 		"msconf_seller_validation" => MsSeller::MS_SELLER_VALIDATION_NONE,
 		"msconf_product_validation" => MsProduct::MS_PRODUCT_VALIDATION_NONE,
-		"msconf_seller_commission" => 5,
 		"msconf_image_preview_width" => 100,
 		"msconf_image_preview_height" => 100,
 		"msconf_credit_order_statuses" => array(5),
@@ -35,7 +34,6 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		"ms_newsellers_module" => "",	
 		"ms_sellerdropdown_module" => "",	
 		"msconf_allow_free_products" => 0,
-		"msconf_seller_commission_flat" => 0.5,
 		"msconf_allow_multiple_categories" => 0,
 		"msconf_images_limits" => array(0,0),
 		"msconf_downloads_limits" => array(0,0),		
