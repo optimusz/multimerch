@@ -84,8 +84,6 @@ final class MsSeller extends Model {
 				SET seller_id = " . (int)$data['seller_id'] . ",
 					seller_status = " . (int)$data['seller_status'] . ",
 					seller_approved = " . (int)$data['seller_approved'] . ",
-					commission = " . (float)$this->config->get('msconf_seller_commission') . ",
-					commission_flat = " . (float)$this->config->get('msconf_seller_commission_flat') . ",
 					nickname = '" . $this->db->escape($data['sellerinfo_nickname']) . "',
 					description = '" . $this->db->escape($data['sellerinfo_description']) . "',
 					company = '" . $this->db->escape($data['sellerinfo_company']) . "',
@@ -151,32 +149,6 @@ final class MsSeller extends Model {
 		$this->db->query($sql);
 	}		
 		
-	public function getCommissionPercentForSeller($seller_id) {
-		$sql = "SELECT 	commission
-				FROM `" . DB_PREFIX . "ms_seller`
-				WHERE seller_id = " . (int)$seller_id; 
-
-		$res = $this->db->query($sql);
-
-		if (isset($res->row['commission']))
-			return $res->row['commission'];
-		else
-			return 0;
-	}
-
-	public function getCommissionFlatForSeller($seller_id) {
-		$sql = "SELECT 	commission_flat
-				FROM `" . DB_PREFIX . "ms_seller`
-				WHERE seller_id = " . (int)$seller_id; 
-
-		$res = $this->db->query($sql);
-
-		if (isset($res->row['commission_flat']))
-			return $res->row['commission_flat'];
-		else
-			return 0;
-	}
-
 	public function getSellerAvatar($seller_id) {
 		$query = $this->db->query("SELECT avatar as avatar FROM " . DB_PREFIX . "ms_seller WHERE seller_id = '" . (int)$seller_id . "'");
 		
@@ -247,8 +219,6 @@ final class MsSeller extends Model {
 					seller_status = '" .  (int)$data['seller_status'] .  "',
 					seller_approved = '" .  (int)$data['seller_approved'] .  "',
 					product_validation = '" .  (int)$data['sellerinfo_product_validation'] .  "',
-					commission = '" .  (float)$data['sellerinfo_commission'] .  "',
-					commission_flat = '" .  (float)$data['sellerinfo_commission_flat'] .  "'
 				WHERE seller_id = " . (int)$seller_id;
 		
 		$this->db->query($sql);	
@@ -285,8 +255,6 @@ final class MsSeller extends Model {
 						ms.seller_status as 'ms.seller_status',
 						ms.seller_approved as 'ms.seller_approved',
 						ms.date_created as 'ms.date_created',
-						ms.commission as 'ms.commission',
-						ms.commission_flat as 'ms.commission_flat',
 						ms.product_validation as 'ms.product_validation',
 						ms.avatar as 'ms.avatar',
 						ms.country_id as 'ms.country_id',
@@ -320,8 +288,6 @@ final class MsSeller extends Model {
 						ms.seller_status as 'ms.seller_status',
 						ms.seller_approved as 'ms.seller_approved',
 						ms.date_created as 'ms.date_created',
-						ms.commission as 'ms.commission',
-						ms.commission_flat as 'ms.commission_flat',
 						ms.avatar as 'ms.avatar',
 						ms.country_id as 'ms.country_id',
 						ms.description as 'ms.description',

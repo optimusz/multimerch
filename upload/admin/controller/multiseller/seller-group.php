@@ -92,6 +92,11 @@ class ControllerMultisellerSellerGroup extends ControllerMultisellerBase {
 		
 		$this->document->setTitle($this->language->get('ms_catalog_seller_groups_heading'));
 		
+		
+		$time = microtime(true);
+		var_dump($this->MsLoader->MsCommission->betterCalculateCommissions(1));
+		var_dump(microtime(true) - $time);
+		
 		list($this->template, $this->children) = $this->MsLoader->MsHelper->admLoadTemplate('seller-group'); 
 		$this->response->setOutput($this->render());
 	}
