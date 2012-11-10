@@ -239,7 +239,7 @@
 								)
 							);
 							
-							//$this->MsLoader->MsMail->sendOrderMails($order_id);
+							$this->MsLoader->MsMail->sendOrderMails($order_id);
 						} else {
 							// send order status change mails
 						}
@@ -277,7 +277,7 @@
 							);
 							
 							// send refund mails
-							//$this->MsLoader->MsMail->sendOrderMails($order_id);
+							$this->MsLoader->MsMail->sendOrderMails($order_id);
 						} else {
 							// send order status change mails
 						}

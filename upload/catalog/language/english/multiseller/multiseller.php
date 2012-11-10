@@ -76,6 +76,9 @@ $_['ms_mail_subject_product_purchased']      = 'Product purchased';
 $_['ms_mail_product_purchased'] = <<<EOT
 Your product %s has been purchased from %s.
 EOT;
+$_['ms_mail_product_purchased_multiple'] = <<<EOT
+Your products have been purchased from %s: %s x %s.
+EOT;
 
 $_['ms_mail_subject_seller_contact']      = 'New customer message';
 $_['ms_mail_seller_contact'] = <<<EOT
