@@ -393,6 +393,8 @@ $_['ms_account_withdraw_breadcrumbs']       = 'Request Earnings';
 $_['ms_account_withdraw_balance']      = 'Your current balance:';
 $_['ms_account_withdraw_balance_available']      = 'Available for withdrawal:';
 $_['ms_account_withdraw_minimum']      = 'Minimum withdrawal amount:';
+$_['ms_account_balance_formatted']      = '%s (-%s reserved)';
+
 
 $_['ms_account_withdraw_amount']      = 'Amount:';
 $_['ms_account_withdraw_amount_note']      = 'Amount note';

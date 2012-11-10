@@ -19,7 +19,7 @@
 		<div class="warning"><?php echo $error_warning; ?></div>
 	<?php } ?>
 	
-	<?php echo $ms_account_transactions_balance; ?> <b><?php echo $balance; ?></b>
+	<?php echo $ms_account_transactions_balance; ?> <b><?php echo $balance; ?></b><br /><br />
 	
 	<table class="list">
 		<thead>

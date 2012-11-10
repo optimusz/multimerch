@@ -27,7 +27,7 @@ class ControllerSellerAccountWithdrawal extends ControllerSellerAccount {
 				$json['errors']['withdraw_amount'] = $this->language->get('ms_error_withdraw_balance');
 			} else if ($data['withdraw_amount'] < $this->config->get('msconf_minimum_withdrawal_amount')) {
 				$json['errors']['withdraw_amount'] = $this->language->get('ms_error_withdraw_minimum');
-			}			
+			}
 		}
 		
 		if (empty($json['errors'])) {
@@ -63,17 +63,19 @@ class ControllerSellerAccountWithdrawal extends ControllerSellerAccount {
 		
 		$seller_balance = $this->MsLoader->MsBalance->getSellerBalance($seller_id);
 		$available_balance = $seller_balance - $this->MsLoader->MsBalance->getReservedSellerFunds($seller_id);
+		$balance_reserved_formatted = $this->currency->format($this->MsLoader->MsBalance->getReservedSellerFunds($seller_id), $this->config->get('config_currency'));
 		
 		$this->document->addScript('catalog/view/javascript/account-withdrawal.js');
 		
-		$this->data['balance'] =  $seller_balance;
-		$this->data['balance_formatted'] =  $this->currency->format($this->data['balance'],$this->config->get('config_currency'));
+		$this->data['balance'] = $seller_balance;
+		$this->data['balance_formatted'] = $this->currency->format($this->data['balance'],$this->config->get('config_currency'));
 
-		$this->data['balance_available'] =  $available_balance;
-		$this->data['balance_available_formatted'] =  $this->currency->format($available_balance, $this->config->get('config_currency'));
+		$this->data['balance_available'] = $available_balance;
+		$this->data['balance_available_formatted'] = $this->currency->format($available_balance, $this->config->get('config_currency'));
+		$this->data['ms_account_balance_formatted'] = sprintf($this->language->get('ms_account_balance_formatted'), $this->data['balance_formatted'], $balance_reserved_formatted);
 		
-		$this->data['paypal'] =  $this->MsLoader->MsSeller->getPaypal();
-		$this->data['msconf_minimum_withdrawal_amount'] =  $this->currency->format($this->config->get('msconf_minimum_withdrawal_amount'),$this->config->get('config_currency'));
+		$this->data['paypal'] = $this->MsLoader->MsSeller->getPaypal();
+		$this->data['msconf_minimum_withdrawal_amount'] = $this->currency->format($this->config->get('msconf_minimum_withdrawal_amount'),$this->config->get('config_currency'));
 		$this->data['msconf_allow_partial_withdrawal'] = $this->config->get('msconf_allow_partial_withdrawal');
 		$this->data['currency_code'] = $this->config->get('config_currency');
 		
