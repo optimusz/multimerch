@@ -253,6 +253,7 @@ $_['ms_catalog_sellerinfo_product_validation_note'] = 'Product validation for th
 // Catalog - Products
 $_['ms_catalog_products_heading'] = 'Products';
 $_['ms_catalog_products_breadcrumbs'] = 'Products';
+$_['ms_catalog_products_notify_sellers'] = 'Notify Sellers';
 
 
 // Catalog - Seller Groups

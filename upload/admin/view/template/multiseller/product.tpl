@@ -30,7 +30,7 @@
       		<option value="<?php echo $i; ?>"><?php echo $this->MsLoader->MsProduct->getStatusText($i); ?></option>
       		<?php } ?>
       	</select>
-      	<input type="checkbox" name="bulk_mail" id="bulk_mail" />
+      	<input type="checkbox" name="bulk_mail" id="bulk_mail"><?php echo $ms_catalog_products_notify_sellers; ?></input>
       	<a class="ms-action button" id="ms-bulk-apply"><?php echo $ms_apply; ?></a>
       	</form>
 	  </div>
