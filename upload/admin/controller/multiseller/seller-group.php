@@ -98,11 +98,14 @@ class ControllerMultisellerSellerGroup extends ControllerMultisellerBase {
 	
 	// Insert a new seller group
 	public function insert() {
+		$this->data['token'] = $this->session->data['token'];
+		$this->data['heading'] = $this->language->get('ms_catalog_insert_seller_group_heading');
 		$this->document->setTitle($this->language->get('ms_catalog_insert_seller_group_heading'));
+		
+		$this->data['cancel'] = $this->url->link('multiseller/seller-group', 'token=' . $this->session->data['token'], 'SSL');
 		
 		$this->load->model('localisation/language');
 		$this->data['languages'] = $this->model_localisation_language->getLanguages();		
-		
 		
 		$this->data['seller_group'] = NULL;
 		/*
@@ -137,6 +140,8 @@ class ControllerMultisellerSellerGroup extends ControllerMultisellerBase {
 		$this->data['token'] = $this->session->data['token'];
 		$this->data['heading'] = $this->language->get('ms_catalog_edit_seller_group_heading');
 		$this->document->setTitle($this->language->get('ms_catalog_edit_seller_group_heading'));
+		
+		$this->data['cancel'] = $this->url->link('multiseller/seller-group', 'token=' . $this->session->data['token'], 'SSL'); //'multiseller/seller-group';
 		
 		$this->load->model('localisation/language');
 		$this->data['languages'] = $this->model_localisation_language->getLanguages();		
