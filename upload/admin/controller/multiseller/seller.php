@@ -6,7 +6,6 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 		$data = $this->request->post;
 		$seller = $this->MsLoader->MsSeller->getSeller($data['seller_id']);
 		$json = array();
-		var_dump($data);
 		if (empty($seller)) {
 			if (empty($data['sellerinfo_nickname'])) {
 				$json['errors']['sellerinfo_nickname'] = 'Username cannot be empty'; 

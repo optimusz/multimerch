@@ -6,8 +6,6 @@ class ControllerMultisellerSellerGroup extends ControllerMultisellerBase {
 	
 	// List all the seller groups
 	public function index() {
-		var_dump($this->MsLoader->MsCommission->calculateCommission(1));
-		
 		$this->validate(__FUNCTION__);
 		
 		$sort = isset($this->request->get['sort']) ? $this->request->get['sort'] : 'msgd.name';
