@@ -1,48 +1,31 @@
 <?php
 class ModelMultisellerSettings extends Model {
 	public function createTable() {
-		// ms_commission_rate - table with concrete commission rates consisting of flat rate and percentage each
-		$sql = "
-			CREATE TABLE `" . DB_PREFIX . "ms_commission_rate` (
-             `commission_rate_id` int(11) NOT NULL AUTO_INCREMENT,
-			 `flat` DECIMAL(15,4) NOT NULL,
-			 `percent` DECIMAL(4,2) NOT NULL,
-        	PRIMARY KEY (`commission_rate_id`)) default CHARSET=utf8";
-        
-        $this->db->query($sql);
-		$this->db->query("INSERT INTO " . DB_PREFIX . "ms_commission_rate (flat,percent) VALUES(0,0)");
-        $sale_rate_id = $this->db->getLastId();
-		$this->db->query("INSERT INTO " . DB_PREFIX . "ms_commission_rate (flat,percent) VALUES(0,0)");
-        $list_rate_id = $this->db->getLastId();
-		$this->db->query("INSERT INTO " . DB_PREFIX . "ms_commission_rate (flat,percent) VALUES(0,0)");
-        $reg_rate_id = $this->db->getLastId();
-		$this->db->query("INSERT INTO " . DB_PREFIX . "ms_commission_rate (flat,percent) VALUES(0,0)");
-        $monthly_rate_id = $this->db->getLastId();
-
-		
 		$sql = "
 			CREATE TABLE `" . DB_PREFIX . "ms_commission` (
              `commission_id` int(11) NOT NULL AUTO_INCREMENT,
-			 `reg_rate_id` int(11) DEFAULT NULL,
-			 `monthly_rate_id` int(11) DEFAULT NULL,
-			 `list_rate_id` int(11) DEFAULT NULL,
-			 `sale_rate_id` int(11) DEFAULT NULL,
         	PRIMARY KEY (`commission_id`)) default CHARSET=utf8";
         
         $this->db->query($sql);		
-		$this->db->query("INSERT INTO " . DB_PREFIX . "ms_commission (reg_rate_id, monthly_rate_id, list_rate_id, sale_rate_id) VALUES($reg_rate_id, $monthly_rate_id, $list_rate_id, $sale_rate_id)");
-		$commission_id = $this->db->getLastId();
 		
+		$sql = "
+			CREATE TABLE `" . DB_PREFIX . "ms_commission_rate` (
+             `rate_id` int(11) NOT NULL AUTO_INCREMENT,
+             `rate_type` int(11) NOT NULL,
+			 `commission_id` int(11) NOT NULL,
+			 `flat` DECIMAL(15,4),
+			 `percent` DECIMAL(15,2),
+        	PRIMARY KEY (`rate_id`)) default CHARSET=utf8";
+        
+        $this->db->query($sql);
+        
 		$sql = "
 			CREATE TABLE `" . DB_PREFIX . "ms_seller_group` (
              `seller_group_id` int(11) NOT NULL AUTO_INCREMENT,
 			 `commission_id` int(11) DEFAULT NULL,
         	PRIMARY KEY (`seller_group_id`)) default CHARSET=utf8";
         
-		// ms_seller_group_description - table with seller group information
         $this->db->query($sql);
-		$this->db->query("INSERT INTO " . DB_PREFIX . "ms_seller_group (commission_id) VALUES($commission_id)");
-        $seller_group_id = $this->db->getLastId();
         		
 		$sql = "
 			CREATE TABLE `" . DB_PREFIX . "ms_seller_group_description` (
@@ -54,12 +37,6 @@ class ModelMultisellerSettings extends Model {
         	PRIMARY KEY (`seller_group_description_id`)) default CHARSET=utf8";
         
         $this->db->query($sql);
-		$this->load->model('localisation/language');
-		$languages = $this->model_localisation_language->getLanguages();
-		foreach ($languages as $language_id => $value) {
-			$this->db->query("INSERT INTO " . DB_PREFIX . "ms_seller_group_description SET seller_group_id = '" . (int)$seller_group_id . "', language_id = '" . (int)$language_id . "', name = 'Default', description = 'Default seller group'");
-		}		
-
 		
 		$sql = "
 			CREATE TABLE `" . DB_PREFIX . "ms_product` (
@@ -251,6 +228,24 @@ class ModelMultisellerSettings extends Model {
 		
 	}
 	
+	public function addData() {
+		$this->db->query("INSERT INTO " . DB_PREFIX . "ms_commission () VALUES()");
+		$commission_id = $this->db->getLastId();
+		
+		$rate_type = MsCommission::RATE_SALE;
+		$this->db->query("INSERT INTO " . DB_PREFIX . "ms_commission_rate (rate_type, commission_id, flat, percent) VALUES($rate_type, $commission_id, 0,0)");
+        $rate_id = $this->db->getLastId();
+        
+		$this->db->query("INSERT INTO " . DB_PREFIX . "ms_seller_group (commission_id) VALUES($commission_id)");
+        $seller_group_id = $this->db->getLastId();
+        
+		$this->load->model('localisation/language');
+		$languages = $this->model_localisation_language->getLanguages();
+
+		foreach ($languages as $code => $language) {
+			$this->db->query("INSERT INTO " . DB_PREFIX . "ms_seller_group_description SET seller_group_id = '" . (int)$seller_group_id . "', language_id = '" . (int)$language['language_id'] . "', name = 'Default', description = 'Default seller group'");
+		}
+	}
 	
 	// ToDo: drop databases
 	public function dropTable() {

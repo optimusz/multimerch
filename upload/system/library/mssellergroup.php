@@ -1,7 +1,8 @@
 <?php
 class MsSellerGroup extends Model {
 	public function getSellerGroup($seller_group_id, $data = array()) {
-		$sql = "SELECT *
+		$sql = "SELECT *,
+						msg.commission_id as 'msg.commission_id'
 				FROM " . DB_PREFIX . "ms_seller_group msg
 				WHERE msg.seller_group_id = '" . (int)$seller_group_id . "'";
 		
@@ -77,34 +78,45 @@ class MsSellerGroup extends Model {
 		return $res->row['total'];
 	}
 	
-	public function saveSellerGroup($data) {
-		$this->db->query("INSERT INTO " . DB_PREFIX . "ms_seller_group () VALUES()");
-	
+	public function createSellerGroup($data) {
+		$commission_id = $this->MsLoader->MsCommission->createCommission($data['commission_rates']);
+		
+		$this->db->query("INSERT INTO " . DB_PREFIX . "ms_seller_group (commission_id) VALUES(". (!is_null($commission_id) ? $commission_id : 'NULL') . ")");
 		$seller_group_id = $this->db->getLastId();
 		
-		foreach ($data['seller_group_description'] as $language_id => $value) {
-			$this->db->query("INSERT INTO " . DB_PREFIX . "ms_seller_group_description 
-								SET seller_group_id = '" . (int)$seller_group_id . "', 
-									language_id = '" . (int)$language_id . "', 
-									name = '" . $this->db->escape($value['name']) . "', 
-									description = '" . $this->db->escape($value['description']) . "'");
+		foreach ($data['description'] as $language_id => $value) {
+			$this->db->query("
+				INSERT INTO " . DB_PREFIX . "ms_seller_group_description 
+					SET seller_group_id = '" . (int)$seller_group_id . "', 
+						language_id = '" . (int)$language_id . "', 
+						name = '" . $this->db->escape($value['name']) . "', 
+						description = '" . $this->db->escape($value['description']) . "'");
 		}
+		
+		
 	}
 	
 	// Edit seller group
 	public function editSellerGroup($seller_group_id, $data) {
-		// Uncomment when there are fields to update!
-		//$this->db->query("UPDATE " . DB_PREFIX . "ms_seller_group WHERE seller_group_id = '" . (int)$seller_group_id . "'");
-	
-		$this->db->query("DELETE FROM " . DB_PREFIX . "ms_seller_group_description 
-							WHERE seller_group_id = '" . (int)$seller_group_id . "'");
-
-		foreach ($data['seller_group_description'] as $language_id => $value) {
-			$this->db->query("INSERT INTO " . DB_PREFIX . "ms_seller_group_description 
-								SET seller_group_id = '" . (int)$seller_group_id . "', 
-									language_id = '" . (int)$language_id . "', 
-									name = '" . $this->db->escape($value['name']) . "', 
-									description = '" . $this->db->escape($value['description']) . "'");
+		if (!$data['commission_id']) {
+			$commission_id = $this->MsLoader->MsCommission->createCommission($data['commission_rates']);
+		} else {
+			$commission_id = $this->MsLoader->MsCommission->editCommission($data['commission_id'], $data['commission_rates']);
+		}
+		
+		$sql = "UPDATE " . DB_PREFIX . "ms_seller_group
+				SET commission_id = " . (!is_null($commission_id) ? (int)$commission_id : 'NULL' ) . "
+				WHERE seller_group_id = " . (int)$seller_group_id;
+		$this->db->query($sql);
+		
+		foreach ($data['description'] as $language_id => $language) {
+			$sql = "UPDATE " . DB_PREFIX . "ms_seller_group_description
+					SET name = '". $this->db->escape($language['name']) ."',
+						description = '". $this->db->escape(htmlspecialchars(nl2br($language['description']), ENT_COMPAT)) ."'
+					WHERE seller_group_id = " . (int)$seller_group_id . "
+					AND language_id = " . (int)$language_id;
+					
+			$this->db->query($sql);
 		}
 	}
 		

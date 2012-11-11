@@ -210,6 +210,12 @@ final class MsSeller extends Model {
 	
 	public function adminEditSeller($data) {
 		$seller_id = (int)$data['seller_id'];
+
+		if (!$data['sellerinfo_commission_id']) {
+			$commission_id = $this->MsLoader->MsCommission->createCommission($data['sellerinfo_commission']);
+		} else {
+			$commission_id = $this->MsLoader->MsCommission->editCommission($data['sellerinfo_commission_id'], $data['sellerinfo_commission']);
+		}
 		
 		$sql = "UPDATE " . DB_PREFIX . "ms_seller
 				SET description = '" . $this->db->escape($data['sellerinfo_description']) . "',
@@ -219,6 +225,8 @@ final class MsSeller extends Model {
 					seller_status = '" .  (int)$data['seller_status'] .  "',
 					seller_approved = '" .  (int)$data['seller_approved'] .  "',
 					product_validation = '" .  (int)$data['sellerinfo_product_validation'] .  "',
+					commission_id = " . (!is_null($commission_id) ? (int)$commission_id : 'NULL' ) . ",
+					seller_group = '" .  (int)$data['sellerinfo_seller_group'] .  "'
 				WHERE seller_id = " . (int)$seller_id;
 		
 		$this->db->query($sql);	
@@ -259,6 +267,8 @@ final class MsSeller extends Model {
 						ms.avatar as 'ms.avatar',
 						ms.country_id as 'ms.country_id',
 						ms.description as 'ms.description',
+						ms.commission_id as 'ms.commission_id',
+						ms.seller_group as 'ms.seller_group',
 						IFNULL(SUM(mp.number_sold), 0) as 'total_sales'
 				FROM `" . DB_PREFIX . "customer` c
 				INNER JOIN `" . DB_PREFIX . "ms_seller` ms

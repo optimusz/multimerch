@@ -1,193 +1,89 @@
 <?php
 class MsCommission extends Model {
+	const RATE_SALE = 1;
+	
 	const TYPE_SALES_QUANTITY = 1;
 	const TYPE_SALES_AMOUNT = 2;
 	const TYPE_PERIODIC = 3;
 	const TYPE_DATE_UNTIL = 4;
 	
-	const TYPES_INT = 1;
-	const TYPES_DECIMAL = 2;
-	const TYPES_PERIODIC = 4;
+	public function createCommission($rates) {
+		foreach ($rates as $type => $rate) {
+			if ( (!isset($rate['flat']) || empty($rate['flat'])) && (!isset($rate['percent']) || empty($rate['percent'])) ) {
+				unset($rates[$type]);
+			}
+		}
+
+		if (!empty($rates)) {
+			$sql = "INSERT INTO " . DB_PREFIX . "ms_commission () VALUES ()";
+			$this->db->query($sql);
+			$commission_id = $this->db->getLastId();
+			
+			foreach ($rates as $type => $rate) {
+				$sql = "INSERT INTO " . DB_PREFIX . "ms_commission_rate
+						SET commission_id = " . (int)$commission_id . ",
+							rate_type = " . (int)$type . ",
+							flat = " . (isset($rate['flat']) && !empty($rate['flat']) ? $rate['flat'] : 'NULL') . ",
+							percent = " . (isset($rate['percent']) && !empty($rate['percent']) ? $rate['percent'] : 'NULL');
+
+				$this->db->query($sql);	
+			}
+		} else {
+			$commission_id = NULL;
+		}
+		
+		return $commission_id;
+	}
+	
+	public function editCommission($commission_id, $rates) {
+		foreach ($rates as $type => $rate) {
+			if ( (!isset($rate['flat']) || empty($rate['flat'])) && (!isset($rate['percent']) || empty($rate['percent'])) ) {
+				$sql = "DELETE FROM " . DB_PREFIX . "ms_commission_rate WHERE rate_id = " . (int)$rate['rate_id'];
+				$this->db->query($sql);
+				unset($rates[$type]);
+			} else {
+				$sql = "UPDATE " . DB_PREFIX . "ms_commission_rate
+						SET flat = " . (isset($rate['flat']) && !empty($rate['flat']) ? $rate['flat'] : 'NULL') . ",
+							percent = " . (isset($rate['percent']) && !empty($rate['percent']) ? $rate['percent'] : 'NULL') . "
+						WHERE rate_id = " . (int)$rate['rate_id'];
+				$this->db->query($sql);
+			}
+		}
+		
+		if (empty($rates)) {
+			$commission_id = NULL;
+		}
+		
+		return $commission_id;
+	}
+		
+		
 	
 	// Get commissions
-	public function getCommissions($commission_id) {
-		$sql = "SELECT 	regcr.flat as `regcr.flat`, regcr.percent as `regcr.percent`,
-						moncr.flat as `moncr.flat`, moncr.percent as `moncr.percent`,
-						lstcr.flat as `lstcr.flat`, lstcr.percent as `lstcr.percent`,
-						salcr.flat as `salcr.flat`, salcr.percent as `salcr.percent`
-				FROM `" . DB_PREFIX . "ms_commission` cm
-				LEFT JOIN `" . DB_PREFIX . "ms_commission_rate` regcr ON(cm.reg_rate_id = regcr.commission_rate_id)
-				LEFT JOIN `" . DB_PREFIX . "ms_commission_rate` moncr ON(cm.monthly_rate_id = moncr.commission_rate_id)
-				LEFT JOIN `" . DB_PREFIX . "ms_commission_rate` lstcr ON(cm.list_rate_id = lstcr.commission_rate_id)
-				LEFT JOIN `" . DB_PREFIX . "ms_commission_rate` salcr ON(cm.sale_rate_id = salcr.commission_rate_id)
-				WHERE cm.commission_id = " . (int)$commission_id;
+	public function getCommissionRates($commission_id) {
+		$sql = "SELECT 	mcr.rate_id as 'mcr.rate_id',
+						mcr.rate_type as 'mcr.rate_type',
+						mcr.flat as 'mcr.flat',
+						mcr.percent as 'mcr.percent'
+				FROM `" . DB_PREFIX . "ms_commission_rate` mcr
+				WHERE mcr.commission_id = " . (int)$commission_id;
 		$res = $this->db->query($sql);
+		$rates = array();
 		
-		$commissions = array(
-			'reg_rate' => array(
-				'flat'=> $res->row['regcr.flat'],
-				'percent'=> $res->row['regcr.percent']
-			),
-			'monthly_rate' => array(
-				'flat'=> $res->row['moncr.flat'],
-				'percent'=> $res->row['moncr.percent']
-			),
-			'list_rate' => array(
-				'flat'=> $res->row['lstcr.flat'],
-				'percent'=> $res->row['lstcr.percent']
-			),
-			'sale_rate' => array(
-				'flat'=> $res->row['salcr.flat'],
-				'percent'=> $res->row['salcr.percent']
-			)
-		);
-		
-		return $commissions;
-	}
-	
-	// Calculate commissions
-	public function calculateCommissions($seller_id) {
-		// Get seller commission id
-		$sql = "SELECT seller_group as `seller_group`, commission_id as `commission_id`
-				FROM `" . DB_PREFIX . "ms_seller`
-				WHERE ms_seller.seller_id = " . (int)$seller_id;
-		$res = $this->db->query($sql);
-		
-		$seller_group_id = $res['seller_group'];
-		$seller_commission_id = $res['commission_id'];
-		
-		// Get seller group commission id
-		$sql = "SELECT commission_id as `commission_id`
-				FROM `" . DB_PREFIX . "ms_seller_group`
-				WHERE ms_seller_group.seller_group_id = " . (int)$seller_group_id;
-		$res = $this->db->query($sql);
-		
-		$seller_group_commission_id = $res['commission_id'];
-		
-		// Get default store commissions if not default seller group
-		if ($seller_group_id != 1) {
-			// 1 - Get default store commissions
-			$sql = "SELECT 	regcr.flat as `regcr.flat`, regcr.percent as `regcr.percent`,
-							moncr.flat as `moncr.flat`, moncr.percent as `moncr.percent`,
-							lstcr.flat as `lstcr.flat`, lstcr.percent as `lstcr.percent`,
-							salcr.flat as `salcr.flat`, salcr.percent as `salcr.percent`
-					FROM `" . DB_PREFIX . "ms_commission` cm
-					LEFT JOIN `" . DB_PREFIX . "ms_commission_rate` regcr ON(cm.reg_rate_id = regcr.commission_rate_id)
-					LEFT JOIN `" . DB_PREFIX . "ms_commission_rate` moncr ON(cm.monthly_rate_id = moncr.commission_rate_id)
-					LEFT JOIN `" . DB_PREFIX . "ms_commission_rate` lstcr ON(cm.list_rate_id = lstcr.commission_rate_id)
-					LEFT JOIN `" . DB_PREFIX . "ms_commission_rate` salcr ON(cm.sale_rate_id = salcr.commission_rate_id)
-					WHERE cm.commission_id = " . 1;
-			$res = $this->db->query($sql);
-		
-			$commissions = array(
-				'reg_rate' => array(
-					'flat'=> $res->rows[0]['regcr.flat'],
-					'percent'=> $res->rows[0]['regcr.percent']
-				),
-				'monthly_rate' => array(
-					'flat'=> $res->rows[0]['moncr.flat'],
-					'percent'=> $res->rows[0]['moncr.percent']
-				),
-				'list_rate' => array(
-					'flat'=> $res->rows[0]['lstcr.flat'],
-					'percent'=> $res->rows[0]['lstcr.percent']
-				),
-				'sale_rate' => array(
-					'flat'=> $res->rows[0]['salcr.flat'],
-					'percent'=> $res->rows[0]['salcr.percent']
-				)
+		foreach ($res->rows as $row) {
+			$rates[$row['mcr.rate_type']] = array(
+				'rate_id' => $row['mcr.rate_id'],			
+				'rate_type' => $row['mcr.rate_type'],
+				'flat' => $row['mcr.flat'],
+				'percent' => $row['mcr.percent']
 			);
 		}
-		
-		// 2 - Get seller group commissions
-		$sql = "SELECT 	regcr.flat as `regcr.flat`, regcr.percent as `regcr.percent`,
-				moncr.flat as `moncr.flat`, moncr.percent as `moncr.percent`,
-				lstcr.flat as `lstcr.flat`, lstcr.percent as `lstcr.percent`,
-				salcr.flat as `salcr.flat`, salcr.percent as `salcr.percent`
-		FROM `" . DB_PREFIX . "ms_commission` cm
-		LEFT JOIN `" . DB_PREFIX . "ms_commission_rate` regcr ON(cm.reg_rate_id = regcr.commission_rate_id)
-		LEFT JOIN `" . DB_PREFIX . "ms_commission_rate` moncr ON(cm.monthly_rate_id = moncr.commission_rate_id)
-		LEFT JOIN `" . DB_PREFIX . "ms_commission_rate` lstcr ON(cm.list_rate_id = lstcr.commission_rate_id)
-		LEFT JOIN `" . DB_PREFIX . "ms_commission_rate` salcr ON(cm.sale_rate_id = salcr.commission_rate_id)
-		WHERE cm.commission_id = " . (int)$seller_group_commission_id;
-		$res = $this->db->query($sql);
-			
-		if ($res->rows[0]['regcr.flat'] != NULL) {
-			$commissions['reg_rate']['flat'] = $res->rows[0]['regcr.flat'];
-		}
-		if ($res->rows[0]['regcr.percent'] != NULL) {
-			$commissions['reg_rate']['percent'] = $res->rows[0]['regcr.percent'];
-		}
-		
-		if ($res->rows[0]['moncr.flat'] != NULL) {
-			$commissions['monthly_rate']['flat'] = $res->rows[0]['moncr.flat'];
-		}
-		if ($res->rows[0]['moncr.percent'] != NULL) {
-			$commissions['monthly_rate']['percent'] = $res->rows[0]['moncr.percent'];
-		}
-		
-		if ($res->rows[0]['lstcr.flat'] != NULL) {
-			$commissions['list_rate']['flat'] = $res->rows[0]['lstcr.flat'];
-		}
-		if ($res->rows[0]['lstcr.percent'] != NULL) {
-			$commissions['list_rate']['percent'] = $res->rows[0]['lstcr.percent'];
-		}
-		
-		if ($res->rows[0]['salcr.flat'] != NULL) {
-			$commissions['sale_rate']['flat'] = $res->rows[0]['salcr.flat'];
-		}
-		if ($res->rows[0]['salcr.percent'] != NULL) {
-			$commissions['sale_rate']['percent'] = $res->rows[0]['salcr.percent'];
-		}
-		
-		// 3 - Get seller commissions
-		$sql = "SELECT 	regcr.flat as `regcr.flat`, regcr.percent as `regcr.percent`,
-				moncr.flat as `moncr.flat`, moncr.percent as `moncr.percent`,
-				lstcr.flat as `lstcr.flat`, lstcr.percent as `lstcr.percent`,
-				salcr.flat as `salcr.flat`, salcr.percent as `salcr.percent`
-		FROM `" . DB_PREFIX . "ms_commission` cm
-		LEFT JOIN `" . DB_PREFIX . "ms_commission_rate` regcr ON(cm.reg_rate_id = regcr.commission_rate_id)
-		LEFT JOIN `" . DB_PREFIX . "ms_commission_rate` moncr ON(cm.monthly_rate_id = moncr.commission_rate_id)
-		LEFT JOIN `" . DB_PREFIX . "ms_commission_rate` lstcr ON(cm.list_rate_id = lstcr.commission_rate_id)
-		LEFT JOIN `" . DB_PREFIX . "ms_commission_rate` salcr ON(cm.sale_rate_id = salcr.commission_rate_id)
-		WHERE cm.commission_id = " . (int)$seller_commission_id;
-		$res = $this->db->query($sql);		
-	
-	
-		if ($res->rows[0]['regcr.flat'] != NULL) {
-			$commissions['reg_rate']['flat'] = $res->rows[0]['regcr.flat'];
-		}
-		if ($res->rows[0]['regcr.percent'] != NULL) {
-			$commissions['reg_rate']['percent'] = $res->rows[0]['regcr.percent'];
-		}
-		
-		if ($res->rows[0]['moncr.flat'] != NULL) {
-			$commissions['monthly_rate']['flat'] = $res->rows[0]['moncr.flat'];
-		}
-		if ($res->rows[0]['moncr.percent'] != NULL) {
-			$commissions['monthly_rate']['percent'] = $res->rows[0]['moncr.percent'];
-		}
-		
-		if ($res->rows[0]['lstcr.flat'] != NULL) {
-			$commissions['list_rate']['flat'] = $res->rows[0]['lstcr.flat'];
-		}
-		if ($res->rows[0]['lstcr.percent'] != NULL) {
-			$commissions['list_rate']['percent'] = $res->rows[0]['lstcr.percent'];
-		}
-		
-		if ($res->rows[0]['salcr.flat'] != NULL) {
-			$commissions['sale_rate']['flat'] = $res->rows[0]['salcr.flat'];
-		}
-		if ($res->rows[0]['salcr.percent'] != NULL) {
-			$commissions['sale_rate']['percent'] = $res->rows[0]['salcr.percent'];
-		}
-		
-		return $commissions;
+		return $rates;
 	}
 	
-	
-	public function betterCalculateCommissions($seller_id) {
-		$default_commission_id = 1;
+	public function calculateCommission($seller_id) {
+		$default_seller_group = $this->MsLoader->MsSellerGroup->getSellerGroup($this->config->get('msconf_default_seller_group_id'));
+		$default_commission_id = $default_seller_group['msg.commission_id'];
 		
 		$sql = "SELECT seller_group as `seller_group`,
 						commission_id as `commission_id`
@@ -206,29 +102,23 @@ class MsCommission extends Model {
 		$group_commission_id = $res->row['commission_id'];
 		
 		// Get default commissions
-		$commissions = $this->getCommissions($default_commission_id);
+		$commissions = $this->getCommissionRates($default_commission_id);
 		
 		// Apply group commissions
 		if ($group_commission_id != $default_commission_id) {
-			$group_commissions = $this->getCommissions($group_commission_id);
-			foreach ($group_commissions as $rate => $c) {
-				foreach ($c as $ctype => $cval) {
-					if (!is_null($cval)) {
-						$commissions[$rate][$ctype] = $cval;
-					}
-				}
+			$group_commissions = $this->getCommissionRates($group_commission_id);
+			foreach ($group_commissions as $rate_type => $rate_val) {
+					if (!is_null($rate_val['flat'])) $commissions[$rate_type]['flat'] = $rate_val['flat'];
+					if (!is_null($rate_val['percent'])) $commissions[$rate_type]['percent'] = $rate_val['percent'];
 			}
 		}
 		
 		// Apply individual seller commissions
 		if (!is_null($seller_commission_id)) {
-			$seller_commissions = $this->getCommissions($seller_commission_id);
-			foreach ($seller_commissions as $rate => $c) {
-				foreach ($c as $ctype => $cval) {
-					if (!is_null($cval)) {
-						$commissions[$rate][$ctype] = $cval;
-					}
-				}
+			$seller_commissions = $this->getCommissionRates($seller_commission_id);
+			foreach ($seller_commissions as $rate_type => $rate_val) {
+					if (!is_null($rate_val['flat'])) $commissions[$rate_type]['flat'] = $rate_val['flat'];
+					if (!is_null($rate_val['percent'])) $commissions[$rate_type]['percent'] = $rate_val['percent'];
 			}
 		}
 		
@@ -236,7 +126,7 @@ class MsCommission extends Model {
 	}
 	
 	// fun
-	public function myLittleCalculateCommissions($seller_id) {
+	public function myLittleCalculateCommission($seller_id) {
 		$sql = "SELECT 	def_reg.flat as `def_reg.flat`,
 						def_reg.percent as `def_reg.percent`,
 						def_mon.flat as `def_mon.flat`,

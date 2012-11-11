@@ -12,7 +12,12 @@
     </div>
     <div class="content">
     <form id="ms-sellerinfo">
-    	<input type="hidden" id="seller_id" name="seller_id" value="<?php echo $seller['seller_id']; ?>" />
+      <input type="hidden" id="seller_id" name="seller_id" value="<?php echo $seller['seller_id']; ?>" />
+	 	<div id="tabs" class="htabs">
+	 		<a href="#tab-general"><?php echo $tab_general; ?></a>
+	 		<a href="#tab-commission"><?php echo $ms_commission; ?></a>
+	 	</div>
+	 	<div id="tab-general">      
       <table class="ms-product form" id="ms-sellerinfo">
         <tr>
 			<?php if (!empty($seller['ms.nickname'])) { ?>
@@ -28,14 +33,19 @@
 	          </td>          		
           	<?php } ?>
         </tr>
+        
+
         <tr>
-          <td><?php echo $ms_catalog_sellerinfo_commission; ?></td>
-          <td>
-          	<input size="3" type="text" name="sellerinfo_commission_flat" value="<?php echo $this->currency->format($seller['ms.commission_flat'], $this->config->get('config_currency'), '', FALSE); ?>" /><?php echo $currency_code; ?>
-			+<input size="3" type="text" name="sellerinfo_commission" value="<?php echo $seller['ms.commission']; ?>" size="3"/>%          	
-          	<p class="error" id="error_sellerinfo_commission"></p>
-          </td>
+          <td><?php echo $ms_catalog_sellerinfo_sellergroup; ?></td>
+          <td><select name="sellerinfo_seller_group">
+              <?php foreach ($seller_groups as $group) { ?>
+              <option value="<?php echo $group['seller_group_id']; ?>" <?php if ($seller['ms.seller_group'] == $group['seller_group_id']) { ?>selected="selected"<?php } ?>><?php echo $group['name']; ?></option>
+			  <?php } ?>
+            </select>
+          	<p class="error" id="error_sellerinfo_sellergroup"></p>
+          </td>          	
         </tr>
+        
         
 		<tr>
 			<td>
@@ -118,16 +128,6 @@
         </tr>
 
         <tr>
-          <td><?php echo $ms_approved; ?></td>
-          <td>
-          	<select name="seller_approved">
-              	<option value="1" <?php if ($seller['ms.seller_approved'] == 1) { ?>selected="selected"<?php } ?>><?php echo $text_yes; ?></option>
-              	<option value="0" <?php if ($seller['ms.seller_approved'] == 0) { ?>selected="selected"<?php } ?>><?php echo $text_no; ?></option>
-            </select>
-          </td>
-        </tr>
-
-        <tr>
           <td>
           	<span><?php echo $ms_catalog_sellerinfo_notify; ?></span>
           </td>
@@ -150,12 +150,31 @@
           </td>
         </tr>
       </table>
+      </div>
+      
+		<div id="tab-commission">
+		<table class="form">
+		<input type="hidden" name="sellerinfo_commission_id" value="<?php echo $seller['commission_id']; ?>" />
+        <tr>
+          <td><?php echo $ms_catalog_sellerinfo_commission_sale; ?></td>
+          <td>
+			<input type="hidden" name="sellerinfo_commission[<?php echo MsCommission::RATE_SALE; ?>][rate_id]" value="<?php echo $seller['commission_rates'][MsCommission::RATE_SALE]['rate_id']; ?>" />
+			<input type="hidden" name="sellerinfo_commission[<?php echo MsCommission::RATE_SALE; ?>][rate_type]" value="<?php echo MsCommission::RATE_SALE; ?>" /> 
+			<input type="text" name="sellerinfo_commission[<?php echo MsCommission::RATE_SALE; ?>][flat]" value="<?php echo isset($seller['commission_rates'][MsCommission::RATE_SALE]['flat']) ? $this->currency->format($seller['commission_rates'][MsCommission::RATE_SALE]['flat'], $this->config->get('config_currency'), '', FALSE) : '' ?>" size="3"/><?php echo $this->config->get('config_currency'); ?>
+			+<input type="text" name="sellerinfo_commission[<?php echo MsCommission::RATE_SALE; ?>][percent]" value="<?php echo $seller['commission_rates'][MsCommission::RATE_SALE]['percent']; ?>" size="3"/>%
+			<p class="error" id="error_sellerinfo_commission"></p>
+          </td>
+        </tr>		
+		</table>
+		</div>
     </div>
   </form>
   </div>
   </div>
 <script>
 $(function() {
+	$('#tabs a').tabs();
+
 	$('input[name="sellerinfo_notify"]').change(function() {
 		if ($(this).val() == 0) {
 			$('textarea[name="sellerinfo_message"]').val('').attr('disabled','disabled');

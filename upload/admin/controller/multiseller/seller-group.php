@@ -6,6 +6,8 @@ class ControllerMultisellerSellerGroup extends ControllerMultisellerBase {
 	
 	// List all the seller groups
 	public function index() {
+		var_dump($this->MsLoader->MsCommission->calculateCommission(1));
+		
 		$this->validate(__FUNCTION__);
 		
 		$sort = isset($this->request->get['sort']) ? $this->request->get['sort'] : 'msgd.name';
@@ -92,11 +94,6 @@ class ControllerMultisellerSellerGroup extends ControllerMultisellerBase {
 		
 		$this->document->setTitle($this->language->get('ms_catalog_seller_groups_heading'));
 		
-		
-		$time = microtime(true);
-		var_dump($this->MsLoader->MsCommission->betterCalculateCommissions(1));
-		var_dump(microtime(true) - $time);
-		
 		list($this->template, $this->children) = $this->MsLoader->MsHelper->admLoadTemplate('seller-group'); 
 		$this->response->setOutput($this->render());
 	}
@@ -146,11 +143,19 @@ class ControllerMultisellerSellerGroup extends ControllerMultisellerBase {
 		$this->load->model('localisation/language');
 		$this->data['languages'] = $this->model_localisation_language->getLanguages();		
 		
-		$this->data['seller_group'] = array(
-			'description' => $this->MsLoader->MsSellerGroup->getSellerGroupDescriptions($this->request->get['seller_group_id']),
-			'commission' => NULL
-		);
+		$seller_group = $this->MsLoader->MsSellerGroup->getSellerGroup($this->request->get['seller_group_id']);
+
+		if (is_null($seller_group['commission_id']))
+			$rates = NULL;
+		else
+			$rates = $this->MsLoader->MsCommission->getCommissionRates($seller_group['msg.commission_id']);
 		
+		$this->data['seller_group'] = array(
+			'seller_group_id' => $seller_group['seller_group_id'],
+			'description' => $this->MsLoader->MsSellerGroup->getSellerGroupDescriptions($this->request->get['seller_group_id']),
+			'commission_id' => $seller_group['commission_id'],
+			'commission_rates' => $rates
+		);
 		
 		$this->data['breadcrumbs'] = $this->MsLoader->MsHelper->admSetBreadcrumbs(array(
 			array(
@@ -233,17 +238,6 @@ class ControllerMultisellerSellerGroup extends ControllerMultisellerBase {
 	}
 	
 	private function validateForm() {
-		foreach ($this->request->post['seller_group_description'] as $language_id => $value) {
-			if ((utf8_strlen($value['name']) < 3) || (utf8_strlen($value['name']) > 32)) {
-				$this->error['name'][$language_id] = $this->language->get('ms_error_seller_group_name');
-			}
-		}
-
-		if (!$this->error) {
-			return true;
-		} else {
-			return false;
-		}
 	}
 	
 	// Validate delete of the seller group
@@ -263,6 +257,37 @@ class ControllerMultisellerSellerGroup extends ControllerMultisellerBase {
 		} else {
 			return false;
 		}
+	}
+	
+	public function jxSave() {
+		$data = $this->request->post['seller_group'];
+		$json = array();
+
+		foreach ($data['description'] as $language_id => $value) {
+			if ((utf8_strlen($value['name']) < 3) || (utf8_strlen($value['name']) > 32)) {
+				$json['errors']['name_' . $language_id] = $this->language->get('ms_error_seller_group_name');
+			}
+		}
+
+		if (!empty($data['seller_group_id']) && $this->config->get('msconf_default_seller_group_id') == $data['seller_group_id']) {
+			foreach ($data['commission_rates'] as &$rate) {
+				if (empty($rate['flat'])) $rate['flat'] = 0;
+				if (empty($rate['percent'])) $rate['percent'] = 0;
+			}
+			unset($rate);
+		}
+
+		if (empty($json['errors'])) {
+			if (empty($data['seller_group_id'])) {
+				$this->MsLoader->MsSellerGroup->createSellerGroup($data);
+			} else {
+				$this->MsLoader->MsSellerGroup->editSellerGroup($data['seller_group_id'], $data);
+			}
+			
+			$this->session->data['success'] = 'success';
+		}
+		
+		$this->response->setOutput(json_encode($json));
 	}
 }
 ?>

@@ -235,7 +235,10 @@ $_['ms_catalog_sellerinfo_nickname']    = 'Nickname';
 $_['ms_catalog_sellerinfo_description']    = 'Description';
 $_['ms_catalog_sellerinfo_company']     = 'Company';
 $_['ms_catalog_sellerinfo_country']    = 'Country';
-$_['ms_catalog_sellerinfo_commission']    = 'Commission (flat fee + %)';
+$_['ms_catalog_sellerinfo_sellergroup']    = 'Seller group';
+
+$_['ms_catalog_sellerinfo_commission_sale']    = 'Per sale:';
+
 $_['ms_catalog_sellerinfo_country_dont_display']    = 'Do not display country';
 $_['ms_catalog_sellerinfo_website']    = 'Website';
 $_['ms_catalog_sellerinfo_avatar']    = 'Avatar';

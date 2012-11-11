@@ -6,7 +6,7 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 		$data = $this->request->post;
 		$seller = $this->MsLoader->MsSeller->getSeller($data['seller_id']);
 		$json = array();
-		
+		var_dump($data);
 		if (empty($seller)) {
 			if (empty($data['sellerinfo_nickname'])) {
 				$json['errors']['sellerinfo_nickname'] = 'Username cannot be empty'; 
@@ -46,6 +46,11 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 					foreach ($products as $p) {
 						$this->MsLoader->MsProduct->changeStatus($p['product_id'], $data['seller_status']);
 					}
+					
+					$data['seller_approved'] = 0;
+					break;
+				case MsSeller::STATUS_ACTIVE:
+					$data['seller_approved'] = 1;
 					break;
 			}
 
@@ -172,7 +177,8 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 
 		$seller = $this->MsLoader->MsSeller->getSeller($this->request->get['seller_id']);
 
-		$this->data['seller_statuses'] =$this->MsLoader->MsSeller->getStatuses(); 
+		$this->data['seller_statuses'] =$this->MsLoader->MsSeller->getStatuses();
+		$this->data['seller_groups'] =$this->MsLoader->MsSellerGroup->getSellerGroups();  
 
 		if (!empty($seller)) {
 			$this->data['seller'] = $seller;
@@ -181,6 +187,14 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 				$this->data['seller']['avatar']['thumb'] = $this->MsLoader->MsFile->resizeImage($seller['ms.avatar'], $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'));
 				//$this->session->data['multiseller']['files'][] = $seller['avatar'];
 			}
+			
+			if (is_null($seller['ms.commission_id']))
+				$rates = NULL;
+			else
+				$rates = $this->MsLoader->MsCommission->getCommissionRates($seller['ms.commission_id']);
+			
+			$this->data['seller']['commission_id'] = $seller['ms.commission_id'];	
+			$this->data['seller']['commission_rates'] = $rates;
 		}
 
 		$this->data['currency_code'] = $this->config->get('config_currency');
