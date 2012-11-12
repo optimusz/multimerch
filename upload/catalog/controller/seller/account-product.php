@@ -345,7 +345,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 			$latin_check = '/[^\x{0030}-\x{007f}]/u';
 			$non_latin_chars = preg_match($latin_check, $language['product_name']);
 			if ($this->config->get('msconf_enable_non_alphanumeric_seo') && $non_latin_chars) {
-				$data['keyword'] = implode("-", str_replace("-", "", explode(" ", strtolower($language['product_name']))));
+				$data['keyword'] = implode("-", str_replace("-", "", explode(" ", preg_replace(preg_replace("/[^\p{L}\p{N}]/u", '', strtolower($language['product_name'])))));
 			}
 			else {
 				$data['keyword'] = implode("-", str_replace("-", "", explode(" ", preg_replace("/[^A-Za-z0-9 ]/", '', strtolower($language['product_name'])))));
