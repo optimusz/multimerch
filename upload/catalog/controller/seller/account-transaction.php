@@ -22,10 +22,15 @@ class ControllerSellerAccountTransaction extends ControllerSellerAccount {
    				'date_created' => date($this->language->get('date_format_short'), strtotime($entry['date_created']))
    			);
    		}
-
+		
 		$balance_formatted = $this->currency->format($this->MsLoader->MsBalance->getSellerBalance($seller_id),$this->config->get('config_currency'));
-		$balance_reserved_formatted = $this->currency->format($this->MsLoader->MsBalance->getReservedSellerFunds($seller_id), $this->config->get('config_currency'));
-		$this->data['balance'] = sprintf($this->language->get('ms_account_balance_formatted'), $balance_formatted, $balance_reserved_formatted);;
+		if ($this->MsLoader->MsBalance->getReservedSellerFunds($seller_id) > 0) {
+			$balance_reserved_formatted = sprintf($this->language->get('ms_account_balance_reserved_formatted'), $this->currency->format($this->MsLoader->MsBalance->getReservedSellerFunds($seller_id), $this->config->get('config_currency')));
+		} else {
+			$balance_reserved_formatted = "";
+		}
+		$this->data['balance'] = $balance_formatted . " " . $balance_reserved_formatted;
+
 		
 		$pagination = new Pagination();
 		$pagination->total = $this->MsLoader->MsBalance->getTotalSellerBalanceEntries($seller_id);

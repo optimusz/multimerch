@@ -63,7 +63,14 @@ class ControllerSellerAccountWithdrawal extends ControllerSellerAccount {
 		
 		$seller_balance = $this->MsLoader->MsBalance->getSellerBalance($seller_id);
 		$available_balance = $seller_balance - $this->MsLoader->MsBalance->getReservedSellerFunds($seller_id);
-		$balance_reserved_formatted = $this->currency->format($this->MsLoader->MsBalance->getReservedSellerFunds($seller_id), $this->config->get('config_currency'));
+		
+		$balance_formatted = $this->currency->format($this->MsLoader->MsBalance->getSellerBalance($seller_id),$this->config->get('config_currency'));
+		if ($this->MsLoader->MsBalance->getReservedSellerFunds($seller_id) > 0) {
+			$balance_reserved_formatted = sprintf($this->language->get('ms_account_balance_reserved_formatted'), $this->currency->format($this->MsLoader->MsBalance->getReservedSellerFunds($seller_id), $this->config->get('config_currency')));
+		} else {
+			$balance_reserved_formatted = "";
+		}
+		$this->data['ms_account_balance_formatted'] = $balance_formatted . " " . $balance_reserved_formatted;
 		
 		$this->document->addScript('catalog/view/javascript/account-withdrawal.js');
 		
@@ -72,7 +79,6 @@ class ControllerSellerAccountWithdrawal extends ControllerSellerAccount {
 
 		$this->data['balance_available'] = $available_balance;
 		$this->data['balance_available_formatted'] = $this->currency->format($available_balance, $this->config->get('config_currency'));
-		$this->data['ms_account_balance_formatted'] = sprintf($this->language->get('ms_account_balance_formatted'), $this->data['balance_formatted'], $balance_reserved_formatted);
 		
 		$this->data['paypal'] = $this->MsLoader->MsSeller->getPaypal();
 		$this->data['msconf_minimum_withdrawal_amount'] = $this->currency->format($this->config->get('msconf_minimum_withdrawal_amount'),$this->config->get('config_currency'));
