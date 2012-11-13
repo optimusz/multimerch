@@ -42,7 +42,8 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		"msconf_enable_quantities" => 0, // 0 - no, 1 - yes, 2 - shipping dependent
 		"msconf_product_options" => array(),
 		"msconf_enable_pdf_generator" => 0,
-		"msconf_enable_seo_urls" => 0,
+		"msconf_enable_seo_urls_seller" => 0,
+		"msconf_enable_seo_urls_product" => 0,
 		"msconf_enable_update_seo_urls" => 0,
 		"msconf_enable_non_alphanumeric_seo" => 0,
 		"msconf_product_image_path" => 'sellers/',
