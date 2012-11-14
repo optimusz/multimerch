@@ -28,7 +28,7 @@
 		
 		<div class="content">
 			<!-- todo status check update -->
-			<?php if ($seller['ms.seller_status'] == MsSeller::STATUS_DISABLED) { ?>
+			<?php if ($seller['ms.seller_status'] == MsSeller::STATUS_DISABLED || $seller['ms.seller_status'] == MsSeller::STATUS_DELETED) { ?>
 			<div class="ms-overlay"></div>
 			<?php } ?>
 			<table class="ms-product">
@@ -141,7 +141,7 @@
 				</a>
 			</div>
 			
-			<?php if ($seller['ms.seller_status'] != MsSeller::STATUS_DISABLED) { ?>
+			<?php if ($seller['ms.seller_status'] != MsSeller::STATUS_DISABLED && $seller['ms.seller_status'] != MsSeller::STATUS_DELETED) { ?>
 			<div class="right">
 				<a class="button" id="ms-submit-button">
 					<span><?php echo $ms_button_save; ?></span>

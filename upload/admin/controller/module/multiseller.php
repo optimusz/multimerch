@@ -92,7 +92,8 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 			} elseif ($this->config->get($s)) {
 				$this->data[$s] = $this->config->get($s);
 			} else {
-				$this->data[$s] = $this->settings[$s];
+				if (isset($this->settings[$s]))
+					$this->data[$s] = $this->settings[$s];
 			}
 		}
 		

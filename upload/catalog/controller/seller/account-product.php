@@ -123,7 +123,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 					if ($this->config->get('msconf_enable_pdf_generator') && extension_loaded('imagick')) {
 						$ext = explode('.', $file['name']); $ext = end($ext);
 						if (strtolower($ext) == 'pdf') {
-							$im = new imagick(DIR_IMAGE . $this->config->get('msconf_temp_image_path') . $fileData['fileName']);
+							$im = new imagick(DIR_DOWNLOAD . $this->config->get('msconf_temp_download_path') . $fileData['fileName']);
 							$pages = $im->getNumberImages() - 1;
 						}
 					}
@@ -523,6 +523,8 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 	}
 	
 	public function index() {
+		//var_dump($this->MsLoader->MsCommission->calculateCommission($this->customer->getId()));
+		
 		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
 		$seller_id = $this->customer->getId();
 		

@@ -115,14 +115,14 @@ $_['ms_config_product_validation_note'] = 'Product validation';
 $_['ms_config_product_validation_none'] = 'No validation';
 $_['ms_config_product_validation_approval'] = 'Manual approval';
 
-$_['ms_config_enable_seo_urls_seller'] = 'Enable SEO URLs generation for new seller pages';
-$_['ms_config_enable_seo_urls_seller_note'] = 'To be able to use generated SEO URLs for sellers, enable SEO URL setting for your shop as well. Setting is located in System -> Settings -> (Your Store) Edit -> Server tab.';
-$_['ms_config_enable_seo_urls_product'] = 'Enable SEO URLs generation for new products';
-$_['ms_config_enable_seo_urls_product_note'] = 'To be able to use generated SEO URLs for products, enable SEO URL setting for your shop as well. Setting is located in System -> Settings -> (Your Store) Edit -> Server tab.';
+$_['ms_config_enable_seo_urls_seller'] = 'Generate SEO URLs for new sellers';
+$_['ms_config_enable_seo_urls_seller_note'] = 'This option will generate SEO-friendly URLs for new sellers. SEO URLs need to be enabled in OpenCart to use this.';
+$_['ms_config_enable_seo_urls_product'] = 'Generate SEO URLs for new products (experimental)';
+$_['ms_config_enable_seo_urls_product_note'] = 'This option will generate SEO-friendly URLs for new product. SEO URLs need to be enabled in OpenCart to use this. Experimental, especially for non-English stores.';
 $_['ms_config_enable_update_seo_urls'] = 'Enable SEO URLs generation for updated products';
 $_['ms_config_enable_update_seo_urls_note'] = 'This setting enables new SEO URLs generation, when existing products are updated.';
-$_['ms_config_enable_non_alphanumeric_seo'] = 'Enable non-alphanumeric and non-latin characters in SEO URLs';
-$_['ms_config_enable_non_alphanumeric_seo_note'] = 'This setting enables all non-alphanumeric and non-latin characters in SEO URLs. Use at your own risk.';
+$_['ms_config_enable_non_alphanumeric_seo'] = 'Allow UTF8 in SEO URLs (experimental)';
+$_['ms_config_enable_non_alphanumeric_seo_note'] = 'This will not strip UTF8 symbols from SEO URLs. Use at your own risk.';
 
 $_['ms_config_seller_commission'] = 'Default store commission';
 $_['ms_config_seller_commission_note'] = 'Default store commission (flat fee + %)';

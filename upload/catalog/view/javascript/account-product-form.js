@@ -49,7 +49,7 @@ $(function() {
 					    
 					}				
 				} else {
-					console.log('success');
+					//console.log('success');
 					location = jsonData['redirect'];
 				}
 	       	}
@@ -109,7 +109,7 @@ $(function() {
 				
 				if (data.cancel) {
 					$('#ms-file-addimages').uploadify('cancel','*');
-					console.log('cancelling queue');
+					//console.log('cancelling queue');
 				}
 	        },
 	        'onUploadError' : function(file, errorCode, errorMsg, errorString) {

@@ -226,7 +226,7 @@ class MsFile extends Model {
 				return $json;
 			}
 			
-			$pathinfo = pathinfo(DIR_IMAGE . $this->config->get('msconf_temp_image_path') . $fileName);
+			$pathinfo = pathinfo(DIR_DOWNLOAD . $this->config->get('msconf_temp_download_path') . $fileName);
 			$list = glob(DIR_IMAGE . $this->config->get('msconf_temp_image_path') . $pathinfo['filename'] . '*\.png');
 			//var_dump($list);
 			foreach ($list as $pagePreview) {
@@ -234,14 +234,14 @@ class MsFile extends Model {
 				@unlink($pagePreview);
 			}
 
-			$name = DIR_IMAGE . $this->config->get('msconf_temp_image_path') . $fileName . "[" . $filePages . "]";
+			$name = DIR_DOWNLOAD . $this->config->get('msconf_temp_download_path') . $fileName . "[" . $filePages . "]";
 			$im = new imagick($name);
 			$pages = $im->getNumberImages();
 
 			$im->setImageFormat( "png" );
 			$im->setImageCompressionQuality(100);
 
-			$pathinfo = pathinfo(DIR_IMAGE . $this->config->get('msconf_temp_image_path') . $fileName);
+			$pathinfo = pathinfo(DIR_DOWNLOAD . $this->config->get('msconf_temp_download_path') . $fileName);
 			$json['token'] = substr($pathinfo['basename'], 0, strrpos($pathinfo['basename'], '.'));
 	
 			if ($im->writeImages(DIR_IMAGE . $this->config->get('msconf_temp_image_path') . $pathinfo['filename'] . '.png', false)) {

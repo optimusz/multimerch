@@ -28,6 +28,7 @@ $(function() {
 					}
 					window.scrollTo(0,0);
 				} else {
+					window.scrollTo(0,0);
 					window.location.reload();
 				}
 	       	}
