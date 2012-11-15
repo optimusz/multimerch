@@ -45,6 +45,18 @@
 	<!-- ************************ -->	
 	<!-- ************************ -->	
 	
+	<!-- ie console fix -->
+	<file name="catalog/view/theme/&themeFolder;/template/common/header.tpl">
+			<operation>
+			<search position="before"><![CDATA[
+				<?php foreach ($scripts as $script) { ?>
+			]]></search>
+			<add><![CDATA[
+				<script type="text/javascript"> if (!window.console) console = {log: function() {}}; </script>
+			]]></add>
+		</operation>	
+	</file>
+	
 	<!-- number of sellers/products line -->
 	<file name="catalog/view/theme/&themeFolder;/template/common/header.tpl">
 		<operation error="log">
@@ -529,6 +541,15 @@
 
 	<!-- navigation menu -->
 	<file name="&adminFolder;/view/template/common/header.tpl">
+			<operation>
+			<search position="before"><![CDATA[
+				<?php foreach ($scripts as $script) { ?>
+			]]></search>
+			<add><![CDATA[
+				<script type="text/javascript"> if (!window.console) console = {log: function() {}}; </script>
+			]]></add>
+		</operation>
+
 		<operation>
 			<search position="before" offset="1"><![CDATA[
 			<ul class="right">
