@@ -158,7 +158,7 @@
 	var msGlobals = {
 		timestamp: '<?php echo $timestamp; ?>',
 		token : '<?php echo md5($salt . $timestamp); ?>',
-		session_id: '<?php echo session_id(); ?>',
+		session_id: '<?php echo session_id(); ?>'
 	};
 </script>
 <?php echo $footer; ?>

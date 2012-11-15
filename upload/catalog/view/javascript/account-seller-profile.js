@@ -46,14 +46,14 @@ $(function() {
 			'hideButton'   : true,
 			'buttonClass'  : 'ms-button-upload',
 			'height': 25,
-			//'debug' : true,
+			'debug' : true,
 			'multi': false,
 			'method'   : 'post',
 			//'buttonImage' : 'catalog/view/theme/default/image/ms-update-30px.png',
 			'formData'     : {
 				'timestamp' : msGlobals.timestamp,
 				'token'     : msGlobals.token,
-				'session_id': msGlobals.session_id,
+				'session_id': msGlobals.session_id
 			},
 			'swf'      : 'catalog/view/javascript/uploadify.swf',
 			'uploader' : 'index.php?route=seller/account-profile/jxUploadSellerAvatar',

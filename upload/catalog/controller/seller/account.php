@@ -13,10 +13,11 @@ class ControllerSellerAccount extends Controller {
 				return;
 			// Re-create session as Flash doesn't pass session info
 	  		if (isset($_POST['session_id'])) {
-	  			session_destroy();
-	  			$_COOKIE['PHPSESSID'] = $_POST['session_id'];
-	  			$registry->set('session', new Session());
-	  			//session_start();
+	  			if (!isset($this->session->data['customer_id'])) {
+	  				session_destroy();
+	  				$_COOKIE['PHPSESSID'] = $_POST['session_id'];
+	  				$registry->set('session', new Session());
+	  			}
 	  			if (isset($_SESSION['customer_id'])) {
 	  				$salt = $this->MsLoader->MsSeller->getSalt($_SESSION['customer_id']);
 	  				if (isset($_POST['token']) && isset($_POST['timestamp']) && $_POST['token'] == md5($salt . $_POST['timestamp'])) {
