@@ -46,7 +46,7 @@ $(function() {
 			'hideButton'   : true,
 			'buttonClass'  : 'ms-button-upload',
 			'height': 25,
-			'debug' : true,
+			'debug' : false,
 			'multi': false,
 			'method'   : 'post',
 			//'buttonImage' : 'catalog/view/theme/default/image/ms-update-30px.png',
