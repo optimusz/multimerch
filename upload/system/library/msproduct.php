@@ -736,6 +736,7 @@ class MsProduct extends Model {
 				SET status = " . (int)$enabled . " WHERE product_id = " . (int)$product_id;
 
 		$res = $this->db->query($sql);
+		$this->registry->get('cache')->delete('product');
 	}
 	
 	public function approve($product_id) {
@@ -744,6 +745,7 @@ class MsProduct extends Model {
 				WHERE product_id = " . (int)$product_id;
 		
 		$res = $this->db->query($sql);
+		$this->registry->get('cache')->delete('product');
 	}
 	
 	public function disapprove($product_id) {
@@ -752,6 +754,8 @@ class MsProduct extends Model {
 				WHERE product_id = " . (int)$product_id;
 		
 		$res = $this->db->query($sql);
+		
+		$this->registry->get('cache')->delete('product');
 	}
 	
 	public function createRecord($product_id, $data) {
@@ -759,7 +763,7 @@ class MsProduct extends Model {
 				SET	product_id =  " . (int)$product_id
 				. (isset($data['seller_id']) ? ", seller_id =  " .  (int)$data['seller_id'] : '');
 		
-		$res = $this->db->query($sql);		
+		$res = $this->db->query($sql);
 	}
 }
 ?>
