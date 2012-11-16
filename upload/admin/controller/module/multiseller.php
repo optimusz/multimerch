@@ -162,6 +162,15 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		
 		$this->request->post['msconf_paypal_sandbox'] = 1;
 		magic*/
+
+		if (!isset($this->request->post['msconf_credit_order_statuses']))
+			$this->request->post['msconf_credit_order_statuses'] = array();
+		
+		if (!isset($this->request->post['msconf_debit_order_statuses']))
+			$this->request->post['msconf_debit_order_statuses'] = array();
+		
+		if (!isset($this->request->post['msconf_product_options']))
+			$this->request->post['msconf_product_options'] = array();
 		
 		// todo setting validation
 		$this->_editSettings();
