@@ -312,7 +312,30 @@ Your product %s at %s has been modified by the administrator.
 Product status: %s
 EOT;
 
+$_['ms_mail_subject_product_purchased']      = 'Product purchased';
+$_['ms_mail_product_purchased'] = <<<EOT
+Your product %s has been purchased from %s.
+EOT;
+$_['ms_mail_product_purchased_multiple'] = <<<EOT
+Your products have been purchased from %s: %s x %s.
+EOT;
+
+$_['ms_mail_product_purchased_info'] = <<<EOT
+\n
+Delivery address:
+
+%s %s
+%s
+%s
+%s
+%s %s
+%s
+%s
+EOT;
+
 // Sales - Mail
 $_['ms_text_seller_all']      = 'All sellers';
 
+$_['ms_transaction_sale']      = 'Sale: %s (-%s commission)';
+$_['ms_transaction_refund']      = 'Refund: %s';
 ?>

@@ -41,6 +41,11 @@ class MsMail extends Model {
 		$this->errors = array();
 	}
 
+	private function _modelExists($model) {
+		$file  = DIR_APPLICATION . 'model/' . $model . '.php';
+		return file_exists($file);
+	}
+
 	private function _getRecipients($mail_type) {
 		if ($mail_type < 100)
 			return $this->registry->get('customer')->getEmail();
@@ -114,9 +119,13 @@ class MsMail extends Model {
 		}
 
 		if (isset($data['order_id'])) {
-			$this->load->model('checkout/order');
-			$model_checkout_order = $this->registry->get('model_checkout_order'); 
-			$order_info = $model_checkout_order->getOrder($data['order_id']);
+			if ($this->_modelExists('checkout/order')) {
+				$this->load->model('checkout/order');
+				$order_info = $this->model_checkout_order->getOrder($data['order_id']);
+			} else {
+				$this->load->model('sale/order');
+				$order_info = $this->model_sale_order->getOrder($data['order_id']);
+			}
 		}
 		
 		if (isset($data['seller_id'])) {

@@ -95,8 +95,7 @@ Message:
 EOT;
 
 $_['ms_mail_product_purchased_info'] = <<<EOT
-
-
+\n
 Delivery address:
 
 %s %s
