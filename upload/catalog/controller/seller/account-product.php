@@ -142,6 +142,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 	
 	public function jxSubmitProduct() {
 		$data = $this->request->post;
+		
 		$seller = $this->MsLoader->MsSeller->getSeller($this->customer->getId());
 
 		if (isset($data['product_id']) && !empty($data['product_id'])) {
@@ -353,6 +354,8 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 			}
 		}
 
+		unset($data['product_specials'][0]);
+
 		if (empty($json['errors'])) {
 			$mails = array();
 			// set product status
@@ -544,6 +547,16 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		);
 		
 		foreach ($products as $product) {
+			$specials = $this->MsLoader->MsProduct->getProductSpecials($product['product_id']);
+
+			$special = false;
+			foreach ($specials as $product_special) {
+				if (($product_special['date_start'] == '0000-00-00' || $product_special['date_start'] < date('Y-m-d')) && ($product_special['date_end'] == '0000-00-00' || $product_special['date_end'] > date('Y-m-d'))) {
+					$special = $product_special['price'];
+					break;
+				}
+			}
+
 			$links = array();
 			
 			if ($product['mp.product_status'] != MsProduct::STATUS_DISABLED) {
@@ -562,9 +575,14 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 				$links['delete'] = $this->url->link('seller/account-product/delete', 'product_id=' . $product['product_id'], 'SSL');
 			}
 			
-			$this->data['products'][] = Array(
-				'pd.name' => $product['pd.name'],  
+			$sale_data = $this->MsLoader->MsProduct->getSaleData($product['product_id']);
+			
+			$this->data['products'][] = array(
+				'pd.name' => $product['pd.name'],
+				'special' => $special,
+				'p.price' => $this->currency->format($product['p.price'], $this->config->get('config_currency')),
 				'mp.number_sold' => $product['mp.number_sold'],
+				'mp.total_earnings' => $this->currency->format($sale_data['total'], $this->config->get('config_currency')),
 				'mp.product_status' => $product['mp.product_status'],
 				'status_text' => $this->MsLoader->MsProduct->getStatusText($product['mp.product_status']),
 				'p.date_created' => date($this->language->get('date_format_short'), strtotime($product['p.date_created'])),
@@ -612,6 +630,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 	public function update() {
 		$this->load->model('tool/image');
 		$this->load->model('catalog/category');
+		$this->load->model('catalog/product');
 		$this->document->addScript('catalog/view/javascript/jquery.uploadify.js');
 		
 		if ($this->config->get('msconf_enable_pdf_generator') && extension_loaded('imagick')) {
@@ -653,7 +672,8 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 			}
 			
 			$this->data['product_attributes'] = $this->MsLoader->MsProduct->getProductAttributes($product_id);
-			
+			$product['specials'] = $this->MsLoader->MsProduct->getProductSpecials($product_id);
+			var_dump($product['specials']);
 			if (!empty($product['thumbnail'])) {
 				$product['images'][] = array(
 					'name' => $product['thumbnail'],

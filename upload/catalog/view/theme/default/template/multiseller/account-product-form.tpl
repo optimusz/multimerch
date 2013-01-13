@@ -20,7 +20,15 @@
 		<input type="hidden" name="action" id="ms_action" />
 		
 		<div class="content">
-			<div class="htabs" id="htabs">
+     	<div id="general-tabs" class="htabs">
+     		<a href="#tab-general"><?php echo $ms_account_product_tab_general; ?></a>
+     		<a href="#tab-specials"><?php echo $ms_account_product_tab_specials; ?></a>
+     		<a href="#tab-discounts"><?php echo $ms_account_product_tab_discounts; ?></a>
+     	</div>
+     	
+     	<!-- general tab -->
+     	<div id="tab-general">
+			<div class="htabs" id="language-tabs">
 				<?php foreach ($languages as $language) { ?>
 				<a class="lang" href="#language<?php echo $language['language_id']; ?>"><img src="image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?></a>
 				<?php } ?>
@@ -267,6 +275,55 @@
 				</tr>
 				<?php } ?>
 			</table>
+		</div>
+		
+		<!-- specials tab -->
+		<div id="tab-specials">
+			<table class="list">
+				<thead>
+				<tr>
+					<td><?php echo $ms_account_product_priority; ?></td>
+					<td><?php echo $ms_account_product_price; ?></td>
+					<td><?php echo $ms_account_product_date_start; ?></td>
+					<td><?php echo $ms_account_product_date_end; ?></td>
+					<td></td>
+				</tr>
+				</thead>
+				
+				<tbody>				
+				
+				<!-- sample row -->
+				<tr class="ffSample">				
+					<td><input type="text" name="product_specials[0][priority]" value="" size="2" /></td>
+					<td><input type="text" name="product_specials[0][price]" value="" /></td>
+					<td><input type="text" name="product_specials[0][date_start]" value="" class="date" /></td>
+					<td><input type="text" name="product_specials[0][date_end]" value="" class="date" /></td>
+					<td><a class="ms-button ms-button-delete" title="<?php echo $ms_delete; ?>"></a></td>
+				</tr>
+				
+				<?php if (isset($product['specials'])) { ?>
+				<?php $special_row = 1; ?>
+				<?php foreach ($product['specials'] as $product_special) { ?>
+				<tr>
+					<td><input type="text" name="product_specials[<?php echo $special_row; ?>][priority]" value="<?php echo $product_special['priority']; ?>" size="2" /></td>
+					<td><input type="text" name="product_specials[<?php echo $special_row; ?>][price]" value="<?php echo $product_special['price']; ?>" /></td>
+					<td><input type="text" name="product_specials[<?php echo $special_row; ?>][date_start]" value="<?php echo $product_special['date_start']; ?>" class="date" /></td>
+					<td><input type="text" name="product_specials[<?php echo $special_row; ?>][date_end]" value="<?php echo $product_special['date_end']; ?>" class="date" /></td>
+					<td><a class="ms-button ms-button-delete" title="<?php echo $ms_delete; ?>"></a></td>
+				</tr>
+				<?php $special_row++; ?>
+				<?php } ?>
+				<?php } ?>
+				</tbody>
+
+				<tfoot>
+				<tr>
+				<td colspan="5"><a class="button ffClone"><?php echo $ms_button_add_special; ?></a></td>
+				</tr>
+				</tfoot>
+			</table>
+		</div>
+		
 		</div>
 		
 		<div class="buttons">

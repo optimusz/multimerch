@@ -1,3 +1,18 @@
+/* table alignment style override */
+#content .content table.list .left {
+	width: auto;
+	float: none;
+}
+
+table.list td, table.list thead td  {
+	text-align: center;
+	padding: 7px;
+}
+
+.ffSample {
+	display: none;
+}
+
 .ms-form .content {
 	position: relative;
 }
@@ -149,6 +164,10 @@
 	height: 16px;
 	background: url('../image/remove.png');
 	cursor: pointer;
+}
+
+.ms-account-product-form #general-tabs {
+	margin-bottom: 2px;
 }
 
 .ms-language-div {
@@ -527,7 +546,7 @@ div.ms-jquery-dialog.ui-widget-content,
 
 
 /* seller account product list*/
-.ms-account-product .ms-button {
+.ms-button {
 	display: inline-block;
 	width: 30px;
 	height: 30px;
@@ -536,6 +555,17 @@ div.ms-jquery-dialog.ui-widget-content,
 
 .ms-account-product table.list tbody td {
 	vertical-align: middle;
+}
+
+.ms-account-product-form .ms-button {
+	display: inline-block;
+	width: 20px;
+	height: 20px;
+	margin: 3px 0;
+}
+
+.ms-account-product-form .ms-button-delete {
+	background-image: url(../image/ms-delete-20px.png);
 }
 
 .ms-button-view {

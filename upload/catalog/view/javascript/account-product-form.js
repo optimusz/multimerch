@@ -1,6 +1,31 @@
 $(function() {
-	$('#htabs a.lang').tabs();
-
+	$('#language-tabs a.lang').tabs();
+	$('#general-tabs a').tabs();
+	
+	$("body").delegate(".date", "focusin", function(){
+		$(this).datepicker({dateFormat: 'yy-mm-dd'});
+	});
+	
+	$('body').delegate("a.ms-button-delete", "click", function() {	
+		$(this).parents('tr').remove();
+	});
+	
+	$('body').delegate("a.ffClone", "click", function() {
+		var lastRow = $(this).parents('table').find('tbody tr:last input:last').attr('name');
+		if (typeof lastRow == "undefined") {
+			var newRowNum = 1;
+		} else {
+			var newRowNum = parseInt(lastRow.match(/[0-9]+/)) + 1;
+		}
+		console.log(lastRow, newRowNum);
+		var newRow = $(this).parents('table').find('tbody tr.ffSample').clone();
+		newRow.find('input,select').attr('name', function(i,name) {
+			return name.replace('[0]','[' + newRowNum + ']');
+		});
+		
+		$(this).parents('table').find('tbody').append(newRow.removeAttr('class'));
+	});
+	
 	$("input[name='product_enable_shipping']").live('change', function() {
 		if ($(this).val() == 1) {
 			if (!$("input[name='product_quantity']").hasClass("ffUnchangeable")) {
@@ -32,8 +57,7 @@ $(function() {
 			url: 'index.php?route=seller/account-product/'+url,
 			data: $(this).parents("form").serialize(),
 		    beforeSend: function() {
-		    	$('#ms-new-product a.button').hide();
-		    	button.before('<span class="wait">&nbsp;<img src="catalog/view/theme/default/image/loading.gif" alt="" /></span>');
+		    	button.hide().before('<span class="wait">&nbsp;<img src="catalog/view/theme/default/image/loading.gif" alt="" /></span>');
 		    },			
 			success: function(jsonData) {
 				$('.error').text('');
@@ -234,7 +258,7 @@ $(function() {
 	          				(data.files[i].filePages ? '<a href="index.php?route=seller/account-product/jxRenderPdfgenDialog" class="ms-button-pdf" title="'+msGlobals.button_generate+'"></a>' : '') +
 	          				'<span class="ms-button-download disabled"></span>' +
 	          				'<span class="ms-button-update disabled"></span>' +
-		          			'<a class="ms-button-delete" title="'+msGlobals.text_delete+'"></a>' +
+		          			//'<a class="ms-button-delete" title="'+msGlobals.text_delete+'"></a>' +
 		          			'</div>' +
 		          			'</div>';
 		        		$("#product_download_files").append(downloadTag).children(':last').hide().fadeIn(1000);
