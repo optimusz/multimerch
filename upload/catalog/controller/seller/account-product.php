@@ -172,7 +172,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		
 				if (empty($language['product_description'])) {
 					$json['errors']['product_description_' . $language_id] = $this->language->get('ms_error_product_description_empty'); 
-				} else if (mb_strlen($language['product_description']) < 25 || mb_strlen($language['product_description']) > 1000 ) {
+				} else if (mb_strlen($language['product_description']) < 25 || mb_strlen($language['product_description']) > 4000 ) {
 					$json['errors']['product_description_' . $language_id] = $this->language->get('ms_error_product_description_length');			
 				}
 			} else {
@@ -541,8 +541,8 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 			array(
 				'order_by'  => 'date_added',
 				'order_way' => 'DESC',
-				'offset' => ($page - 1) * 5,
-				'limit' => 5
+				'offset' => ($page - 1) * 10,
+				'limit' => 10
 			)
 		);
 		
@@ -600,8 +600,8 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 			'seller_id' => $seller_id,
 			'product_status' => array(MsProduct::STATUS_ACTIVE, MsProduct::STATUS_INACTIVE, MsProduct::STATUS_DISABLED)
 		));
-		$pagination->page = ($page - 1) * 5;
-		$pagination->limit = 5;
+		$pagination->page = ($page - 1) * 10;
+		$pagination->limit = 10;
 		$pagination->text = $this->language->get('text_pagination');
 		$pagination->url = $this->url->link('seller/account-product', 'page={page}', 'SSL');
 		$this->data['pagination'] = $pagination->render();
