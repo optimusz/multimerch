@@ -5,7 +5,7 @@ class ControllerSellerAccountWithdrawal extends ControllerSellerAccount {
 		$data = $this->request->post;
 
 		$seller = $this->MsLoader->MsSeller->getSeller($this->customer->getId());
-		$balance = $this->MsLoader->MsBalance->getSellerBalance($this->customer->getId()) - $this->MsLoader->MsBalance->getReservedSellerFunds($this->customer->getId());
+		$balance = $this->MsLoader->MsBalance->getAvailableSellerFunds($this->customer->getId()) - $this->MsLoader->MsBalance->getReservedSellerFunds($this->customer->getId());
 
 		$json = array();
 		
@@ -62,15 +62,17 @@ class ControllerSellerAccountWithdrawal extends ControllerSellerAccount {
 		$seller_id = $this->customer->getId();
 		
 		$seller_balance = $this->MsLoader->MsBalance->getSellerBalance($seller_id);
-		$available_balance = $seller_balance - $this->MsLoader->MsBalance->getReservedSellerFunds($seller_id);
+		$pending_funds = $this->MsLoader->MsBalance->getReservedSellerFunds($seller_id);
+		$waiting_funds = $this->MsLoader->MsBalance->getWaitingSellerFunds($seller_id);
+		$available_balance = $this->MsLoader->MsBalance->getAvailableSellerFunds($seller_id);
 		
 		$balance_formatted = $this->currency->format($this->MsLoader->MsBalance->getSellerBalance($seller_id),$this->config->get('config_currency'));
-		if ($this->MsLoader->MsBalance->getReservedSellerFunds($seller_id) > 0) {
-			$balance_reserved_formatted = sprintf($this->language->get('ms_account_balance_reserved_formatted'), $this->currency->format($this->MsLoader->MsBalance->getReservedSellerFunds($seller_id), $this->config->get('config_currency')));
-		} else {
-			$balance_reserved_formatted = "";
-		}
-		$this->data['ms_account_balance_formatted'] = $balance_formatted . " " . $balance_reserved_formatted;
+		$balance_reserved_formatted = $pending_funds > 0 ? sprintf($this->language->get('ms_account_balance_reserved_formatted'), $this->currency->format($pending_funds)) . ', ' : '';
+		$balance_reserved_formatted .= $waiting_funds > 0 ? sprintf($this->language->get('ms_account_balance_waiting_formatted'), $this->currency->format($waiting_funds)) . ', ' : ''; 
+		$balance_reserved_formatted = ($balance_reserved_formatted == '' ? '' : '(' . substr($balance_reserved_formatted, 0, -2) . ')'); 
+		
+		$this->data['ms_account_balance_formatted'] = $balance_formatted;
+		$this->data['ms_account_reserved_formatted'] = $balance_reserved_formatted;
 		
 		$this->document->addScript('catalog/view/javascript/account-withdrawal.js');
 		

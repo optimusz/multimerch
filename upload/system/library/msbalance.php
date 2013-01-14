@@ -1,8 +1,8 @@
 <?php
 class MsBalance extends Model {
 	const MS_BALANCE_TYPE_SALE = 1;
-	const MS_BALANCE_TYPE_REFUND = 2;	
-	const MS_BALANCE_TYPE_WITHDRAWAL = 3;	
+	const MS_BALANCE_TYPE_REFUND = 2;
+	const MS_BALANCE_TYPE_WITHDRAWAL = 3;
 	
   	public function __construct($registry) {
   		parent::__construct($registry);
@@ -85,6 +85,11 @@ class MsBalance extends Model {
 		return $res->row['balance'];
 	}
 
+	public function getAvailableSellerFunds($seller_id) {
+		return max(0, $this->getSellerBalance($seller_id) - $this->getReservedSellerFunds($seller_id) - $this->getWaitingSellerFunds($seller_id, $this->config->get('msconf_withdrawal_waiting_period')));
+	
+	}
+
 	public function getReservedSellerFunds($seller_id) {
 		$sql = "SELECT SUM(amount) as total
 				FROM " . DB_PREFIX . "ms_withdrawal
@@ -95,6 +100,23 @@ class MsBalance extends Model {
 
 		return $res->row['total'];
 	}
+	
+	public function getWaitingSellerFunds($seller_id) {
+		$sql = "SELECT SUM(amount) as total
+				FROM " . DB_PREFIX . "ms_balance
+				WHERE seller_id = " . (int)$seller_id . " 
+				AND balance_type = " . (int)MsBalance::MS_BALANCE_TYPE_SALE . "
+				AND DATEDIFF(NOW(), date_created) < " . (int)$this->config->get('msconf_withdrawal_waiting_period');
+				
+		$res = $this->db->query($sql);
+		
+		$pending_diff = $this->getSellerBalance($seller_id) - $this->getReservedSellerFunds($seller_id);
+		
+		if ($pending_diff >= $res->row['total'])
+			return $res->row['total'];
+		else
+			return $pending_diff;
+	}	
 	
 	public function addBalanceEntry($seller_id, $data) {
 		$sql = "INSERT INTO " . DB_PREFIX . "ms_balance

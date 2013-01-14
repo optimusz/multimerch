@@ -23,14 +23,21 @@ class ControllerSellerAccountTransaction extends ControllerSellerAccount {
    			);
    		}
 		
-		$balance_formatted = $this->currency->format($this->MsLoader->MsBalance->getSellerBalance($seller_id),$this->config->get('config_currency'));
-		if ($this->MsLoader->MsBalance->getReservedSellerFunds($seller_id) > 0) {
-			$balance_reserved_formatted = sprintf($this->language->get('ms_account_balance_reserved_formatted'), $this->currency->format($this->MsLoader->MsBalance->getReservedSellerFunds($seller_id), $this->config->get('config_currency')));
-		} else {
-			$balance_reserved_formatted = "";
-		}
-		$this->data['balance'] = $balance_formatted . " " . $balance_reserved_formatted;
+		$seller_balance = $this->MsLoader->MsBalance->getSellerBalance($seller_id);
+		$pending_funds = $this->MsLoader->MsBalance->getReservedSellerFunds($seller_id);
+		$waiting_funds = $this->MsLoader->MsBalance->getWaitingSellerFunds($seller_id, 14);
+		$balance_formatted = $this->currency->format($seller_balance,$this->config->get('config_currency'));
+		
+		$balance_reserved_formatted = $pending_funds > 0 ? sprintf($this->language->get('ms_account_balance_reserved_formatted'), $this->currency->format($pending_funds)) . ', ' : '';
+		$balance_reserved_formatted .= $waiting_funds > 0 ? sprintf($this->language->get('ms_account_balance_waiting_formatted'), $this->currency->format($waiting_funds)) . ', ' : ''; 
+		$balance_reserved_formatted = ($balance_reserved_formatted == '' ? '' : '(' . substr($balance_reserved_formatted, 0, -2) . ')');
 
+		$this->data['ms_balance_formatted'] = $balance_formatted;
+		$this->data['ms_reserved_formatted'] = $balance_reserved_formatted;
+
+		$earnings = $this->MsLoader->MsSeller->getTotalEarnings($seller_id);
+
+		$this->data['earnings'] = $this->currency->format($earnings, $this->config->get('config_currency'));
 		
 		$pagination = new Pagination();
 		$pagination->total = $this->MsLoader->MsBalance->getTotalSellerBalanceEntries($seller_id);
