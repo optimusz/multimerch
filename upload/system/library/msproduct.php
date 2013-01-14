@@ -9,14 +9,15 @@ class MsProduct extends Model {
 	const MS_PRODUCT_VALIDATION_APPROVAL = 2;
 	
 	private $errors;
-		
+	
+	
 	private function _getDepth($a, $eid) {
 		foreach ($a as $key => $val) {
 			if ($val['category_id'] == $eid) {
 				if ($val['parent_id'] == 0) {
 					return 0;
 				} else {
-					return 1+$this->_getDepth($a, $val['parent_id']);
+					return 1 + $this->_getDepth($a, $val['parent_id']);
 				}
 			}
 		}
@@ -58,9 +59,8 @@ class MsProduct extends Model {
 			foreach ($query->rows as $result) {
 				$category_data[] = array(
 					'category_id' => $result['category_id'],
-					'name'        => str_repeat('&nbsp;&nbsp;',$this->_getDepth($query->rows, $result['category_id'])) . $result['name'],
-					//'status'  	  => $result['status'],
-					//'sort_order'  => $result['sort_order'],
+					'parent_id' => $result['parent_id'],
+					'name'        => $result['name'],
 				);
 			
 				$category_data = array_merge($category_data, $this->getCategories($result['category_id']));
@@ -69,8 +69,19 @@ class MsProduct extends Model {
 			//$this->cache->set('category.' . (int)$this->config->get('config_language_id') . '.' . (int)$parent_id, $category_data);
 		}
 		
+		if ($parent_id == 0) {
+			$category_data_indented = array();
+			foreach ($category_data as $category) {
+				$category_data_indented[] = array(
+					'category_id' => $category['category_id'],
+					'name'        => str_repeat('&nbsp;&nbsp;&nbsp;',$this->_getDepth($category_data, $category['category_id'])) . $category['name'],
+				);
+			}
+			return $category_data_indented;
+		}
+		
 		return $category_data;
-	}	
+	}
 	
 	public function getMultipleCategories($parent_id = 0) {
 		$category_data = $this->cache->get('category.' . (int)$this->config->get('config_language_id') . '.' . (int)$parent_id);
