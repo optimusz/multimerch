@@ -22,8 +22,14 @@
 		<div class="content">
      	<div id="general-tabs" class="htabs">
      		<a href="#tab-general"><?php echo $ms_account_product_tab_general; ?></a>
+     		
+     		<?php if ($this->config->get('msconf_allow_specials')) { ?>
      		<a href="#tab-specials"><?php echo $ms_account_product_tab_specials; ?></a>
+     		<?php } ?>
+     		
+     		<?php if ($this->config->get('msconf_allow_discounts')) { ?>
      		<a href="#tab-discounts"><?php echo $ms_account_product_tab_discounts; ?></a>
+     		<?php } ?>
      	</div>
      	
      	<!-- general tab -->
@@ -278,6 +284,7 @@
 		</div>
 		
 		<!-- specials tab -->
+		<?php if ($this->config->get('msconf_allow_specials')) { ?>
 		<div id="tab-specials">
 			<table class="list">
 				<thead>
@@ -323,6 +330,59 @@
 				</tfoot>
 			</table>
 		</div>
+		<?php } ?>
+		
+		<!-- discounts tab -->
+		<?php if ($this->config->get('msconf_allow_discounts')) { ?>
+		<div id="tab-discounts">
+			<table class="list">
+				<thead>
+				<tr>
+					<td><?php echo $ms_account_product_priority; ?></td>
+					<td><?php echo $ms_account_product_quantity; ?></td>
+					<td><?php echo $ms_account_product_price; ?></td>
+					<td><?php echo $ms_account_product_date_start; ?></td>
+					<td><?php echo $ms_account_product_date_end; ?></td>
+					<td></td>
+				</tr>
+				</thead>
+				
+				<tbody>				
+				
+				<!-- sample row -->
+				<tr class="ffSample">				
+					<td><input type="text" name="product_discounts[0][priority]" value="" size="2" /></td>
+					<td><input type="text" name="product_discounts[0][quantity]" value="" size="2" /></td>
+					<td><input type="text" name="product_discounts[0][price]" value="" /></td>
+					<td><input type="text" name="product_discounts[0][date_start]" value="" class="date" /></td>
+					<td><input type="text" name="product_discounts[0][date_end]" value="" class="date" /></td>
+					<td><a class="ms-button ms-button-delete" title="<?php echo $ms_delete; ?>"></a></td>
+				</tr>
+				
+				<?php if (isset($product['discounts'])) { ?>
+				<?php $discount_row = 1; ?>
+				<?php foreach ($product['discounts'] as $product_discount) { ?>
+				<tr>
+					<td><input type="text" name="product_discounts[<?php echo $discount_row; ?>][priority]" value="<?php echo $product_discount['priority']; ?>" size="2" /></td>
+					<td><input type="text" name="product_discounts[<?php echo $discount_row; ?>][quantity]" value="<?php echo $product_discount['quantity']; ?>" size="2" /></td>
+					<td><input type="text" name="product_discounts[<?php echo $discount_row; ?>][price]" value="<?php echo $product_discount['price']; ?>" /></td>
+					<td><input type="text" name="product_discounts[<?php echo $discount_row; ?>][date_start]" value="<?php echo $product_discount['date_start']; ?>" class="date" /></td>
+					<td><input type="text" name="product_discounts[<?php echo $discount_row; ?>][date_end]" value="<?php echo $product_discount['date_end']; ?>" class="date" /></td>
+					<td><a class="ms-button ms-button-delete" title="<?php echo $ms_delete; ?>"></a></td>
+				</tr>
+				<?php $discount_row++; ?>
+				<?php } ?>
+				<?php } ?>
+				</tbody>
+
+				<tfoot>
+				<tr>
+					<td colspan="5"><a class="button ffClone"><?php echo $ms_button_add_discount; ?></a></td>
+				</tr>
+				</tfoot>
+			</table>
+		</div>		
+		<?php } ?>
 		
 		</div>
 		

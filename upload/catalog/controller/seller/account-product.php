@@ -196,15 +196,15 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 			$i++;
 		}
 		
-		if (empty($data['product_price'])) {
-			if ($data['product_price'] !== "0" || $this->config->get('msconf_allow_free_products') == 0) {
+		if ((float)$data['product_price'] == 0) {
+			if (!is_numeric($data['product_price'])) {
+				$json['errors']['product_price'] = $this->language->get('ms_error_product_price_invalid');			
+			} else if ($this->config->get('msconf_allow_free_products') == 0) {
 				$json['errors']['product_price'] = $this->language->get('ms_error_product_price_empty');
 			}
-		} else if (!is_numeric($data['product_price'])) {
-			$json['errors']['product_price'] = $this->language->get('ms_error_product_price_invalid');
-		} else if ($data['product_price'] < $this->config->get('msconf_minimum_product_price')) {
+		} else if ((float)$data['product_price'] < (float)$this->config->get('msconf_minimum_product_price')) {
 			$json['errors']['product_price'] = $this->language->get('ms_error_product_price_low');
-		}		
+		}
 
 		$msconf_downloads_limits = $this->config->get('msconf_downloads_limits');
 		if (!isset($data['product_downloads'])) {
@@ -354,7 +354,9 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 			}
 		}
 
+		// sample rows
 		unset($data['product_specials'][0]);
+		unset($data['product_discounts'][0]);
 
 		if (empty($json['errors'])) {
 			$mails = array();
@@ -631,6 +633,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		$this->load->model('tool/image');
 		$this->load->model('catalog/category');
 		$this->load->model('catalog/product');
+		$this->load->model('localisation/currency');
 		$this->document->addScript('catalog/view/javascript/jquery.uploadify.js');
 		
 		if ($this->config->get('msconf_enable_pdf_generator') && extension_loaded('imagick')) {
@@ -673,7 +676,8 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 			
 			$this->data['product_attributes'] = $this->MsLoader->MsProduct->getProductAttributes($product_id);
 			$product['specials'] = $this->MsLoader->MsProduct->getProductSpecials($product_id);
-			var_dump($product['specials']);
+			$product['discounts'] = $this->MsLoader->MsProduct->getProductDiscounts($product_id);
+
 			if (!empty($product['thumbnail'])) {
 				$product['images'][] = array(
 					'name' => $product['thumbnail'],
@@ -711,6 +715,12 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 				if (!in_array($download['filename'], $this->session->data['multiseller']['files']))
 					$this->session->data['multiseller']['files'][] = $download['filename'];
 			}
+
+			$currencies = $this->model_localisation_currency->getCurrencies();
+      		$decimal_place = $currencies[$this->config->get('config_currency')]['decimal_place'];
+      		$decimal_point = $this->language->get('decimal_point');
+      		$thousand_point = $this->language->get('thousand_point');
+			$product['price'] = number_format(round($product['price'], (int)$decimal_place), (int)$decimal_place, $decimal_point, $thousand_point);
 
 			$this->data['product'] = $product;
 			$this->data['msconf_allow_multiple_categories'] = $this->config->get('msconf_allow_multiple_categories');
