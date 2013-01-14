@@ -19,8 +19,9 @@
 		<div class="warning"><?php echo $error_warning; ?></div>
 	<?php } ?>
 	
-	<?php echo $ms_account_transactions_balance; ?> <b><?php echo $balance; ?></b><br /><br />
-	
+	<?php echo $ms_account_transactions_balance; ?> <b><?php echo $ms_balance_formatted; ?></b> <span style="color: gray"><?php echo $ms_reserved_formatted; ?></span><br /><br />
+	<?php echo $ms_account_transactions_earnings; ?> <b><?php echo $earnings; ?></b><br /><br />	
+
 	<table class="list">
 		<thead>
 			<tr>

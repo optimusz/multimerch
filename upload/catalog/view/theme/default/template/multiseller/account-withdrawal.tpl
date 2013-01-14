@@ -15,7 +15,7 @@
 		<div class="warning"><?php echo $error_warning; ?></div>
 	<?php } ?>
 	
-	<p><?php echo $ms_account_withdraw_balance; ?> <b><?php echo $ms_account_balance_formatted; ?></b></p>
+	<p><?php echo $ms_account_withdraw_balance; ?> <b><?php echo $ms_account_balance_formatted; ?></b> <span style="color: gray"><?php echo $ms_account_reserved_formatted; ?></span></p>
 	<p><?php echo $ms_account_withdraw_balance_available; ?> <b><?php echo $balance_available_formatted; ?></b></p>
 	<p><?php echo $ms_account_withdraw_minimum; ?> <b><?php echo $msconf_minimum_withdrawal_amount; ?></b></p>
 	

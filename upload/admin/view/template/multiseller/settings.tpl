@@ -9,7 +9,7 @@
 	<div class="error" id="error"></div>
 	<div class="box">
 		<div class="heading">
-	    	<h1><img src="view/image/module.png"/><?php echo $heading_title; ?></h1>
+			<h1><img src="view/image/module.png"/><?php echo $heading_title; ?></h1>
 			<div class="buttons">
 				<a class="button" id="saveSettings"><?php echo $button_save; ?></a>
 				<a onclick="location = '<?php echo $cancel; ?>';" class="button"><span><?php echo $button_cancel; ?></span></a>
@@ -17,14 +17,15 @@
 	  	</div>
 	  	<div class="content">
 			<form id="settings" action="<?php echo $action; ?>" method="post" enctype="multipart/form-data">
-		     	<div id="tabs" class="htabs">
-		     		<a href="#tab-general"><?php echo $tab_general; ?></a>
-		     		<a href="#tab-productform"><?php echo $ms_config_productform; ?></a>
-		     		<a href="#tab-modules"><?php echo $ms_config_modules; ?></a>
-		     	</div>
-		     	
-		     	<!-- BEGIN GENERAL TAB -->
-		     	<div id="tab-general">
+			 	<div id="tabs" class="htabs">
+			 		<a href="#tab-general"><?php echo $tab_general; ?></a>
+			 		<a href="#tab-productform"><?php echo $ms_config_productform; ?></a>
+			 		<a href="#tab-finances"><?php echo $ms_config_finances; ?></a>
+			 		<a href="#tab-modules"><?php echo $ms_config_modules; ?></a>
+			 	</div>
+			 	
+			 	<!-- BEGIN GENERAL TAB -->
+			 	<div id="tab-general">
 				<table class="form">
 					<tr>
 						<td>
@@ -42,11 +43,11 @@
 							<span class="help"><?php echo $ms_config_seller_validation_note; ?></span>
 						</td>
 						<td>
-			              	<select name="msconf_seller_validation">
-			              	  <option value="1" <?php if($msconf_seller_validation == 1) { ?> selected="selected" <?php } ?>><?php echo $ms_config_seller_validation_none; ?></option>
-			                  <!--<option value="2" <?php if($msconf_seller_validation == 2) { ?> selected="selected" <?php } ?>><?php echo $ms_config_seller_validation_activation; ?></option>-->
-			                  <option value="3" <?php if($msconf_seller_validation == 3) { ?> selected="selected" <?php } ?>><?php echo $ms_config_seller_validation_approval; ?></option>
-			                </select>
+						  	<select name="msconf_seller_validation">
+						  	  <option value="1" <?php if($msconf_seller_validation == 1) { ?> selected="selected" <?php } ?>><?php echo $ms_config_seller_validation_none; ?></option>
+							  <!--<option value="2" <?php if($msconf_seller_validation == 2) { ?> selected="selected" <?php } ?>><?php echo $ms_config_seller_validation_activation; ?></option>-->
+							  <option value="3" <?php if($msconf_seller_validation == 3) { ?> selected="selected" <?php } ?>><?php echo $ms_config_seller_validation_approval; ?></option>
+							</select>
 						</td>
 					</tr>
 					
@@ -56,78 +57,78 @@
 							<span class="help"><?php echo $ms_config_product_validation_note; ?></span>
 						</td>
 						<td>
-			              	<select name="msconf_product_validation">
-			              	  <option value="1" <?php if($msconf_product_validation == 1) { ?> selected="selected" <?php } ?>><?php echo $ms_config_product_validation_none; ?></option>
-			                  <option value="2" <?php if($msconf_product_validation == 2) { ?> selected="selected" <?php } ?>><?php echo $ms_config_product_validation_approval; ?></option>
-			                </select>
+						  	<select name="msconf_product_validation">
+							<option value="1" <?php if($msconf_product_validation == 1) { ?> selected="selected" <?php } ?>><?php echo $ms_config_product_validation_none; ?></option>
+							<option value="2" <?php if($msconf_product_validation == 2) { ?> selected="selected" <?php } ?>><?php echo $ms_config_product_validation_approval; ?></option>
+							</select>
 						</td>
 					</tr>
 					
 					<tr>
-		            	<td>
+						<td>
 							<span><?php echo $ms_config_enable_seo_urls_seller; ?></span>
 							<span class="help"><?php echo $ms_config_enable_seo_urls_seller_note; ?></span>
 						</td>
-		            	<td>
-			                <input type="radio" name="msconf_enable_seo_urls_seller" value="1" <?php if($msconf_enable_seo_urls_seller == 1) { ?> checked="checked" <?php } ?>  />
-			                <?php echo $text_yes; ?>
-			                <input type="radio" name="msconf_enable_seo_urls_seller" value="0" <?php if($msconf_enable_seo_urls_seller == 0) { ?> checked="checked" <?php } ?>  />
-			                <?php echo $text_no; ?>
-		              	</td>
-		            </tr>
+						<td>
+							<input type="radio" name="msconf_enable_seo_urls_seller" value="1" <?php if($msconf_enable_seo_urls_seller == 1) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_yes; ?>
+							<input type="radio" name="msconf_enable_seo_urls_seller" value="0" <?php if($msconf_enable_seo_urls_seller == 0) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_no; ?>
+						</td>
+					</tr>
 					
 					<tr>
-		            	<td>
+						<td>
 							<span><?php echo $ms_config_enable_seo_urls_product; ?></span>
 							<span class="help"><?php echo $ms_config_enable_seo_urls_product_note; ?></span>
 						</td>
-		            	<td>
-			                <input type="radio" name="msconf_enable_seo_urls_product" value="1" <?php if($msconf_enable_seo_urls_product == 1) { ?> checked="checked" <?php } ?>  />
-			                <?php echo $text_yes; ?>
-			                <input type="radio" name="msconf_enable_seo_urls_product" value="0" <?php if($msconf_enable_seo_urls_product == 0) { ?> checked="checked" <?php } ?>  />
-			                <?php echo $text_no; ?>
-		              	</td>
-		            </tr>
+						<td>
+							<input type="radio" name="msconf_enable_seo_urls_product" value="1" <?php if($msconf_enable_seo_urls_product == 1) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_yes; ?>
+							<input type="radio" name="msconf_enable_seo_urls_product" value="0" <?php if($msconf_enable_seo_urls_product == 0) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_no; ?>
+					  	</td>
+					</tr>
 					
 					<!--<tr>
-		            	<td>
+						<td>
 							<span><?php //echo $ms_config_enable_update_seo_urls; ?></span>
 							<span class="help"><?php //echo $ms_config_enable_update_seo_urls_note; ?></span>
 						</td>
-		            	<td>
-			                <input type="radio" name="msconf_enable_update_seo_urls" value="1" <?php //if($msconf_enable_update_seo_urls == 1) { ?> checked="checked" <?php //} ?>  />
-			                <?php //echo $text_yes; ?>
-			                <input type="radio" name="msconf_enable_update_seo_urls" value="0" <?php //if($msconf_enable_update_seo_urls == 0) { ?> checked="checked" <?php //} ?>  />
-			                <?php //echo $text_no; ?>
-		              	</td>
-		            </tr>-->
+						<td>
+							<input type="radio" name="msconf_enable_update_seo_urls" value="1" <?php //if($msconf_enable_update_seo_urls == 1) { ?> checked="checked" <?php //} ?>  />
+							<?php //echo $text_yes; ?>
+							<input type="radio" name="msconf_enable_update_seo_urls" value="0" <?php //if($msconf_enable_update_seo_urls == 0) { ?> checked="checked" <?php //} ?>  />
+							<?php //echo $text_no; ?>
+					  	</td>
+					</tr>-->
 					
 					<tr>
-		            	<td>
+						<td>
 							<span><?php echo $ms_config_enable_non_alphanumeric_seo; ?></span>
 							<span class="help"><?php echo $ms_config_enable_non_alphanumeric_seo_note; ?></span>
 						</td>
-		            	<td>
-			                <input type="radio" name="msconf_enable_non_alphanumeric_seo" value="1" <?php if($msconf_enable_non_alphanumeric_seo == 1) { ?> checked="checked" <?php } ?>  />
-			                <?php echo $text_yes; ?>
-			                <input type="radio" name="msconf_enable_non_alphanumeric_seo" value="0" <?php if($msconf_enable_non_alphanumeric_seo == 0) { ?> checked="checked" <?php } ?>  />
-			                <?php echo $text_no; ?>
-		              	</td>
-		            </tr>
+						<td>
+							<input type="radio" name="msconf_enable_non_alphanumeric_seo" value="1" <?php if($msconf_enable_non_alphanumeric_seo == 1) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_yes; ?>
+							<input type="radio" name="msconf_enable_non_alphanumeric_seo" value="0" <?php if($msconf_enable_non_alphanumeric_seo == 0) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_no; ?>
+					  	</td>
+					</tr>
 					
-		            <tr>
-			              <td>
-			              		<span><?php echo $ms_config_image_preview_size; ?></span>
+					<tr>
+						  <td>
+						  		<span><?php echo $ms_config_image_preview_size; ?></span>
 								<span class="help"><?php echo $ms_config_image_preview_size_note; ?></span>
-			              </td>
-			              <td>
-			              	<input type="text" name="msconf_image_preview_width" value="<?php echo $msconf_image_preview_width; ?>" size="3" />
-			                x
-			                <input type="text" name="msconf_image_preview_height" value="<?php echo $msconf_image_preview_height; ?>" size="3" />
-			              </td>
-		            </tr>
+						  </td>
+						  <td>
+						  	<input type="text" name="msconf_image_preview_width" value="<?php echo $msconf_image_preview_width; ?>" size="3" />
+							x
+							<input type="text" name="msconf_image_preview_height" value="<?php echo $msconf_image_preview_height; ?>" size="3" />
+						  </td>
+					</tr>
 
-		            <tr>
+					<tr>
 						<td>
 							<span><?php echo $ms_config_seller_terms_page; ?></span>
 							<span class="help"><?php echo $ms_config_seller_terms_page_note; ?></span>
@@ -146,54 +147,286 @@
 						</td>
 					</tr>
 
-		            <tr>
-			              <td>
-			              		<span><?php echo $ms_config_credit_order_statuses; ?></span>
+					<tr>
+						<td>
+							<span><?php echo $ms_config_comments_maxlen; ?></span>
+							<span class="help"><?php echo $ms_config_comments_maxlen_note; ?></span>
+						</td>
+						<td>
+							<input type="text" name="msconf_comments_maxlen" value="<?php echo $msconf_comments_maxlen; ?>" size="3"/>
+						</td>
+					</tr>
+				</table>
+				</div>
+				<!-- END GENERAL TAB -->
+				
+			 	<!-- BEGIN PRODUCT FORM TAB -->
+			 	<div id="tab-productform">
+				<table class="form">
+					<tr>
+						<td>
+							<span><?php echo $ms_config_minimum_product_price; ?></span>
+							<span class="help"><?php echo $ms_config_minimum_product_price_note; ?></span>
+						</td>
+						<td>
+							<input type="text" name="msconf_minimum_product_price" value="<?php echo $msconf_minimum_product_price; ?>" size="3"/>
+						</td>
+					</tr>
+					
+		   			<tr>
+						<td>
+							<span><?php echo $ms_config_allow_free_products; ?></span>
+							<span class="help"><?php echo $ms_config_allow_free_products_note; ?></span>
+						</td>
+						<td>
+							<input type="radio" name="msconf_allow_free_products" value="1" <?php if($msconf_allow_free_products == 1) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_yes; ?>
+							<input type="radio" name="msconf_allow_free_products" value="0" <?php if($msconf_allow_free_products == 0) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_no; ?>
+					  	</td>
+					</tr>
+
+		   			<tr>
+						<td>
+							<span><?php echo $ms_config_allow_specials; ?></span>
+							<span class="help"><?php echo $ms_config_allow_specials_note; ?></span>
+						</td>
+						<td>
+							<input type="radio" name="msconf_allow_specials" value="1" <?php if($msconf_allow_specials == 1) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_yes; ?>
+							<input type="radio" name="msconf_allow_specials" value="0" <?php if($msconf_allow_specials == 0) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_no; ?>
+					  	</td>
+					</tr>
+
+		   			<tr>
+						<td>
+							<span><?php echo $ms_config_allow_discounts; ?></span>
+							<span class="help"><?php echo $ms_config_allow_discounts_note; ?></span>
+						</td>
+						<td>
+							<input type="radio" name="msconf_allow_discounts" value="1" <?php if($msconf_allow_discounts == 1) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_yes; ?>
+							<input type="radio" name="msconf_allow_discounts" value="0" <?php if($msconf_allow_discounts == 0) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_no; ?>
+					  	</td>
+					</tr>
+
+		   			<tr>
+						<td>
+							<span><?php echo $ms_config_allow_multiple_categories; ?></span>
+							<span class="help"><?php echo $ms_config_allow_multiple_categories_note; ?></span>
+						</td>
+						<td>
+							<input type="radio" name="msconf_allow_multiple_categories" value="1" <?php if($msconf_allow_multiple_categories == 1) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_yes; ?>
+							<input type="radio" name="msconf_allow_multiple_categories" value="0" <?php if($msconf_allow_multiple_categories == 0) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_no; ?>
+					  	</td>
+					</tr>	
+					
+					<tr>
+						  <td>
+						  		<span><?php echo $ms_config_allowed_image_types; ?></span>
+								<span class="help"><?php echo $ms_config_allowed_image_types_note; ?></span>
+						  </td>
+						  <td>
+						  	<input type="text" name="msconf_allowed_image_types" value="<?php echo $msconf_allowed_image_types; ?>" />
+						  </td>
+					</tr>
+					
+					<tr>
+						  <td>
+						  		<span><?php echo $ms_config_allowed_download_types; ?></span>
+								<span class="help"><?php echo $ms_config_allowed_download_types_note; ?></span>
+						  </td>
+						  <td>
+						  	<input type="text" name="msconf_allowed_download_types" value="<?php echo $msconf_allowed_download_types; ?>" />
+						  </td>
+					</tr>
+					
+					<tr>
+						  <td>
+						  		<span><?php echo $ms_config_images_limits; ?></span>
+								<span class="help"><?php echo $ms_config_images_limits_note; ?></span>
+						  </td>
+						  <td>
+						  	Min. <input type="text" name="msconf_images_limits[]" value="<?php echo $msconf_images_limits[0]; ?>" size="3" /> 
+						  	Max. <input type="text" name="msconf_images_limits[]" value="<?php echo $msconf_images_limits[1]; ?>" size="3" />
+						  </td>
+					</tr>
+
+					<tr>
+						  <td>
+						  		<span><?php echo $ms_config_downloads_limits; ?></span>
+								<span class="help"><?php echo $ms_config_downloads_limits_note; ?></span>
+						  </td>
+						  <td>
+						  	Min. <input type="text" name="msconf_downloads_limits[]" value="<?php echo $msconf_downloads_limits[0]; ?>" size="3" /> 
+						  	Max. <input type="text" name="msconf_downloads_limits[]" value="<?php echo $msconf_downloads_limits[1]; ?>" size="3" />
+						  </td>
+					</tr>
+
+					<tr>
+						<td>
+							<span><?php echo $ms_config_enable_shipping; ?></span>
+							<span class="help"><?php echo $ms_config_enable_shipping_note; ?></span>
+						</td>
+						<td>
+							<input type="radio" name="msconf_enable_shipping" value="1" <?php if($msconf_enable_shipping == 1) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_yes; ?>
+							<input type="radio" name="msconf_enable_shipping" value="0" <?php if($msconf_enable_shipping == 0) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_no; ?>
+							<input type="radio" name="msconf_enable_shipping" value="2" <?php if($msconf_enable_shipping == 2) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_seller_select; ?>							
+					  	</td>
+					</tr>
+					
+					<tr>
+						<td>
+							<span><?php echo $ms_config_enable_quantities; ?></span>
+							<span class="help"><?php echo $ms_config_enable_quantities_note; ?></span>
+						</td>
+						<td>
+							<input type="radio" name="msconf_enable_quantities" value="1" <?php if($msconf_enable_quantities == 1) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_yes; ?>
+							<input type="radio" name="msconf_enable_quantities" value="0" <?php if($msconf_enable_quantities == 0) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_no; ?>
+							<input type="radio" name="msconf_enable_quantities" value="2" <?php if($msconf_enable_quantities == 2) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_shipping_dependent; ?>							
+					  	</td>
+					</tr>
+					
+					<tr>
+						<td>
+							<span><?php echo $ms_config_provide_buyerinfo; ?></span>
+							<span class="help"><?php echo $ms_config_provide_buyerinfo_note; ?></span>
+						</td>
+						<td>
+							<input type="radio" name="msconf_provide_buyerinfo" value="1" <?php if($msconf_provide_buyerinfo == 1) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_yes; ?>
+							<input type="radio" name="msconf_provide_buyerinfo" value="0" <?php if($msconf_provide_buyerinfo == 0) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_no; ?>
+							<input type="radio" name="msconf_provide_buyerinfo" value="2" <?php if($msconf_provide_buyerinfo == 2) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_shipping_dependent; ?>							
+					  	</td>
+					</tr>
+					
+					<tr>
+						  <td>
+						  		<span><?php echo $ms_config_product_options; ?></span>
+								<span class="help"><?php echo $ms_config_product_options_note; ?></span>
+						  </td>
+						  <td>
+						  	<div class="scrollbox">
+							  <?php $class = 'odd'; ?>
+							  <?php foreach ($options as $option) { ?>
+							  <?php if (!in_array($option['type'], array('checkbox','radio','select'))) continue; ?>
+							  <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+							  <div class="<?php echo $class; ?>">
+								<?php if (in_array($option['option_id'], $msconf_product_options)) { ?>
+								<input type="checkbox" name="msconf_product_options[]" value="<?php echo $option['option_id']; ?>" checked="checked" />
+								<?php echo $option['name']; ?>
+								<?php } else { ?>
+								<input type="checkbox" name="msconf_product_options[]" value="<?php echo $option['option_id']; ?>" />
+								<?php echo $option['name']; ?>
+								<?php } ?>
+							  </div>
+							  <?php } ?>
+							</div>
+						  </td>
+					</tr>
+					
+					<tr>
+						<td>
+							<span><?php echo $ms_config_enable_pdf_generator; ?></span>
+							<span class="help"><?php echo $ms_config_enable_pdf_generator_note; ?></span>
+						</td>
+						<td>
+							<input type="radio" name="msconf_enable_pdf_generator" value="1" <?php if($msconf_enable_pdf_generator == 1) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_yes; ?>
+							<input type="radio" name="msconf_enable_pdf_generator" value="0" <?php if($msconf_enable_pdf_generator == 0) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_no; ?>
+					  	</td>
+					</tr>					
+				</table>
+				</div>
+				<!-- END PRODUCT FORM TAB -->
+				
+			 	<!-- BEGIN FINANCES TAB -->
+			 	<div id="tab-finances">
+				<table class="form">
+					<tr>
+						  <td>
+						  		<span><?php echo $ms_config_credit_order_statuses; ?></span>
 								<span class="help"><?php echo $ms_config_credit_order_statuses_note; ?></span>
-			              </td>
-			              <td>
-			              	<div class="scrollbox">
-			                  <?php $class = 'odd'; ?>
-			                  <?php foreach ($order_statuses as $status) { ?>
-			                  <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
-			                  <div class="<?php echo $class; ?>">
-			                    <?php if (in_array($status['order_status_id'], $msconf_credit_order_statuses)) { ?>
-			                    <input type="checkbox" name="msconf_credit_order_statuses[]" value="<?php echo $status['order_status_id']; ?>" checked="checked" />
-			                    <?php echo $status['name']; ?>
-			                    <?php } else { ?>
-			                    <input type="checkbox" name="msconf_credit_order_statuses[]" value="<?php echo $status['order_status_id']; ?>" />
-			                    <?php echo $status['name']; ?>
-			                    <?php } ?>
-			                  </div>
-			                  <?php } ?>
-			                </div>
-			              </td>
-		            </tr>
-		            
-		            <tr>
-			              <td>
-			              		<span><?php echo $ms_config_debit_order_statuses; ?></span>
+						  </td>
+						  <td>
+						  	<div class="scrollbox">
+							  <?php $class = 'odd'; ?>
+							  <?php foreach ($order_statuses as $status) { ?>
+							  <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+							  <div class="<?php echo $class; ?>">
+								<?php if (in_array($status['order_status_id'], $msconf_credit_order_statuses)) { ?>
+								<input type="checkbox" name="msconf_credit_order_statuses[]" value="<?php echo $status['order_status_id']; ?>" checked="checked" />
+								<?php echo $status['name']; ?>
+								<?php } else { ?>
+								<input type="checkbox" name="msconf_credit_order_statuses[]" value="<?php echo $status['order_status_id']; ?>" />
+								<?php echo $status['name']; ?>
+								<?php } ?>
+							  </div>
+							  <?php } ?>
+							</div>
+						  </td>
+					</tr>
+					
+					<tr>
+						  <td>
+						  		<span><?php echo $ms_config_debit_order_statuses; ?></span>
 								<span class="help"><?php echo $ms_config_debit_order_statuses_note; ?></span>
-			              </td>
-			              <td>
-			              	<div class="scrollbox">
-			                  <?php $class = 'odd'; ?>
-			                  <?php foreach ($order_statuses as $status) { ?>
-			                  <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
-			                  <div class="<?php echo $class; ?>">
-			                    <?php if (in_array($status['order_status_id'], $msconf_debit_order_statuses)) { ?>
-			                    <input type="checkbox" name="msconf_debit_order_statuses[]" value="<?php echo $status['order_status_id']; ?>" checked="checked" />
-			                    <?php echo $status['name']; ?>
-			                    <?php } else { ?>
-			                    <input type="checkbox" name="msconf_debit_order_statuses[]" value="<?php echo $status['order_status_id']; ?>" />
-			                    <?php echo $status['name']; ?>
-			                    <?php } ?>
-			                  </div>
-			                  <?php } ?>
-			                </div>
-			              </td>
-		            </tr>
-		            
+						  </td>
+						  <td>
+						  	<div class="scrollbox">
+							  <?php $class = 'odd'; ?>
+							  <?php foreach ($order_statuses as $status) { ?>
+							  <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+							  <div class="<?php echo $class; ?>">
+								<?php if (in_array($status['order_status_id'], $msconf_debit_order_statuses)) { ?>
+								<input type="checkbox" name="msconf_debit_order_statuses[]" value="<?php echo $status['order_status_id']; ?>" checked="checked" />
+								<?php echo $status['name']; ?>
+								<?php } else { ?>
+								<input type="checkbox" name="msconf_debit_order_statuses[]" value="<?php echo $status['order_status_id']; ?>" />
+								<?php echo $status['name']; ?>
+								<?php } ?>
+							  </div>
+							  <?php } ?>
+							</div>
+						  </td>
+					</tr>
+									
+					<tr>
+						<td>
+							<span><?php echo $ms_config_allow_withdrawal_requests; ?></span>
+							<span class="help"><?php echo $ms_config_allow_withdrawal_requests; ?></span>
+						</td>
+						<td>
+							<input type="radio" name="msconf_allow_withdrawal_requests" value="1" <?php if($msconf_allow_withdrawal_requests == 1) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_yes; ?>
+							<input type="radio" name="msconf_allow_withdrawal_requests" value="0" <?php if($msconf_allow_withdrawal_requests == 0) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_no; ?>
+					  	</td>
+					</tr>
+
+					<tr>
+						  <td>
+						  		<span><?php echo $ms_config_withdrawal_waiting_period; ?></span>
+								<span class="help"><?php echo $ms_config_withdrawal_waiting_period_note; ?></span>
+						  </td>
+						  <td>
+						  	<input type="text" size="3" name="msconf_withdrawal_waiting_period" value="<?php echo $msconf_withdrawal_waiting_period; ?>" /><?php echo $ms_days; ?>
+						  </td>
+					</tr>
+
 					<tr>
 						<td>
 							<span><?php echo $ms_config_minimum_withdrawal; ?></span>
@@ -204,19 +437,19 @@
 						</td>
 					</tr>
 					
-		            <tr>
-		            	<td>
+					<tr>
+						<td>
 							<span><?php echo $ms_config_allow_partial_withdrawal; ?></span>
 							<span class="help"><?php echo $ms_config_allow_partial_withdrawal_note; ?></span>
 						</td>
-		            	<td>
-			                <input type="radio" name="msconf_allow_partial_withdrawal" value="1" <?php if($msconf_allow_partial_withdrawal == 1) { ?> checked="checked" <?php } ?>  />
-			                <?php echo $text_yes; ?>
-			                <input type="radio" name="msconf_allow_partial_withdrawal" value="0" <?php if($msconf_allow_partial_withdrawal == 0) { ?> checked="checked" <?php } ?>  />
-			                <?php echo $text_no; ?>
-		              	</td>
-		            </tr>
-		            
+						<td>
+							<input type="radio" name="msconf_allow_partial_withdrawal" value="1" <?php if($msconf_allow_partial_withdrawal == 1) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_yes; ?>
+							<input type="radio" name="msconf_allow_partial_withdrawal" value="0" <?php if($msconf_allow_partial_withdrawal == 0) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_no; ?>
+					  	</td>
+					</tr>
+
 					<tr>
 						<td>
 							<span><?php echo $ms_config_paypal_api_username; ?></span>
@@ -247,766 +480,575 @@
 						</td>
 					</tr>
 					
-		            <tr>
-		            	<td>
+					<tr>
+						<td>
 							<span><?php echo $ms_config_paypal_sandbox; ?></span>
 							<span class="help"><?php echo $ms_config_paypal_sandbox_note; ?></span>
 						</td>
-		            	<td>
-			                <input type="radio" name="msconf_paypal_sandbox" value="1" <?php if($msconf_paypal_sandbox == 1) { ?> checked="checked" <?php } ?>  />
-			                <?php echo $text_yes; ?>
-			                <input type="radio" name="msconf_paypal_sandbox" value="0" <?php if($msconf_paypal_sandbox == 0) { ?> checked="checked" <?php } ?>  />
-			                <?php echo $text_no; ?>
-		              	</td>
-		            </tr>					
-					
-		            <tr>
-		            	<td>
-							<span><?php echo $ms_config_allow_withdrawal_requests; ?></span>
-							<span class="help"><?php echo $ms_config_allow_withdrawal_requests; ?></span>
-						</td>
-		            	<td>
-			                <input type="radio" name="msconf_allow_withdrawal_requests" value="1" <?php if($msconf_allow_withdrawal_requests == 1) { ?> checked="checked" <?php } ?>  />
-			                <?php echo $text_yes; ?>
-			                <input type="radio" name="msconf_allow_withdrawal_requests" value="0" <?php if($msconf_allow_withdrawal_requests == 0) { ?> checked="checked" <?php } ?>  />
-			                <?php echo $text_no; ?>
-		              	</td>
-		            </tr>				
-		            
-					<tr>
 						<td>
-							<span><?php echo $ms_config_comments_maxlen; ?></span>
-							<span class="help"><?php echo $ms_config_comments_maxlen_note; ?></span>
-						</td>
-						<td>
-							<input type="text" name="msconf_comments_maxlen" value="<?php echo $msconf_comments_maxlen; ?>" size="3"/>
-						</td>
-					</tr>
+							<input type="radio" name="msconf_paypal_sandbox" value="1" <?php if($msconf_paypal_sandbox == 1) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_yes; ?>
+							<input type="radio" name="msconf_paypal_sandbox" value="0" <?php if($msconf_paypal_sandbox == 0) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_no; ?>
+					  	</td>
+					</tr>					
 				</table>
 				</div>
-				<!-- END GENERAL TAB -->
-				
-		     	<!-- BEGIN PRODUCT FORM TAB -->
-		     	<div id="tab-productform">
-				<table class="form">
-					<tr>
-						<td>
-							<span><?php echo $ms_config_minimum_product_price; ?></span>
-							<span class="help"><?php echo $ms_config_minimum_product_price_note; ?></span>
-						</td>
-						<td>
-							<input type="text" name="msconf_minimum_product_price" value="<?php echo $msconf_minimum_product_price; ?>" size="3"/>
-						</td>
-					</tr>		            
-		            
-		   			<tr>
-						<td>
-							<span><?php echo $ms_config_allow_free_products; ?></span>
-							<span class="help"><?php echo $ms_config_allow_free_products_note; ?></span>
-						</td>
-		            	<td>
-			                <input type="radio" name="msconf_allow_free_products" value="1" <?php if($msconf_allow_free_products == 1) { ?> checked="checked" <?php } ?>  />
-			                <?php echo $text_yes; ?>
-			                <input type="radio" name="msconf_allow_free_products" value="0" <?php if($msconf_allow_free_products == 0) { ?> checked="checked" <?php } ?>  />
-			                <?php echo $text_no; ?>
-		              	</td>
-					</tr>	         
-
-		   			<tr>
-						<td>
-							<span><?php echo $ms_config_allow_multiple_categories; ?></span>
-							<span class="help"><?php echo $ms_config_allow_multiple_categories_note; ?></span>
-						</td>
-		            	<td>
-			                <input type="radio" name="msconf_allow_multiple_categories" value="1" <?php if($msconf_allow_multiple_categories == 1) { ?> checked="checked" <?php } ?>  />
-			                <?php echo $text_yes; ?>
-			                <input type="radio" name="msconf_allow_multiple_categories" value="0" <?php if($msconf_allow_multiple_categories == 0) { ?> checked="checked" <?php } ?>  />
-			                <?php echo $text_no; ?>
-		              	</td>
-					</tr>	
-		            
-		            <tr>
-			              <td>
-			              		<span><?php echo $ms_config_allowed_image_types; ?></span>
-								<span class="help"><?php echo $ms_config_allowed_image_types_note; ?></span>
-			              </td>
-			              <td>
-			              	<input type="text" name="msconf_allowed_image_types" value="<?php echo $msconf_allowed_image_types; ?>" />
-			              </td>
-		            </tr>
-		            
-		            <tr>
-			              <td>
-			              		<span><?php echo $ms_config_allowed_download_types; ?></span>
-								<span class="help"><?php echo $ms_config_allowed_download_types_note; ?></span>
-			              </td>
-			              <td>
-			              	<input type="text" name="msconf_allowed_download_types" value="<?php echo $msconf_allowed_download_types; ?>" />
-			              </td>
-		            </tr>
-		            
-		            <tr>
-			              <td>
-			              		<span><?php echo $ms_config_images_limits; ?></span>
-								<span class="help"><?php echo $ms_config_images_limits_note; ?></span>
-			              </td>
-			              <td>
-			              	Min. <input type="text" name="msconf_images_limits[]" value="<?php echo $msconf_images_limits[0]; ?>" size="3" /> 
-			              	Max. <input type="text" name="msconf_images_limits[]" value="<?php echo $msconf_images_limits[1]; ?>" size="3" />
-			              </td>
-		            </tr>
-
-		            <tr>
-			              <td>
-			              		<span><?php echo $ms_config_downloads_limits; ?></span>
-								<span class="help"><?php echo $ms_config_downloads_limits_note; ?></span>
-			              </td>
-			              <td>
-			              	Min. <input type="text" name="msconf_downloads_limits[]" value="<?php echo $msconf_downloads_limits[0]; ?>" size="3" /> 
-			              	Max. <input type="text" name="msconf_downloads_limits[]" value="<?php echo $msconf_downloads_limits[1]; ?>" size="3" />
-			              </td>
-		            </tr>
-
-		            <tr>
-		            	<td>
-							<span><?php echo $ms_config_enable_shipping; ?></span>
-							<span class="help"><?php echo $ms_config_enable_shipping_note; ?></span>
-						</td>
-		            	<td>
-			                <input type="radio" name="msconf_enable_shipping" value="1" <?php if($msconf_enable_shipping == 1) { ?> checked="checked" <?php } ?>  />
-			                <?php echo $text_yes; ?>
-			                <input type="radio" name="msconf_enable_shipping" value="0" <?php if($msconf_enable_shipping == 0) { ?> checked="checked" <?php } ?>  />
-			                <?php echo $text_no; ?>
-			                <input type="radio" name="msconf_enable_shipping" value="2" <?php if($msconf_enable_shipping == 2) { ?> checked="checked" <?php } ?>  />
-			                <?php echo $text_seller_select; ?>			                
-		              	</td>
-		            </tr>
-					
-		            <tr>
-		            	<td>
-							<span><?php echo $ms_config_enable_quantities; ?></span>
-							<span class="help"><?php echo $ms_config_enable_quantities_note; ?></span>
-						</td>
-		            	<td>
-			                <input type="radio" name="msconf_enable_quantities" value="1" <?php if($msconf_enable_quantities == 1) { ?> checked="checked" <?php } ?>  />
-			                <?php echo $text_yes; ?>
-			                <input type="radio" name="msconf_enable_quantities" value="0" <?php if($msconf_enable_quantities == 0) { ?> checked="checked" <?php } ?>  />
-			                <?php echo $text_no; ?>
-			                <input type="radio" name="msconf_enable_quantities" value="2" <?php if($msconf_enable_quantities == 2) { ?> checked="checked" <?php } ?>  />
-			                <?php echo $text_shipping_dependent; ?>			                
-		              	</td>
-		            </tr>
-					
-		            <tr>
-		            	<td>
-							<span><?php echo $ms_config_provide_buyerinfo; ?></span>
-							<span class="help"><?php echo $ms_config_provide_buyerinfo_note; ?></span>
-						</td>
-		            	<td>
-			                <input type="radio" name="msconf_provide_buyerinfo" value="1" <?php if($msconf_provide_buyerinfo == 1) { ?> checked="checked" <?php } ?>  />
-			                <?php echo $text_yes; ?>
-			                <input type="radio" name="msconf_provide_buyerinfo" value="0" <?php if($msconf_provide_buyerinfo == 0) { ?> checked="checked" <?php } ?>  />
-			                <?php echo $text_no; ?>
-			                <input type="radio" name="msconf_provide_buyerinfo" value="2" <?php if($msconf_provide_buyerinfo == 2) { ?> checked="checked" <?php } ?>  />
-			                <?php echo $text_shipping_dependent; ?>			                
-		              	</td>
-		            </tr>
-		            
-		            <tr>
-			              <td>
-			              		<span><?php echo $ms_config_product_options; ?></span>
-								<span class="help"><?php echo $ms_config_product_options_note; ?></span>
-			              </td>
-			              <td>
-			              	<div class="scrollbox">
-			                  <?php $class = 'odd'; ?>
-			                  <?php foreach ($options as $option) { ?>
-			                  <?php if (!in_array($option['type'], array('checkbox','radio','select'))) continue; ?>
-			                  <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
-			                  <div class="<?php echo $class; ?>">
-			                    <?php if (in_array($option['option_id'], $msconf_product_options)) { ?>
-			                    <input type="checkbox" name="msconf_product_options[]" value="<?php echo $option['option_id']; ?>" checked="checked" />
-			                    <?php echo $option['name']; ?>
-			                    <?php } else { ?>
-			                    <input type="checkbox" name="msconf_product_options[]" value="<?php echo $option['option_id']; ?>" />
-			                    <?php echo $option['name']; ?>
-			                    <?php } ?>
-			                  </div>
-			                  <?php } ?>
-			                </div>
-			              </td>
-		            </tr>
-		            
-		            <tr>
-		            	<td>
-							<span><?php echo $ms_config_enable_pdf_generator; ?></span>
-							<span class="help"><?php echo $ms_config_enable_pdf_generator_note; ?></span>
-						</td>
-		            	<td>
-			                <input type="radio" name="msconf_enable_pdf_generator" value="1" <?php if($msconf_enable_pdf_generator == 1) { ?> checked="checked" <?php } ?>  />
-			                <?php echo $text_yes; ?>
-			                <input type="radio" name="msconf_enable_pdf_generator" value="0" <?php if($msconf_enable_pdf_generator == 0) { ?> checked="checked" <?php } ?>  />
-			                <?php echo $text_no; ?>
-		              	</td>
-		            </tr>		            
-				</table>
-				</div>
-				<!-- END PRODUCT FORM TAB -->
 				
 				<!-- BEGIN MODULES TAB -->
 				<div id="tab-modules">	
 					<div id="tabs-modules" class="htabs">
-			     		<a href="#tab-carousel"><?php echo $ms_config_carousel; ?></a>
-			     		<a href="#tab-sellerdropdown"><?php echo $ms_config_sellerdropdown; ?></a>			     		
-			     		<a href="#tab-topsellers"><?php echo $ms_config_topsellers; ?></a>
-			     		<a href="#tab-newsellers"><?php echo $ms_config_newsellers; ?></a>
-			     	</div>
-			     	
+				 		<a href="#tab-carousel"><?php echo $ms_config_carousel; ?></a>
+				 		<a href="#tab-sellerdropdown"><?php echo $ms_config_sellerdropdown; ?></a>				 		
+				 		<a href="#tab-topsellers"><?php echo $ms_config_topsellers; ?></a>
+				 		<a href="#tab-newsellers"><?php echo $ms_config_newsellers; ?></a>
+				 	</div>
+				 	
 					<!-- BEGIN CAROUSEL -->
 					<div id="tab-carousel">
-				      <table id="module" class="list">
-				        <thead>
-				          <tr>
-				            <td class="left"><?php echo $ms_config_layout; ?></td>
-				            <td class="left"><?php echo $ms_config_position; ?></td>		          
-				            <td class="left"><?php echo $ms_config_limit; ?></td>
-				            <td class="left"><?php echo $ms_config_scroll; ?></td>
-				            <td class="left"><?php echo $ms_config_image; ?></td>
-				            <td class="left"><?php echo $ms_config_status; ?></td>
-				            <td class="right"><?php echo $ms_config_sort_order; ?></td>
-				            <td></td>
-				          </tr>
-				        </thead>
-				        <tbody>
-				        
-				        <!-- sample row -->
+					  <table id="module" class="list">
+						<thead>
+						  <tr>
+							<td class="left"><?php echo $ms_config_layout; ?></td>
+							<td class="left"><?php echo $ms_config_position; ?></td>				  
+							<td class="left"><?php echo $ms_config_limit; ?></td>
+							<td class="left"><?php echo $ms_config_scroll; ?></td>
+							<td class="left"><?php echo $ms_config_image; ?></td>
+							<td class="left"><?php echo $ms_config_status; ?></td>
+							<td class="right"><?php echo $ms_config_sort_order; ?></td>
+							<td></td>
+						  </tr>
+						</thead>
+						<tbody>
+						
+						<!-- sample row -->
 						<tr class="ffSample">
-						    <td class="left">
-						    	<select name="ms_carousel_module[0][layout_id]">
-							        <?php foreach ($layouts as $layout) { ?>
-							        <option value="<?php echo $layout['layout_id']; ?>"><?php echo $layout['name']; ?></option>
-							        <?php } ?>
-						    	</select>
-						    </td>
-						    <td class="left">
-						    	<select name="ms_carousel_module[0][position]">
-							        <option value="content_top"><?php echo $ms_config_top; ?></option>
-							        <option value="content_bottom"><?php echo $ms_config_bottom; ?></option>
-							        <option value="column_left"><?php echo $ms_config_column_left; ?></option>
-							        <option value="column_right"><?php echo $ms_config_column_right; ?></option>
-						    	</select>
-						    </td>
-						    <td class="left">
-						    	<input type="text" name="ms_carousel_module[0][limit]" value="" size="1" />
-						    </td>
-						    <td class="left">
-						    	<input type="text" name="ms_carousel_module[0][scroll]" value="" size="3" />
-						    </td>
-						    <td class="left">
-						    	<input type="text" name="ms_carousel_module[0][width]" value="" size="3" />
+							<td class="left">
+								<select name="ms_carousel_module[0][layout_id]">
+									<?php foreach ($layouts as $layout) { ?>
+									<option value="<?php echo $layout['layout_id']; ?>"><?php echo $layout['name']; ?></option>
+									<?php } ?>
+								</select>
+							</td>
+							<td class="left">
+								<select name="ms_carousel_module[0][position]">
+									<option value="content_top"><?php echo $ms_config_top; ?></option>
+									<option value="content_bottom"><?php echo $ms_config_bottom; ?></option>
+									<option value="column_left"><?php echo $ms_config_column_left; ?></option>
+									<option value="column_right"><?php echo $ms_config_column_right; ?></option>
+								</select>
+							</td>
+							<td class="left">
+								<input type="text" name="ms_carousel_module[0][limit]" value="" size="1" />
+							</td>
+							<td class="left">
+								<input type="text" name="ms_carousel_module[0][scroll]" value="" size="3" />
+							</td>
+							<td class="left">
+								<input type="text" name="ms_carousel_module[0][width]" value="" size="3" />
 								<input type="text" name="ms_carousel_module[0][height]" value="" size="3" />
 							  	<span class="error"></span>
-						    </td>
-						    <td class="left">
-						    	<select name="ms_carousel_module[0][status]">
-						        	<option value="1" selected="selected"><?php echo $text_enabled; ?></option>
-						        	<option value="0"><?php echo $text_disabled; ?></option>
-						    	</select>
-						    </td>
-						    <td class="right">
-						    	<input type="text" name="ms_carousel_module[0][sort_order]" value="" size="3" />
-						    </td>
-						    <td class="left">
-						    	<a class="button ffRemove"><?php echo $button_remove; ?></a>
-						    </td>
-						</tr>		        
-				        <!-- /sample row -->
-				        
-				        <?php $row = 1; ?>
-				        <?php if (isset($ms_carousel_module) && is_array($ms_carousel_module)) { ?>
-				        <?php foreach ($ms_carousel_module as $module) { ?>
-				        <tr id="module-row<?php echo $row; ?>">
-				            <td class="left">
-				            	<select name="ms_carousel_module[<?php echo $row; ?>][layout_id]">
-					                <?php foreach ($layouts as $layout) { ?>
-					                <?php if ($layout['layout_id'] == $module['layout_id']) { ?>
-					                <option value="<?php echo $layout['layout_id']; ?>" selected="selected"><?php echo $layout['name']; ?></option>
-					                <?php } else { ?>
-					                <option value="<?php echo $layout['layout_id']; ?>"><?php echo $layout['name']; ?></option>
-					                <?php } ?>
-					                <?php } ?>
-				            	</select>
-				            </td>
-				            <td class="left">
-				           		<select name="ms_carousel_module[<?php echo $row; ?>][position]">
-					                <?php if ($module['position'] == 'content_top') { ?>
-					                <option value="content_top" selected="selected"><?php echo $ms_config_top; ?></option>
-					                <?php } else { ?>
-					                <option value="content_top"><?php echo $ms_config_top; ?></option>
-					                <?php } ?>
-					                <?php if ($module['position'] == 'content_bottom') { ?>
-					                <option value="content_bottom" selected="selected"><?php echo $ms_config_bottom; ?></option>
-					                <?php } else { ?>
-					                <option value="content_bottom"><?php echo $ms_config_bottom; ?></option>
-					                <?php } ?>
-					                <?php if ($module['position'] == 'column_left') { ?>
-					                <option value="column_left" selected="selected"><?php echo $ms_config_column_left; ?></option>
-					                <?php } else { ?>
-					                <option value="column_left"><?php echo $ms_config_column_left; ?></option>
-					                <?php } ?>
-					                <?php if ($module['position'] == 'column_right') { ?>
-					                <option value="column_right" selected="selected"><?php echo $ms_config_column_right; ?></option>
-					                <?php } else { ?>
-					                <option value="column_right"><?php echo $ms_config_column_right; ?></option>
-					                <?php } ?>
-				            	</select>
-				            </td>
-				            <td class="left">
-				            	<input type="text" name="ms_carousel_module[<?php echo $row; ?>][limit]" value="<?php echo $module['limit']; ?>" size="1" />
-				            </td>
-				            <td class="left">
-				            	<input type="text" name="ms_carousel_module[<?php echo $row; ?>][scroll]" value="<?php echo $module['scroll']; ?>" size="3" />
-				            </td>
-				            <td class="left">
-				            	<input type="text" name="ms_carousel_module[<?php echo $row; ?>][width]" value="<?php echo $module['width']; ?>" size="3" />
-				            	<input type="text" name="ms_carousel_module[<?php echo $row; ?>][height]" value="<?php echo $module['height']; ?>" size="3" />
-				            	<?php if (isset($error_image[$row])) { ?>
-				            	<span class="error"><?php echo $error_image[$row]; ?></span>
-				            	<?php } ?>
-				            </td>
-				            <td class="left">
-				            	<select name="ms_carousel_module[<?php echo $row; ?>][status]">
-					                <?php if ($module['status']) { ?>
-					                <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
-					                <option value="0"><?php echo $text_disabled; ?></option>
-					                <?php } else { ?>
-					                <option value="1"><?php echo $text_enabled; ?></option>
-					                <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
-					                <?php } ?>
-				            	</select>
-				            </td>
-				            <td class="right">
-				            	<input type="text" name="ms_carousel_module[<?php echo $row; ?>][sort_order]" value="<?php echo $module['sort_order']; ?>" size="3" />
-				            </td>
-				            <td class="left">
-				            	<a class="button ffRemove"><?php echo $button_remove; ?></a>
-				           	</td>
-				        </tr>
-				        <?php $row++; ?>
-				        <?php } ?>
-				        <?php } ?>
-				        </tbody>
-				        <tfoot>
-				          <tr>
-				            <td colspan="7"></td>
-				            <td class="left"><a class="button ffClone"><?php echo $button_add_module; ?></a></td>
-				          </tr>
-				        </tfoot>
-				      </table>
-				    </div>
-				    <!-- END CAROUSEL -->
-				    
-				    <!-- BEGIN TOPSELLERS -->
+							</td>
+							<td class="left">
+								<select name="ms_carousel_module[0][status]">
+									<option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+									<option value="0"><?php echo $text_disabled; ?></option>
+								</select>
+							</td>
+							<td class="right">
+								<input type="text" name="ms_carousel_module[0][sort_order]" value="" size="3" />
+							</td>
+							<td class="left">
+								<a class="button ffRemove"><?php echo $button_remove; ?></a>
+							</td>
+						</tr>				
+						<!-- /sample row -->
+						
+						<?php $row = 1; ?>
+						<?php if (isset($ms_carousel_module) && is_array($ms_carousel_module)) { ?>
+						<?php foreach ($ms_carousel_module as $module) { ?>
+						<tr id="module-row<?php echo $row; ?>">
+							<td class="left">
+								<select name="ms_carousel_module[<?php echo $row; ?>][layout_id]">
+									<?php foreach ($layouts as $layout) { ?>
+									<?php if ($layout['layout_id'] == $module['layout_id']) { ?>
+									<option value="<?php echo $layout['layout_id']; ?>" selected="selected"><?php echo $layout['name']; ?></option>
+									<?php } else { ?>
+									<option value="<?php echo $layout['layout_id']; ?>"><?php echo $layout['name']; ?></option>
+									<?php } ?>
+									<?php } ?>
+								</select>
+							</td>
+							<td class="left">
+						   		<select name="ms_carousel_module[<?php echo $row; ?>][position]">
+									<?php if ($module['position'] == 'content_top') { ?>
+									<option value="content_top" selected="selected"><?php echo $ms_config_top; ?></option>
+									<?php } else { ?>
+									<option value="content_top"><?php echo $ms_config_top; ?></option>
+									<?php } ?>
+									<?php if ($module['position'] == 'content_bottom') { ?>
+									<option value="content_bottom" selected="selected"><?php echo $ms_config_bottom; ?></option>
+									<?php } else { ?>
+									<option value="content_bottom"><?php echo $ms_config_bottom; ?></option>
+									<?php } ?>
+									<?php if ($module['position'] == 'column_left') { ?>
+									<option value="column_left" selected="selected"><?php echo $ms_config_column_left; ?></option>
+									<?php } else { ?>
+									<option value="column_left"><?php echo $ms_config_column_left; ?></option>
+									<?php } ?>
+									<?php if ($module['position'] == 'column_right') { ?>
+									<option value="column_right" selected="selected"><?php echo $ms_config_column_right; ?></option>
+									<?php } else { ?>
+									<option value="column_right"><?php echo $ms_config_column_right; ?></option>
+									<?php } ?>
+								</select>
+							</td>
+							<td class="left">
+								<input type="text" name="ms_carousel_module[<?php echo $row; ?>][limit]" value="<?php echo $module['limit']; ?>" size="1" />
+							</td>
+							<td class="left">
+								<input type="text" name="ms_carousel_module[<?php echo $row; ?>][scroll]" value="<?php echo $module['scroll']; ?>" size="3" />
+							</td>
+							<td class="left">
+								<input type="text" name="ms_carousel_module[<?php echo $row; ?>][width]" value="<?php echo $module['width']; ?>" size="3" />
+								<input type="text" name="ms_carousel_module[<?php echo $row; ?>][height]" value="<?php echo $module['height']; ?>" size="3" />
+								<?php if (isset($error_image[$row])) { ?>
+								<span class="error"><?php echo $error_image[$row]; ?></span>
+								<?php } ?>
+							</td>
+							<td class="left">
+								<select name="ms_carousel_module[<?php echo $row; ?>][status]">
+									<?php if ($module['status']) { ?>
+									<option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+									<option value="0"><?php echo $text_disabled; ?></option>
+									<?php } else { ?>
+									<option value="1"><?php echo $text_enabled; ?></option>
+									<option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+									<?php } ?>
+								</select>
+							</td>
+							<td class="right">
+								<input type="text" name="ms_carousel_module[<?php echo $row; ?>][sort_order]" value="<?php echo $module['sort_order']; ?>" size="3" />
+							</td>
+							<td class="left">
+								<a class="button ffRemove"><?php echo $button_remove; ?></a>
+						   	</td>
+						</tr>
+						<?php $row++; ?>
+						<?php } ?>
+						<?php } ?>
+						</tbody>
+						<tfoot>
+						  <tr>
+							<td colspan="7"></td>
+							<td class="left"><a class="button ffClone"><?php echo $button_add_module; ?></a></td>
+						  </tr>
+						</tfoot>
+					  </table>
+					</div>
+					<!-- END CAROUSEL -->
+					
+					<!-- BEGIN TOPSELLERS -->
 					<div id="tab-topsellers">
-				      <table class="list">
-				        <thead>
-				          <tr>
-				            <td class="left"><?php echo $ms_config_layout; ?></td>
-				            <td class="left"><?php echo $ms_config_position; ?></td>		          
-				            <td class="left"><?php echo $ms_config_limit; ?></td>
-				            <td class="left"><?php echo $ms_config_image; ?></td>				            
-				            <td class="left"><?php echo $ms_config_status; ?></td>
-				            <td class="right"><?php echo $ms_config_sort_order; ?></td>
-				            <td></td>
-				          </tr>
-				        </thead>
+					  <table class="list">
+						<thead>
+						  <tr>
+							<td class="left"><?php echo $ms_config_layout; ?></td>
+							<td class="left"><?php echo $ms_config_position; ?></td>				  
+							<td class="left"><?php echo $ms_config_limit; ?></td>
+							<td class="left"><?php echo $ms_config_image; ?></td>							
+							<td class="left"><?php echo $ms_config_status; ?></td>
+							<td class="right"><?php echo $ms_config_sort_order; ?></td>
+							<td></td>
+						  </tr>
+						</thead>
 		
 						<tbody>
-				        <!-- sample row -->
-				        <tr class="ffSample">
-				            <td class="left">
-				            	<select name="ms_topsellers_module[0][layout_id]">
-					                <?php foreach ($layouts as $layout) { ?>
-					                <option value="<?php echo $layout['layout_id']; ?>"><?php echo $layout['name']; ?></option>
-					                <?php } ?>
-				            	</select>
-				            </td>
-				            <td class="left">
-				            	<select name="ms_topsellers_module[0][position]">
-					                <option value="content_top"><?php echo $ms_config_top; ?></option>
-					                <option value="content_bottom"><?php echo $ms_config_bottom; ?></option>
-					                <option value="column_left"><?php echo $ms_config_column_left; ?></option>
-					                <option value="column_right"><?php echo $ms_config_column_right; ?></option>
-				            	</select>
-				            </td>		          
-				            <td class="left">
-				            	<input type="text" name="ms_topsellers_module[0][limit]" value="" size="1" />
-				            </td>
-						    <td class="left">
-						    	<input type="text" name="ms_topsellers_module[0][width]" value="" size="3" />
+						<!-- sample row -->
+						<tr class="ffSample">
+							<td class="left">
+								<select name="ms_topsellers_module[0][layout_id]">
+									<?php foreach ($layouts as $layout) { ?>
+									<option value="<?php echo $layout['layout_id']; ?>"><?php echo $layout['name']; ?></option>
+									<?php } ?>
+								</select>
+							</td>
+							<td class="left">
+								<select name="ms_topsellers_module[0][position]">
+									<option value="content_top"><?php echo $ms_config_top; ?></option>
+									<option value="content_bottom"><?php echo $ms_config_bottom; ?></option>
+									<option value="column_left"><?php echo $ms_config_column_left; ?></option>
+									<option value="column_right"><?php echo $ms_config_column_right; ?></option>
+								</select>
+							</td>				  
+							<td class="left">
+								<input type="text" name="ms_topsellers_module[0][limit]" value="" size="1" />
+							</td>
+							<td class="left">
+								<input type="text" name="ms_topsellers_module[0][width]" value="" size="3" />
 								<input type="text" name="ms_topsellers_module[0][height]" value="" size="3" />
 							  	<span class="error"></span>
-						    </td>				            
-				            <td class="left">
-				            	<select name="ms_topsellers_module[0][status]">
-				                	<option value="1" selected="selected"><?php echo $text_enabled; ?></option>
-				                	<option value="0"><?php echo $text_disabled; ?></option>
-				              	</select>
-				            </td>
-				            <td class="right">
-				            	<input type="text" name="ms_topsellers_module[0][sort_order]" value="" size="3" />
-				            </td>
-				            <td class="left">
-				            	<a class="button ffRemove"><?php echo $button_remove; ?></a>
-				            </td>
-				          </tr>
-				        <!-- /sample row -->
+							</td>							
+							<td class="left">
+								<select name="ms_topsellers_module[0][status]">
+									<option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+									<option value="0"><?php echo $text_disabled; ?></option>
+							  	</select>
+							</td>
+							<td class="right">
+								<input type="text" name="ms_topsellers_module[0][sort_order]" value="" size="3" />
+							</td>
+							<td class="left">
+								<a class="button ffRemove"><?php echo $button_remove; ?></a>
+							</td>
+						  </tr>
+						<!-- /sample row -->
 		
-				        <?php $row = 1; ?>
-				        <?php if (isset($ms_topsellers_module) && is_array($ms_topsellers_module)) { ?>
-				        <?php foreach ($ms_topsellers_module as $module) { ?>
-				        <tr>
-				            <td class="left">
-					            <select name="ms_topsellers_module[<?php echo $row; ?>][layout_id]">
-					                <?php foreach ($layouts as $layout) { ?>
-					                <?php if ($layout['layout_id'] == $module['layout_id']) { ?>
-					                <option value="<?php echo $layout['layout_id']; ?>" selected="selected"><?php echo $layout['name']; ?></option>
-					                <?php } else { ?>
-					                <option value="<?php echo $layout['layout_id']; ?>"><?php echo $layout['name']; ?></option>
-					                <?php } ?>
-					                <?php } ?>
-					            </select>
-				            </td>
-				            <td class="left">
-				           		<select name="ms_topsellers_module[<?php echo $row; ?>][position]">
-					                <?php if ($module['position'] == 'content_top') { ?>
-					                <option value="content_top" selected="selected"><?php echo $ms_config_top; ?></option>
-					                <?php } else { ?>
-					                <option value="content_top"><?php echo $ms_config_top; ?></option>
-					                <?php } ?>
-					                <?php if ($module['position'] == 'content_bottom') { ?>
-					                <option value="content_bottom" selected="selected"><?php echo $ms_config_bottom; ?></option>
-					                <?php } else { ?>
-					                <option value="content_bottom"><?php echo $ms_config_bottom; ?></option>
-					                <?php } ?>
-					                <?php if ($module['position'] == 'column_left') { ?>
-					                <option value="column_left" selected="selected"><?php echo $ms_config_column_left; ?></option>
-					                <?php } else { ?>
-					                <option value="column_left"><?php echo $ms_config_column_left; ?></option>
-					                <?php } ?>
-					                <?php if ($module['position'] == 'column_right') { ?>
-					                <option value="column_right" selected="selected"><?php echo $ms_config_column_right; ?></option>
-					                <?php } else { ?>
-					                <option value="column_right"><?php echo $ms_config_column_right; ?></option>
-					                <?php } ?>
-				                </select>
-				            </td>		          
-				            <td class="left">
-				            	<input type="text" name="ms_topsellers_module[<?php echo $row; ?>][limit]" value="<?php echo $module['limit']; ?>" size="1" />
-				            </td>
-				            <td class="left">
-				            	<input type="text" name="ms_topsellers_module[<?php echo $row; ?>][width]" value="<?php echo $module['width']; ?>" size="3" />
-				            	<input type="text" name="ms_topsellers_module[<?php echo $row; ?>][height]" value="<?php echo $module['height']; ?>" size="3" />
-				            	<?php if (isset($error_image[$row])) { ?>
-				            	<span class="error"><?php echo $error_image[$row]; ?></span>
-				            	<?php } ?>
-				            </td>				            
-				            <td class="left">
-				            	<select name="ms_topsellers_module[<?php echo $row; ?>][status]">
-					                <?php if ($module['status']) { ?>
-					                <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
-					                <option value="0"><?php echo $text_disabled; ?></option>
-					                <?php } else { ?>
-					                <option value="1"><?php echo $text_enabled; ?></option>
-					                <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
-					                <?php } ?>
-				            	</select>
-				            </td>
-				            <td class="right">
-				            	<input type="text" name="ms_topsellers_module[<?php echo $row; ?>][sort_order]" value="<?php echo $module['sort_order']; ?>" size="3" />
-				            </td>
-				            <td class="left">
-				            	<a class="button ffRemove"><?php echo $button_remove; ?></a>
-				            </td>
-				        </tr>
-				        <?php $row++; ?>
-				        <?php } ?>
-				        <?php } ?>
-				        </tbody>
-				        
-				        <tfoot>
-				          <tr>
-				            <td colspan="6"></td>
-				            <td class="left">
-				            	<a class="button ffClone"><?php echo $button_add_module; ?></a>
-				            </td>
-				          </tr>
-				        </tfoot>
-				      </table>
-				    </div>
-				    <!-- END TOPSELLERS -->
-				    
-				    <!-- BEGIN SELLERS DROPDOWN -->
+						<?php $row = 1; ?>
+						<?php if (isset($ms_topsellers_module) && is_array($ms_topsellers_module)) { ?>
+						<?php foreach ($ms_topsellers_module as $module) { ?>
+						<tr>
+							<td class="left">
+								<select name="ms_topsellers_module[<?php echo $row; ?>][layout_id]">
+									<?php foreach ($layouts as $layout) { ?>
+									<?php if ($layout['layout_id'] == $module['layout_id']) { ?>
+									<option value="<?php echo $layout['layout_id']; ?>" selected="selected"><?php echo $layout['name']; ?></option>
+									<?php } else { ?>
+									<option value="<?php echo $layout['layout_id']; ?>"><?php echo $layout['name']; ?></option>
+									<?php } ?>
+									<?php } ?>
+								</select>
+							</td>
+							<td class="left">
+						   		<select name="ms_topsellers_module[<?php echo $row; ?>][position]">
+									<?php if ($module['position'] == 'content_top') { ?>
+									<option value="content_top" selected="selected"><?php echo $ms_config_top; ?></option>
+									<?php } else { ?>
+									<option value="content_top"><?php echo $ms_config_top; ?></option>
+									<?php } ?>
+									<?php if ($module['position'] == 'content_bottom') { ?>
+									<option value="content_bottom" selected="selected"><?php echo $ms_config_bottom; ?></option>
+									<?php } else { ?>
+									<option value="content_bottom"><?php echo $ms_config_bottom; ?></option>
+									<?php } ?>
+									<?php if ($module['position'] == 'column_left') { ?>
+									<option value="column_left" selected="selected"><?php echo $ms_config_column_left; ?></option>
+									<?php } else { ?>
+									<option value="column_left"><?php echo $ms_config_column_left; ?></option>
+									<?php } ?>
+									<?php if ($module['position'] == 'column_right') { ?>
+									<option value="column_right" selected="selected"><?php echo $ms_config_column_right; ?></option>
+									<?php } else { ?>
+									<option value="column_right"><?php echo $ms_config_column_right; ?></option>
+									<?php } ?>
+								</select>
+							</td>				  
+							<td class="left">
+								<input type="text" name="ms_topsellers_module[<?php echo $row; ?>][limit]" value="<?php echo $module['limit']; ?>" size="1" />
+							</td>
+							<td class="left">
+								<input type="text" name="ms_topsellers_module[<?php echo $row; ?>][width]" value="<?php echo $module['width']; ?>" size="3" />
+								<input type="text" name="ms_topsellers_module[<?php echo $row; ?>][height]" value="<?php echo $module['height']; ?>" size="3" />
+								<?php if (isset($error_image[$row])) { ?>
+								<span class="error"><?php echo $error_image[$row]; ?></span>
+								<?php } ?>
+							</td>							
+							<td class="left">
+								<select name="ms_topsellers_module[<?php echo $row; ?>][status]">
+									<?php if ($module['status']) { ?>
+									<option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+									<option value="0"><?php echo $text_disabled; ?></option>
+									<?php } else { ?>
+									<option value="1"><?php echo $text_enabled; ?></option>
+									<option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+									<?php } ?>
+								</select>
+							</td>
+							<td class="right">
+								<input type="text" name="ms_topsellers_module[<?php echo $row; ?>][sort_order]" value="<?php echo $module['sort_order']; ?>" size="3" />
+							</td>
+							<td class="left">
+								<a class="button ffRemove"><?php echo $button_remove; ?></a>
+							</td>
+						</tr>
+						<?php $row++; ?>
+						<?php } ?>
+						<?php } ?>
+						</tbody>
+						
+						<tfoot>
+						  <tr>
+							<td colspan="6"></td>
+							<td class="left">
+								<a class="button ffClone"><?php echo $button_add_module; ?></a>
+							</td>
+						  </tr>
+						</tfoot>
+					  </table>
+					</div>
+					<!-- END TOPSELLERS -->
+					
+					<!-- BEGIN SELLERS DROPDOWN -->
 					<div id="tab-sellerdropdown">
-				      <table class="list">
-				        <thead>
-				          <tr>
-				            <td class="left"><?php echo $ms_config_layout; ?></td>
-				            <td class="left"><?php echo $ms_config_position; ?></td>		          
-				            <td class="left"><?php echo $ms_config_status; ?></td>
-				            <td class="right"><?php echo $ms_config_sort_order; ?></td>
-				            <td></td>
-				          </tr>
-				        </thead>
+					  <table class="list">
+						<thead>
+						  <tr>
+							<td class="left"><?php echo $ms_config_layout; ?></td>
+							<td class="left"><?php echo $ms_config_position; ?></td>				  
+							<td class="left"><?php echo $ms_config_status; ?></td>
+							<td class="right"><?php echo $ms_config_sort_order; ?></td>
+							<td></td>
+						  </tr>
+						</thead>
 		
 						<tbody>
-				        <!-- sample row -->
-				        <tr class="ffSample">
-				            <td class="left">
-				            	<select name="ms_sellerdropdown_module[0][layout_id]">
-					                <?php foreach ($layouts as $layout) { ?>
-					                <option value="<?php echo $layout['layout_id']; ?>"><?php echo $layout['name']; ?></option>
-					                <?php } ?>
-				            	</select>
-				            </td>
-				            <td class="left">
-				            	<select name="ms_sellerdropdown_module[0][position]">
-					                <option value="content_top"><?php echo $ms_config_top; ?></option>
-					                <option value="content_bottom"><?php echo $ms_config_bottom; ?></option>
-					                <option value="column_left"><?php echo $ms_config_column_left; ?></option>
-					                <option value="column_right"><?php echo $ms_config_column_right; ?></option>
-				            	</select>
-				            </td>		          
-				            <td class="left">
-				            	<select name="ms_sellerdropdown_module[0][status]">
-				                	<option value="1" selected="selected"><?php echo $text_enabled; ?></option>
-				                	<option value="0"><?php echo $text_disabled; ?></option>
-				              	</select>
-				            </td>
-				            <td class="right">
-				            	<input type="text" name="ms_sellerdropdown_module[0][sort_order]" value="" size="3" />
-				            </td>
-				            <td class="left">
-				            	<a class="button ffRemove"><?php echo $button_remove; ?></a>
-				            </td>
-				          </tr>
-				        <!-- /sample row -->
+						<!-- sample row -->
+						<tr class="ffSample">
+							<td class="left">
+								<select name="ms_sellerdropdown_module[0][layout_id]">
+									<?php foreach ($layouts as $layout) { ?>
+									<option value="<?php echo $layout['layout_id']; ?>"><?php echo $layout['name']; ?></option>
+									<?php } ?>
+								</select>
+							</td>
+							<td class="left">
+								<select name="ms_sellerdropdown_module[0][position]">
+									<option value="content_top"><?php echo $ms_config_top; ?></option>
+									<option value="content_bottom"><?php echo $ms_config_bottom; ?></option>
+									<option value="column_left"><?php echo $ms_config_column_left; ?></option>
+									<option value="column_right"><?php echo $ms_config_column_right; ?></option>
+								</select>
+							</td>				  
+							<td class="left">
+								<select name="ms_sellerdropdown_module[0][status]">
+									<option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+									<option value="0"><?php echo $text_disabled; ?></option>
+							  	</select>
+							</td>
+							<td class="right">
+								<input type="text" name="ms_sellerdropdown_module[0][sort_order]" value="" size="3" />
+							</td>
+							<td class="left">
+								<a class="button ffRemove"><?php echo $button_remove; ?></a>
+							</td>
+						  </tr>
+						<!-- /sample row -->
 		
-				        <?php $row = 1; ?>
-				        <?php if (isset($ms_sellerdropdown_module) && is_array($ms_sellerdropdown_module)) { ?>
-				        <?php foreach ($ms_sellerdropdown_module as $module) { ?>
-				        <tr>
-				            <td class="left">
-					            <select name="ms_sellerdropdown_module[<?php echo $row; ?>][layout_id]">
-					                <?php foreach ($layouts as $layout) { ?>
-					                <?php if ($layout['layout_id'] == $module['layout_id']) { ?>
-					                <option value="<?php echo $layout['layout_id']; ?>" selected="selected"><?php echo $layout['name']; ?></option>
-					                <?php } else { ?>
-					                <option value="<?php echo $layout['layout_id']; ?>"><?php echo $layout['name']; ?></option>
-					                <?php } ?>
-					                <?php } ?>
-					            </select>
-				            </td>
-				            <td class="left">
-				           		<select name="ms_sellerdropdown_module[<?php echo $row; ?>][position]">
-					                <?php if ($module['position'] == 'content_top') { ?>
-					                <option value="content_top" selected="selected"><?php echo $ms_config_top; ?></option>
-					                <?php } else { ?>
-					                <option value="content_top"><?php echo $ms_config_top; ?></option>
-					                <?php } ?>
-					                <?php if ($module['position'] == 'content_bottom') { ?>
-					                <option value="content_bottom" selected="selected"><?php echo $ms_config_bottom; ?></option>
-					                <?php } else { ?>
-					                <option value="content_bottom"><?php echo $ms_config_bottom; ?></option>
-					                <?php } ?>
-					                <?php if ($module['position'] == 'column_left') { ?>
-					                <option value="column_left" selected="selected"><?php echo $ms_config_column_left; ?></option>
-					                <?php } else { ?>
-					                <option value="column_left"><?php echo $ms_config_column_left; ?></option>
-					                <?php } ?>
-					                <?php if ($module['position'] == 'column_right') { ?>
-					                <option value="column_right" selected="selected"><?php echo $ms_config_column_right; ?></option>
-					                <?php } else { ?>
-					                <option value="column_right"><?php echo $ms_config_column_right; ?></option>
-					                <?php } ?>
-				                </select>
-				            </td>		          
-				            <td class="left">
-				            	<select name="ms_sellerdropdown_module[<?php echo $row; ?>][status]">
-					                <?php if ($module['status']) { ?>
-					                <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
-					                <option value="0"><?php echo $text_disabled; ?></option>
-					                <?php } else { ?>
-					                <option value="1"><?php echo $text_enabled; ?></option>
-					                <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
-					                <?php } ?>
-				            	</select>
-				            </td>
-				            <td class="right">
-				            	<input type="text" name="ms_sellerdropdown_module[<?php echo $row; ?>][sort_order]" value="<?php echo $module['sort_order']; ?>" size="3" />
-				            </td>
-				            <td class="left">
-				            	<a class="button ffRemove"><?php echo $button_remove; ?></a>
-				            </td>
-				        </tr>
-				        <?php $row++; ?>
-				        <?php } ?>
-				        <?php } ?>
-				        </tbody>
-				        
-				        <tfoot>
-				          <tr>
-				            <td colspan="4"></td>
-				            <td class="left">
-				            	<a class="button ffClone"><?php echo $button_add_module; ?></a>
-				            </td>
-				          </tr>
-				        </tfoot>
-				      </table>
-				    </div>
-				    <!-- END RANDOM SELLERS -->
-				    
-				    <!-- BEGIN NEW SELLERS -->
+						<?php $row = 1; ?>
+						<?php if (isset($ms_sellerdropdown_module) && is_array($ms_sellerdropdown_module)) { ?>
+						<?php foreach ($ms_sellerdropdown_module as $module) { ?>
+						<tr>
+							<td class="left">
+								<select name="ms_sellerdropdown_module[<?php echo $row; ?>][layout_id]">
+									<?php foreach ($layouts as $layout) { ?>
+									<?php if ($layout['layout_id'] == $module['layout_id']) { ?>
+									<option value="<?php echo $layout['layout_id']; ?>" selected="selected"><?php echo $layout['name']; ?></option>
+									<?php } else { ?>
+									<option value="<?php echo $layout['layout_id']; ?>"><?php echo $layout['name']; ?></option>
+									<?php } ?>
+									<?php } ?>
+								</select>
+							</td>
+							<td class="left">
+						   		<select name="ms_sellerdropdown_module[<?php echo $row; ?>][position]">
+									<?php if ($module['position'] == 'content_top') { ?>
+									<option value="content_top" selected="selected"><?php echo $ms_config_top; ?></option>
+									<?php } else { ?>
+									<option value="content_top"><?php echo $ms_config_top; ?></option>
+									<?php } ?>
+									<?php if ($module['position'] == 'content_bottom') { ?>
+									<option value="content_bottom" selected="selected"><?php echo $ms_config_bottom; ?></option>
+									<?php } else { ?>
+									<option value="content_bottom"><?php echo $ms_config_bottom; ?></option>
+									<?php } ?>
+									<?php if ($module['position'] == 'column_left') { ?>
+									<option value="column_left" selected="selected"><?php echo $ms_config_column_left; ?></option>
+									<?php } else { ?>
+									<option value="column_left"><?php echo $ms_config_column_left; ?></option>
+									<?php } ?>
+									<?php if ($module['position'] == 'column_right') { ?>
+									<option value="column_right" selected="selected"><?php echo $ms_config_column_right; ?></option>
+									<?php } else { ?>
+									<option value="column_right"><?php echo $ms_config_column_right; ?></option>
+									<?php } ?>
+								</select>
+							</td>				  
+							<td class="left">
+								<select name="ms_sellerdropdown_module[<?php echo $row; ?>][status]">
+									<?php if ($module['status']) { ?>
+									<option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+									<option value="0"><?php echo $text_disabled; ?></option>
+									<?php } else { ?>
+									<option value="1"><?php echo $text_enabled; ?></option>
+									<option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+									<?php } ?>
+								</select>
+							</td>
+							<td class="right">
+								<input type="text" name="ms_sellerdropdown_module[<?php echo $row; ?>][sort_order]" value="<?php echo $module['sort_order']; ?>" size="3" />
+							</td>
+							<td class="left">
+								<a class="button ffRemove"><?php echo $button_remove; ?></a>
+							</td>
+						</tr>
+						<?php $row++; ?>
+						<?php } ?>
+						<?php } ?>
+						</tbody>
+						
+						<tfoot>
+						  <tr>
+							<td colspan="4"></td>
+							<td class="left">
+								<a class="button ffClone"><?php echo $button_add_module; ?></a>
+							</td>
+						  </tr>
+						</tfoot>
+					  </table>
+					</div>
+					<!-- END RANDOM SELLERS -->
+					
+					<!-- BEGIN NEW SELLERS -->
 					<div id="tab-newsellers">
-				      <table class="list">
-				        <thead>
-				          <tr>
-				            <td class="left"><?php echo $ms_config_layout; ?></td>
-				            <td class="left"><?php echo $ms_config_position; ?></td>		          
-				            <td class="left"><?php echo $ms_config_limit; ?></td>
-				            <td class="left"><?php echo $ms_config_image; ?></td>				            
-				            <td class="left"><?php echo $ms_config_status; ?></td>
-				            <td class="right"><?php echo $ms_config_sort_order; ?></td>
-				            <td></td>
-				          </tr>
-				        </thead>
+					  <table class="list">
+						<thead>
+						  <tr>
+							<td class="left"><?php echo $ms_config_layout; ?></td>
+							<td class="left"><?php echo $ms_config_position; ?></td>				  
+							<td class="left"><?php echo $ms_config_limit; ?></td>
+							<td class="left"><?php echo $ms_config_image; ?></td>							
+							<td class="left"><?php echo $ms_config_status; ?></td>
+							<td class="right"><?php echo $ms_config_sort_order; ?></td>
+							<td></td>
+						  </tr>
+						</thead>
 		
 						<tbody>
-				        <!-- sample row -->
-				        <tr class="ffSample">
-				            <td class="left">
-				            	<select name="ms_newsellers_module[0][layout_id]">
-					                <?php foreach ($layouts as $layout) { ?>
-					                <option value="<?php echo $layout['layout_id']; ?>"><?php echo $layout['name']; ?></option>
-					                <?php } ?>
-				            	</select>
-				            </td>
-				            <td class="left">
-				            	<select name="ms_newsellers_module[0][position]">
-					                <option value="content_top"><?php echo $ms_config_top; ?></option>
-					                <option value="content_bottom"><?php echo $ms_config_bottom; ?></option>
-					                <option value="column_left"><?php echo $ms_config_column_left; ?></option>
-					                <option value="column_right"><?php echo $ms_config_column_right; ?></option>
-				            	</select>
-				            </td>		          
-				            <td class="left">
-				            	<input type="text" name="ms_newsellers_module[0][limit]" value="" size="1" />
-				            </td>
-						    <td class="left">
-						    	<input type="text" name="ms_newsellers_module[0][width]" value="" size="3" />
+						<!-- sample row -->
+						<tr class="ffSample">
+							<td class="left">
+								<select name="ms_newsellers_module[0][layout_id]">
+									<?php foreach ($layouts as $layout) { ?>
+									<option value="<?php echo $layout['layout_id']; ?>"><?php echo $layout['name']; ?></option>
+									<?php } ?>
+								</select>
+							</td>
+							<td class="left">
+								<select name="ms_newsellers_module[0][position]">
+									<option value="content_top"><?php echo $ms_config_top; ?></option>
+									<option value="content_bottom"><?php echo $ms_config_bottom; ?></option>
+									<option value="column_left"><?php echo $ms_config_column_left; ?></option>
+									<option value="column_right"><?php echo $ms_config_column_right; ?></option>
+								</select>
+							</td>				  
+							<td class="left">
+								<input type="text" name="ms_newsellers_module[0][limit]" value="" size="1" />
+							</td>
+							<td class="left">
+								<input type="text" name="ms_newsellers_module[0][width]" value="" size="3" />
 								<input type="text" name="ms_newsellers_module[0][height]" value="" size="3" />
 							  	<span class="error"></span>
-						    </td>				            
-				            <td class="left">
-				            	<select name="ms_newsellers_module[0][status]">
-				                	<option value="1" selected="selected"><?php echo $text_enabled; ?></option>
-				                	<option value="0"><?php echo $text_disabled; ?></option>
-				              	</select>
-				            </td>
-				            <td class="right">
-				            	<input type="text" name="ms_newsellers_module[0][sort_order]" value="" size="3" />
-				            </td>
-				            <td class="left">
-				            	<a class="button ffRemove"><?php echo $button_remove; ?></a>
-				            </td>
-				          </tr>
-				        <!-- /sample row -->
+							</td>							
+							<td class="left">
+								<select name="ms_newsellers_module[0][status]">
+									<option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+									<option value="0"><?php echo $text_disabled; ?></option>
+							  	</select>
+							</td>
+							<td class="right">
+								<input type="text" name="ms_newsellers_module[0][sort_order]" value="" size="3" />
+							</td>
+							<td class="left">
+								<a class="button ffRemove"><?php echo $button_remove; ?></a>
+							</td>
+						  </tr>
+						<!-- /sample row -->
 		
-				        <?php $row = 1; ?>
-				        <?php if (isset($ms_newsellers_module) && is_array($ms_newsellers_module)) { ?>
-				        <?php foreach ($ms_newsellers_module as $module) { ?>
-				        <tr>
-				            <td class="left">
-					            <select name="ms_newsellers_module[<?php echo $row; ?>][layout_id]">
-					                <?php foreach ($layouts as $layout) { ?>
-					                <?php if ($layout['layout_id'] == $module['layout_id']) { ?>
-					                <option value="<?php echo $layout['layout_id']; ?>" selected="selected"><?php echo $layout['name']; ?></option>
-					                <?php } else { ?>
-					                <option value="<?php echo $layout['layout_id']; ?>"><?php echo $layout['name']; ?></option>
-					                <?php } ?>
-					                <?php } ?>
-					            </select>
-				            </td>
-				            <td class="left">
-				           		<select name="ms_newsellers_module[<?php echo $row; ?>][position]">
-					                <?php if ($module['position'] == 'content_top') { ?>
-					                <option value="content_top" selected="selected"><?php echo $ms_config_top; ?></option>
-					                <?php } else { ?>
-					                <option value="content_top"><?php echo $ms_config_top; ?></option>
-					                <?php } ?>
-					                <?php if ($module['position'] == 'content_bottom') { ?>
-					                <option value="content_bottom" selected="selected"><?php echo $ms_config_bottom; ?></option>
-					                <?php } else { ?>
-					                <option value="content_bottom"><?php echo $ms_config_bottom; ?></option>
-					                <?php } ?>
-					                <?php if ($module['position'] == 'column_left') { ?>
-					                <option value="column_left" selected="selected"><?php echo $ms_config_column_left; ?></option>
-					                <?php } else { ?>
-					                <option value="column_left"><?php echo $ms_config_column_left; ?></option>
-					                <?php } ?>
-					                <?php if ($module['position'] == 'column_right') { ?>
-					                <option value="column_right" selected="selected"><?php echo $ms_config_column_right; ?></option>
-					                <?php } else { ?>
-					                <option value="column_right"><?php echo $ms_config_column_right; ?></option>
-					                <?php } ?>
-				                </select>
-				            </td>		          
-				            <td class="left">
-				            	<input type="text" name="ms_newsellers_module[<?php echo $row; ?>][limit]" value="<?php echo $module['limit']; ?>" size="1" />
-				            </td>
-				            <td class="left">
-				            	<input type="text" name="ms_newsellers_module[<?php echo $row; ?>][width]" value="<?php echo $module['width']; ?>" size="3" />
-				            	<input type="text" name="ms_newsellers_module[<?php echo $row; ?>][height]" value="<?php echo $module['height']; ?>" size="3" />
-				            	<?php if (isset($error_image[$row])) { ?>
-				            	<span class="error"><?php echo $error_image[$row]; ?></span>
-				            	<?php } ?>
-				            </td>				            
-				            <td class="left">
-				            	<select name="ms_newsellers_module[<?php echo $row; ?>][status]">
-					                <?php if ($module['status']) { ?>
-					                <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
-					                <option value="0"><?php echo $text_disabled; ?></option>
-					                <?php } else { ?>
-					                <option value="1"><?php echo $text_enabled; ?></option>
-					                <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
-					                <?php } ?>
-				            	</select>
-				            </td>
-				            <td class="right">
-				            	<input type="text" name="ms_newsellers_module[<?php echo $row; ?>][sort_order]" value="<?php echo $module['sort_order']; ?>" size="3" />
-				            </td>
-				            <td class="left">
-				            	<a class="button ffRemove"><?php echo $button_remove; ?></a>
-				            </td>
-				        </tr>
-				        <?php $row++; ?>
-				        <?php } ?>
-				        <?php } ?>
-				        </tbody>
-				        
-				        <tfoot>
-				          <tr>
-				            <td colspan="6"></td>
-				            <td class="left">
-				            	<a class="button ffClone"><?php echo $button_add_module; ?></a>
-				            </td>
-				          </tr>
-				        </tfoot>
-				      </table>
-				    </div>
-				    <!-- END NEW SELLERS -->
+						<?php $row = 1; ?>
+						<?php if (isset($ms_newsellers_module) && is_array($ms_newsellers_module)) { ?>
+						<?php foreach ($ms_newsellers_module as $module) { ?>
+						<tr>
+							<td class="left">
+								<select name="ms_newsellers_module[<?php echo $row; ?>][layout_id]">
+									<?php foreach ($layouts as $layout) { ?>
+									<?php if ($layout['layout_id'] == $module['layout_id']) { ?>
+									<option value="<?php echo $layout['layout_id']; ?>" selected="selected"><?php echo $layout['name']; ?></option>
+									<?php } else { ?>
+									<option value="<?php echo $layout['layout_id']; ?>"><?php echo $layout['name']; ?></option>
+									<?php } ?>
+									<?php } ?>
+								</select>
+							</td>
+							<td class="left">
+						   		<select name="ms_newsellers_module[<?php echo $row; ?>][position]">
+									<?php if ($module['position'] == 'content_top') { ?>
+									<option value="content_top" selected="selected"><?php echo $ms_config_top; ?></option>
+									<?php } else { ?>
+									<option value="content_top"><?php echo $ms_config_top; ?></option>
+									<?php } ?>
+									<?php if ($module['position'] == 'content_bottom') { ?>
+									<option value="content_bottom" selected="selected"><?php echo $ms_config_bottom; ?></option>
+									<?php } else { ?>
+									<option value="content_bottom"><?php echo $ms_config_bottom; ?></option>
+									<?php } ?>
+									<?php if ($module['position'] == 'column_left') { ?>
+									<option value="column_left" selected="selected"><?php echo $ms_config_column_left; ?></option>
+									<?php } else { ?>
+									<option value="column_left"><?php echo $ms_config_column_left; ?></option>
+									<?php } ?>
+									<?php if ($module['position'] == 'column_right') { ?>
+									<option value="column_right" selected="selected"><?php echo $ms_config_column_right; ?></option>
+									<?php } else { ?>
+									<option value="column_right"><?php echo $ms_config_column_right; ?></option>
+									<?php } ?>
+								</select>
+							</td>				  
+							<td class="left">
+								<input type="text" name="ms_newsellers_module[<?php echo $row; ?>][limit]" value="<?php echo $module['limit']; ?>" size="1" />
+							</td>
+							<td class="left">
+								<input type="text" name="ms_newsellers_module[<?php echo $row; ?>][width]" value="<?php echo $module['width']; ?>" size="3" />
+								<input type="text" name="ms_newsellers_module[<?php echo $row; ?>][height]" value="<?php echo $module['height']; ?>" size="3" />
+								<?php if (isset($error_image[$row])) { ?>
+								<span class="error"><?php echo $error_image[$row]; ?></span>
+								<?php } ?>
+							</td>							
+							<td class="left">
+								<select name="ms_newsellers_module[<?php echo $row; ?>][status]">
+									<?php if ($module['status']) { ?>
+									<option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+									<option value="0"><?php echo $text_disabled; ?></option>
+									<?php } else { ?>
+									<option value="1"><?php echo $text_enabled; ?></option>
+									<option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+									<?php } ?>
+								</select>
+							</td>
+							<td class="right">
+								<input type="text" name="ms_newsellers_module[<?php echo $row; ?>][sort_order]" value="<?php echo $module['sort_order']; ?>" size="3" />
+							</td>
+							<td class="left">
+								<a class="button ffRemove"><?php echo $button_remove; ?></a>
+							</td>
+						</tr>
+						<?php $row++; ?>
+						<?php } ?>
+						<?php } ?>
+						</tbody>
+						
+						<tfoot>
+						  <tr>
+							<td colspan="6"></td>
+							<td class="left">
+								<a class="button ffClone"><?php echo $button_add_module; ?></a>
+							</td>
+						  </tr>
+						</tfoot>
+					  </table>
+					</div>
+					<!-- END NEW SELLERS -->
 				</div>
-		    	<!-- END MODULES TAB -->
+				<!-- END MODULES TAB -->
 			</form>
 		</div>
 	</div>
@@ -1039,7 +1081,7 @@ $('body').delegate("a.ffClone", "click", function() {
 
 $(function() {
 	$("#saveSettings").click(function() {
-	    $.ajax({
+		$.ajax({
 			type: "POST",
 			dataType: "json",
 			url: 'index.php?route=module/multiseller/savesettings&token=<?php echo $token; ?>',
@@ -1048,15 +1090,15 @@ $(function() {
 				if (jsonData.errors) {
 					$("#error").html('');
 					for (error in jsonData.errors) {
-					    if (!jsonData.errors.hasOwnProperty(error)) {
-					        continue;
-					    }
-					    $("#error").append('<p>'+jsonData.errors[error]+'</p>');
+						if (!jsonData.errors.hasOwnProperty(error)) {
+							continue;
+						}
+						$("#error").append('<p>'+jsonData.errors[error]+'</p>');
 					}				
 				} else {
 					window.location.reload();
 				}
-	       	}
+		   	}
 		});
 	});
 });

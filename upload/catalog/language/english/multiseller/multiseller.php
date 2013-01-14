@@ -26,6 +26,8 @@ $_['ms_update']      = 'Update';
 
 
 $_['ms_button_submit']      = 'Submit';
+$_['ms_button_add_special']      = 'Define a new special price';
+$_['ms_button_add_discount']      = 'Define a new quantity discount';
 $_['ms_button_generate']      = 'Generate images from PDF';
 $_['ms_button_regenerate']      = 'Regenerate images';
 $_['ms_button_submit_request']      = 'Submit request';
@@ -242,6 +244,10 @@ $_['ms_account_withdraw']       = 'Request earnings';
 $_['ms_account_newproduct_heading']      = 'New Product';
 $_['ms_account_newproduct_breadcrumbs']       = 'New Product';
 
+$_['ms_account_product_tab_general']      = 'General';
+$_['ms_account_product_tab_specials']      = 'Special prices';
+$_['ms_account_product_tab_discounts']      = 'Quantity discounts';
+
 $_['ms_account_product_name_description']    = 'Name & Description';
 $_['ms_account_product_name']    = 'Name';
 $_['ms_account_product_name_note']    = 'Specify a name for your product';
@@ -274,6 +280,10 @@ $_['ms_account_product_message']     = 'Message';
 $_['ms_account_product_message_note']    = 'Your message to the reviewer';
 
 $_['ms_account_product_download_pages']     = 'Pages:';
+
+$_['ms_account_product_priority']     = 'Priority';
+$_['ms_account_product_date_start']     = 'Start date';
+$_['ms_account_product_date_end']     = 'End date';
 
 // Account - Edit product
 
@@ -363,6 +373,7 @@ $_['ms_account_products_breadcrumbs']       = 'Your Products';
 $_['ms_account_products_product']      = 'Product';
 $_['ms_account_products_publish']       = 'Published';
 $_['ms_account_products_sales']      = 'Sales';
+$_['ms_account_products_earnings']      = 'Earnings';
 $_['ms_account_products_status']       = 'Status';
 $_['ms_account_products_date']       = 'Date added';
 $_['ms_account_products_action']       = 'Action';
@@ -377,6 +388,7 @@ $_['ms_account_transactions_heading']      = 'Your Transactions';
 $_['ms_account_transactions_breadcrumbs']       = 'Your Transactions';
 
 $_['ms_account_transactions_balance']      = 'Your current balance:';
+$_['ms_account_transactions_earnings']      = 'Your earnings to date:';
 $_['ms_account_transactions_date_created']      = 'Date created';
 $_['ms_account_transactions_date_modified']      = 'Date modified';
 $_['ms_account_transactions_description']       = 'Description';
@@ -392,7 +404,8 @@ $_['ms_account_withdraw_breadcrumbs']       = 'Request Earnings';
 $_['ms_account_withdraw_balance']      = 'Your current balance:';
 $_['ms_account_withdraw_balance_available']      = 'Available for withdrawal:';
 $_['ms_account_withdraw_minimum']      = 'Minimum withdrawal amount:';
-$_['ms_account_balance_reserved_formatted']      = '(-%s reserved)';
+$_['ms_account_balance_reserved_formatted']      = '-%s pending withdrawal';
+$_['ms_account_balance_waiting_formatted']      = '-%s waiting period';
 
 
 $_['ms_account_withdraw_amount']      = 'Amount:';

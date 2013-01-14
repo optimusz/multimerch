@@ -206,6 +206,18 @@ class MsProduct extends Model {
 		return $attribute_data;
 	}	
 	
+	public function getProductSpecials($product_id) {
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_special WHERE product_id = '" . (int)$product_id . "' ORDER BY priority, price");
+		
+		return $query->rows;
+	}
+	
+	public function getProductDiscounts($product_id) {
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_discount WHERE product_id = '" . (int)$product_id . "' ORDER BY quantity, priority, price");
+		
+		return $query->rows;
+	}
+
 	public function getProductThumbnail($product_id) {
 		$query = $this->db->query("SELECT image FROM " . DB_PREFIX . "product WHERE product_id = '" . (int)$product_id . "'");
 		
@@ -287,7 +299,7 @@ class MsProduct extends Model {
 			$sql = "INSERT INTO " . DB_PREFIX . "product_to_category
 					SET product_id = " . (int)$product_id . ",
 						category_id = " . (int)$category_id;
-			$this->db->query($sql);		
+			$this->db->query($sql);
 		}
 
 		$sql = "INSERT INTO " . DB_PREFIX . "product_to_store
@@ -327,6 +339,18 @@ class MsProduct extends Model {
 						$this->db->query("INSERT INTO " . DB_PREFIX . "ms_product_attribute SET product_id = '" . (int)$product_id . "', option_id = '" . (int)$option_id . "', option_value_id = '" . (int)$option_value_id . "'");
 					}
 				}
+			}
+		}
+
+		if (isset($data['product_specials'])) {
+			foreach ($data['product_specials'] as $product_special) {
+				$this->db->query("INSERT INTO " . DB_PREFIX . "product_special SET product_id = '" . (int)$product_id . "', customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "', priority = '" . (int)$product_special['priority'] . "', price = '" . (float)$product_special['price'] . "', date_start = '" . $this->db->escape($product_special['date_start']) . "', date_end = '" . $this->db->escape($product_special['date_end']) . "'");
+			}
+		}
+
+		if (isset($data['product_discounts'])) {
+			foreach ($data['product_discounts'] as $product_discount) {
+				$this->db->query("INSERT INTO " . DB_PREFIX . "product_discount SET product_id = '" . (int)$product_id . "', customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "', quantity = '" . (int)$product_discount['quantity'] . "', priority = '" . (int)$product_discount['priority'] . "', price = '" . (float)$product_discount['price'] . "', date_start = '" . $this->db->escape($product_discount['date_start']) . "', date_end = '" . $this->db->escape($product_discount['date_end']) . "'");
 			}
 		}
 
@@ -525,6 +549,23 @@ class MsProduct extends Model {
 			}
 		}
 		
+		
+		// specials
+		$this->db->query("DELETE FROM " . DB_PREFIX . "product_special WHERE product_id = '" . (int)$product_id . "'");
+		if (isset($data['product_specials'])) {
+			foreach ($data['product_specials'] as $product_special) {
+				$this->db->query("INSERT INTO " . DB_PREFIX . "product_special SET product_id = '" . (int)$product_id . "', customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "', priority = '" . (int)$product_special['priority'] . "', price = '" . (float)$product_special['price'] . "', date_start = '" . $this->db->escape($product_special['date_start']) . "', date_end = '" . $this->db->escape($product_special['date_end']) . "'");
+			}
+		}		
+		
+		// discounts
+		$this->db->query("DELETE FROM " . DB_PREFIX . "product_discount WHERE product_id = '" . (int)$product_id . "'");
+		if (isset($data['product_discounts'])) {
+			foreach ($data['product_discounts'] as $product_discount) {
+				$this->db->query("INSERT INTO " . DB_PREFIX . "product_discount SET product_id = '" . (int)$product_id . "', customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "', quantity = '" . (int)$product_discount['quantity'] . "', priority = '" . (int)$product_discount['priority'] . "', price = '" . (float)$product_discount['price'] . "', date_start = '" . $this->db->escape($product_discount['date_start']) . "', date_end = '" . $this->db->escape($product_discount['date_end']) . "'");
+			}
+		}		
+		
 		$this->registry->get('cache')->delete('product');
 		
 		return $product_id;		
@@ -670,7 +711,9 @@ class MsProduct extends Model {
 		// todo validate order parameters
 		$sql = "SELECT  p.product_id as 'product_id',
 						p.image as 'p.image',
+						p.price as 'p.price',
 						pd.name as 'pd.name',
+						ms.seller_id as 'seller_id',
 						ms.nickname as 'ms.nickname',
 						mp.product_status as 'mp.product_status',
 						mp.product_approved as 'mp.product_approved',
@@ -771,10 +814,32 @@ class MsProduct extends Model {
 	
 	public function createRecord($product_id, $data) {
 		$sql = "INSERT IGNORE INTO " . DB_PREFIX . "ms_product
-				SET	product_id =  " . (int)$product_id
+				SET	product_id =  " . (int)$product_id . ",
+					product_status = " . (int)MsProduct::STATUS_INACTIVE
 				. (isset($data['seller_id']) ? ", seller_id =  " .  (int)$data['seller_id'] : '');
 		
 		$res = $this->db->query($sql);
+	}
+	
+	public function getSaleData($product_id) {
+		$sql = "SELECT SUM(op.quantity) AS quantity,
+					   SUM(op.total + op.total * op.tax / 100) AS total
+				FROM " . DB_PREFIX . "order_product op
+				LEFT JOIN `" . DB_PREFIX . "order` o
+					ON (op.order_id = o.order_id)
+				WHERE op.product_id = " . (int)$product_id;
+		
+		$res = $this->db->query($sql);
+		return $res->row;
+	}
+	
+	public function changeSeller($product_id, $seller_id) {
+		$sql = "UPDATE " . DB_PREFIX . "ms_product
+				SET	seller_id =  " . (int)$seller_id . "
+				WHERE product_id = " . (int)$product_id;
+		var_dump($sql);
+		$res = $this->db->query($sql);
+		$this->registry->get('cache')->delete('product');
 	}
 }
 ?>

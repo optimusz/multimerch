@@ -110,6 +110,7 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 			
 			//$result['total_earnings'] = $this->currency->format($this->MsLoader->MsSeller->getEarningsForSeller($result['seller_id']), $this->config->get('config_currency'));
 			$result['current_balance'] = $this->currency->format($this->MsLoader->MsBalance->getSellerBalance($result['seller_id']), $this->config->get('config_currency'));
+			$result['earnings'] = $this->currency->format($this->MsLoader->MsSeller->getTotalEarnings($result['seller_id']), $this->config->get('config_currency'));
 			$result['total_sales'] = $this->MsLoader->MsSeller->getSalesForSeller($result['seller_id']);
 			$result['status'] = $this->MsLoader->MsSeller->getStatusText($result['ms.seller_status']);
 			$result['actions'][] = array(

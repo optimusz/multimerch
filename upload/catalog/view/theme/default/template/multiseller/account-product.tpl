@@ -23,7 +23,9 @@
 	<thead>
 	<tr>
 		<td class="left"><?php echo $ms_account_products_product; ?></td>
+		<td class="center"><?php echo $ms_account_product_price; ?></td>
 		<td class="center"><?php echo $ms_account_products_sales; ?></td>
+		<td class="center"><?php echo $ms_account_products_earnings; ?></td>
 		<td class="center"><?php echo $ms_account_products_status; ?></td>
 		<td class="center"><?php echo $ms_account_products_date; ?></td>
 		<td class="center" style="width: 150px"><?php echo $ms_account_products_action; ?></td>
@@ -35,8 +37,23 @@
 	<?php foreach ($products  as $product) { ?>
 	<tr>
 		<td class="left"><?php echo $product['pd.name']; ?></td>
+		<td class="center">
+		<?php if ($product['special']) { ?>
+			<span style="text-decoration: line-through;"><?php echo $product['p.price']; ?></span><br/>
+			<span style="color: #b00;"><?php echo $product['special']; ?></span>
+		<?php } else { ?>
+			<?php echo $product['p.price']; ?>
+		<?php } ?>
+		</td>
 		<td class="center"><?php echo $product['mp.number_sold']; ?></td>
-		<td class="center"><?php echo $product['status_text']; ?></td>
+		<td class="center"><?php echo $product['mp.total_earnings']; ?></td>
+		<td>
+			<?php if ($product['mp.product_status'] == MsProduct::STATUS_ACTIVE) { ?> 
+			<span style="color: #080;"><?php echo $product['status_text']; ?></td></span>
+			<?php } else { ?>
+			<span style="color: #b00;"><?php echo $product['status_text']; ?></td></span>
+			<?php } ?>
+		</td>
 		<td class="center"><?php echo $product['p.date_created']; ?></td>
 		<td class="right">
 			<?php if (isset($product['view_link'])) { ?>

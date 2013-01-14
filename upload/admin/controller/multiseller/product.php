@@ -11,6 +11,16 @@ class ControllerMultisellerProduct extends ControllerMultisellerBase {
 		
 		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
 
+		$this->data['sellers'] = $this->MsLoader->MsSeller->getSellers(
+			array(
+				'seller_status' => array(MsSeller::STATUS_ACTIVE, MsSeller::STATUS_INACTIVE)
+			),
+			array(
+				'order_by'  => 'ms.nickname',
+				'order_way' => 'ASC'			
+			)
+		);
+
 		$results = $this->MsLoader->MsProduct->getProducts(
 			array(),
 			array (
@@ -45,7 +55,8 @@ class ControllerMultisellerProduct extends ControllerMultisellerBase {
 				'mp.product_status' => $result['mp.product_status'],
 				'status_text' => $this->MsLoader->MsProduct->getStatusText($result['mp.product_status']),
 				'action' => $action,
-				'product_id' => $result['product_id']
+				'product_id' => $result['product_id'],
+				'seller_id' => $result['seller_id']
 			);
 		}
 		
@@ -149,6 +160,30 @@ class ControllerMultisellerProduct extends ControllerMultisellerBase {
 		} else {
 			//$this->session->data['error'] = 'Error changing product status.';
 		}
-	}	
+	}
+	
+	public function jxProductSeller() {
+		$this->validate(__FUNCTION__);
+		$product_id = $this->request->get['product_id'];
+		$seller = $this->MsLoader->MsSeller->getSeller($this->request->get['seller_id']);
+		$this->MsLoader->MsProduct->createRecord($product_id);
+		$this->MsLoader->MsProduct->changeSeller($product_id, $this->request->get['seller_id']);
+		switch($seller['ms.seller_status']) {
+			case MsSeller::STATUS_INACTIVE:
+				$this->MsLoader->MsProduct->changeStatus($product_id, MsProduct::STATUS_INACTIVE);
+				$this->MsLoader->MsProduct->disapprove($product_id);			
+				break;
+			case MsSeller::STATUS_DISABLED:
+				$this->MsLoader->MsProduct->changeStatus($product_id, MsProduct::STATUS_DISABLED);
+				$this->MsLoader->MsProduct->disapprove($product_id);			
+				break;
+			case MsSeller::STATUS_DELETED:
+				$this->MsLoader->MsProduct->changeStatus($product_id, MsProduct::STATUS_DELETED);
+				$this->MsLoader->MsProduct->disapprove($product_id);			
+				break;
+			default:
+				break;
+		}
+	}
 }
 ?>

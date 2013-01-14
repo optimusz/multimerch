@@ -6,6 +6,8 @@ $_['ms_disabled']      = 'Disabled';
 $_['ms_apply']      = 'Apply';
 $_['ms_approved']      = 'Approved';
 
+$_['ms_days'] = 'days';
+
 $_['ms_status_active'] = 'Active';
 $_['ms_status_inactive'] = 'Inactive';
 $_['ms_status_published'] = 'Published';
@@ -17,8 +19,6 @@ $_['ms_error_directory'] = "Warning: Could not create directory: %s. Please crea
 $_['ms_error_directory_notwritable'] = "Warning: Directory already exists and is not writable: %s. Please make sure it's empty and make it server-writable before proceeding. <br />";
 $_['ms_error_directory_exists'] = "Warning: Directory already exists: %s. Please make sure it's empty before proceeding. <br />";
 $_['ms_error_product_publish'] = 'Failed to publish some products: seller account not active.';
-
-
 
 $_['ms_success_installed']      = 'Extension successfully installed';
 $_['ms_success_product_status']      = 'Successfully changed product status.';
@@ -205,10 +205,20 @@ $_['ms_config_product_options_note'] = 'Enable product options on new product pa
 $_['ms_config_seller_terms_page'] = 'Seller account terms';
 $_['ms_config_seller_terms_page_note'] = 'Sellers have to agree to the terms when creating a seller account.';
 
+$_['ms_config_allow_specials'] = 'Allow special prices';
+$_['ms_config_allow_specials_note'] = 'Allow sellers to define special prices';
+
+$_['ms_config_allow_discounts'] = 'Allow quantity discounts';
+$_['ms_config_allow_discounts_note'] = 'Allow sellers to define quantity discounts';
+
+$_['ms_config_withdrawal_waiting_period'] = 'Withdrawal waiting period';
+$_['ms_config_withdrawal_waiting_period_note'] = 'Seller balance entries newer than this value will not be available for withdrawal';
+
 $_['ms_config_carousel']       = 'Seller carousel';
 $_['ms_config_topsellers']       = 'Top sellers';
 $_['ms_config_modules']       = 'Modules';
 $_['ms_config_productform']       = 'Product form';
+$_['ms_config_finances']       = 'Finances';
 $_['ms_config_newsellers']       = 'New sellers';
 $_['ms_config_sellerdropdown']       = 'Seller dropdown';
 
@@ -281,7 +291,8 @@ $_['ms_error_seller_group_default'] = 'Error: Default seller group can not be de
 // Finances - Withdrawals
 $_['ms_finances_withdrawals_heading'] = 'Withdrawals';
 $_['ms_finances_withdrawals_breadcrumbs'] = 'Withdrawals';
-
+$_['ms_withdrawal_pending'] = 'Total pending';
+$_['ms_withdrawal_paid'] = 'Total paid out';
 
 // Finances - Transactions
 $_['ms_finances_transactions_heading'] = 'Transactions';

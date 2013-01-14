@@ -26,17 +26,19 @@
 		    border: 1px solid #000000;
       	}
       </style>
+		<?php echo $ms_withdrawal_pending; ?>: <b><?php echo $amount_pending;?></b><br />
+		<?php echo $ms_withdrawal_paid; ?>: <b><?php echo $amount_paid;?></b><br /><br />
       <form action="" method="post" enctype="multipart/form-data" id="form">
         <table class="list" style="text-align: center">
           <thead>
             <tr>
               	<td width="1" style="text-align: center;"><input type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);" /></td>
-				<td><?php echo $ms_seller; ?></a></td>
-				<td><?php echo $ms_amount; ?></a></td>
-				<td><?php echo $ms_date_created; ?></a></td>
-				<td><?php echo $ms_status; ?></a></td>				
-				<td><?php echo $ms_processed_by; ?></a></td>
-				<td><?php echo $ms_date_processed; ?></a></td>
+				<td><?php echo $ms_seller; ?></td>
+				<td><?php echo $ms_amount; ?></td>
+				<td><?php echo $ms_date_created; ?></td>
+				<td><?php echo $ms_status; ?></td>				
+				<td><?php echo $ms_processed_by; ?></td>
+				<td><?php echo $ms_date_processed; ?></td>
             </tr>
           </thead>
           <tbody>

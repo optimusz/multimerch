@@ -77,6 +77,19 @@ class MsWithdrawal extends Model {
 		$res = $this->db->query($sql);
 
 		return $res->row['total'];
-	}	
+	}
+	
+	public function getTotalAmount($data) {
+		$sql = "SELECT SUM(amount) as 'total'
+				FROM " . DB_PREFIX . "ms_withdrawal
+				WHERE 1 = 1 "
+				. (isset($data['seller_id']) ? " AND seller_id =  " .  (int)$data['seller_id'] : '')
+				. (isset($data['currency_id']) ? " AND seller_id =  " .  (int)$data['currency_id'] : '')				
+				. (isset($data['withdrawal_status']) ? " AND withdrawal_status IN  (" .  $this->db->escape(implode(',', $data['withdrawal_status'])) . ")" : '');
+				
+		$res = $this->db->query($sql);
+
+		return $res->row['total'];		
+	}
 }
 ?>

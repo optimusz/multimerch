@@ -347,6 +347,16 @@ final class MsSeller extends Model {
 			MsSeller::STATUS_DELETED => $this->language->get('ms_status_deleted')
 		);
 	}
+	
+	public function getTotalEarnings($seller_id) {
+		$sql = "SELECT SUM(seller_net_amt) as total
+				FROM `" . DB_PREFIX . "ms_order_product_data`
+				WHERE seller_id = " . (int)$seller_id;
+		
+		$res = $this->db->query($sql);
+		
+		return $res->row['total'];
+	}
 }
 
 ?>

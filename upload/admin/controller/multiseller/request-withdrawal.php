@@ -5,6 +5,14 @@ class ControllerMultisellerRequestWithdrawal extends ControllerMultisellerBase {
 		$this->validate(__FUNCTION__);
 		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
 		
+		$this->data['amount_pending'] = $this->currency->format($this->MsLoader->MsWithdrawal->getTotalAmount(array(
+			'withdrawal_status' => array(MsWithdrawal::STATUS_PENDING)
+		)), $this->config->get('config_currency'));
+		
+		$this->data['amount_paid'] = $this->currency->format($this->MsLoader->MsWithdrawal->getTotalAmount(array(
+			'withdrawal_status' => array(MsWithdrawal::STATUS_PAID, MsWithdrawal::STATUS_MARKEDASPAID)
+		)), $this->config->get('config_currency'));		
+		
 		$sort = array(
 			'order_by'  => 'mw.date_created',
 			'order_way' => 'DESC',

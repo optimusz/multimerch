@@ -65,7 +65,15 @@
               </td>
               <td><img src="<?php echo $product['p.image']; ?>" /></td>
               <td><?php echo $product['pd.name']; ?></td>
-              <td><?php echo $product['ms.nickname']; ?></td>
+              <td>
+              	<select>
+              		<option value="0">--No seller--</option>
+              		<?php foreach($sellers as $s) { ?>
+              		<option value="<?php echo $s['seller_id']; ?>" <?php if ($s['seller_id'] == $product['seller_id']) { ?>selected="selected"<?php } ?>><?php echo $s['ms.nickname']; ?></option>
+              		<?php } ?>
+              	</select>
+              	<span class="ms-assign-seller" style="background-image: url('view/image/success.png'); width: 16px; height: 16px; display: inline-block; cursor: pointer; vertical-align: middle" title="Save" />
+              </td>
               <td>
               	<?php echo $this->MsLoader->MsProduct->getStatusText($product['mp.product_status']); ?>
               </td>
@@ -93,6 +101,23 @@
 <script type="text/javascript"><!--
 $(document).ready(function() {
 	$('#date').datepicker({dateFormat: 'yy-mm-dd'});
+	
+	$(".ms-assign-seller").click(function() {
+		var button = $(this);
+		var product_id = button.parents('tr').children('td:first').find('input:checkbox').val();
+		var seller_id = button.prev('select').find('option:selected').val();
+		$(this).hide().before('<img src="view/image/loading.gif" alt="" />');
+	    $.ajax({
+			type: "POST",
+			//dataType: "json",
+			url: 'index.php?route=multiseller/product/jxProductSeller&product_id='+ product_id +'&seller_id='+ seller_id +'&token=<?php echo $token; ?>',
+			success: function(jsonData) {
+				button.show().prev().remove();
+				button.parents('td').effect("highlight", {color: '#BBDF8D'}, 2000);
+			}
+		});
+	});
+	
 	$("#ms-bulk-apply").click(function() {
 		if ($('#form tbody input:checkbox:checked').length == 0)
 			return;

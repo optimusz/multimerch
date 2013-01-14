@@ -257,6 +257,7 @@
 						}
 					}
 				} else if (in_array($order_status_id, $this->config->get('msconf_debit_order_statuses'))) {
+				foreach ($order_product_query->rows as $order_product) {
 					$refund_balance_entry = $this->MsLoader->MsBalance->getBalanceEntry(
 						array(
 							'seller_id' => $this->MsLoader->MsProduct->getSellerId($order_product['product_id']),
@@ -295,6 +296,7 @@
 						}
 						
 					}
+				}
 				}
 			]]></add>
 		</operation>
@@ -548,9 +550,11 @@
 			$this->language->load('multiseller/multiseller');
 			if (in_array($data['order_status_id'], $this->config->get('msconf_credit_order_statuses'))) {
 				foreach ($ms_order_product_query->rows as $order_product) {
+					$seller_id = $this->MsLoader->MsProduct->getSellerId($order_product['product_id']);
+					if (!$seller_id) continue;
 					$balance_entry = $this->MsLoader->MsBalance->getBalanceEntry(
 						array(
-							'seller_id' => $this->MsLoader->MsProduct->getSellerId($order_product['product_id']),
+							'seller_id' => $seller_id,
 							'product_id' => $order_product['product_id'],
 							'order_id' => $order_id,
 							'balance_type' => MsBalance::MS_BALANCE_TYPE_SALE
@@ -558,7 +562,6 @@
 					);
 					
 					if (!$balance_entry) {
-						$seller_id = $this->MsLoader->MsProduct->getSellerId($order_product['product_id']);
 						$commissions = $this->MsLoader->MsCommission->calculateCommission($seller_id);
 						$store_commission_flat = $commissions[MsCommission::RATE_SALE]['flat'];
 						$store_commission_pct = $order_product['total'] * $commissions[MsCommission::RATE_SALE]['percent'] / 100;
@@ -591,6 +594,7 @@
 					}
 				}
 			} else if (in_array($data['order_status_id'], $this->config->get('msconf_debit_order_statuses'))) {
+			foreach ($order_product_query->rows as $order_product) {
 				$refund_balance_entry = $this->MsLoader->MsBalance->getBalanceEntry(
 					array(
 						'seller_id' => $this->MsLoader->MsProduct->getSellerId($order_product['product_id']),
@@ -629,6 +633,7 @@
 					}
 					
 				}
+			}
 			}
 			]]></add>
 		</operation>
