@@ -213,7 +213,8 @@
 				<tr>
 					<td><?php if ($msconf_images_limits[0] > 0) { ?><span class="required">*</span><?php } ?> <?php echo $ms_account_product_image; ?></td>
 					<td>
-						<input type="file" name="ms-file-addimages" id="ms-file-addimages" />
+						<!--<input type="file" name="ms-file-addimages" id="ms-file-addimages" />-->
+						<a name="ms-file-addimages" id="ms-file-addimages" class="button"><span>Select images</span></a>
 						<p class="ms-note"><?php echo $ms_account_product_image_note; ?></p>
 						<p class="error" id="error_product_image"></p>
 						<div id="product_image_files">
@@ -235,7 +236,8 @@
 				<tr>
 					<td><?php if ($msconf_downloads_limits[0] > 0) { ?><span class="required">*</span><?php } ?> <?php echo $ms_account_product_download; ?></td>
 					<td>
-						<input type="file" name="ms-file-addfiles" id="ms-file-addfiles" />
+						<!--<input type="file" name="ms-file-addfiles" id="ms-file-addfiles" />-->
+						<a name="ms-file-addfiles" id="ms-file-addfiles" class="button"><span>Select files</span></a>
 						<p class="ms-note"><?php echo $ms_account_product_download_note; ?></p>
 						<p class="error" id="error_product_download"></p>
 						
@@ -249,9 +251,8 @@
 								<span class="ms-download-name"><?php echo $download['name']; ?></span>
 								<div class="ms-buttons">
 									<a href="<?php echo $download['href']; ?>" class="ms-button-download" title="<?php echo $ms_download; ?>"></a>
-									<div class="ms-button-update" title="<?php echo $ms_update; ?>">
-										<input id="ms-update-<?php echo $download['id']; ?>" name="ms-update-<?php echo $download['id']; ?>" class="ms-file-updatedownload" type="file" multiple="false" />
-									</div>
+										<!--<input id="ms-update-<?php echo $download['id']; ?>" name="ms-update-<?php echo $download['id']; ?>" class="ms-file-updatedownload" type="file" multiple="false" />-->
+									<a id="ms-update-<?php echo $download['id']; ?>" name="ms-update-<?php echo $download['id']; ?>" class="ms-file-updatedownload ms-button-update" title="<?php echo $ms_update; ?>"></a>
 									<a class="ms-button-delete" title="<?php echo $ms_delete; ?>"></a>
 								</div>
 							</div>

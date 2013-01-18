@@ -1,6 +1,6 @@
 $(function() {
 	$("#ms-submit-button").click(function() {
-		$('.success').remove();	
+		$('.success').remove();
 		var id = $(this).attr('id');
 	    $.ajax({
 			type: "POST",
@@ -24,7 +24,6 @@ $(function() {
 					    } else {
 					    	$('#error_'+id).text(jsonData.errors[error]);
 					   	}
-					    //console.log(error + " -> " + jsonData.errors[error]);
 					}
 					window.scrollTo(0,0);
 				} else {
@@ -39,35 +38,37 @@ $(function() {
 		$(this).parent().remove();
 	});	
 
-	/* uploadify buttons */
-	$('#ms-file-selleravatar').each(function() {
-    	var fileTag = $(this);
-       	fileTag.uploadify({
-			'hideButton'   : true,
-			'buttonClass'  : 'ms-button-upload',
-			'height': 25,
-			'debug' : false,
-			'multi': false,
-			'method'   : 'post',
-			//'buttonImage' : 'catalog/view/theme/default/image/ms-update-30px.png',
-			'formData'     : {
-				'timestamp' : msGlobals.timestamp,
-				'token'     : msGlobals.token,
-				'session_id': msGlobals.session_id
+	var uploader = new plupload.Uploader({
+		runtimes : 'gears,html5,flash',
+		//runtimes : 'flash',
+		multi_selection:false,
+		browse_button: 'ms-file-selleravatar',
+		url: 'index.php?route=seller/account-profile/jxUploadSellerAvatar',
+		flash_swf_url: 'catalog/view/javascript/plupload/plupload.flash.swf',
+		silverlight_xap_url : 'catalog/view/javascript/plupload/plupload.silverlight.xap',
+		
+	    multipart_params : {
+			'timestamp' : msGlobals.timestamp,
+			'token'     : msGlobals.token,
+			'session_id': msGlobals.session_id
+	    },
+		
+		filters : [
+			{title : "Image files", extensions : "png,jpg,jpeg"},
+		],
+		
+		init : {
+			FilesAdded: function(up, files) {
+				up.start();
 			},
-			'swf'      : 'catalog/view/javascript/uploadify.swf',
-			'uploader' : 'index.php?route=seller/account-profile/jxUploadSellerAvatar',
-	        'onUploadStart' : function(file) {
-	        },
-	        'onSelect' : function(file) {
-	            $('#error_sellerinfo_avatar').html('');
-	        },	        
-	        'onUploadSuccess' : function(file, data, response) {
+			
+			FileUploaded: function(up, file, info) {
 				try {
-   					data = $.parseJSON(data);
+   					data = $.parseJSON(info.response);
 				} catch(e) {
 					console.log('Invalid JSON response: ');
-					console.log(data);
+					console.log(info.response);
+					return;
 				}
 
 				if (!$.isEmptyObject(data.errors)) {
@@ -81,25 +82,22 @@ $(function() {
 				if (!$.isEmptyObject(data.files)) {
 					for (var i = 0; i < data.files.length; i++) {
 						$("#sellerinfo_avatar_files").html(
-	        			'<div class="ms-image">' +
-	        			'<input type="hidden" value="'+data.files[i].name+'" name="sellerinfo_avatar_name" />' +
-	        			'<img src="'+data.files[i].thumb+'" />' +
-	        			'<span class="ms-remove"></span>' +
-	        			'</div>').children(':last').hide().fadeIn(2000);
+						'<div class="ms-image">' +
+						'<input type="hidden" value="'+data.files[i].name+'" name="sellerinfo_avatar_name" />' +
+						'<img src="'+data.files[i].thumb+'" />' +
+						'<span class="ms-remove"></span>' +
+						'</div>').children(':last').hide().fadeIn(2000);
 					}
 				}
 				
-				if (data.cancel) {
-					$('#ms-file-selleravatar').uploadify('cancel','*');
-					console.log('cancelling queue');
-				}
-	        },
-	        'onUploadError' : function(file, errorCode, errorMsg, errorString) {
-	        	//$('#error_product_image').append(errorString).hide().fadeIn(2000);
-	        	console.log(errorCode + ' ' + errorMsg + ' ' + errorString);
-	        }
-		});
-	});
+				up.stop();
+			},
+			
+			Error: function(up, args) {
+				console.log('[error] ', args);
+			}
+		}
+	}).init();
 	
 	$('.colorbox').colorbox({
 		width: 640,

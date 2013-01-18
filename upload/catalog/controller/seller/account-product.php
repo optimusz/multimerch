@@ -468,7 +468,11 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 	
 	public function create() {
 		$this->load->model('catalog/category');
-		$this->document->addScript('catalog/view/javascript/jquery.uploadify.js');
+		//$this->document->addScript('catalog/view/javascript/jquery.uploadify.js');
+		$this->document->addScript('http://bp.yahooapis.com/2.4.21/browserplus-min.js');
+		$this->document->addScript('catalog/view/javascript/plupload/plupload.full.js');
+		$this->document->addScript('catalog/view/javascript/plupload/jquery.plupload.queue/jquery.plupload.queue.js');		
+		
 		if ($this->config->get('msconf_enable_pdf_generator') && extension_loaded('imagick')) {
 			$this->document->addScript('catalog/view/javascript/dialog-pdf.js');
 		}		
@@ -584,7 +588,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 				'special' => $special,
 				'p.price' => $this->currency->format($product['p.price'], $this->config->get('config_currency')),
 				'mp.number_sold' => $product['mp.number_sold'],
-				'mp.total_earnings' => $this->currency->format($sale_data['total'], $this->config->get('config_currency')),
+				'mp.total_earnings' => $this->currency->format($sale_data['seller_total'], $this->config->get('config_currency')),
 				'mp.product_status' => $product['mp.product_status'],
 				'status_text' => $this->MsLoader->MsProduct->getStatusText($product['mp.product_status']),
 				'p.date_created' => date($this->language->get('date_format_short'), strtotime($product['p.date_created'])),
@@ -634,7 +638,10 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		$this->load->model('catalog/category');
 		$this->load->model('catalog/product');
 		$this->load->model('localisation/currency');
-		$this->document->addScript('catalog/view/javascript/jquery.uploadify.js');
+		//$this->document->addScript('catalog/view/javascript/jquery.uploadify.js');
+		$this->document->addScript('http://bp.yahooapis.com/2.4.21/browserplus-min.js');
+		$this->document->addScript('catalog/view/javascript/plupload/plupload.full.js');
+		$this->document->addScript('catalog/view/javascript/plupload/jquery.plupload.queue/jquery.plupload.queue.js');		
 		
 		if ($this->config->get('msconf_enable_pdf_generator') && extension_loaded('imagick')) {
 			$this->document->addScript('catalog/view/javascript/dialog-pdf.js');

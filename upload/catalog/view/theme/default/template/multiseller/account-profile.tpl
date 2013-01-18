@@ -92,7 +92,8 @@
 				<tr>
 					<td><?php echo $ms_account_sellerinfo_avatar; ?></td>
 					<td>
-						<input type="file" name="ms-file-selleravatar" id="ms-file-selleravatar" />
+						<!--<input type="file" name="ms-file-selleravatar" id="ms-file-selleravatar" />-->
+						<a name="ms-file-selleravatar" id="ms-file-selleravatar" class="button"><span>Select files</span></a>
 						<p class="ms-note"><?php echo $ms_account_sellerinfo_avatar_note; ?></p>
 						<p class="error" id="error_sellerinfo_avatar"></p>
 						
