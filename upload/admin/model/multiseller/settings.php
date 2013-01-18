@@ -69,17 +69,19 @@ class ModelMultisellerSettings extends Model {
         
 		$createTable = "
 			CREATE TABLE " . DB_PREFIX . "ms_comments (
-             `id` int(11) NOT NULL AUTO_INCREMENT,
-             `id_product` int(11) NOT NULL,
-             `id_customer` int(10) UNSIGNED DEFAULT NULL,
-             `name` varchar(32) NOT NULL DEFAULT '',
-             `email` varchar(128) NOT NULL DEFAULT '',
-             `comment` text NOT NULL,
-             `create_time` int(11) NOT NULL DEFAULT '0',
-             `display` tinyint(1) NOT NULL DEFAULT '0',
-        	PRIMARY KEY (`id`)) default CHARSET=utf8";
-        
-        $this->db->query($createTable);        
+	         `id` int(11) NOT NULL AUTO_INCREMENT,
+	         `parent_id` int(11) DEFAULT NULL,
+	         `product_id` int(11) NOT NULL,
+	         `seller_id` int(11) DEFAULT NULL,
+	         `customer_id` int(11) DEFAULT NULL,
+			 `user_id` int(11) DEFAULT NULL,
+	         `name` varchar(128) NOT NULL DEFAULT '',
+	         `email` varchar(128) NOT NULL DEFAULT '',
+	         `comment` text NOT NULL,
+	         `display` tinyint(1) NOT NULL DEFAULT 1,
+	         `create_time` int(11) NOT NULL,
+	    	PRIMARY KEY (`id`)) default CHARSET=utf8";
+        $this->db->query($createTable);
 	
 		$createTable = "
 			CREATE TABLE " . DB_PREFIX . "ms_product_attribute (

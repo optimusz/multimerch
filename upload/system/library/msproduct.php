@@ -823,10 +823,13 @@ class MsProduct extends Model {
 	
 	public function getSaleData($product_id) {
 		$sql = "SELECT SUM(op.quantity) AS quantity,
-					   SUM(op.total + op.total * op.tax / 100) AS total
+					   SUM(op.total + op.total * op.tax / 100) AS total,
+					   SUM(seller_net_amt) AS seller_total
 				FROM " . DB_PREFIX . "order_product op
 				LEFT JOIN `" . DB_PREFIX . "order` o
 					ON (op.order_id = o.order_id)
+				LEFT JOIN `" . DB_PREFIX . "ms_order_product_data` mopd
+					ON (op.order_id = mopd.order_id)
 				WHERE op.product_id = " . (int)$product_id;
 		
 		$res = $this->db->query($sql);
@@ -837,7 +840,7 @@ class MsProduct extends Model {
 		$sql = "UPDATE " . DB_PREFIX . "ms_product
 				SET	seller_id =  " . (int)$seller_id . "
 				WHERE product_id = " . (int)$product_id;
-		var_dump($sql);
+		//var_dump($sql);
 		$res = $this->db->query($sql);
 		$this->registry->get('cache')->delete('product');
 	}

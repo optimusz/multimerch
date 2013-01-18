@@ -71,6 +71,24 @@ class MsBalance extends Model {
 		return $res->row['total'];
 	}
 
+	public function getTotalBalanceAmount($data = array()) {
+		$sql = "SELECT COALESCE(
+					(SELECT SUM(balance) FROM " . DB_PREFIX . "ms_balance
+					 WHERE balance_id IN (
+						SELECT MAX(balance_id) FROM " . DB_PREFIX . "ms_balance
+						LEFT JOIN " . DB_PREFIX . "ms_seller
+							USING(seller_id)"
+						. (isset($data['seller_status']) ? " WHERE seller_status IN  (" .  $this->db->escape(implode(',', $data['seller_status'])) . ")" : '') .
+						" GROUP BY seller_id
+					)),
+					0
+				) as total";
+		$res = $this->db->query($sql);
+
+		return $res->row['total'];
+	}
+
+
 	public function getSellerBalance($seller_id) {
 		$sql = "SELECT COALESCE(
 					(SELECT balance FROM " . DB_PREFIX . "ms_balance

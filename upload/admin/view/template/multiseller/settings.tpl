@@ -16,11 +16,12 @@
 			</div>
 	  	</div>
 	  	<div class="content">
-			<form id="settings" action="<?php echo $action; ?>" method="post" enctype="multipart/form-data">
+			<form id="settings" method="post" enctype="multipart/form-data">
 			 	<div id="tabs" class="htabs">
 			 		<a href="#tab-general"><?php echo $tab_general; ?></a>
 			 		<a href="#tab-productform"><?php echo $ms_config_productform; ?></a>
 			 		<a href="#tab-finances"><?php echo $ms_config_finances; ?></a>
+			 		<a href="#tab-comments"><?php echo $ms_config_comments; ?></a>
 			 		<a href="#tab-modules"><?php echo $ms_config_modules; ?></a>
 			 	</div>
 			 	
@@ -144,16 +145,6 @@
 								<?php } ?>
 								<?php } ?>
 							</select>
-						</td>
-					</tr>
-
-					<tr>
-						<td>
-							<span><?php echo $ms_config_comments_maxlen; ?></span>
-							<span class="help"><?php echo $ms_config_comments_maxlen_note; ?></span>
-						</td>
-						<td>
-							<input type="text" name="msconf_comments_maxlen" value="<?php echo $msconf_comments_maxlen; ?>" size="3"/>
 						</td>
 					</tr>
 				</table>
@@ -491,10 +482,87 @@
 							<input type="radio" name="msconf_paypal_sandbox" value="0" <?php if($msconf_paypal_sandbox == 0) { ?> checked="checked" <?php } ?>  />
 							<?php echo $text_no; ?>
 					  	</td>
-					</tr>					
+					</tr>
 				</table>
 				</div>
 				
+			 	<!-- BEGIN COMMENTS TAB -->
+			 	<div id="tab-comments">
+				<table class="form">
+					<tr>
+						<td>
+							<span><?php echo $ms_config_comments_enable; ?></span>
+							<span class="help"><?php echo $ms_config_comments_enable_note; ?></span>
+						</td>
+						<td>
+							<input type="radio" name="msconf_comments_enable" value="1" <?php if($msconf_comments_enable == 1) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_yes; ?>
+							<input type="radio" name="msconf_comments_enable" value="0" <?php if($msconf_comments_enable == 0) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_no; ?>
+						</td>
+					</tr>
+
+					<tr>
+						<td>
+							<span><?php echo $ms_config_comments_allow_guests; ?></span>
+							<span class="help"><?php echo $ms_config_comments_allow_guests_note; ?></span>
+						</td>
+						<td>
+							<input type="radio" name="msconf_comments_allow_guests" value="1" <?php if($msconf_comments_allow_guests == 1) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_yes; ?>
+							<input type="radio" name="msconf_comments_allow_guests" value="0" <?php if($msconf_comments_allow_guests == 0) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_no; ?>
+						</td>
+					</tr>
+
+					<tr>
+						<td>
+							<span><?php echo $ms_config_comments_enforce_customer_data; ?></span>
+							<span class="help"><?php echo $ms_config_comments_enforce_customer_data_note; ?></span>
+						</td>
+						<td>
+							<input type="radio" name="msconf_comments_enforce_customer_data" value="1" <?php if($msconf_comments_enforce_customer_data == 1) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_yes; ?>
+							<input type="radio" name="msconf_comments_enforce_customer_data" value="0" <?php if($msconf_comments_enforce_customer_data == 0) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_no; ?>
+						</td>
+					</tr>
+
+					<tr>
+						<td>
+							<span><?php echo $ms_config_comments_enable_customer_captcha; ?></span>
+							<span class="help"><?php echo $ms_config_comments_enable_customer_captcha_note; ?></span>
+						</td>
+						<td>
+							<input type="radio" name="msconf_comments_enable_customer_captcha" value="1" <?php if($msconf_comments_enable_customer_captcha == 1) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_yes; ?>
+							<input type="radio" name="msconf_comments_enable_customer_captcha" value="0" <?php if($msconf_comments_enable_customer_captcha == 0) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_no; ?>
+						</td>
+					</tr>
+
+					<tr>
+						<td>
+							<span><?php echo $ms_config_comments_perpage; ?></span>
+							<span class="help"><?php echo $ms_config_comments_perpage_note; ?></span>
+						</td>
+						<td>
+							<input size="2" type="text" name="msconf_comments_perpage" value="<?php echo $msconf_comments_perpage; ?>" />
+						</td>
+					</tr>
+
+					<tr>
+						<td>
+							<span><?php echo $ms_config_comments_maxlen; ?></span>
+							<span class="help"><?php echo $ms_config_comments_maxlen_note; ?></span>
+						</td>
+						<td>
+							<input type="text" name="msconf_comments_maxlen" value="<?php echo $msconf_comments_maxlen; ?>" size="3"/>
+						</td>
+					</tr>
+				</table>
+				</div>
+								
 				<!-- BEGIN MODULES TAB -->
 				<div id="tab-modules">	
 					<div id="tabs-modules" class="htabs">

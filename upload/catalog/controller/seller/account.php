@@ -6,27 +6,26 @@ class ControllerSellerAccount extends Controller {
 
 		$this->data = array_merge($this->data, $this->load->language('multiseller/multiseller'),$this->load->language('account/account'));
 		$parts = explode('/', $this->request->request['route']);
-		// Uploadify checks
-		//$this->_log = new Log("uploadify.log");
+
 		if (isset($parts[2]) && in_array($parts[2], array('jxUpdateFile','jxUploadImages', 'jxUploadDownloads', 'jxUploadSellerAvatar'))) {
 			if (empty($_POST) || empty($_FILES))
 				return;
 			// Re-create session as Flash doesn't pass session info
-	  		if (isset($_POST['session_id'])) {
-	  			if (!isset($this->session->data['customer_id'])) {
-	  				session_destroy();
-	  				$_COOKIE['PHPSESSID'] = $_POST['session_id'];
-	  				$registry->set('session', new Session());
-	  			}
-	  			if (isset($_SESSION['customer_id'])) {
-	  				$salt = $this->MsLoader->MsSeller->getSalt($_SESSION['customer_id']);
-	  				if (isset($_POST['token']) && isset($_POST['timestamp']) && $_POST['token'] == md5($salt . $_POST['timestamp'])) {
-	  					$this->session->data['customer_id'] = $_SESSION['customer_id'];
-	  					$this->customer = new Customer($this->registry);
-	  					// todo re-initialize seller object
-	  				}
-	  			}
-	  		}
+			if (isset($_POST['session_id'])) {
+				if (!isset($this->session->data['customer_id'])) {
+					session_destroy();
+					$_COOKIE['PHPSESSID'] = $_POST['session_id'];
+					$registry->set('session', new Session());
+				}
+				if (isset($_SESSION['customer_id'])) {
+					$salt = $this->MsLoader->MsSeller->getSalt($_SESSION['customer_id']);
+					if (isset($_POST['token']) && isset($_POST['timestamp']) && $_POST['token'] == md5($salt . $_POST['timestamp'])) {
+						$this->session->data['customer_id'] = $_SESSION['customer_id'];
+						$this->customer = new Customer($this->registry);
+						// todo re-initialize seller object
+					}
+				}
+			}
 		}
 		
 	  	if (!$this->customer->isLogged()) {

@@ -123,7 +123,7 @@ table.list td, table.list thead td  {
 }
 
 .ms-product .ms-download .ms-button-delete {
-	background-image: url(../image/ms-delete-30px.png); 
+	background-image: url(../image/ms-delete-30px.png);
 }
 
 .ms-product .ms-download .ms-button-delete.disabled {
@@ -131,13 +131,11 @@ table.list td, table.list thead td  {
 }
 
 .ms-product .ms-download .ms-button-update {
-	display: inline-block;
-	vertical-align: top;
+	background-image: url(../image/ms-update-30px.png);
 }
 
 .ms-product .ms-download span.ms-button-update.disabled {
 	background-image: url(../image/ms-update-30px-bw.png);
-	margin: 0 4px;
 }
 
 .ms-product .uploadify-queue {

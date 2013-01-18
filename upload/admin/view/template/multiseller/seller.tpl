@@ -16,6 +16,7 @@
       <h1><img src="view/image/customer.png" alt="" /> <?php echo $ms_catalog_sellers_heading; ?></h1>
     </div>
     <div class="content">
+		<?php echo $total_balance; ?><br /><br />
       <form action="" method="post" enctype="multipart/form-data" id="form">
         <table class="list">
           <thead>

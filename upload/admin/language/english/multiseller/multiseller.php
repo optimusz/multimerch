@@ -86,6 +86,7 @@ $_['ms_menu_reports_sales'] = 'Sales';
 $_['ms_catalog_sellers_heading'] = 'Sellers';
 $_['ms_catalog_sellers_breadcrumbs'] = 'Sellers';
 
+$_['ms_catalog_sellers_total_balance'] = 'Total amount on all balances: <b>%s</b> (active sellers: <b>%s</b>)';
 $_['ms_catalog_sellers_name'] = 'Name';
 $_['ms_catalog_sellers_display_name'] = 'Display name';
 $_['ms_catalog_sellers_email'] = 'Email';
@@ -178,9 +179,6 @@ $_['ms_config_paypal_api_password_note'] = 'PayPal API password note';
 $_['ms_config_paypal_api_signature'] = 'PayPal API signature';
 $_['ms_config_paypal_api_signature_note'] = 'PayPal API signature note';
 
-$_['ms_config_comments_maxlen'] = 'Maximum comment length';
-$_['ms_config_comments_maxlen_note'] = 'Maximum comment length note';
-
 $_['ms_config_notification_email'] = 'Email for admin notifications';
 $_['ms_config_notification_email_note'] = 'Email for admin notifications note';
 
@@ -214,6 +212,24 @@ $_['ms_config_allow_discounts_note'] = 'Allow sellers to define quantity discoun
 $_['ms_config_withdrawal_waiting_period'] = 'Withdrawal waiting period';
 $_['ms_config_withdrawal_waiting_period_note'] = 'Seller balance entries newer than this value will not be available for withdrawal';
 
+$_['ms_config_comments_enable'] = 'Enable comments';
+$_['ms_config_comments_enable_note'] = 'Enable or disable comments functionality';
+
+$_['ms_config_comments_perpage'] = 'Comments per page';
+$_['ms_config_comments_perpage_note'] = 'Number of comments per page in front store';
+
+$_['ms_config_comments_allow_guests'] = 'Allow guest comments';
+$_['ms_config_comments_allow_guests_note'] = 'Allow unregistered visitors to post comments';
+
+$_['ms_config_comments_enforce_customer_data'] = 'Enforce customer data';
+$_['ms_config_comments_enforce_customer_data_note'] = 'Prevent registered customers from using custom name and email when posting comments';
+
+$_['ms_config_comments_enable_customer_captcha'] = 'Enable customer captcha';
+$_['ms_config_comments_enable_customer_captcha_note'] = 'Enable captcha for registered customers';
+
+$_['ms_config_comments_maxlen'] = 'Maximum comment length';
+$_['ms_config_comments_maxlen_note'] = 'Maximum comment length when posting comments in front store';
+
 $_['ms_config_carousel']       = 'Seller carousel';
 $_['ms_config_topsellers']       = 'Top sellers';
 $_['ms_config_modules']       = 'Modules';
@@ -221,6 +237,7 @@ $_['ms_config_productform']       = 'Product form';
 $_['ms_config_finances']       = 'Finances';
 $_['ms_config_newsellers']       = 'New sellers';
 $_['ms_config_sellerdropdown']       = 'Seller dropdown';
+$_['ms_config_comments']       = 'Comments';
 
 $_['ms_config_module']         = 'Modules';
 $_['ms_config_status']         = 'Status';

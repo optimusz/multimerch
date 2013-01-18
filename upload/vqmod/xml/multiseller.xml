@@ -13,7 +13,20 @@
 	<!--         SYSTEM           -->
 	<!-- ************************ -->	
 	<!-- ************************ -->
-		
+
+	<file name="system/engine/loader.php">
+		<operation>
+			<search position="after"><![CDATA[
+				$this->registry = $registry;
+			]]></search>
+			<add><![CDATA[
+				$vqmod = new VQMod();
+				require_once($vqmod->modCheck(DIR_SYSTEM . 'library/msloader.php'));
+				$registry->set('MsLoader', new MsLoader($registry));
+			]]></add>
+		</operation>
+	</file>
+
 	<file name="system/library/customer.php">
 		<operation>
 			<search position="after"><![CDATA[
@@ -31,7 +44,7 @@
 				$this->model_setting_extension->uninstall('module', $value);
 			]]></search>
 			<add><![CDATA[
-				if (!in_array($value,array('ms_carousel'))) {
+				if (!in_array($value,array('ms_carousel', 'ms_newsellers', 'ms_topsellers', 'ms_sellerdropdown'))) {
 					$this->model_setting_extension->uninstall('module', $value);
 				}
 			]]></add>
@@ -357,7 +370,9 @@
 				<div id="tab-description" class="tab-content"><?php echo $description; ?></div>
 			]]></search>
 			<add><![CDATA[
-  				<a href="#tab-comments"><?php echo $tab_comments ?></a>
+				<?php if ($this->config->get('msconf_comments_enable')) { ?>
+					<a href="#tab-comments"><?php echo $tab_comments ?></a>
+				<?php } ?>
 			]]></add>
 		</operation>
 		
@@ -366,10 +381,27 @@
 				<?php if ($tags) { ?>
 			]]></search>
 			<add><![CDATA[
-  				<div id="tab-comments" class="tab-content"></div>
+				<?php if ($this->config->get('msconf_comments_enable')) { ?>
+  				<div id="tab-comments" class="tab-content">
+  					<div class="pcComments"></div>
+  					<div class="pcForm"></div>
+  				</div>
+				<?php } ?>
 			]]></add>
 		</operation>
 	
+		<operation>
+			<search position="before"><![CDATA[
+				$('#button-review').bind('click', function() {
+			]]></search>
+			<add><![CDATA[
+			<?php if ($this->config->get('msconf_comments_enable')) { ?>
+				$('#tab-comments .pcForm').load('index.php?route=module/ms-comments/renderForm&product_id=<?php echo $product_id; ?>');
+				$('#tab-comments .pcComments').load('index.php?route=module/ms-comments/renderComments&product_id=<?php echo $product_id; ?>');
+			<?php } ?>
+			]]></add>
+		</operation>
+
 		<operation>
 			<search position="replace"><![CDATA[
 				<span><?php echo $text_stock; ?></span> <?php echo $stock; ?></div>
@@ -382,15 +414,6 @@
   				</div>
 			]]></add>
 		</operation>
-		
-		<operation>
-			<search position="before"><![CDATA[
-				$('#button-review').bind('click', function() {
-			]]></search>
-			<add><![CDATA[
-  				$('#tab-comments').load('index.php?route=module/ms-comments/getComments&product_id=<?php echo $product_id; ?>');
-			]]></add>
-		</operation>		
 	</file>
 
 	<file name="catalog/controller/product/product.php">
@@ -460,9 +483,20 @@
 			    $this->data['tab_related'] = $this->language->get('tab_related');
 			]]></search>
 			<add><![CDATA[
-				$this->load->model('module/multiseller/comments');
-				$this->language->load('multiseller/multiseller');
-				$this->data['tab_comments'] = sprintf($this->language->get('ms_comments_tab_comments'), $this->model_module_multiseller_comments->getCommentsCount($this->request->get['product_id']));
+				if ($this->config->get('msconf_comments_enable')) {
+					$this->language->load('multiseller/multiseller');
+					$this->data['tab_comments'] = sprintf($this->language->get('ms_comments_tab_comments'), $this->MsLoader->MsComments->getTotalComments(array(
+						'product_id' => $this->request->get['product_id'],
+						'displayed' => 1
+					)));
+					
+					$this->document->addScript('catalog/view/javascript/ms-comments.js');
+					if (file_exists('catalog/view/theme/' . $this->config->get('config_template') . '/stylesheet/ms-comments.css')) {
+						$this->document->addStyle('catalog/view/theme/' . $this->config->get('config_template') . '/stylesheet/ms-comments.css');
+					} else {
+						$this->document->addStyle('catalog/view/theme/default/stylesheet/ms-comments.css');
+					}
+				}
 			]]></add>
 		</operation>
 	</file>

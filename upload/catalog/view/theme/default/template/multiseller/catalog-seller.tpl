@@ -43,7 +43,7 @@
 			<?php if ($seller['country']) { ?>
 			<p class="country">
 			<b><?php echo $ms_catalog_sellers_country; ?></b>
-			<img class="country-flag" src="<?php echo $seller['country_flag']; ?>" alt="<?php echo $country; ?>" title="<?php echo $country; ?>" /> <span class="country-name"><?php echo $seller['country']; ?></span>
+			<img class="country-flag" src="<?php echo $seller['country_flag']; ?>" alt="<?php echo $seller['country']; ?>" title="<?php echo $seller['country']; ?>" /> <span class="country-name"><?php echo $seller['country']; ?></span>
 			</p>
 			<?php } ?>
 			

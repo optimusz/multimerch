@@ -83,6 +83,7 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 		);
 		*/
 		
+		$this->data['total_balance'] = sprintf($this->language->get('ms_catalog_sellers_total_balance'), $this->currency->format($this->MsLoader->MsBalance->getTotalBalanceAmount(), $this->config->get('config_currency')), $this->currency->format($this->MsLoader->MsBalance->getTotalBalanceAmount(array('seller_status' => array(MsSeller::STATUS_ACTIVE))), $this->config->get('config_currency')));
 		
 		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
 		
