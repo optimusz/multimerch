@@ -5,7 +5,6 @@ class MsLoader {
 		$this->registry = $registry;		
 		spl_autoload_register(array('MsLoader', '_autoloadLibrary'));
 		spl_autoload_register(array('MsLoader', '_autoloadController'));
-		//require_once(DIR_APPLICATION . 'controller/seller/account-controller.php');
    	}
 
 	public function __get($class) {
@@ -25,7 +24,8 @@ class MsLoader {
 	private static function _autoloadLibrary($class) {
 	    $file = DIR_SYSTEM . 'library/' . strtolower($class) . '.php';
 	    if (file_exists($file)) {
-	    	require($file);
+	    	$vqmod = new VQMod();
+			require_once($vqmod->modCheck($file));
 	    }
 	}
 
@@ -35,7 +35,8 @@ class MsLoader {
 		if (isset($matches[0][1]) && isset($matches[0][2])) {
 		    $file = DIR_APPLICATION . 'controller/' . strtolower($matches[0][1]) . '/' . strtolower($matches[0][2]) . '.php';
 		    if (file_exists($file)) {
-		    	require($file);
+		    	$vqmod = new VQMod();
+				require_once($vqmod->modCheck($file));
 		    }
 		}
 	}
