@@ -5,19 +5,15 @@ class MsFile extends Model {
 	}
 
 	// ***FUNCTION***: checks whether file already exists and proposes a new name for a file
-	private function _checkExistingFiles($path) {
-		$newPath = $path;
+	function _checkExistingFiles($path, $filename) {
+		$newFilename = $filename;
+		$i = 1;
 		
-		if (file_exists($newPath)) {
-			$i = 1;
-			$newPath = substr($path, 0, strrpos($path, '.')) . "-" . $i . substr($path, strrpos($path, '.'));
-			
-			while ( file_exists( $newPath ) ) {
-				$i++;
-				$newPath = substr($path, 0, strrpos($path, '.')) . "-" . $i . substr($path, strrpos($path, '.'));
-			}
+		while (file_exists($path . '/' . $newFilename)) {
+			$newFilename = substr($filename, 0, strrpos($filename, '.')) . "-" . $i++ . substr($filename, strrpos($filename, '.'));
 		}
-		return $newPath;
+		
+		return $newFilename;
 	}
 
 	public function checkPostMax($post, $files) {
@@ -132,28 +128,39 @@ class MsFile extends Model {
   		return $newpath;
   	}
 	
-  	public function moveImage($fileName) {
+  	public function moveImage($path) {
+		$key = array_search($path, $this->session->data['multiseller']['files']);
+		if (!$key) return;
+
+		$dirname = dirname($path) . '/';
+		$filename = basename($path);
+  		
 		$imageDir = $this->config->get('msconf_product_image_path');
-		
+
 		// Check if folder exists and create if not
 		if (!is_dir(DIR_IMAGE . $imageDir . $this->customer->getId() . "/")) {
 			mkdir(DIR_IMAGE . $imageDir . $this->customer->getId() . "/", 0755);
 			@touch(DIR_IMAGE . $imageDir . $this->customer->getId() . "/" . 'index.html');
 		}
-  		
-  		$key = array_search($fileName, $this->session->data['multiseller']['files']);
-  		//strip nonce and timestamp
-  		$original_file_name = substr($fileName, strpos($fileName, '.') + 1, mb_strlen($fileName));
 
-		if ($this->_isNewUpload($fileName)) {
-			$newpath = $imageDir . $this->customer->getId() . "/" . $original_file_name;
-			$checkedNewPath = $this->_checkExistingFiles(DIR_IMAGE . $newpath);
-			rename(DIR_IMAGE . $this->config->get('msconf_temp_image_path') . $fileName, $checkedNewPath);
+		if ($dirname == './') {
+			// new upload
+			$dirname = $this->config->get('msconf_temp_image_path');
+	  		//strip nonce and timestamp
+	  		$originalFilename = $filename;
+	  		$filename = substr($filename, strpos($filename, '.') + 1, mb_strlen($filename));
 		}
-		
+
+		if (DIR_IMAGE . $imageDir . $this->customer->getId() . "/" . $filename != DIR_IMAGE . $path) {
+			$newFilename = $this->_checkExistingFiles(DIR_IMAGE . $imageDir . $this->customer->getId(), $filename);
+			$newPath = $imageDir . $this->customer->getId() . "/" . $newFilename;
+			rename(DIR_IMAGE . $dirname . (isset($originalFilename) ? $originalFilename : $filename), DIR_IMAGE . $newPath);
+		} else {
+			$newPath = $imageDir . $this->customer->getId() . "/" . $filename;
+		}
+			
   		unset ($this->session->data['multiseller']['files'][$key]);
-  		
-  		return $newpath;
+  		return $newPath;
   	}
 	
   	public function deleteDownload($fileName) {

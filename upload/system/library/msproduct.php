@@ -134,7 +134,7 @@ class MsProduct extends Model {
 	}	
 	
 	public function getProductImages($product_id) {
-		$sql = "SELECT * FROM " . DB_PREFIX . "product_image WHERE product_id = '" . (int)$product_id . "'";
+		$sql = "SELECT * FROM " . DB_PREFIX . "product_image WHERE product_id = '" . (int)$product_id . "' ORDER BY sort_order ASC";
 		$res = $this->db->query($sql);
 		
 		$images = array();
@@ -365,17 +365,28 @@ class MsProduct extends Model {
 		$product_id = $data['product_id'];
 
 		$old_thumbnail = $this->getProductThumbnail($product_id);
-		if (!isset($data['product_thumbnail']) || ($old_thumbnail['image'] != $data['product_thumbnail'])) {
-			$this->MsLoader->MsFile->deleteImage($old_thumbnail['image']);
-		}
+		$old_images = $this->getProductImages($product_id);
 		
 		if (isset($data['product_thumbnail'])) {
-			if ($old_thumbnail['image'] != $data['product_thumbnail']) {			
-				$thumbnail = $this->MsLoader->MsFile->moveImage($data['product_thumbnail']);
-			} else {
-				$thumbnail = $old_thumbnail['image'];
+			$keep_thumbnail = false;
+			foreach ($old_images as $old_image) {
+				if ($old_image['image'] == $data['product_thumbnail']) {
+					$keep_thumbnail = true;
+					$thumbnail = $old_image['image']; 
+					break;
+				}
+			}
+			
+			if (!$keep_thumbnail) {
+				if ($old_thumbnail['image'] == $data['product_thumbnail']) {
+					$thumbnail = $old_thumbnail['image'];
+				} else {
+					$this->MsLoader->MsFile->deleteImage($old_thumbnail['image']);
+					$thumbnail = $this->MsLoader->MsFile->moveImage($data['product_thumbnail']);				
+				}
 			}
 		} else {
+			$this->MsLoader->MsFile->deleteImage($old_thumbnail['image']);
 			$thumbnail = '';
 		}
 
@@ -442,8 +453,9 @@ class MsProduct extends Model {
 			$this->db->query($sql);		
 		}
 
-		// images		
-		$old_images = $this->getProductImages($product_id);
+		// images
+		$new_images = $data['product_images'];
+		
 		if (isset($data['product_images'])) {
 			foreach($old_images as $k => $old_image) {
 				$key = array_search($old_image['image'], $data['product_images']);
@@ -455,9 +467,14 @@ class MsProduct extends Model {
 			
 			foreach ($data['product_images'] as $key => $product_image) {
 				$newImagePath = $this->MsLoader->MsFile->moveImage($product_image);
-				$this->db->query("INSERT INTO " . DB_PREFIX . "product_image SET product_id = '" . (int)$product_id . "', image = '" . $this->db->escape(html_entity_decode($newImagePath, ENT_QUOTES, 'UTF-8')) . "', sort_order = '" . (int)$key . "'");
+				$this->db->query("INSERT INTO " . DB_PREFIX . "product_image SET product_id = '" . (int)$product_id . "', image = '" . $this->db->escape(html_entity_decode($newImagePath, ENT_QUOTES, 'UTF-8')) . "', sort_order = '" . (int)array_search($product_image, $new_images) . "'");
 			}
 		}		
+
+		$i = 0;
+		foreach ($new_images as $key => $image) {
+			$this->db->query("UPDATE " . DB_PREFIX . "product_image SET sort_order = " . $i++ . " WHERE product_id = '" . (int)$product_id . "' AND image = '" . $this->db->escape(html_entity_decode($image, ENT_QUOTES, 'UTF-8')) . "'");
+		}
 
 		foreach($old_images as $old_image) {
 			if ($old_image['image'] != $thumbnail) {
@@ -465,7 +482,6 @@ class MsProduct extends Model {
 			}
 			$this->db->query("DELETE FROM " . DB_PREFIX . "product_image WHERE product_id = '" . (int)$product_id . "' AND product_image_id = '" . (int)$old_image['product_image_id'] . "'");
 		}
-
 
 		// downloads
 		$old_downloads = $this->getProductDownloads($product_id);
@@ -812,7 +828,7 @@ class MsProduct extends Model {
 		$this->registry->get('cache')->delete('product');
 	}
 	
-	public function createRecord($product_id, $data) {
+	public function createRecord($product_id, $data = array()) {
 		$sql = "INSERT IGNORE INTO " . DB_PREFIX . "ms_product
 				SET	product_id =  " . (int)$product_id . ",
 					product_status = " . (int)MsProduct::STATUS_INACTIVE

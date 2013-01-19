@@ -109,11 +109,14 @@ $(document).ready(function() {
 		$(this).hide().before('<img src="view/image/loading.gif" alt="" />');
 	    $.ajax({
 			type: "POST",
-			//dataType: "json",
+			dataType: "json",
 			url: 'index.php?route=multiseller/product/jxProductSeller&product_id='+ product_id +'&seller_id='+ seller_id +'&token=<?php echo $token; ?>',
 			success: function(jsonData) {
 				button.show().prev().remove();
 				button.parents('td').effect("highlight", {color: '#BBDF8D'}, 2000);
+				if (jsonData.product_status) {
+					button.parents('td').next('td').html(jsonData.product_status).effect("highlight", {color: '#BBDF8D'}, 2000);
+				}
 			}
 		});
 	});

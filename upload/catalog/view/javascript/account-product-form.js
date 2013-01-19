@@ -1,6 +1,7 @@
 $(function() {
 	$('#language-tabs a.lang').tabs();
 	$('#general-tabs a').tabs();
+	$( "#product_image_files" ).sortable();
 	
 	$("body").delegate(".date", "focusin", function(){
 		$(this).datepicker({dateFormat: 'yy-mm-dd'});

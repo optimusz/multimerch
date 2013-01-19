@@ -163,27 +163,35 @@ class ControllerMultisellerProduct extends ControllerMultisellerBase {
 	}
 	
 	public function jxProductSeller() {
+		$json = array();
+		
 		$this->validate(__FUNCTION__);
 		$product_id = $this->request->get['product_id'];
 		$seller = $this->MsLoader->MsSeller->getSeller($this->request->get['seller_id']);
-		$this->MsLoader->MsProduct->createRecord($product_id);
+		$this->MsLoader->MsProduct->createRecord($product_id, array('seller_id' => $this->request->get['seller_id']));
 		$this->MsLoader->MsProduct->changeSeller($product_id, $this->request->get['seller_id']);
 		switch($seller['ms.seller_status']) {
 			case MsSeller::STATUS_INACTIVE:
+				$json['product_status'] = $this->MsLoader->MsProduct->getStatusText(MsProduct::STATUS_INACTIVE);
 				$this->MsLoader->MsProduct->changeStatus($product_id, MsProduct::STATUS_INACTIVE);
 				$this->MsLoader->MsProduct->disapprove($product_id);			
 				break;
 			case MsSeller::STATUS_DISABLED:
+				$json['product_status'] = $this->MsLoader->MsProduct->getStatusText(MsProduct::STATUS_DISABLED);
 				$this->MsLoader->MsProduct->changeStatus($product_id, MsProduct::STATUS_DISABLED);
 				$this->MsLoader->MsProduct->disapprove($product_id);			
 				break;
 			case MsSeller::STATUS_DELETED:
+				$json['product_status'] = $this->MsLoader->MsProduct->getStatusText(MsProduct::STATUS_DELETED);
 				$this->MsLoader->MsProduct->changeStatus($product_id, MsProduct::STATUS_DELETED);
 				$this->MsLoader->MsProduct->disapprove($product_id);			
 				break;
 			default:
+				$product = $this->MsLoader->MsProduct->getProduct($product_id);
+				$json['product_status'] = $this->MsLoader->MsProduct->getStatusText($product['mp.product_status']);
 				break;
 		}
+		$this->response->setOutput(json_encode($json));
 	}
 }
 ?>
