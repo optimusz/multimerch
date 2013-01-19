@@ -7,7 +7,7 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		"multiseller/request-withdrawal",
 		"multiseller/seller",
 		"multiseller/transaction",
-		"multiseller/seller-group"		
+		"multiseller/seller-group"
 	);
 		
 	private $settings = array(
@@ -190,6 +190,11 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 	public function index() {
 		$this->validate(__FUNCTION__);
 		
+		$this->load->model("multiseller/settings");
+		if (!$this->model_multiseller_settings->checkDbVersion22()) {
+			$this->data['update22'] = $this->url->link('module/multiseller/update22', 'token=' . $this->session->data['token'], 'SSL');
+		}
+		
 		foreach($this->settings as $s=>$v) {
 			//var_dump($s,$this->config->get($s));
 			$this->data[$s] = $this->config->get($s);
@@ -232,6 +237,18 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		
 		list($this->template, $this->children) = $this->MsLoader->MsHelper->admLoadTemplate('settings');
 		$this->response->setOutput($this->render());
+	}
+	
+	public function update22() {
+		$this->validate(__FUNCTION__);
+		$this->load->model("multiseller/settings");
+		
+		if (!$this->model_multiseller_settings->checkDbVersion22()) {
+			$this->model_multiseller_settings->update22();
+			echo 'Done';
+		} else {
+			echo 'Db up to date';
+		}
 	}
 }
 ?>

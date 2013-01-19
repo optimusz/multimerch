@@ -11,6 +11,9 @@
 		<div class="heading">
 			<h1><img src="view/image/module.png"/><?php echo $heading_title; ?></h1>
 			<div class="buttons">
+				<?php if (isset($update22)) { ?>
+				<a class="button" href="<?php echo $update22; ?>">Update DB to version 2.2</a>
+				<?php } ?>
 				<a class="button" id="saveSettings"><?php echo $button_save; ?></a>
 				<a onclick="location = '<?php echo $cancel; ?>';" class="button"><span><?php echo $button_cancel; ?></span></a>
 			</div>

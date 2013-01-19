@@ -36,6 +36,10 @@ $_['ms_button_save_draft']      = 'Save draft';
 $_['ms_button_save_draft_unpublish']      = 'This product will be unpublished';
 $_['ms_button_cancel']      = 'Cancel';
 
+$_['ms_button_select_image']      = 'Select image';
+$_['ms_button_select_images']      = 'Select images';
+$_['ms_button_select_files']      = 'Select files';
+
 
 $_['ms_transaction_sale']      = 'Sale: %s (-%s commission)';
 $_['ms_transaction_refund']      = 'Refund: %s';
@@ -276,6 +280,8 @@ $_['ms_account_product_push_note']     = 'Newly added and updated downloads will
 $_['ms_account_product_image']     = 'Images';
 $_['ms_account_product_image_note']     = 'Select images for your product. First image will be used as a thumbnail. Allowed extensions: %s';
 
+
+$_['ms_account_product_message_reviewer']     = 'Message to the reviewer';
 $_['ms_account_product_message']     = 'Message';
 $_['ms_account_product_message_note']    = 'Your message to the reviewer';
 

@@ -214,7 +214,7 @@
 					<td><?php if ($msconf_images_limits[0] > 0) { ?><span class="required">*</span><?php } ?> <?php echo $ms_account_product_image; ?></td>
 					<td>
 						<!--<input type="file" name="ms-file-addimages" id="ms-file-addimages" />-->
-						<a name="ms-file-addimages" id="ms-file-addimages" class="button"><span>Select images</span></a>
+						<a name="ms-file-addimages" id="ms-file-addimages" class="button"><span><?php echo $ms_button_select_images; ?></span></a>
 						<p class="ms-note"><?php echo $ms_account_product_image_note; ?></p>
 						<p class="error" id="error_product_image"></p>
 						<div id="product_image_files">
@@ -237,7 +237,7 @@
 					<td><?php if ($msconf_downloads_limits[0] > 0) { ?><span class="required">*</span><?php } ?> <?php echo $ms_account_product_download; ?></td>
 					<td>
 						<!--<input type="file" name="ms-file-addfiles" id="ms-file-addfiles" />-->
-						<a name="ms-file-addfiles" id="ms-file-addfiles" class="button"><span>Select files</span></a>
+						<a name="ms-file-addfiles" id="ms-file-addfiles" class="button"><span><?php echo $ms_button_select_files; ?></span></a>
 						<p class="ms-note"><?php echo $ms_account_product_download_note; ?></p>
 						<p class="error" id="error_product_download"></p>
 						
@@ -270,7 +270,7 @@
 				</tr>
 				
 				<?php if ($seller['ms.product_validation'] == MsProduct::MS_PRODUCT_VALIDATION_APPROVAL) { ?>
-				<tr><td colspan="2"><h3>Message to the reviewer</h3></td></tr>
+				<tr><td colspan="2"><h3><?php echo $ms_account_product_message_reviewer; ?></h3></td></tr>
 				
 				<tr>
 					<td><?php echo $ms_account_product_message; ?></td>

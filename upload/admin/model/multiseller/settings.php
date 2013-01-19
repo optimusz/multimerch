@@ -1,12 +1,32 @@
 <?php
 class ModelMultisellerSettings extends Model {
+	public function checkDbVersion22() {
+		$res = $this->db->query("SHOW COLUMNS FROM `" . DB_PREFIX . "ms_comments` LIKE 'parent_id'");
+		if ($res->num_rows)
+			return true;
+			
+		return false;
+	}
+
+	public function update22() {
+		if (!$this->checkDbVersion22()) {
+			$this->db->query("ALTER TABLE " . DB_PREFIX . "ms_comments ADD `parent_id` int(11) DEFAULT NULL AFTER `id`");
+			$this->db->query("ALTER TABLE " . DB_PREFIX . "ms_comments CHANGE `id_product` `product_id` int(11) NOT NULL");
+			$this->db->query("ALTER TABLE " . DB_PREFIX . "ms_comments CHANGE `id_customer` `customer_id` int(11) DEFAULT NULL");
+			$this->db->query("ALTER TABLE " . DB_PREFIX . "ms_comments ADD `user_id` int(11) DEFAULT NULL AFTER `customer_id`");
+			$this->db->query("ALTER TABLE " . DB_PREFIX . "ms_comments CHANGE `name` `name` varchar(128) NOT NULL DEFAULT ''");
+			$this->db->query("ALTER TABLE " . DB_PREFIX . "ms_comments CHANGE `create_time` `create_time` int(11) NOT NULL");
+			$this->db->query("ALTER TABLE " . DB_PREFIX . "ms_comments CHANGE `display` `display` tinyint(1) NOT NULL");
+		}
+	}
+	
 	public function createTable() {
 		$sql = "
 			CREATE TABLE `" . DB_PREFIX . "ms_commission` (
              `commission_id` int(11) NOT NULL AUTO_INCREMENT,
         	PRIMARY KEY (`commission_id`)) default CHARSET=utf8";
         
-        $this->db->query($sql);		
+        $this->db->query($sql);
 		
 		$sql = "
 			CREATE TABLE `" . DB_PREFIX . "ms_commission_rate` (
