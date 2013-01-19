@@ -8,11 +8,11 @@ $(function() {
 			url: 'index.php?route=seller/account-profile/jxsavesellerinfo',
 			data: $(this).parents("form").serialize(),
 		    beforeSend: function() {
-		    	$('#ms-sellerinfo a.button').hide().before('<span class="wait">&nbsp;<img src="catalog/view/theme/default/image/loading.gif" alt="" /></span>');
+		    	$('#ms-submit-button').hide().before('<span class="wait">&nbsp;<img src="catalog/view/theme/default/image/loading.gif" alt="" /></span>');
 		    },			
 			success: function(jsonData) {
 				if (!jQuery.isEmptyObject(jsonData.errors)) {
-					$('#ms-sellerinfo a.button').show().prev('span.wait').remove();				
+					$('#ms-submit-button').show().prev('span.wait').remove();				
 					$('#error_'+id).text('');
 					for (error in jsonData.errors) {
 					    if (!jsonData.errors.hasOwnProperty(error)) {
@@ -39,7 +39,7 @@ $(function() {
 	});	
 
 	var uploader = new plupload.Uploader({
-		runtimes : 'gears,html5,flash',
+		runtimes : 'gears,html5,flash,silverlight',
 		//runtimes : 'flash',
 		multi_selection:false,
 		browse_button: 'ms-file-selleravatar',
@@ -54,11 +54,12 @@ $(function() {
 	    },
 		
 		filters : [
-			{title : "Image files", extensions : "png,jpg,jpeg"},
+			//{title : "Image files", extensions : "png,jpg,jpeg"},
 		],
 		
 		init : {
 			FilesAdded: function(up, files) {
+				$('#error_sellerinfo_avatar').html('');
 				up.start();
 			},
 			
@@ -68,6 +69,7 @@ $(function() {
 				} catch(e) {
 					console.log('Invalid JSON response: ');
 					console.log(info.response);
+					$('#error_sellerinfo_avatar').append(msGlobals.uploadError).hide().fadeIn(2000);
 					return;
 				}
 
@@ -94,6 +96,7 @@ $(function() {
 			},
 			
 			Error: function(up, args) {
+				$('#error_sellerinfo_avatar').append(msGlobals.uploadError).hide().fadeIn(2000);
 				console.log('[error] ', args);
 			}
 		}

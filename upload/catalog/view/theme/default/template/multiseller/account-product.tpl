@@ -80,7 +80,7 @@
 	<?php } ?>
 	<?php } else { ?>
 	<tr>
-		<td class="center" colspan="6"><?php echo $ms_account_products_noproducts; ?></td>
+		<td class="center" colspan="7"><?php echo $ms_account_products_noproducts; ?></td>
 	</tr>
 	<?php } ?>
 	</tbody>

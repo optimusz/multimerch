@@ -9,6 +9,14 @@ table.list td, table.list thead td  {
 	padding: 7px;
 }
 
+.ms-totals {
+	position: absolute;
+	bottom: 3px;
+	left: 0;
+	font-weight: bold;
+	color: #38B0E3;
+}
+
 .ffSample {
 	display: none;
 }

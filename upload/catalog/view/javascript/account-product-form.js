@@ -17,7 +17,7 @@ $(function() {
 		} else {
 			var newRowNum = parseInt(lastRow.match(/[0-9]+/)) + 1;
 		}
-		console.log(lastRow, newRowNum);
+
 		var newRow = $(this).parents('table').find('tbody tr.ffSample').clone();
 		newRow.find('input,select').attr('name', function(i,name) {
 			return name.replace('[0]','[' + newRowNum + ']');
@@ -73,7 +73,6 @@ $(function() {
 						
 					}				
 				} else {
-					//console.log('success');
 					location = jsonData['redirect'];
 				}
 		   	}
@@ -120,6 +119,7 @@ $(function() {
 				} catch(e) {
 					console.log('Invalid JSON response: ');
 					console.log(info.response);
+					$('#error_product_image').append(msGlobals.uploadError).hide().fadeIn(2000);
 					return;
 				}
 				
@@ -148,13 +148,14 @@ $(function() {
 			},
 			
 			Error: function(up, args) {
+				$('#error_product_image').append(msGlobals.uploadError).hide().fadeIn(2000);
 				console.log('[error] ', args);
 			}
 		}
 	}).init();
 	
 	new plupload.Uploader({
-		runtimes : 'gears,html5,flash',
+		runtimes : 'gears,html5,flash,silverlight',
 		//runtimes : 'flash',
 		browse_button: 'ms-file-addfiles',
 		url: 'index.php?route=seller/account-product/jxUploadDownloads',
@@ -193,6 +194,7 @@ $(function() {
 				} catch(e) {
 					console.log('Invalid JSON response: ');
 					console.log(info.response);
+					$('#error_product_download').append(msGlobals.uploadError).hide().fadeIn(2000);
 					return;
 				}
 				
@@ -241,7 +243,7 @@ $(function() {
 			
 			Error: function(up, args) {
 				console.log('[error] ', args);
-				$('#error_product_download').append(args.message).children('span:last').hide().fadeIn(1000);
+				$('#error_product_download').append(uploadError).children('span:last').hide().fadeIn(1000);
 			}
 		}
 	}).init();	
@@ -289,6 +291,7 @@ $(function() {
 					} catch(e) {
 						console.log('Invalid JSON response: ');
 						console.log(info.response);
+						$('#error_product_download').append(msGlobals.uploadError).hide().fadeIn(2000);
 						return;
 					}
 					
@@ -310,6 +313,7 @@ $(function() {
 				},
 				
 				Error: function(up, args) {
+					$('#error_product_download').append(msGlobals.uploadError).hide().fadeIn(2000);
 					console.log('[error] ', args);
 				}
 			}

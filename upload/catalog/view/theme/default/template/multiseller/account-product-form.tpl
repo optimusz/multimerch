@@ -378,7 +378,7 @@
 
 				<tfoot>
 				<tr>
-					<td colspan="5"><a class="button ffClone"><?php echo $ms_button_add_discount; ?></a></td>
+					<td colspan="6"><a class="button ffClone"><?php echo $ms_button_add_discount; ?></a></td>
 				</tr>
 				</tfoot>
 			</table>
@@ -412,7 +412,8 @@
 		timestamp: '<?php echo $timestamp; ?>',
 		token : '<?php echo md5($salt . $timestamp); ?>',
 		session_id: '<?php echo session_id(); ?>',
-		product_id: '<?php echo $product['product_id']; ?>'
+		product_id: '<?php echo $product['product_id']; ?>',
+		uploadError: '<?php echo $ms_error_file_upload_error; ?>'
 	};
 </script>
 <?php echo $footer; ?>
