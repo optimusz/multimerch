@@ -5,7 +5,7 @@
 ]>
 <modification>
 	<id>Digital Multiseller Marketplace</id>
-	<version>2.0</version>
+	<version>2.2</version>
 	<author>http://ffct.cc</author>
 	
 	<!-- ************************ -->
@@ -77,7 +77,7 @@
 				<div class="links"><a href="<?php echo $home; ?>"><?php echo $text_home; ?></a><a href="<?php echo $wishlist; ?>" id="wishlist-total"><?php echo $text_wishlist; ?></a><a href="<?php echo $account; ?>"><?php echo $text_account; ?></a><a href="<?php echo $shopping_cart; ?>"><?php echo $text_shopping_cart; ?></a><a href="<?php echo $checkout; ?>"><?php echo $text_checkout; ?></a></div>
 			]]></search>
 			<add><![CDATA[
-				<div style="position: absolute; bottom: 3px; left: 0; font-weight: bold; color: #38B0E3"><?php echo sprintf($ms_totals_line, $ms_total_sellers, $ms_total_products); ?></div>
+				<div class="ms-totals"><?php echo sprintf($ms_totals_line, $ms_total_sellers, $ms_total_products); ?></div>
 			]]></add>
 		</operation>	
 	</file>
@@ -97,6 +97,8 @@
 				$this->data['ms_total_sellers'] = $this->MsLoader->MsSeller->getTotalSellers(array(
 					'seller_status' => array(MsSeller::STATUS_ACTIVE) 
 				));
+				
+				$this->MsLoader->MsHelper->addStyle('multiseller');
 			]]></add>
 		</operation>
 	</file>

@@ -205,9 +205,9 @@ $_['ms_error_file_size'] = 'File too big';
 $_['ms_error_file_upload_error'] = 'File upload error';
 
 $_['ms_error_product_name_empty'] = 'Product name cannot be empty';
-$_['ms_error_product_name_length'] = 'Product name should be between 4 and 50 characters';
+$_['ms_error_product_name_length'] = 'Product name should be between %s and %s characters';
 $_['ms_error_product_description_empty'] = 'Product description cannot be empty';
-$_['ms_error_product_description_length'] = 'Product description should be between 25 and 1000 characters';
+$_['ms_error_product_description_length'] = 'Product description should be between %s and %s characters';
 $_['ms_error_product_tags_length'] = 'Line too long';
 $_['ms_error_product_price_empty'] = 'Please specify a price for your product';
 $_['ms_error_product_price_invalid'] = 'Invalid price';

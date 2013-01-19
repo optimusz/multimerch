@@ -167,23 +167,23 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 				if (empty($language['product_name'])) {
 					$json['errors']['product_name_' . $language_id] = $this->language->get('ms_error_product_name_empty'); 
 				} else if (mb_strlen($language['product_name']) < 4 || mb_strlen($language['product_name']) > 50 ) {
-					$json['errors']['product_name_' . $language_id] = $this->language->get('ms_error_product_name_length');			
+					$json['errors']['product_name_' . $language_id] = sprintf($this->language->get('ms_error_product_name_length'), 4, 50);
 				}
 		
 				if (empty($language['product_description'])) {
 					$json['errors']['product_description_' . $language_id] = $this->language->get('ms_error_product_description_empty'); 
 				} else if (mb_strlen($language['product_description']) < 25 || mb_strlen($language['product_description']) > 4000 ) {
-					$json['errors']['product_description_' . $language_id] = $this->language->get('ms_error_product_description_length');			
+					$json['errors']['product_description_' . $language_id] = sprintf($this->language->get('ms_error_product_description_length'), 25, 4000);
 				}
 			} else {
 				if (!empty($language['product_name']) && (mb_strlen($language['product_name']) < 4 || mb_strlen($language['product_name']) > 50)) {
-					$json['errors']['product_name_' . $language_id] = $this->language->get('ms_error_product_name_length');			
+					$json['errors']['product_name_' . $language_id] = sprintf($this->language->get('ms_error_product_name_length'), 4, 50);
 				} else if (empty($language['product_name'])) {
 					$data['languages'][$language_id]['product_name'] = $data['languages'][$default]['product_name'];
 				}
 
-				if (!empty($language['product_description']) && (mb_strlen($language['product_description']) < 25 || mb_strlen($language['product_description']) > 1000)) {
-					$json['errors']['product_description_' . $language_id] = $this->language->get('ms_error_product_description_length');			
+				if (!empty($language['product_description']) && (mb_strlen($language['product_description']) < 25 || mb_strlen($language['product_description']) > 4000)) {
+					$json['errors']['product_description_' . $language_id] = sprintf($this->language->get('ms_error_product_description_length'), 25, 4000);
 				} else if (empty($language['product_description'])) {
 					$data['languages'][$language_id]['product_description'] = $data['languages'][$default]['product_description'];
 				}
