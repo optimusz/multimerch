@@ -147,7 +147,7 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 	public function index() {
 		$this->document->addScript('catalog/view/javascript/account-seller-profile.js');
 		//$this->document->addScript('catalog/view/javascript/jquery.uploadify.js');
-		$this->document->addScript('http://bp.yahooapis.com/2.4.21/browserplus-min.js');
+		//$this->document->addScript('http://bp.yahooapis.com/2.4.21/browserplus-min.js');
 		$this->document->addScript('catalog/view/javascript/plupload/plupload.full.js');
 		$this->document->addScript('catalog/view/javascript/plupload/jquery.plupload.queue/jquery.plupload.queue.js');
 		

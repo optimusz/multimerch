@@ -688,7 +688,7 @@
 
 		<operation>
 			<search position="before" offset="1"><![CDATA[
-			<ul class="right">
+			<ul class="right"
 			]]></search>
 			<add><![CDATA[
 		      <li id="multiseller"><a class="top"><?php echo $ms_menu_multiseller; ?></a>

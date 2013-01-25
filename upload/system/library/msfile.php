@@ -284,9 +284,9 @@ class MsFile extends Model {
 		$image->save(DIR_IMAGE . $this->config->get('msconf_temp_image_path') . $new_image);
 		
 		if (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) {
-			return HTTPS_IMAGE . $this->config->get('msconf_temp_image_path') . $new_image;
+			return $this->config->get('config_ssl') . 'image/' . $this->config->get('msconf_temp_image_path') . $new_image;
 		} else {
-			return HTTP_IMAGE . $this->config->get('msconf_temp_image_path') . $new_image;
+			return $this->config->get('config_url') . 'image/' . $this->config->get('msconf_temp_image_path') . $new_image;
 		}
   	}
 }

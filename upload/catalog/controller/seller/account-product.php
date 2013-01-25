@@ -469,7 +469,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 	public function create() {
 		$this->load->model('catalog/category');
 		//$this->document->addScript('catalog/view/javascript/jquery.uploadify.js');
-		$this->document->addScript('http://bp.yahooapis.com/2.4.21/browserplus-min.js');
+		//$this->document->addScript('http://bp.yahooapis.com/2.4.21/browserplus-min.js');
 		$this->document->addScript('catalog/view/javascript/plupload/plupload.full.js');
 		$this->document->addScript('catalog/view/javascript/plupload/jquery.plupload.queue/jquery.plupload.queue.js');		
 		
@@ -478,6 +478,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		}		
 		
 		$this->document->addScript('catalog/view/javascript/account-product-form.js');
+		$this->document->addScript('catalog/view/javascript/jquery/tabs.js');
 		
 		$this->data['seller'] = $this->MsLoader->MsSeller->getSeller($this->customer->getId());
 		$this->data['salt'] = $this->MsLoader->MsSeller->getSalt($this->customer->getId());
@@ -648,6 +649,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		}
 
 		$this->document->addScript('catalog/view/javascript/account-product-form.js');
+		$this->document->addScript('catalog/view/javascript/jquery/tabs.js');
 		
 		$this->data['seller'] = $this->MsLoader->MsSeller->getSeller($this->customer->getId());
 		
