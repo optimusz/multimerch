@@ -570,7 +570,7 @@ class ControllerSellerCatalogSeller extends ControllerSellerCatalog {
 		$pagination->page = $page;
 		$pagination->limit = $limit;
 		$pagination->text = $this->language->get('text_pagination');
-		$pagination->url = $this->url->link('seller/catalog-seller/products', $url . '&page={page}');
+		$pagination->url = $this->url->link('seller/catalog-seller/products', $url . '&page={page}&seller_id=' . $seller['seller_id']);
 	
 		$this->data['pagination'] = $pagination->render();
 		

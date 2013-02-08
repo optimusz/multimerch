@@ -130,7 +130,7 @@ class MsFile extends Model {
 	
   	public function moveImage($path) {
 		$key = array_search($path, $this->session->data['multiseller']['files']);
-		if (!$key) return;
+		if ($key === FALSE) return;
 
 		$dirname = dirname($path) . '/';
 		$filename = basename($path);
@@ -158,7 +158,7 @@ class MsFile extends Model {
 		} else {
 			$newPath = $imageDir . $this->customer->getId() . "/" . $filename;
 		}
-			
+
   		unset ($this->session->data['multiseller']['files'][$key]);
   		return $newPath;
   	}
