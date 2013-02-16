@@ -15,6 +15,17 @@ class MsFile extends Model {
 		
 		return $newFilename;
 	}
+	
+	function _checkExistingFilesSizes($path, $filename, $filesize) {
+		$newFilename = $filename;
+		$i = 1;
+		
+		while ( file_exists($path . '/' . $newFilename) && ($filesize != filesize($path . '/' . $newFilename)) ) {
+			$newFilename = substr($filename, 0, strrpos($filename, '.')) . "-" . $i++ . substr($filename, strrpos($filename, '.'));
+		}
+		
+		return $newFilename;
+	}
 
 	public function checkPostMax($post, $files) {
 		$errors = array();
@@ -278,12 +289,17 @@ class MsFile extends Model {
 		$info = pathinfo($filename);
 		$extension = $info['extension'];
 		
-		$file = substr($info['basename'], 0, strrpos($info['basename'], '.')) . '-' . $width . 'x' . $height . '.' . $extension;
-		$new_image = $this->_checkExistingFiles(DIR_IMAGE . $this->config->get('msconf_temp_image_path'), $file);
-		
+		$temporary_filename = time() . '_' . md5(rand()) . '.' . $info["basename"];
 		$image = new Image(DIR_IMAGE . $filename);
 		$image->resize($width, $height);
-		$image->save(DIR_IMAGE . $this->config->get('msconf_temp_image_path') . $new_image);
+		$image->save(DIR_IMAGE . $this->config->get('msconf_temp_image_path') . $temporary_filename);
+		
+		$file = substr($info['basename'], 0, strrpos($info['basename'], '.')) . '-' . $width . 'x' . $height . '.' . $extension;
+		$new_image = $this->_checkExistingFilesSizes(DIR_IMAGE . $this->config->get('msconf_temp_image_path'), $file, filesize(DIR_IMAGE . $this->config->get('msconf_temp_image_path') . $temporary_filename));
+		
+		if (copy(DIR_IMAGE . $this->config->get('msconf_temp_image_path') . $temporary_filename, DIR_IMAGE . $this->config->get('msconf_temp_image_path') . $new_image)) {
+			unlink(DIR_IMAGE . $this->config->get('msconf_temp_image_path') . $temporary_filename);
+		}
 		
 		if (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) {
 			return $this->config->get('config_ssl') . 'image/' . $this->config->get('msconf_temp_image_path') . $new_image;
