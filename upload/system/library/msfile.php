@@ -278,7 +278,9 @@ class MsFile extends Model {
 		$info = pathinfo($filename);
 		$extension = $info['extension'];
 		
-		$new_image = substr($info['basename'], 0, strrpos($info['basename'], '.')) . '-' . $width . 'x' . $height . '.' . $extension;
+		$file = substr($info['basename'], 0, strrpos($info['basename'], '.')) . '-' . $width . 'x' . $height . '.' . $extension;
+		$new_image = $this->_checkExistingFiles(DIR_IMAGE . $this->config->get('msconf_temp_image_path') . $this->customer->getId(), $file);
+		
 		$image = new Image(DIR_IMAGE . $filename);
 		$image->resize($width, $height);
 		$image->save(DIR_IMAGE . $this->config->get('msconf_temp_image_path') . $new_image);
