@@ -16,11 +16,22 @@ class MsFile extends Model {
 		return $newFilename;
 	}
 	
-	function _checkExistingFilesSizes($path, $filename, $filesize) {
+	function _checkExistingFilesSizes($path, $filename, $md5) {
 		$newFilename = $filename;
 		$i = 1;
 		
 		while ( file_exists($path . '/' . $newFilename) && ($filesize != filesize($path . '/' . $newFilename)) ) {
+			$newFilename = substr($filename, 0, strrpos($filename, '.')) . "-" . $i++ . substr($filename, strrpos($filename, '.'));
+		}
+		
+		return $newFilename;
+	}
+	
+	function _checkExistingFilesMd5($path, $filename, $md5) {
+		$newFilename = $filename;
+		$i = 1;
+
+		while ( file_exists($path . '/' . $newFilename) && ($md5 !== md5_file($path . '/' . $newFilename)) ) {
 			$newFilename = substr($filename, 0, strrpos($filename, '.')) . "-" . $i++ . substr($filename, strrpos($filename, '.'));
 		}
 		
@@ -295,7 +306,7 @@ class MsFile extends Model {
 		$image->save(DIR_IMAGE . $this->config->get('msconf_temp_image_path') . $temporary_filename);
 		
 		$file = substr($info['basename'], 0, strrpos($info['basename'], '.')) . '-' . $width . 'x' . $height . '.' . $extension;
-		$new_image = $this->_checkExistingFilesSizes(DIR_IMAGE . $this->config->get('msconf_temp_image_path'), $file, filesize(DIR_IMAGE . $this->config->get('msconf_temp_image_path') . $temporary_filename));
+		$new_image = $this->_checkExistingFilesMd5(DIR_IMAGE . $this->config->get('msconf_temp_image_path'), $file, md5_file(DIR_IMAGE . $this->config->get('msconf_temp_image_path') . $temporary_filename));
 		
 		if (copy(DIR_IMAGE . $this->config->get('msconf_temp_image_path') . $temporary_filename, DIR_IMAGE . $this->config->get('msconf_temp_image_path') . $new_image)) {
 			unlink(DIR_IMAGE . $this->config->get('msconf_temp_image_path') . $temporary_filename);
