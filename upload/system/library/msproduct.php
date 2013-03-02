@@ -90,9 +90,9 @@ class MsProduct extends Model {
 	
 		if (!$category_data) {
 			$category_data = array();
-		
+			
 			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "category c LEFT JOIN " . DB_PREFIX . "category_description cd ON (c.category_id = cd.category_id) WHERE c.parent_id = '" . (int)$parent_id . "' AND cd.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY c.sort_order, cd.name ASC");
-		
+			
 			foreach ($query->rows as $result) {
 				$category_data[] = array(
 					'category_id' => $result['category_id'],
@@ -102,7 +102,7 @@ class MsProduct extends Model {
 				);
 			
 				$category_data = array_merge($category_data, $this->getCategories($result['category_id']));
-			}	
+			}
 	
 			$this->cache->set('category.' . (int)$this->config->get('config_language_id') . '.' . (int)$parent_id, $category_data);
 		}
@@ -182,7 +182,7 @@ class MsProduct extends Model {
 		$option_value_data = array();
 		
 		$option_value_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "option_value ov LEFT JOIN " . DB_PREFIX . "option_value_description ovd ON (ov.option_value_id = ovd.option_value_id) WHERE ov.option_id = '" . (int)$option_id . "' AND ovd.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY ov.sort_order ASC");
-				
+		
 		foreach ($option_value_query->rows as $option_value) {
 			$option_value_data[] = array(
 				'option_value_id' => $option_value['option_value_id'],
@@ -413,8 +413,8 @@ class MsProduct extends Model {
 						WHERE product_id = " . (int)$product_id . "
 						AND language_id = " . (int)$language_id;
 						
-				$this->db->query($sql);				
-			} else {			
+				$this->db->query($sql);
+			} else {
 				$sql = "UPDATE " . DB_PREFIX . "product_description
 						SET name = '". $this->db->escape($language['product_name']) ."',
 							description = '". $this->db->escape(htmlspecialchars(nl2br($language['product_description']), ENT_COMPAT)) ."'
@@ -425,7 +425,7 @@ class MsProduct extends Model {
 				
 				$sql = "DELETE FROM " . DB_PREFIX . "product_tag
 						WHERE product_id = " . (int)$product_id;
-				$this->db->query($sql);				
+				$this->db->query($sql);
 				
 				if ($language['product_tags']) {
 					$tags = explode(',', $language['product_tags']);
@@ -434,7 +434,7 @@ class MsProduct extends Model {
 					}
 				}
 			}
-		}		
+		}
 		
 		$sql = "UPDATE " . DB_PREFIX . "ms_product
 				SET product_status = " . (int)$data['product_status'] . ",
@@ -452,13 +452,14 @@ class MsProduct extends Model {
 			$sql = "INSERT INTO " . DB_PREFIX . "product_to_category
 					SET product_id = " . (int)$product_id . ",
 						category_id = " . (int)$category_id;
-			$this->db->query($sql);		
+			$this->db->query($sql);	
 		}
 
-		// images
-		$new_images = $data['product_images'];
-		
+		// Images
 		if (isset($data['product_images'])) {
+			
+			$new_images = $data['product_images'];
+			
 			foreach($old_images as $k => $old_image) {
 				$key = array_search($old_image['image'], $data['product_images']);
 				if ($key !== FALSE) {
@@ -471,11 +472,11 @@ class MsProduct extends Model {
 				$newImagePath = $this->MsLoader->MsFile->moveImage($product_image);
 				$this->db->query("INSERT INTO " . DB_PREFIX . "product_image SET product_id = '" . (int)$product_id . "', image = '" . $this->db->escape(html_entity_decode($newImagePath, ENT_QUOTES, 'UTF-8')) . "', sort_order = '" . (int)array_search($product_image, $new_images) . "'");
 			}
-		}		
-
-		$i = 0;
-		foreach ($new_images as $key => $image) {
-			$this->db->query("UPDATE " . DB_PREFIX . "product_image SET sort_order = " . $i++ . " WHERE product_id = '" . (int)$product_id . "' AND image = '" . $this->db->escape(html_entity_decode($image, ENT_QUOTES, 'UTF-8')) . "'");
+			
+			$i = 0;
+			foreach ($new_images as $key => $image) {
+				$this->db->query("UPDATE " . DB_PREFIX . "product_image SET sort_order = " . $i++ . " WHERE product_id = '" . (int)$product_id . "' AND image = '" . $this->db->escape(html_entity_decode($image, ENT_QUOTES, 'UTF-8')) . "'");
+			}
 		}
 
 		foreach($old_images as $old_image) {
@@ -498,14 +499,14 @@ class MsProduct extends Model {
 						
 						$this->db->query("UPDATE " . DB_PREFIX . "download SET remaining = 5, filename = '" . $this->db->escape($newFile) . "', mask = '" . $this->db->escape($fileMask) . "' WHERE download_id = '" . (int)$dl['download_id'] . "'");
 						
-			        	if (isset($data['push_downloads'])) {
-			        		//var_dump('pushing download ' . $dl['download_id']);
-			      			$this->db->query("UPDATE " . DB_PREFIX . "order_download SET remaining = 5, `filename` = '" . $this->db->escape($newFile) . "', mask = '" . $this->db->escape($fileMask) . "', name = '" . $this->db->escape($fileMask) . "' WHERE `filename` = '" . $this->db->escape($old_downloads[$dl['download_id']]['filename']) . "'");
-			      		}
+						if (isset($data['push_downloads'])) {
+							//var_dump('pushing download ' . $dl['download_id']);
+							$this->db->query("UPDATE " . DB_PREFIX . "order_download SET remaining = 5, `filename` = '" . $this->db->escape($newFile) . "', mask = '" . $this->db->escape($fileMask) . "', name = '" . $this->db->escape($fileMask) . "' WHERE `filename` = '" . $this->db->escape($old_downloads[$dl['download_id']]['filename']) . "'");
+						}
 						
 						foreach ($data['languages'] as $language_id => $language) {
 							$this->db->query("UPDATE " . DB_PREFIX . "download_description SET name = '" . $this->db->escape($fileMask) . "' WHERE download_id = '" . (int)$dl['download_id'] . "' AND language_id = '" . (int)$language_id . "'");
-						}						
+						}
 						
 						$this->MsLoader->MsFile->deleteDownload($old_downloads[$dl['download_id']]['filename']);
 					} else {
@@ -528,16 +529,16 @@ class MsProduct extends Model {
 						$this->db->query("INSERT INTO " . DB_PREFIX . "download_description SET download_id = '" . (int)$download_id . "', name = '" . $this->db->escape($fileMask) . "', language_id = '" . (int)$language_id . "'");
 					}
 					
-		        	if (isset($data['push_downloads'])) {
-		        		$orders = $this->db->query("SELECT order_product_id, order_id FROM " . DB_PREFIX . "order_product WHERE product_id = '"  . (int)$product_id . "'");
-		        		//var_dump($orders);
-		        		//var_dump("SELECT order_product_id, order_id FROM " . DB_PREFIX . "order_product WHERE product_id = '"  . (int)$product_id . "'");
-		        		foreach ($orders->rows as $row) {
+					if (isset($data['push_downloads'])) {
+						$orders = $this->db->query("SELECT order_product_id, order_id FROM " . DB_PREFIX . "order_product WHERE product_id = '"  . (int)$product_id . "'");
+						//var_dump($orders);
+						//var_dump("SELECT order_product_id, order_id FROM " . DB_PREFIX . "order_product WHERE product_id = '"  . (int)$product_id . "'");
+						foreach ($orders->rows as $row) {
 							//var_dump('pushing download ' . $newFile . ' for ' . $row['order_product_id']);
 							//var_dump("INSERT INTO " . DB_PREFIX . "order_download SET order_id = '" . (int)$row['order_id'] . "', order_product_id = '" . (int)$row['order_product_id'] . "', remaining = 5, `filename` = '" . $this->db->escape($newFile) . "', mask = '" . $this->db->escape($fileMask) . "', name = '" . $this->db->escape($fileMask) . "'");
-		      				$this->db->query("INSERT INTO " . DB_PREFIX . "order_download SET order_id = '" . (int)$row['order_id'] . "', order_product_id = '" . (int)$row['order_product_id'] . "', remaining = 5, `filename` = '" . $this->db->escape($newFile) . "', mask = '" . $this->db->escape($fileMask) . "', name = '" . $this->db->escape($fileMask) . "'");
-		        		}
-		      		}					
+							$this->db->query("INSERT INTO " . DB_PREFIX . "order_download SET order_id = '" . (int)$row['order_id'] . "', order_product_id = '" . (int)$row['order_product_id'] . "', remaining = 5, `filename` = '" . $this->db->escape($newFile) . "', mask = '" . $this->db->escape($fileMask) . "', name = '" . $this->db->escape($fileMask) . "'");
+						}
+					}
 				}
 			}
 		}
