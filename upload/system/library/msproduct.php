@@ -63,12 +63,14 @@ class MsProduct extends Model {
 					'name'        => $result['name'],
 				);
 			
+				//Recursive call of the function and merge of all the categories together
 				$category_data = array_merge($category_data, $this->getCategories($result['category_id']));
 			}
 	
 			//$this->cache->set('category.' . (int)$this->config->get('config_language_id') . '.' . (int)$parent_id, $category_data);
 		}
 		
+		// The first calls of the function (for the root categories), where indentation takes place
 		if ($parent_id == 0) {
 			$category_data_indented = array();
 			foreach ($category_data as $category) {
