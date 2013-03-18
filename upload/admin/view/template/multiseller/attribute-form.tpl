@@ -64,7 +64,7 @@
 			<td>
 				<input type="radio" name="text_type" value="normal" <?php if(!$attribute['multilang'] && !$attribute['number']) { ?>checked="checked"<?php } ?> /><?php echo $ms_attribute_normal; ?>
 				<input type="radio" name="text_type" value="multilang" <?php if($attribute['multilang']) { ?>checked="checked"<?php } ?> /><?php echo $ms_attribute_multilang; ?>
-				<input type="radio" name="text_type" value="number" <?php if($attribute['number']) { ?>checked="checked"<?php } ?> /><?php echo $ms_attribute_number; ?>
+				<!-- <input type="radio" name="text_type" value="number" <?php if($attribute['number']) { ?>checked="checked"<?php } ?> /><?php echo $ms_attribute_number; ?> -->
 				<span class="error"></span><br />
 			</td>
 		</tr>
