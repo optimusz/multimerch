@@ -59,10 +59,10 @@ class ModelMultisellerSettings extends Model {
 								continue;
 						}
 						
-						var_dump("INSERT INTO `" . DB_PREFIX . "ms_attribute` (attribute_id, attribute_type, sort_order) VALUES ({$option['option_id']}, $type, {$option['sort_order']})");
-						var_dump("INSERT INTO `" . DB_PREFIX . "ms_attribute_description` (attribute_id, language_id, name) SELECT option_id, language_id, name FROM `" . DB_PREFIX . "ms_option_description` WHERE option_id = {$option['option_id']}");
-						var_dump("INSERT INTO `" . DB_PREFIX . "ms_attribute_value` (attribute_value_id, attribute_id, image, sort_order) SELECT option_value_id, option_id, image, sort_order FROM `" . DB_PREFIX . "ms_option_value` WHERE option_id = {$option['option_id']}");
-						var_dump("INSERT INTO `" . DB_PREFIX . "ms_attribute_value_description` (attribute_value_id, language_id, attribute_id, name) SELECT option_value_id, language_id, option_id, name FROM `" . DB_PREFIX . "ms_option_value_description` WHERE option_id = {$option['option_id']}");
+						$this->db->query("INSERT INTO `" . DB_PREFIX . "ms_attribute` (attribute_id, attribute_type, sort_order) VALUES ({$option['option_id']}, $type, {$option['sort_order']})");
+						$this->db->query("INSERT INTO `" . DB_PREFIX . "ms_attribute_description` (attribute_id, language_id, name) SELECT option_id, language_id, name FROM `" . DB_PREFIX . "ms_option_description` WHERE option_id = {$option['option_id']}");
+						$this->db->query("INSERT INTO `" . DB_PREFIX . "ms_attribute_value` (attribute_value_id, attribute_id, image, sort_order) SELECT option_value_id, option_id, image, sort_order FROM `" . DB_PREFIX . "ms_option_value` WHERE option_id = {$option['option_id']}");
+						$this->db->query("INSERT INTO `" . DB_PREFIX . "ms_attribute_value_description` (attribute_value_id, language_id, attribute_id, name) SELECT option_value_id, language_id, option_id, name FROM `" . DB_PREFIX . "ms_option_value_description` WHERE option_id = {$option['option_id']}");
 					}
 					
 				default:
