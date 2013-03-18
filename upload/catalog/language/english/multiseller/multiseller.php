@@ -221,6 +221,9 @@ $_['ms_error_product_image_maximum'] = 'No more than %s image(s) allowed';
 $_['ms_error_product_download_maximum'] = 'No more than %s download(s) allowed';
 $_['ms_error_product_message_length'] = 'Message cannot be longer than 1000 characters';
 $_['ms_error_product_invalid_pdf_range'] = 'Please specify comma delimited (,) pages or page ranges using hyphens (-)';
+$_['ms_error_product_attribute_required'] = 'This attribute is required';
+$_['ms_error_product_attribute_long'] = 'This value can not be longer than %s symbols';
+
 
 $_['ms_error_withdraw_amount'] = 'Invalid amount';
 $_['ms_error_withdraw_balance'] = 'Not enough funds on your balance';

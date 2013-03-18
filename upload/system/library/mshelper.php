@@ -82,6 +82,12 @@ class MsHelper extends Model {
 			$this->document->addStyle("catalog/view/theme/default/stylesheet/{$style}.css");
 		}
 	}
+	
+	public function getLanguageId($code) {
+		$res = $this->db->query("SELECT language_id FROM `" . DB_PREFIX . "language` WHERE code = '" . $code . "'");
+		
+		return $res->row['language_id'];
+	}	
 }
 
 ?>

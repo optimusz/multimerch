@@ -63,15 +63,20 @@ $(function() {
 			success: function(jsonData) {
 				$('.error').text('');
 				if (!jQuery.isEmptyObject(jsonData.errors)) {
-					$('#ms-new-product a.button').show();
-					button.prev('span.wait').remove();
+					button.show().prev('span.wait').remove();
 					for (error in jsonData.errors) {
 						if (!jsonData.errors.hasOwnProperty(error)) {
 							continue;
 						}
-						$('#error_'+error).text(jsonData.errors[error]);
-						window.scrollTo(0,0);
 						
+						if ($('#error_'+error).length > 0)
+							$('#error_'+error).text(jsonData.errors[error]);
+						else
+							$('[name="'+error+'"]').nextAll('.error:first').text(jsonData.errors[error]);
+						
+						console.log($('[name="'+error+'"]'));
+						
+						window.scrollTo(0,0);
 					}				
 				} else {
 					location = jsonData['redirect'];

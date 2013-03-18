@@ -11,8 +11,10 @@
 		<div class="heading">
 			<h1><img src="view/image/module.png"/><?php echo $heading_title; ?></h1>
 			<div class="buttons">
-				<?php if (isset($update22)) { ?>
-				<a class="button" href="<?php echo $update22; ?>">Update DB to version 2.2</a>
+				<?php if (isset($updates)) { ?>
+				<?php foreach ($updates as $v => $link) { ?>
+				<a class="button" href="<?php echo $link; ?>">Update DB to version <?php echo $v; ?></a>
+				<?php } ?>
 				<?php } ?>
 				<a class="button" id="saveSettings"><?php echo $button_save; ?></a>
 				<a onclick="location = '<?php echo $cancel; ?>';" class="button"><span><?php echo $button_cancel; ?></span></a>
@@ -304,31 +306,6 @@
 							<input type="radio" name="msconf_provide_buyerinfo" value="2" <?php if($msconf_provide_buyerinfo == 2) { ?> checked="checked" <?php } ?>  />
 							<?php echo $text_shipping_dependent; ?>							
 					  	</td>
-					</tr>
-					
-					<tr>
-						  <td>
-						  		<span><?php echo $ms_config_product_options; ?></span>
-								<span class="help"><?php echo $ms_config_product_options_note; ?></span>
-						  </td>
-						  <td>
-						  	<div class="scrollbox">
-							  <?php $class = 'odd'; ?>
-							  <?php foreach ($options as $option) { ?>
-							  <?php if (!in_array($option['type'], array('checkbox','radio','select'))) continue; ?>
-							  <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
-							  <div class="<?php echo $class; ?>">
-								<?php if (in_array($option['option_id'], $msconf_product_options)) { ?>
-								<input type="checkbox" name="msconf_product_options[]" value="<?php echo $option['option_id']; ?>" checked="checked" />
-								<?php echo $option['name']; ?>
-								<?php } else { ?>
-								<input type="checkbox" name="msconf_product_options[]" value="<?php echo $option['option_id']; ?>" />
-								<?php echo $option['name']; ?>
-								<?php } ?>
-							  </div>
-							  <?php } ?>
-							</div>
-						  </td>
 					</tr>
 					
 					<tr>

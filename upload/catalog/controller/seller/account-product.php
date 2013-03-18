@@ -158,7 +158,15 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 
 		// only check default language for errors
 		$i = 0;
-		$default = 0;		
+		$default = 0;
+		$attributes = array();
+		$product_attributes = array();
+		
+		foreach ($this->MsLoader->MsAttribute->getAttributes(array('multilang' => 1, 'enabled' => 1)) as $attribute) {
+			$attributes[$attribute['attribute_id']] = $attribute;
+			$attributes[$attribute['attribute_id']]['values'] = $this->MsLoader->MsAttribute->getAttributeValues($attribute['attribute_id']);
+		}		
+		
 		foreach ($data['languages'] as $language_id => $language) {
 			// main language inputs are mandatory
 			if ($i == 0) {
@@ -193,9 +201,45 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 				$json['errors']['product_tags_' . $language_id] = $this->language->get('ms_error_product_tags_length');			
 			}
 
+			// multilang attributes
+			if (isset($language['product_attributes'])) {
+				$product_attributes = $language['product_attributes'];
+				unset($data['languages'][$language_id]['product_attributes']);
+							
+				foreach ($attributes as $attribute_id => $attribute) {
+					// required attributes empty, errors, for first language only
+					if ($i == 0 && $attribute['required'] && (!isset($product_attributes[$attribute_id]) || empty($product_attributes[$attribute_id]))) {
+						$json['errors']["languages[$language_id][product_attributes][$attribute_id]"] = $this->language->get('ms_error_product_attribute_required'); 
+						continue;
+					}
+					
+					// attribute validation
+					if ($attribute['attribute_type'] == MsAttribute::TYPE_TEXT) {
+						if (mb_strlen($product_attributes[$attribute_id]['value']) > 100) {
+							$json['errors']["languages[$language_id][product_attributes][$attribute_id]"] = sprintf($this->language->get('ms_error_product_attribute_long'), 100);
+							continue;
+						}
+						// text input validation
+					} else if ($attribute['attribute_type'] == MsAttribute::TYPE_TEXTAREA) {
+						if (mb_strlen($product_attributes[$attribute_id]['value']) > 2000) {
+							$json['errors']["languages[$language_id][product_attributes][$attribute_id]"] = sprintf($this->language->get('ms_error_product_attribute_long'), 2000);
+							continue;
+						}
+					}
+
+					// set attributes
+					$data['languages'][$language_id]['product_attributes'][$attribute_id] = array(
+						'attribute_type' => $attribute['attribute_type'],
+						// sorcery
+						'value' => !empty($product_attributes[$attribute_id]['value']) ? $product_attributes[$attribute_id]['value'] :  (isset($data['languages'][$default]['product_attributes'][$attribute_id]['value']) ? $data['languages'][$default]['product_attributes'][$attribute_id]['value'] : ''),
+						'value_id' => $product_attributes[$attribute_id]['value_id']
+					);
+				}
+			}
+			
 			$i++;
 		}
-		
+
 		if ((float)$data['product_price'] == 0) {
 			if (!is_numeric($data['product_price'])) {
 				$json['errors']['product_price'] = $this->language->get('ms_error_product_price_invalid');			
@@ -220,12 +264,10 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 				foreach ($data['product_downloads'] as $key => $download) {
 					if (!empty($download['filename'])) {
 						if (!$this->MsLoader->MsFile->checkFileAgainstSession($download['filename'])) {
-							//var_dump($download);
 							$json['errors']['product_download'] = $this->language->get('ms_error_file_upload_error');
 						}						
 					} else if (!empty($download['download_id']) && !empty($product['product_id'])) {
 						if (!$this->MsLoader->MsProduct->hasDownload($product['product_id'],$download['download_id'])) {
-							//var_dump($download);
 							$json['errors']['product_download'] = $this->language->get('ms_error_file_upload_error');
 						}
 					} else {
@@ -274,36 +316,81 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 			$json['errors']['product_category'] = $this->language->get('ms_error_product_category_empty'); 		
 		}
 		
-
+		
+		// generic attributes
+		$attributes = array();
+		$product_attributes = array();		
+		
 		if (isset($data['product_attributes'])) {
 			$product_attributes = $data['product_attributes'];
 			unset($data['product_attributes']);
 						
-			foreach ($this->MsLoader->MsProduct->getOptions(array('option_ids' => $this->config->get('msconf_product_options'))) as $option) {
-				$options[$option['option_id']] = $option;
-				$options[$option['option_id']]['values'] = $this->MsLoader->MsProduct->getOptionValues($option['option_id']);
+			foreach ($this->MsLoader->MsAttribute->getAttributes(array('multilang' => 0)) as $attribute) {
+				$attributes[$attribute['attribute_id']] = $attribute;
+				$attributes[$attribute['attribute_id']]['values'] = $this->MsLoader->MsAttribute->getAttributeValues($attribute['attribute_id']);
 			}
-			foreach ($product_attributes as $option_id => $attr) {
-				if (!isset($options[$option_id])) continue;
 
-				// @TODO check for correct value id
-				if ($options[$option_id]['type'] == 'select' || $options[$option_id]['type'] == 'radio') {
-					if ((int)$attr != 0) {
-						$data['product_attributes'][$option_id] = array(
-							'type' => $options[$option_id]['type'],
-							'value' => (int)$attr
+			foreach ($attributes as $attribute_id => $attribute) {
+				// attributes with no values defined, skip
+				if (empty($attribute['values']) && in_array($attribute['attribute_type'], array(MsAttribute::TYPE_CHECKBOX, MsAttribute::TYPE_SELECT, MsAttribute::TYPE_RADIO)))
+					continue;				
+				
+				// required attributes empty, errors
+				if (($attribute['required'] || $attribute['attribute_type'] == MsAttribute::TYPE_RADIO) && (!isset($product_attributes[$attribute_id]) || empty($product_attributes[$attribute_id]))) {
+					$json['errors']["product_attributes[$attribute_id]"] = $this->language->get('ms_error_product_attribute_required'); 
+					continue;
+				}
+				
+				// attribute validation
+				if (in_array($attribute['attribute_type'], array(MsAttribute::TYPE_SELECT, MsAttribute::TYPE_RADIO, MsAttribute::TYPE_IMAGE))) {
+					// select, radio, image
+					if ((int)$product_attributes[$attribute_id] == 0) {
+						// not required, not checked
+					} else {
+						// @TODO check for permitted value id
+						$data['product_attributes'][$attribute_id] = array(
+							'attribute_type' => $attribute['attribute_type'],
+							'value' => $product_attributes[$attribute_id]
 						);
 					}
-				} else if ($options[$option_id]['type'] == 'checkbox') {
-					foreach ($attr as $key => $option_value_id) {
-						if ((int)$option_value_id != 0) {
-							$data['product_attributes'][$option_id]['type']  = $options[$option_id]['type'];
-							$data['product_attributes'][$option_id]['values'][]  = (int)$option_value_id;
+					continue;
+				} else if ($attribute['attribute_type'] == MsAttribute::TYPE_CHECKBOX) {
+					// checkbox
+					foreach ($product_attributes[$attribute_id] as $key => $attribute_value_id) {
+						if ((int)$attribute_value_id != 0) {
+							// @TODO check for permitted value id
+							$data['product_attributes'][$attribute_id]['attribute_type']  = $attribute['attribute_type'];
+							$data['product_attributes'][$attribute_id]['values'][]  = (int)$attribute_value_id;
 						}
-					} 
+					}
+					continue;
+				} else if ($attribute['attribute_type'] == MsAttribute::TYPE_TEXT) {
+					if (mb_strlen($product_attributes[$attribute_id]['value']) > 100) {
+						$json['errors']["product_attributes[$attribute_id]"] = sprintf($this->language->get('ms_error_product_attribute_long'), 100);
+						continue;
+					}
+					// text input validation
+				} else if ($attribute['attribute_type'] == MsAttribute::TYPE_TEXTAREA) {
+					if (mb_strlen($product_attributes[$attribute_id]['value']) > 2000) {
+						$json['errors']["product_attributes[$attribute_id]"] = sprintf($this->language->get('ms_error_product_attribute_long'), 2000);
+						continue;
+					}
+				} else if ($attribute['attribute_type'] == MsAttribute::TYPE_DATE) {
+					// date input validation
+				} else if ($attribute['attribute_type'] == MsAttribute::TYPE_DATETIME) {
+					// datetime input validation
+				} else if ($attribute['attribute_type'] == MsAttribute::TYPE_TIME) {
+					// datetime input validation
 				}
+
+				// set attributes
+				$data['product_attributes'][$attribute_id] = array(
+					'attribute_type' => $attribute['attribute_type'],
+					'value' => $product_attributes[$attribute_id]['value'],
+					'value_id' => $product_attributes[$attribute_id]['value_id'],
+				);
 			}
-		}	
+		}
 		
 		$data['product_subtract'] = 0;
 		if ($this->config->get('msconf_enable_shipping') == 1) { // enable shipping
@@ -487,15 +574,35 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		else
 			$this->data['categories'] = $this->MsLoader->MsProduct->getMultipleCategories(0);
 
-//
-		$this->data['options'] = array();
-		$options = $this->MsLoader->MsProduct->getOptions(array('option_ids' => $this->config->get('msconf_product_options')));
-		foreach ($options as $option) {
-			$option_values = $this->MsLoader->MsProduct->getOptionValues($option['option_id']);
-			$option['values'] = $option_values;
-			$this->data['options'][] = $option;
+		// attributes
+		$attributes = $this->MsLoader->MsAttribute->getAttributes(
+			array(
+				// current language
+				'language_id' => $this->config->get('config_language_id'),
+				'enabled' => 1
+			),
+			array(
+				'order_by' => 'ma.sort_order',
+				'order_way' => 'ASC'
+			)
+		);
+
+		if (!empty($attributes)) {
+			foreach ($attributes as $attr) {
+				$attr['values'] = $this->MsLoader->MsAttribute->getAttributeValues($attr['attribute_id']);
+				
+				if (empty($attr['values']) && in_array($attr['attribute_type'], array(MsAttribute::TYPE_CHECKBOX, MsAttribute::TYPE_SELECT, MsAttribute::TYPE_RADIO)))
+					continue;
+				
+				if ($attr['multilang'] && in_array($attr['attribute_type'], array(MsAttribute::TYPE_TEXT, MsAttribute::TYPE_TEXTAREA))) {
+					$this->data['multilang_attributes'][] = $attr;
+				} else {
+					$this->data['normal_attributes'][] = $attr;
+				}
+			}
 		}
-//
+		
+		//
 
 		$this->load->model('localisation/language');
 		$this->data['languages'] = $this->model_localisation_language->getLanguages();
@@ -534,8 +641,6 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 	}
 	
 	public function index() {
-		//var_dump($this->MsLoader->MsCommission->calculateCommission($this->customer->getId()));
-		
 		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
 		$seller_id = $this->customer->getId();
 		
@@ -675,15 +780,40 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		if (!$product['product_id']) {
 			$this->redirect($this->url->link('seller/account-product', '', 'SSL'));
 		} else {
-			$this->data['options'] = array();
-			$options = $this->MsLoader->MsProduct->getOptions(array('option_ids' => $this->config->get('msconf_product_options')));
-			foreach ($options as $option) {
-				$option_values = $this->MsLoader->MsProduct->getOptionValues($option['option_id']);
-				$option['values'] = $option_values;
-				$this->data['options'][] = $option;
+			//
+			
+			$attributes = $this->MsLoader->MsAttribute->getAttributes(
+				array(
+					// current language
+					'language_id' => $this->config->get('config_language_id'),
+					'enabled' => 1
+				),
+				array(
+					'order_by' => 'ma.sort_order',
+					'order_way' => 'ASC'
+				)
+			);
+			
+			if (!empty($attributes)) {
+				foreach ($attributes as $attr) {
+					$attr['values'] = $this->MsLoader->MsAttribute->getAttributeValues($attr['attribute_id']);
+	
+					if (empty($attr['values']) && in_array($attr['attribute_type'], array(MsAttribute::TYPE_CHECKBOX, MsAttribute::TYPE_SELECT, MsAttribute::TYPE_RADIO)))
+						continue;
+					
+					if ($attr['multilang'] && in_array($attr['attribute_type'], array(MsAttribute::TYPE_TEXT, MsAttribute::TYPE_TEXTAREA))) {
+						$this->data['multilang_attributes'][] = $attr;
+					} else {
+						$this->data['normal_attributes'][] = $attr;
+					}
+				}
+				$a = $this->MsLoader->MsAttribute->getProductAttributeValues($product_id);
+				$this->data['multilang_attribute_values'] = $a[1];
+				$this->data['normal_attribute_values'] = $a[0]; 
 			}
 			
-			$this->data['product_attributes'] = $this->MsLoader->MsProduct->getProductAttributes($product_id);
+			//
+			
 			$product['specials'] = $this->MsLoader->MsProduct->getProductSpecials($product_id);
 			$product['discounts'] = $this->MsLoader->MsProduct->getProductDiscounts($product_id);
 

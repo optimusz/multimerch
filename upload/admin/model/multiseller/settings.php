@@ -1,25 +1,74 @@
 <?php
 class ModelMultisellerSettings extends Model {
-	public function checkDbVersion22() {
-		$res = $this->db->query("SHOW COLUMNS FROM `" . DB_PREFIX . "ms_comments` LIKE 'parent_id'");
+	public function checkDbVersion($version) {
+		return false;
+		switch ($version) {
+			case "2.2":
+				$res = $this->db->query("SHOW COLUMNS FROM `" . DB_PREFIX . "ms_comments` LIKE 'parent_id'");
+			case "2.3":
+				$res = $this->db->query("SHOW COLUMNS FROM `" . DB_PREFIX . "ms_product_attribute` LIKE 'attribute_id'");
+		}
+		
 		if ($res->num_rows)
 			return true;
 			
 		return false;
 	}
 
-	public function update22() {
-		if (!$this->checkDbVersion22()) {
-			$this->db->query("ALTER TABLE " . DB_PREFIX . "ms_comments ADD `parent_id` int(11) DEFAULT NULL AFTER `id`");
-			$this->db->query("ALTER TABLE " . DB_PREFIX . "ms_comments CHANGE `id_product` `product_id` int(11) NOT NULL");
-			$this->db->query("ALTER TABLE " . DB_PREFIX . "ms_comments CHANGE `id_customer` `customer_id` int(11) DEFAULT NULL");
-			$this->db->query("ALTER TABLE " . DB_PREFIX . "ms_comments ADD `user_id` int(11) DEFAULT NULL AFTER `customer_id`");
-			$this->db->query("ALTER TABLE " . DB_PREFIX . "ms_comments CHANGE `name` `name` varchar(128) NOT NULL DEFAULT ''");
-			$this->db->query("ALTER TABLE " . DB_PREFIX . "ms_comments CHANGE `create_time` `create_time` int(11) NOT NULL");
-			$this->db->query("ALTER TABLE " . DB_PREFIX . "ms_comments CHANGE `display` `display` tinyint(1) NOT NULL");
+	public function update($version) {
+		if (!$this->checkDbVersion($version)) {
+			switch ($version) {
+				case "2.2":
+					$this->db->query("ALTER TABLE " . DB_PREFIX . "ms_comments ADD `parent_id` int(11) DEFAULT NULL AFTER `id`");
+					$this->db->query("ALTER TABLE " . DB_PREFIX . "ms_comments CHANGE `id_product` `product_id` int(11) NOT NULL");
+					$this->db->query("ALTER TABLE " . DB_PREFIX . "ms_comments CHANGE `id_customer` `customer_id` int(11) DEFAULT NULL");
+					$this->db->query("ALTER TABLE " . DB_PREFIX . "ms_comments ADD `user_id` int(11) DEFAULT NULL AFTER `customer_id`");
+					$this->db->query("ALTER TABLE " . DB_PREFIX . "ms_comments CHANGE `name` `name` varchar(128) NOT NULL DEFAULT ''");
+					$this->db->query("ALTER TABLE " . DB_PREFIX . "ms_comments CHANGE `create_time` `create_time` int(11) NOT NULL");
+					$this->db->query("ALTER TABLE " . DB_PREFIX . "ms_comments CHANGE `display` `display` tinyint(1) NOT NULL");
+				
+				case "2.3":
+					$this->db->query("ALTER TABLE " . DB_PREFIX . "ms_product_attribute CHANGE `option_id` `attribute_id` int(11) NOT NULL");
+					$this->db->query("ALTER TABLE " . DB_PREFIX . "ms_product_attribute CHANGE `option_value_id` `attribute_value_id` int(11) NOT NULL");
+					$this->db->query("CREATE TABLE `" . DB_PREFIX . "ms_attribute` (`attribute_id` int(11) NOT NULL AUTO_INCREMENT, `attribute_type` int(11) NOT NULL, `number` TINYINT NOT NULL DEFAULT 0, `multilang` TINYINT NOT NULL DEFAULT 0, `required` TINYINT NOT NULL DEFAULT 0, `enalbed` TINYINT NOT NULL DEFAULT 1, `sort_order` int(3) NOT NULL, PRIMARY KEY (`attribute_id`)) DEFAULT CHARSET=utf8");
+					$this->db->query("CREATE TABLE `" . DB_PREFIX . "ms_attribute_description` (`attribute_id` int(11) NOT NULL, `language_id` int(11) NOT NULL, `name` varchar(128) NOT NULL, `description` TEXT NOT NULL DEFAULT '', PRIMARY KEY (`attribute_id`,`language_id`)) DEFAULT CHARSET=utf8");
+					$this->db->query("CREATE TABLE `" . DB_PREFIX . "ms_attribute_value` (`attribute_value_id` int(11) NOT NULL AUTO_INCREMENT, `attribute_id` int(11) NOT NULL, `image` varchar(255) NOT NULL, `sort_order` int(3) NOT NULL, PRIMARY KEY (`attribute_value_id`)) DEFAULT CHARSET=utf8");
+					$this->db->query("CREATE TABLE `" . DB_PREFIX . "ms_attribute_value_description` (`attribute_value_id` int(11) NOT NULL,`language_id` int(11) NOT NULL, `attribute_id` int(11) NOT NULL, `name` varchar(128) NOT NULL, PRIMARY KEY (`attribute_value_id`,`language_id`)) DEFAULT CHARSET=utf8");
+
+					$option_ids = implode(',',$this->config->get('msconf_product_options'));
+					if (empty($option_ids)) return true;
+						
+					$res = $this->db->query("SELECT * FROM " . DB_PREFIX . "option WHERE  option_id IN ($option_ids)");
+					foreach ($res->rows as $option) {
+						switch($option["type"]) {
+							case "checkbox":
+								$type = MsAttribute::TYPE_CHECKBOX;
+								break;
+		
+							case "radio":
+								$type = MsAttribute::TYPE_RADIO;
+								break;
+								
+							case "select":
+								$type = MsAttribute::TYPE_SELECT;
+								break;
+								
+							default:
+								continue;
+						}
+						
+						var_dump("INSERT INTO `" . DB_PREFIX . "ms_attribute` (attribute_id, attribute_type, sort_order) VALUES ({$option['option_id']}, $type, {$option['sort_order']})");
+						var_dump("INSERT INTO `" . DB_PREFIX . "ms_attribute_description` (attribute_id, language_id, name) SELECT option_id, language_id, name FROM `" . DB_PREFIX . "ms_option_description` WHERE option_id = {$option['option_id']}");
+						var_dump("INSERT INTO `" . DB_PREFIX . "ms_attribute_value` (attribute_value_id, attribute_id, image, sort_order) SELECT option_value_id, option_id, image, sort_order FROM `" . DB_PREFIX . "ms_option_value` WHERE option_id = {$option['option_id']}");
+						var_dump("INSERT INTO `" . DB_PREFIX . "ms_attribute_value_description` (attribute_value_id, language_id, attribute_id, name) SELECT option_value_id, language_id, option_id, name FROM `" . DB_PREFIX . "ms_option_value_description` WHERE option_id = {$option['option_id']}");
+					}
+					
+				default:
+					break;
+			}
 		}
 	}
-	
+
 	public function createTable() {
 		$sql = "
 			CREATE TABLE `" . DB_PREFIX . "ms_commission` (
@@ -103,15 +152,6 @@ class ModelMultisellerSettings extends Model {
 	    	PRIMARY KEY (`id`)) default CHARSET=utf8";
         $this->db->query($createTable);
 	
-		$createTable = "
-			CREATE TABLE " . DB_PREFIX . "ms_product_attribute (
-			 `product_id` int(11) NOT NULL,
-			 `option_id` int(11) NOT NULL,
-			 `option_value_id` int(11) NOT NULL,
-        	PRIMARY KEY (`product_id`,`option_id`,`option_value_id`)) default CHARSET=utf8";
-        
-        $this->db->query($createTable);
-        
 		$sql = "
 			CREATE TABLE `" . DB_PREFIX . "ms_balance` (
              `balance_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -247,6 +287,59 @@ class ModelMultisellerSettings extends Model {
         	PRIMARY KEY (`seller_group_criteria_id`)) default CHARSET=utf8";
         
         $this->db->query($sql);
+		
+		
+		// new attributes
+		$sql = "
+			CREATE TABLE `" . DB_PREFIX . "ms_attribute` (
+			`attribute_id` int(11) NOT NULL AUTO_INCREMENT,
+			`attribute_type` int(11) NOT NULL,
+			`number` TINYINT NOT NULL DEFAULT 0,
+			`multilang` TINYINT NOT NULL DEFAULT 0,
+			`required` TINYINT NOT NULL DEFAULT 0,
+			`enalbed` TINYINT NOT NULL DEFAULT 1,
+			`sort_order` int(3) NOT NULL,
+			PRIMARY KEY (`attribute_id`)
+			) DEFAULT CHARSET=utf8";
+		$this->db->query($sql);
+
+		$sql = "
+			CREATE TABLE `" . DB_PREFIX . "ms_attribute_description` (
+			 `attribute_id` int(11) NOT NULL,
+			 `language_id` int(11) NOT NULL,
+			 `name` varchar(128) NOT NULL,
+			 `description` TEXT NOT NULL DEFAULT '',
+			 PRIMARY KEY (`attribute_id`,`language_id`)
+			) DEFAULT CHARSET=utf8";
+		$this->db->query($sql);
+
+		$sql = " 
+			CREATE TABLE `" . DB_PREFIX . "ms_attribute_value` (
+			 `attribute_value_id` int(11) NOT NULL AUTO_INCREMENT,
+			 `attribute_id` int(11) NOT NULL,
+			 `image` varchar(255) NOT NULL,
+			 `sort_order` int(3) NOT NULL,
+			 PRIMARY KEY (`attribute_value_id`)
+			) DEFAULT CHARSET=utf8";
+		$this->db->query($sql);
+		
+		$sql = "
+			CREATE TABLE `" . DB_PREFIX . "ms_attribute_value_description` (
+			 `attribute_value_id` int(11) NOT NULL,
+			 `language_id` int(11) NOT NULL,
+			 `attribute_id` int(11) NOT NULL,
+			 `name` varchar(128) NOT NULL,
+			 PRIMARY KEY (`attribute_value_id`,`language_id`)
+			) DEFAULT CHARSET=utf8";		
+		$this->db->query($sql);
+		
+		$sql = "
+			CREATE TABLE " . DB_PREFIX . "ms_product_attribute (
+			 `product_id` int(11) NOT NULL,
+			 `attribute_id` int(11) NOT NULL,
+			 `attribute_value_id` int(11) NOT NULL,
+        	PRIMARY KEY (`product_id`,`attribute_id`,`attribute_value_id`)) default CHARSET=utf8";
+        $this->db->query($sql);		
 		
 	}
 	

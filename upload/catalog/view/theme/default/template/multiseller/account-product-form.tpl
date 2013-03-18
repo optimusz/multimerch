@@ -76,6 +76,27 @@
 							<p class="error" id="error_product_tags_<?php echo $langId; ?>"></p>
 						</td>
 					</tr>
+					
+					<?php if (isset($multilang_attributes) && !empty($multilang_attributes)) { ?>
+					<?php foreach ($multilang_attributes as &$attr) { ?>
+					<tr>
+						<td><?php if ($attr['required'] && $k == $first) { ?><span class="required">*</span> <?php } ?><?php echo $attr['mad.name']; ?></td>
+						<td>
+							<?php if ($attr['attribute_type'] == MsAttribute::TYPE_TEXT) { ?>
+								<input type="text" name="languages[<?php echo $langId; ?>][product_attributes][<?php echo $attr['attribute_id']; ?>][value]" value="<?php echo isset($multilang_attribute_values[$attr['attribute_id']][$langId]) ? $multilang_attribute_values[$attr['attribute_id']][$langId]['value'] : '' ?>" />
+								<input type="hidden" name="languages[<?php echo $langId; ?>][product_attributes][<?php echo $attr['attribute_id']; ?>][value_id]" value="<?php if (isset($normal_attribute_values[$attr['attribute_id']])) { echo $multilang_attribute_values[$attr['attribute_id']][$langId]['value_id']; } ?>" />
+							<?php } ?>
+							
+							<?php if ($attr['attribute_type'] == MsAttribute::TYPE_TEXTAREA) { ?>
+								<textarea name="languages[<?php echo $langId; ?>][product_attributes][<?php echo $attr['attribute_id']; ?>][value]"><?php echo isset($multilang_attribute_values[$attr['attribute_id']][$langId]) ? $multilang_attribute_values[$attr['attribute_id']][$langId]['value'] : '' ?></textarea>
+								<input type="hidden" name="languages[<?php echo $langId; ?>][product_attributes][<?php echo $attr['attribute_id']; ?>][value_id]" value="<?php if (isset($normal_attribute_values[$attr['attribute_id']])) { echo $multilang_attribute_values[$attr['attribute_id']][$langId]['value_id']; } ?>" />
+							<?php } ?>
+							<p class="ms-note"><?php echo $attr['description']; ?></p>
+							<p class="error"></p>
+						</td>
+					</tr>
+					<?php } ?>
+					<?php } ?>
 				</table>
 				</div>
 			<?php } ?>
@@ -149,59 +170,78 @@
 					</td>
 				</tr> 
 				
-				<?php if ($options) { ?>
-				<?php foreach ($options as $option) { ?>
+				
+				
+				<?php if (isset($normal_attributes) && !empty($normal_attributes)) { ?>
+				<?php foreach ($normal_attributes as $attr) { ?>
 				<tr>
 					<td>
-						<?php /* if ($option['required']) { ?> <span class="required">*</span> <?php } */ ?>
-						<?php echo $option['name']; ?>
+						<?php if ($attr['required']) { ?> <span class="required">*</span> <?php } ?><?php echo $attr['name']; ?>
 					</td>
 					
 					<td>
-						<?php if ($option['type'] == 'select') { ?>
-							<select name="product_attributes[<?php echo $option['option_id']; ?>]">
+						<?php if ($attr['attribute_type'] == MsAttribute::TYPE_SELECT) { ?>
+							<select name="product_attributes[<?php echo $attr['attribute_id']; ?>]">
 							<option value=""><?php echo $text_select; ?></option>
-							<?php foreach ($option['values'] as $option_value) { ?>
-							<option value="<?php echo $option_value['option_value_id']; ?>" <?php if ($product_attributes && isset($product_attributes[$option['option_id']]['values']) && array_key_exists($option_value['option_value_id'], $product_attributes[$option['option_id']]['values'])) { ?>selected="selected"<?php } ?>><?php echo $option_value['name']; ?></option>
+							<?php foreach ($attr['values'] as $attr_value) { ?>
+							<option value="<?php echo $attr_value['attribute_value_id']; ?>" <?php if (isset($normal_attribute_values[$attr['attribute_id']]) && array_key_exists($attr_value['attribute_value_id'], $normal_attribute_values[$attr['attribute_id']])) { ?>selected="selected"<?php } ?>><?php echo $attr_value['name']; ?></option>
 							<?php } ?>
 							</select>
 						<?php } ?>
 						
-						<?php if ($option['type'] == 'radio') { ?>
-						<?php foreach ($option['values'] as $option_value) { ?>
-							<input type="radio" name="product_attributes[<?php echo $option['option_id']; ?>]" value="<?php echo $option_value['option_value_id']; ?>" <?php if ($product_attributes && isset($product_attributes[$option['option_id']]['values']) && array_key_exists($option_value['option_value_id'], $product_attributes[$option['option_id']]['values'])) { ?>checked="checked"<?php } ?> />
-							<label><?php echo $option_value['name']; ?></label>
+						<?php if ($attr['attribute_type'] == MsAttribute::TYPE_RADIO) { ?>
+						<?php foreach ($attr['values'] as $attr_value) { ?>
+							<input type="radio" name="product_attributes[<?php echo $attr['attribute_id']; ?>]" value="<?php echo $attr_value['attribute_value_id']; ?>" <?php if (isset($normal_attribute_values[$attr['attribute_id']]) && array_key_exists($attr_value['attribute_value_id'], $normal_attribute_values[$attr['attribute_id']])) { ?>checked="checked"<?php } ?> />
+							<label><?php echo $attr_value['name']; ?></label>
+							<br />
+						<?php } ?>
+						<?php } ?>
+
+						<?php /* ?>
+						<?php if ($attr['attribute_type'] == MsAttribute::TYPE_IMAGE) { ?>
+						<?php foreach ($attr['values'] as $attr_value) { ?>
+							<input type="radio" name="product_attributes[<?php echo $attr['attribute_id']; ?>]" value="<?php echo $attr_value['attribute_value_id']; ?>" <?php if (isset($normal_attribute_values[$attr['attribute_id']]) && array_key_exists($attr_value['attribute_value_id'], $normal_attribute_values[$attr['attribute_id']])) { ?>checked="checked"<?php } ?> />
+							<label><?php echo $attr_value['name']; ?></label>
+							<br />
+						<?php } ?>
+						<?php } ?>
+						<?php */ ?>
+						
+						<?php if ($attr['attribute_type'] == MsAttribute::TYPE_CHECKBOX) { ?>
+						<?php foreach ($attr['values'] as $attr_value) { ?>
+							<input type="checkbox" name="product_attributes[<?php echo $attr['attribute_id']; ?>][]" value="<?php echo $attr_value['attribute_value_id']; ?>" <?php if (isset($normal_attribute_values[$attr['attribute_id']]) && array_key_exists($attr_value['attribute_value_id'], $normal_attribute_values[$attr['attribute_id']])) { ?>checked="checked"<?php } ?> />
+							<label><?php echo $attr_value['name']; ?></label>
 							<br />
 						<?php } ?>
 						<?php } ?>
 						
-						<?php if ($option['type'] == 'checkbox') { ?>
-						<?php foreach ($option['values'] as $option_value) { ?>
-							<input type="checkbox" name="product_attributes[<?php echo $option['option_id']; ?>][]" value="<?php echo $option_value['option_value_id']; ?>" <?php if ($product_attributes && isset($product_attributes[$option['option_id']]['values']) && array_key_exists($option_value['option_value_id'], $product_attributes[$option['option_id']]['values'])) { ?>checked="checked"<?php } ?> />
-							<label><?php echo $option_value['name']; ?></label>
-							<br />
-						<?php } ?>
+						<?php if ($attr['attribute_type'] == MsAttribute::TYPE_TEXT) { ?>
+							<input type="text" name="product_attributes[<?php echo $attr['attribute_id']; ?>][value]" value="<?php if (isset($normal_attribute_values[$attr['attribute_id']])) { echo current(reset($normal_attribute_values[$attr['attribute_id']])); } ?>" />
+							<input type="hidden" name="product_attributes[<?php echo $attr['attribute_id']; ?>][value_id]" value="<?php if (isset($normal_attribute_values[$attr['attribute_id']])) { echo key($normal_attribute_values[$attr['attribute_id']]); } ?>" />
 						<?php } ?>
 						
-						<?php if ($option['type'] == 'text') { ?>
-							<input type="text" name="product_attributes[<?php echo $option['option_id']; ?>]" value="<?php echo $option['option_value']; ?>" />
+						<?php if ($attr['attribute_type'] == MsAttribute::TYPE_TEXTAREA) { ?>
+							<textarea name="product_attributes[<?php echo $attr['attribute_id']; ?>][value]" cols="40" rows="5"><?php if (isset($normal_attribute_values[$attr['attribute_id']])) { echo current(reset($normal_attribute_values[$attr['attribute_id']])); } ?></textarea>
+							<input type="hidden" name="product_attributes[<?php echo $attr['attribute_id']; ?>][value_id]" value="<?php if (isset($normal_attribute_values[$attr['attribute_id']])) { echo key($normal_attribute_values[$attr['attribute_id']]); } ?>" />
 						<?php } ?>
 						
-						<?php if ($option['type'] == 'textarea') { ?>
-							<textarea name="product_attributes[<?php echo $option['option_id']; ?>]" cols="40" rows="5"><?php echo $option['option_value']; ?></textarea>
+						<?php if ($attr['attribute_type'] == MsAttribute::TYPE_DATE) { ?>
+							<input type="text" name="product_attributes[<?php echo $attr['attribute_id']; ?>][value]" value="<?php if (isset($normal_attribute_values[$attr['attribute_id']])) { echo current(reset($normal_attribute_values[$attr['attribute_id']])); } ?>" class="date" />
+							<input type="hidden" name="product_attributes[<?php echo $attr['attribute_id']; ?>][value_id]" value="<?php if (isset($normal_attribute_values[$attr['attribute_id']])) { echo key($normal_attribute_values[$attr['attribute_id']]); } ?>" />							
 						<?php } ?>
 						
-						<?php if ($option['type'] == 'date') { ?>
-							<input type="text" name="product_attributes[<?php echo $option['option_id']; ?>]" value="<?php echo $option['option_value']; ?>" class="date" />
+						<?php if ($attr['attribute_type'] == MsAttribute::TYPE_DATETIME) { ?>
+							<input type="text" name="product_attributes[<?php echo $attr['attribute_id']; ?>][value]" value="<?php if (isset($normal_attribute_values[$attr['attribute_id']])) { echo current(reset($normal_attribute_values[$attr['attribute_id']])); } ?>" class="datetime" />
+							<input type="hidden" name="product_attributes[<?php echo $attr['attribute_id']; ?>][value_id]" value="<?php if (isset($normal_attribute_values[$attr['attribute_id']])) { echo key($normal_attribute_values[$attr['attribute_id']]); } ?>" />
 						<?php } ?>
 						
-						<?php if ($option['type'] == 'datetime') { ?>
-							<input type="text" name="product_attributes[<?php echo $option['option_id']; ?>]" value="<?php echo $option['option_value']; ?>" class="datetime" />
+						<?php if ($attr['attribute_type'] == MsAttribute::TYPE_TIME) { ?>
+							<input type="text" name="product_attributes[<?php echo $attr['attribute_id']; ?>][value]" value="<?php if (isset($normal_attribute_values[$attr['attribute_id']])) { echo current(reset($normal_attribute_values[$attr['attribute_id']])); } ?>" class="time" />
+							<input type="hidden" name="product_attributes[<?php echo $attr['attribute_id']; ?>][value_id]" value="<?php if (isset($normal_attribute_values[$attr['attribute_id']])) { echo key($normal_attribute_values[$attr['attribute_id']]); } ?>" />
 						<?php } ?>
 						
-						<?php if ($option['type'] == 'time') { ?>
-							<input type="text" name="product_attributes[<?php echo $option['option_id']; ?>]" value="<?php echo $option['option_value']; ?>" class="time" />
-						<?php } ?>
+						<p class="ms-note"><?php echo $attr['description']; ?></p>
+						<p class="error"></p>
 					</td>
 				</tr>
 				<?php } ?>

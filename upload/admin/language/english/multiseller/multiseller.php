@@ -15,6 +15,32 @@ $_['ms_status_notpublished'] = 'Not published';
 $_['ms_status_disabled'] = 'Disabled';
 $_['ms_status_deleted'] = 'Deleted';
 
+$_['ms_type'] = 'Type';
+$_['ms_type_checkbox'] = 'Checkbox';
+$_['ms_type_date'] = 'Date';
+$_['ms_type_datetime'] = 'Date &amp; Time';
+$_['ms_type_file'] = 'File';
+$_['ms_type_image'] = 'Image';
+$_['ms_type_radio'] = 'Radio';
+$_['ms_type_select']         = 'Select';
+$_['ms_type_text']           = 'Text';
+$_['ms_type_textarea']       = 'Textarea';
+$_['ms_type_time']           = 'Time';
+
+$_['text_success']        = 'Success: You have modified options!';
+$_['text_choose']         = 'Choose';
+
+
+$_['text_file']           = 'File';
+$_['text_date']           = 'Date';
+$_['text_datetime']       = 'Date &amp; Time';
+$_['text_time']           = 'Time';
+$_['text_image_manager']  = 'Image Manager';
+$_['text_browse']         = 'Browse';
+$_['text_clear']          = 'Clear';
+
+
+
 $_['ms_error_directory'] = "Warning: Could not create directory: %s. Please create it manually and make it server-writable before proceeding. <br />";
 $_['ms_error_directory_notwritable'] = "Warning: Directory already exists and is not writable: %s. Please make sure it's empty and make it server-writable before proceeding. <br />";
 $_['ms_error_directory_exists'] = "Warning: Directory already exists: %s. Please make sure it's empty before proceeding. <br />";
@@ -54,6 +80,7 @@ $_['ms_date'] = 'Date';
 $_['ms_description'] = 'Description';
 $_['ms_commission'] = 'Commission';
 $_['ms_commission_sale'] = 'Per sale';
+$_['ms_sort_order'] = 'Sort order';
 $_['ms_name'] = 'Name';
 $_['ms_description'] = 'Description';
 
@@ -74,6 +101,7 @@ $_['ms_menu_multiseller'] = 'Multiseller';
 $_['ms_menu_dashboard'] = 'Dashboard';
 $_['ms_menu_sellers'] = 'Sellers';
 $_['ms_menu_seller_groups'] = 'Seller groups';
+$_['ms_menu_attributes'] = 'Attributes';
 $_['ms_menu_products'] = 'Products';
 $_['ms_menu_transactions'] = 'Transactions';
 $_['ms_menu_requests'] = 'Withdrawals';
@@ -319,6 +347,28 @@ $_['button_cancel'] = 'Cancel';
 $_['button_save'] = 'Save';
 $_['ms_action'] = 'Action';
 
+
+// Attributes
+$_['ms_attribute_heading'] = 'Attributes';
+$_['ms_attribute_breadcrumbs'] = 'Attributes';
+$_['ms_attribute_value'] = 'Attribute value';
+
+$_['ms_attribute_text_type'] = 'Text input type';
+$_['ms_attribute_normal'] = 'Normal text';
+$_['ms_attribute_multilang'] = 'Multilanguage text';
+$_['ms_attribute_number'] = 'Number';
+$_['ms_attribute_required'] = 'Required';
+
+$_['ms_add_attribute_value'] = 'New attribute value';
+
+$_['ms_error_attribute_name'] = 'Attribute name must be between 1 and 128 characters';
+$_['ms_error_attribute_type'] = 'This attribute type requires attribute values';
+$_['ms_error_attribute_value_name'] = 'Attribute value name must be between 1 and 128 characters';
+
+
+$_['button_cancel'] = 'Cancel';
+$_['button_save'] = 'Save';
+$_['ms_action'] = 'Action';
 
 // Mails
 $_['ms_mail_greeting']      = "Hello %s,\n\n";

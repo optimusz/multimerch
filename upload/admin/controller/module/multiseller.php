@@ -1,9 +1,12 @@
 <?php
 
 class ControllerModuleMultiseller extends ControllerMultisellerBase {
+	private $_versions = array("2.2", "2.3");
+	
 	private $_controllers = array(
 		"multiseller/base",
 		"multiseller/product",
+		"multiseller/attribute",
 		"multiseller/request-withdrawal",
 		"multiseller/seller",
 		"multiseller/transaction",
@@ -39,7 +42,6 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		"msconf_enable_shipping" => 0, // 0 - no, 1 - yes, 2 - seller select
 		"msconf_provide_buyerinfo" => 0, // 0 - no, 1 - yes, 2 - shipping dependent
 		"msconf_enable_quantities" => 0, // 0 - no, 1 - yes, 2 - shipping dependent
-		"msconf_product_options" => array(),
 		"msconf_enable_pdf_generator" => 0,
 		"msconf_enable_seo_urls_seller" => 0,
 		"msconf_enable_seo_urls_product" => 0,
@@ -191,8 +193,11 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		$this->validate(__FUNCTION__);
 		
 		$this->load->model("multiseller/settings");
-		if (!$this->model_multiseller_settings->checkDbVersion22()) {
-			$this->data['update22'] = $this->url->link('module/multiseller/update22', 'token=' . $this->session->data['token'], 'SSL');
+		
+		foreach ($this->_versions as $version) {
+			if (!$this->model_multiseller_settings->checkDbVersion($version)) {
+				$this->data['updates'][$version] = $this->url->link('module/multiseller/update&version=' . $version, 'token=' . $this->session->data['token'], 'SSL');
+			}
 		}
 		
 		foreach($this->settings as $s=>$v) {
@@ -239,16 +244,19 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		$this->response->setOutput($this->render());
 	}
 	
-	public function update22() {
+	public function update() {
 		$this->validate(__FUNCTION__);
-		$this->load->model("multiseller/settings");
+		$version = $this->request->get['version'];
 		
-		if (!$this->model_multiseller_settings->checkDbVersion22()) {
-			$this->model_multiseller_settings->update22();
+		if  (!in_array($version, $this->_versions)) return; 
+		
+		$this->load->model("multiseller/settings");
+		if (!$this->model_multiseller_settings->checkDbVersion($version)) {
+			$this->model_multiseller_settings->update($version);
 			echo 'Done';
 		} else {
-			echo 'Db up to date';
+			echo 'Db already at version ' . $version;
 		}
-	}
+	}	
 }
 ?>
