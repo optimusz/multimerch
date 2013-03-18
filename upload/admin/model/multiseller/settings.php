@@ -1,7 +1,6 @@
 <?php
 class ModelMultisellerSettings extends Model {
 	public function checkDbVersion($version) {
-		return false;
 		switch ($version) {
 			case "2.2":
 				$res = $this->db->query("SHOW COLUMNS FROM `" . DB_PREFIX . "ms_comments` LIKE 'parent_id'");
