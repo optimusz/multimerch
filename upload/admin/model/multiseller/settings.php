@@ -4,8 +4,11 @@ class ModelMultisellerSettings extends Model {
 		switch ($version) {
 			case "2.2":
 				$res = $this->db->query("SHOW COLUMNS FROM `" . DB_PREFIX . "ms_comments` LIKE 'parent_id'");
+				break;
+				
 			case "2.3":
 				$res = $this->db->query("SHOW COLUMNS FROM `" . DB_PREFIX . "ms_product_attribute` LIKE 'attribute_id'");
+				break;
 		}
 		
 		if ($res->num_rows)
