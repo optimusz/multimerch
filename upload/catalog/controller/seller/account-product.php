@@ -208,7 +208,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 							
 				foreach ($attributes as $attribute_id => $attribute) {
 					// required attributes empty, errors, for first language only
-					if ($i == 0 && $attribute['required'] && (!isset($product_attributes[$attribute_id]) || empty($product_attributes[$attribute_id]))) {
+					if ($i == 0 && $attribute['required'] && (!isset($product_attributes[$attribute_id]) || empty($product_attributes[$attribute_id]) || empty($product_attributes[$attribute_id]['value']))) {
 						$json['errors']["languages[$language_id][product_attributes][$attribute_id]"] = $this->language->get('ms_error_product_attribute_required'); 
 						continue;
 					}
@@ -304,7 +304,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 			$json['errors']['product_message'] = $this->language->get('ms_error_product_message_length');			
 		}		
 		
-		if (isset($data['product_category'])) {
+		if (isset($data['product_category']) && !empty($data['product_category'])) {
 			if (is_array($data['product_category'])) {
 				if (!$this->config->get('msconf_allow_multiple_categories')) {
 					$data['product_category'] = $data['product_category'][0];
@@ -320,76 +320,77 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		// generic attributes
 		$attributes = array();
 		$product_attributes = array();		
-		
+
 		if (isset($data['product_attributes'])) {
 			$product_attributes = $data['product_attributes'];
 			unset($data['product_attributes']);
-						
-			foreach ($this->MsLoader->MsAttribute->getAttributes(array('multilang' => 0)) as $attribute) {
-				$attributes[$attribute['attribute_id']] = $attribute;
-				$attributes[$attribute['attribute_id']]['values'] = $this->MsLoader->MsAttribute->getAttributeValues($attribute['attribute_id']);
-			}
+		}
+		
+		foreach ($this->MsLoader->MsAttribute->getAttributes(array('multilang' => 0)) as $attribute) {
+			$attributes[$attribute['attribute_id']] = $attribute;
+			$attributes[$attribute['attribute_id']]['values'] = $this->MsLoader->MsAttribute->getAttributeValues($attribute['attribute_id']);
+		}
 
-			foreach ($attributes as $attribute_id => $attribute) {
-				// attributes with no values defined, skip
-				if (empty($attribute['values']) && in_array($attribute['attribute_type'], array(MsAttribute::TYPE_CHECKBOX, MsAttribute::TYPE_SELECT, MsAttribute::TYPE_RADIO)))
-					continue;				
-				
-				// required attributes empty, errors
-				if (($attribute['required'] || $attribute['attribute_type'] == MsAttribute::TYPE_RADIO) && (!isset($product_attributes[$attribute_id]) || empty($product_attributes[$attribute_id]))) {
-					$json['errors']["product_attributes[$attribute_id]"] = $this->language->get('ms_error_product_attribute_required'); 
-					continue;
+		foreach ($attributes as $attribute_id => $attribute) {
+			// attributes with no values defined, skip
+			if (empty($attribute['values']) && in_array($attribute['attribute_type'], array(MsAttribute::TYPE_CHECKBOX, MsAttribute::TYPE_SELECT, MsAttribute::TYPE_RADIO)))
+				continue;				
+			
+			// required attributes empty, errors
+			// haha
+			if (($attribute['required'] || $attribute['attribute_type'] == MsAttribute::TYPE_RADIO) && (!isset($product_attributes[$attribute_id]) || empty($product_attributes[$attribute_id]) || (isset($product_attributes[$attribute_id]['value'])) && empty($product_attributes[$attribute_id]['value']))) {
+				$json['errors']["product_attributes[$attribute_id]"] = $this->language->get('ms_error_product_attribute_required'); 
+				continue;
+			}
+			
+			// attribute validation
+			if (in_array($attribute['attribute_type'], array(MsAttribute::TYPE_SELECT, MsAttribute::TYPE_RADIO, MsAttribute::TYPE_IMAGE))) {
+				// select, radio, image
+				if ((int)$product_attributes[$attribute_id] == 0) {
+					// not required, not checked
+				} else {
+					// @TODO check for permitted value id
+					$data['product_attributes'][$attribute_id] = array(
+						'attribute_type' => $attribute['attribute_type'],
+						'value' => $product_attributes[$attribute_id]
+					);
 				}
-				
-				// attribute validation
-				if (in_array($attribute['attribute_type'], array(MsAttribute::TYPE_SELECT, MsAttribute::TYPE_RADIO, MsAttribute::TYPE_IMAGE))) {
-					// select, radio, image
-					if ((int)$product_attributes[$attribute_id] == 0) {
-						// not required, not checked
-					} else {
+				continue;
+			} else if ($attribute['attribute_type'] == MsAttribute::TYPE_CHECKBOX) {
+				// checkbox
+				foreach ($product_attributes[$attribute_id] as $key => $attribute_value_id) {
+					if ((int)$attribute_value_id != 0) {
 						// @TODO check for permitted value id
-						$data['product_attributes'][$attribute_id] = array(
-							'attribute_type' => $attribute['attribute_type'],
-							'value' => $product_attributes[$attribute_id]
-						);
+						$data['product_attributes'][$attribute_id]['attribute_type']  = $attribute['attribute_type'];
+						$data['product_attributes'][$attribute_id]['values'][]  = (int)$attribute_value_id;
 					}
-					continue;
-				} else if ($attribute['attribute_type'] == MsAttribute::TYPE_CHECKBOX) {
-					// checkbox
-					foreach ($product_attributes[$attribute_id] as $key => $attribute_value_id) {
-						if ((int)$attribute_value_id != 0) {
-							// @TODO check for permitted value id
-							$data['product_attributes'][$attribute_id]['attribute_type']  = $attribute['attribute_type'];
-							$data['product_attributes'][$attribute_id]['values'][]  = (int)$attribute_value_id;
-						}
-					}
-					continue;
-				} else if ($attribute['attribute_type'] == MsAttribute::TYPE_TEXT) {
-					if (mb_strlen($product_attributes[$attribute_id]['value']) > 100) {
-						$json['errors']["product_attributes[$attribute_id]"] = sprintf($this->language->get('ms_error_product_attribute_long'), 100);
-						continue;
-					}
-					// text input validation
-				} else if ($attribute['attribute_type'] == MsAttribute::TYPE_TEXTAREA) {
-					if (mb_strlen($product_attributes[$attribute_id]['value']) > 2000) {
-						$json['errors']["product_attributes[$attribute_id]"] = sprintf($this->language->get('ms_error_product_attribute_long'), 2000);
-						continue;
-					}
-				} else if ($attribute['attribute_type'] == MsAttribute::TYPE_DATE) {
-					// date input validation
-				} else if ($attribute['attribute_type'] == MsAttribute::TYPE_DATETIME) {
-					// datetime input validation
-				} else if ($attribute['attribute_type'] == MsAttribute::TYPE_TIME) {
-					// datetime input validation
 				}
-
-				// set attributes
-				$data['product_attributes'][$attribute_id] = array(
-					'attribute_type' => $attribute['attribute_type'],
-					'value' => $product_attributes[$attribute_id]['value'],
-					'value_id' => $product_attributes[$attribute_id]['value_id'],
-				);
+				continue;
+			} else if ($attribute['attribute_type'] == MsAttribute::TYPE_TEXT) {
+				if (mb_strlen($product_attributes[$attribute_id]['value']) > 100) {
+					$json['errors']["product_attributes[$attribute_id]"] = sprintf($this->language->get('ms_error_product_attribute_long'), 100);
+					continue;
+				}
+				// text input validation
+			} else if ($attribute['attribute_type'] == MsAttribute::TYPE_TEXTAREA) {
+				if (mb_strlen($product_attributes[$attribute_id]['value']) > 2000) {
+					$json['errors']["product_attributes[$attribute_id]"] = sprintf($this->language->get('ms_error_product_attribute_long'), 2000);
+					continue;
+				}
+			} else if ($attribute['attribute_type'] == MsAttribute::TYPE_DATE) {
+				// date input validation
+			} else if ($attribute['attribute_type'] == MsAttribute::TYPE_DATETIME) {
+				// datetime input validation
+			} else if ($attribute['attribute_type'] == MsAttribute::TYPE_TIME) {
+				// datetime input validation
 			}
+
+			// set attributes
+			$data['product_attributes'][$attribute_id] = array(
+				'attribute_type' => $attribute['attribute_type'],
+				'value' => $product_attributes[$attribute_id]['value'],
+				'value_id' => $product_attributes[$attribute_id]['value_id'],
+			);
 		}
 		
 		$data['product_subtract'] = 0;

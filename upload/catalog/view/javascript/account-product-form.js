@@ -72,9 +72,7 @@ $(function() {
 						if ($('#error_'+error).length > 0)
 							$('#error_'+error).text(jsonData.errors[error]);
 						else
-							$('[name="'+error+'"]').nextAll('.error:first').text(jsonData.errors[error]);
-						
-						console.log($('[name="'+error+'"]'));
+							$('[name^="'+error+'"]').nextAll('.error:first').text(jsonData.errors[error]);
 						
 						window.scrollTo(0,0);
 					}				

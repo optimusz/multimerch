@@ -63,6 +63,10 @@ class ModelMultisellerSettings extends Model {
 						$this->db->query("INSERT INTO `" . DB_PREFIX . "ms_attribute_description` (attribute_id, language_id, name) SELECT option_id, language_id, name FROM `" . DB_PREFIX . "ms_option_description` WHERE option_id = {$option['option_id']}");
 						$this->db->query("INSERT INTO `" . DB_PREFIX . "ms_attribute_value` (attribute_value_id, attribute_id, image, sort_order) SELECT option_value_id, option_id, image, sort_order FROM `" . DB_PREFIX . "ms_option_value` WHERE option_id = {$option['option_id']}");
 						$this->db->query("INSERT INTO `" . DB_PREFIX . "ms_attribute_value_description` (attribute_value_id, language_id, attribute_id, name) SELECT option_value_id, language_id, option_id, name FROM `" . DB_PREFIX . "ms_option_value_description` WHERE option_id = {$option['option_id']}");
+						
+						$this->load->model('user/user_group');
+						$this->model_user_user_group->addPermission($this->user->getId(), 'access', 'multiseller/attribute');
+						$this->model_user_user_group->addPermission($this->user->getId(), 'modify', 'multiseller/attribute');
 					}
 					
 				default:

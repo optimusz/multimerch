@@ -88,7 +88,7 @@
 		<tr>
 			<td><?php echo $ms_enabled; ?></td>
 			<td>
-				<input type="checkbox" name="enabled" <?php if($attribute['enabled']) { ?>checked="checked"<?php } ?> />
+				<input type="checkbox" name="enabled" <?php if($attribute['enabled'] || !isset($attribute['attribute_id'])) { ?>checked="checked"<?php } ?> />
 				<span class="error"></span><br />
 			</td>
 		</tr>		
