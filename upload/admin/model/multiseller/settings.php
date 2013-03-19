@@ -32,7 +32,7 @@ class ModelMultisellerSettings extends Model {
 				case "2.3":
 					$this->db->query("ALTER TABLE " . DB_PREFIX . "ms_product_attribute CHANGE `option_id` `attribute_id` int(11) NOT NULL");
 					$this->db->query("ALTER TABLE " . DB_PREFIX . "ms_product_attribute CHANGE `option_value_id` `attribute_value_id` int(11) NOT NULL");
-					$this->db->query("CREATE TABLE `" . DB_PREFIX . "ms_attribute` (`attribute_id` int(11) NOT NULL AUTO_INCREMENT, `attribute_type` int(11) NOT NULL, `number` TINYINT NOT NULL DEFAULT 0, `multilang` TINYINT NOT NULL DEFAULT 0, `required` TINYINT NOT NULL DEFAULT 0, `enalbed` TINYINT NOT NULL DEFAULT 1, `sort_order` int(3) NOT NULL, PRIMARY KEY (`attribute_id`)) DEFAULT CHARSET=utf8");
+					$this->db->query("CREATE TABLE `" . DB_PREFIX . "ms_attribute` (`attribute_id` int(11) NOT NULL AUTO_INCREMENT, `attribute_type` int(11) NOT NULL, `number` TINYINT NOT NULL DEFAULT 0, `multilang` TINYINT NOT NULL DEFAULT 0, `required` TINYINT NOT NULL DEFAULT 0, `enabled` TINYINT NOT NULL DEFAULT 1, `sort_order` int(3) NOT NULL, PRIMARY KEY (`attribute_id`)) DEFAULT CHARSET=utf8");
 					$this->db->query("CREATE TABLE `" . DB_PREFIX . "ms_attribute_description` (`attribute_id` int(11) NOT NULL, `language_id` int(11) NOT NULL, `name` varchar(128) NOT NULL, `description` TEXT NOT NULL DEFAULT '', PRIMARY KEY (`attribute_id`,`language_id`)) DEFAULT CHARSET=utf8");
 					$this->db->query("CREATE TABLE `" . DB_PREFIX . "ms_attribute_value` (`attribute_value_id` int(11) NOT NULL AUTO_INCREMENT, `attribute_id` int(11) NOT NULL, `image` varchar(255) NOT NULL, `sort_order` int(3) NOT NULL, PRIMARY KEY (`attribute_value_id`)) DEFAULT CHARSET=utf8");
 					$this->db->query("CREATE TABLE `" . DB_PREFIX . "ms_attribute_value_description` (`attribute_value_id` int(11) NOT NULL,`language_id` int(11) NOT NULL, `attribute_id` int(11) NOT NULL, `name` varchar(128) NOT NULL, PRIMARY KEY (`attribute_value_id`,`language_id`)) DEFAULT CHARSET=utf8");
@@ -299,7 +299,7 @@ class ModelMultisellerSettings extends Model {
 			`number` TINYINT NOT NULL DEFAULT 0,
 			`multilang` TINYINT NOT NULL DEFAULT 0,
 			`required` TINYINT NOT NULL DEFAULT 0,
-			`enalbed` TINYINT NOT NULL DEFAULT 1,
+			`enabled` TINYINT NOT NULL DEFAULT 1,
 			`sort_order` int(3) NOT NULL,
 			PRIMARY KEY (`attribute_id`)
 			) DEFAULT CHARSET=utf8";
