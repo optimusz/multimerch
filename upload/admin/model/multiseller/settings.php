@@ -371,18 +371,22 @@ class ModelMultisellerSettings extends Model {
 				`" . DB_PREFIX . "ms_seller`,
 				`" . DB_PREFIX . "ms_order_product_data`,
 				`" . DB_PREFIX . "ms_withdrawal`,
-				`" . DB_PREFIX . "ms_product_attribute`,
 				`" . DB_PREFIX . "ms_comments`,
 				`" . DB_PREFIX . "ms_balance`,
 				`" . DB_PREFIX . "ms_seller_group`,
 				`" . DB_PREFIX . "ms_seller_group_description`,
+				`" . DB_PREFIX . "ms_seller_group_criteria`,
 				`" . DB_PREFIX . "ms_commission_rate`,
 				`" . DB_PREFIX . "ms_commission`,
 				`" . DB_PREFIX . "ms_criteria`,
 				`" . DB_PREFIX . "ms_range_int`,
 				`" . DB_PREFIX . "ms_range_decimal`,
 				`" . DB_PREFIX . "ms_range_date`,
-				`" . DB_PREFIX . "ms_seller_group_criteria`";
+				`" . DB_PREFIX . "ms_attribute`,
+				`" . DB_PREFIX . "ms_attribute_description`,
+				`" . DB_PREFIX . "ms_attribute_value`,
+				`" . DB_PREFIX . "ms_attribute_value_description`,
+				`" . DB_PREFIX . "ms_product_attribute`";
 				
 		$this->db->query($sql);
 	}
