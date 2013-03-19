@@ -244,7 +244,7 @@ class MsProduct extends Model {
 			}
 			
 			// multilang attributes
-			if ($language['product_attributes']) {
+			if (isset($language['product_attributes'])) {
 				foreach($language['product_attributes'] as $attribute_id => $attr) {
 					if (in_array($attr['attribute_type'], array(MsAttribute::TYPE_TEXT, MsAttribute::TYPE_TEXTAREA, MsAttribute::TYPE_DATE, MsAttribute::TYPE_DATETIME, MsAttribute::TYPE_TIME))) {
 						$this->db->query("INSERT INTO " . DB_PREFIX . "ms_attribute_value SET attribute_id = " . (int)$attribute_id);
@@ -426,7 +426,7 @@ class MsProduct extends Model {
 			}
 			
 			// multilang attributes
-			if ($language['product_attributes']) {
+			if (isset($language['product_attributes'])) {
 				foreach($language['product_attributes'] as $attribute_id => $attr) {
 					if (in_array($attr['attribute_type'], array(MsAttribute::TYPE_TEXT, MsAttribute::TYPE_TEXTAREA, MsAttribute::TYPE_DATE, MsAttribute::TYPE_DATETIME, MsAttribute::TYPE_TIME))) {
 						if ((int)$attr['value_id'] == 0) {

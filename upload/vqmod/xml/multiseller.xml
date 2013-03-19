@@ -240,10 +240,17 @@
 						
 						if (!$balance_entry) {
 							$seller_id = $this->MsLoader->MsProduct->getSellerId($order_product['product_id']);
-							$commissions = $this->MsLoader->MsCommission->calculateCommission($seller_id);
-							$store_commission_flat = $commissions[MsCommission::RATE_SALE]['flat'];
-							$store_commission_pct = $order_product['total'] * $commissions[MsCommission::RATE_SALE]['percent'] / 100;
-							$seller_net_amt = $order_product['total'] - ($store_commission_flat + $store_commission_pct);
+							
+							// don't calculate fees for free products
+							if ($order_product['total'] > 0) {
+								$commissions = $this->MsLoader->MsCommission->calculateCommission($seller_id);
+								$store_commission_flat = $commissions[MsCommission::RATE_SALE]['flat'];
+								$store_commission_pct = $order_product['total'] * $commissions[MsCommission::RATE_SALE]['percent'] / 100;
+								$seller_net_amt = $order_product['total'] - ($store_commission_flat + $store_commission_pct);
+							} else {
+								$store_commission_flat = $store_commission_pct = $seller_net_amt = 0;
+							}
+							
 							$this->MsLoader->MsOrderData->addOrderProductData(
 								$order_product['order_id'],
 								$order_product['product_id'],								
@@ -601,9 +608,15 @@
 					
 					if (!$balance_entry) {
 						$commissions = $this->MsLoader->MsCommission->calculateCommission($seller_id);
-						$store_commission_flat = $commissions[MsCommission::RATE_SALE]['flat'];
-						$store_commission_pct = $order_product['total'] * $commissions[MsCommission::RATE_SALE]['percent'] / 100;
-						$seller_net_amt = $order_product['total'] - ($store_commission_flat + $store_commission_pct);
+						
+						if ($order_product['total'] > 0) {
+							$store_commission_flat = $commissions[MsCommission::RATE_SALE]['flat'];
+							$store_commission_pct = $order_product['total'] * $commissions[MsCommission::RATE_SALE]['percent'] / 100;
+							$seller_net_amt = $order_product['total'] - ($store_commission_flat + $store_commission_pct);
+						} else  {
+							$store_commission_flat = $store_commission_pct = $seller_net_amt = 0;
+						}
+						
 						$this->MsLoader->MsOrderData->addOrderProductData(
 							$order_product['order_id'],
 							$order_product['product_id'],								
