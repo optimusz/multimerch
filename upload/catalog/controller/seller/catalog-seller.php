@@ -7,6 +7,8 @@ class ControllerSellerCatalogSeller extends ControllerSellerCatalog {
 	public function index() {
 		$this->load->model('localisation/country');
 		$this->language->load('product/category');
+		$this->document->addScript('catalog/view/javascript/jquery/jquery.total-storage.min.js');
+		
 		
 		$this->data['text_display'] = $this->language->get('text_display');
 		$this->data['text_list'] = $this->language->get('text_list');
@@ -327,6 +329,7 @@ class ControllerSellerCatalogSeller extends ControllerSellerCatalog {
 		$this->load->model('catalog/product');
 		$this->load->model('localisation/country');
     	$this->language->load('product/category');
+    	$this->document->addScript('catalog/view/javascript/jquery/jquery.total-storage.min.js');
     	
 		$seller = $this->MsLoader->MsSeller->getSeller($this->request->get['seller_id']);
 

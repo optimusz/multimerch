@@ -120,7 +120,11 @@ function display(view) {
 		
 		$('.display').html('<b><?php echo $text_display; ?></b> <?php echo $text_list; ?> <b>/</b> <a onclick="display(\'grid\');"><?php echo $text_grid; ?></a>');
 		
-		$.cookie('display', 'list'); 
+		<?php if (strcmp(VERSION,'1.5.5') >= 0) { ?> 
+		$.totalStorage('display', 'list');
+		<?php } else { ?>
+		$.cookie('display', 'list');
+		<?php } ?>
 	} else {
 		$('.ms-sellerlist').attr('class', 'ms-sellergrid');
 		
@@ -163,15 +167,22 @@ function display(view) {
 					
 		$('.display').html('<b><?php echo $text_display; ?></b> <a onclick="display(\'list\');"><?php echo $text_list; ?></a> <b>/</b> <?php echo $text_grid; ?>');
 		
+		<?php if (strcmp(VERSION,'1.5.5') >= 0) { ?> 
+		$.totalStorage('display', 'grid');
+		<?php } else { ?>
 		$.cookie('display', 'grid');
+		<?php } ?>
 	}
 }
 
+<?php if (strcmp(VERSION,'1.5.5') >= 0) { ?> 
+view = $.totalStorage('display');
+<?php } else { ?>
 view = $.cookie('display');
+<?php } ?>
 
 if (view) {
 	display(view);
-	//display('list');
 } else {
 	display('grid');
 }
