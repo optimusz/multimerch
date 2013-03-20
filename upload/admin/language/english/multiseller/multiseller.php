@@ -354,8 +354,8 @@ $_['ms_attribute_breadcrumbs'] = 'Attributes';
 $_['ms_attribute_value'] = 'Attribute value';
 
 $_['ms_attribute_text_type'] = 'Text input type';
-$_['ms_attribute_normal'] = 'Normal text';
-$_['ms_attribute_multilang'] = 'Multilanguage text';
+$_['ms_attribute_normal'] = 'Generic text';
+$_['ms_attribute_multilang'] = 'Language-specific text';
 $_['ms_attribute_number'] = 'Number';
 $_['ms_attribute_required'] = 'Required';
 
@@ -364,7 +364,8 @@ $_['ms_add_attribute_value'] = 'New attribute value';
 $_['ms_error_attribute_name'] = 'Attribute name must be between 1 and 128 characters';
 $_['ms_error_attribute_type'] = 'This attribute type requires attribute values';
 $_['ms_error_attribute_value_name'] = 'Attribute value name must be between 1 and 128 characters';
-
+$_['ms_success_attribute_created'] = 'Attribute successfully created';
+$_['ms_success_attribute_updated'] = 'Attribute successfully created';
 
 $_['button_cancel'] = 'Cancel';
 $_['button_save'] = 'Save';

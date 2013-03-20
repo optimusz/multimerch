@@ -594,6 +594,10 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 				
 				if (empty($attr['values']) && in_array($attr['attribute_type'], array(MsAttribute::TYPE_CHECKBOX, MsAttribute::TYPE_SELECT, MsAttribute::TYPE_RADIO)))
 					continue;
+
+				foreach ($attr['values'] as &$value) {
+					$value['image'] = (!empty($value['image']) ? $this->MsLoader->MsFile->resizeImage($value['image'], 50, 50) : $this->MsLoader->MsFile->resizeImage('no_image.jpg', 50, 50));					
+				}
 				
 				if ($attr['multilang'] && in_array($attr['attribute_type'], array(MsAttribute::TYPE_TEXT, MsAttribute::TYPE_TEXTAREA))) {
 					$this->data['multilang_attributes'][] = $attr;

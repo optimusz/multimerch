@@ -311,11 +311,13 @@ class MsFile extends Model {
 		if (copy(DIR_IMAGE . $this->config->get('msconf_temp_image_path') . $temporary_filename, DIR_IMAGE . $this->config->get('msconf_temp_image_path') . $new_image)) {
 			unlink(DIR_IMAGE . $this->config->get('msconf_temp_image_path') . $temporary_filename);
 		}
-		
+
 		if (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) {
-			return $this->config->get('config_ssl') . 'image/' . $this->config->get('msconf_temp_image_path') . $new_image;
+			$base = defined('HTTPS_CATALOG') ? HTTPS_CATALOG : HTTPS_SERVER;
+			return $base . 'image/' . $this->config->get('msconf_temp_image_path') . $new_image;
 		} else {
-			return $this->config->get('config_url') . 'image/' . $this->config->get('msconf_temp_image_path') . $new_image;
+			$base = defined('HTTP_CATALOG') ? HTTP_CATALOG : HTTP_SERVER;
+			return $base . 'image/' . $this->config->get('msconf_temp_image_path') . $new_image;
 		}
   	}
 }

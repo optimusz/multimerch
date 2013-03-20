@@ -63,7 +63,7 @@
               <td style="text-align: center;">
                 <input type="checkbox" name="selected[]" value="<?php echo $product['product_id']; ?>" />
               </td>
-              <td><img src="<?php echo $product['p.image']; ?>" /></td>
+              <td class="center"><img src="<?php echo $product['p.image']; ?>" style="padding: 1px; border: 1px solid #DDDDDD" /></td>
               <td><?php echo $product['pd.name']; ?></td>
               <td>
               	<select>

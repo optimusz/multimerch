@@ -47,7 +47,7 @@
 				<option value="<?php echo MsAttribute::TYPE_CHECKBOX; ?>" <?php if (isset($attribute['attribute_type']) && $attribute['attribute_type'] == MsAttribute::TYPE_CHECKBOX) { ?>selected<?php } ?>><?php echo $ms_type_checkbox; ?></option>
 				<option value="<?php echo MsAttribute::TYPE_DATE; ?>" <?php if (isset($attribute['attribute_type']) && $attribute['attribute_type'] == MsAttribute::TYPE_DATE) { ?>selected<?php } ?>><?php echo $ms_type_date; ?></option>
 				<option value="<?php echo MsAttribute::TYPE_DATETIME; ?>" <?php if (isset($attribute['attribute_type']) && $attribute['attribute_type'] == MsAttribute::TYPE_DATETIME) { ?>selected<?php } ?>><?php echo $ms_type_datetime; ?></option>
-				<option value="<?php echo MsAttribute::TYPE_FILE; ?>" <?php if (isset($attribute['attribute_type']) && $attribute['attribute_type'] == MsAttribute::TYPE_FILE) { ?>selected<?php } ?>><?php echo $ms_type_file; ?></option>
+				<?php /* ?><option value="<?php echo MsAttribute::TYPE_FILE; ?>" <?php if (isset($attribute['attribute_type']) && $attribute['attribute_type'] == MsAttribute::TYPE_FILE) { ?>selected<?php } ?>><?php echo $ms_type_file; ?></option><?php */ ?>
 				<option value="<?php echo MsAttribute::TYPE_IMAGE; ?>" <?php if (isset($attribute['attribute_type']) && $attribute['attribute_type'] == MsAttribute::TYPE_IMAGE) { ?>selected<?php } ?>><?php echo $ms_type_image; ?></option>
 				<option value="<?php echo MsAttribute::TYPE_RADIO; ?>" <?php if (isset($attribute['attribute_type']) && $attribute['attribute_type'] == MsAttribute::TYPE_RADIO) { ?>selected<?php } ?>><?php echo $ms_type_radio; ?></option>
 				<option value="<?php echo MsAttribute::TYPE_SELECT; ?>" <?php if (isset($attribute['attribute_type']) && $attribute['attribute_type'] == MsAttribute::TYPE_SELECT) { ?>selected<?php } ?>><?php echo $ms_type_select; ?></option>
@@ -149,8 +149,8 @@
 			
 			<td>
 				<div class="image">
-					<img src="<?php echo $attribute_value['thumb']; ?>" alt="" id="thumb<?php echo $attribute_value_row; ?>" />
-					<input type="hidden" name="attribute_value[<?php echo $attribute_value_row; ?>][image]" value="<?php echo $attribute_value['image']; ?>" />
+					<img src="<?php echo $attribute_value['thumb']; ?>" alt="" />
+					<input type="hidden" name="attribute_value[<?php echo $attribute_value_row; ?>][image]" value="<?php echo $attribute_value['image']; ?>" id="field<?php echo $attribute_value_row; ?>"/>
 					<br />
 					<a class="browseFiles"><?php echo $text_browse; ?></a>
 					&nbsp;&nbsp;|&nbsp;&nbsp;
@@ -167,11 +167,11 @@
 				<a class="button ms-button-delete" title="<?php echo $ms_delete; ?>"><?php echo $ms_delete; ?></a>
 			</td>
 		</tr>
-		</tbody>
 		<?php $attribute_value_row++; ?>
 		<?php } ?>
 		<?php } ?>
-		
+		</tbody>
+				
 		<tfoot>
 			<tr>
 				<td colspan="4" class="center">
@@ -195,13 +195,12 @@ $(function() {
 		$('#dialog').dialog({
 			title: '<?php echo $text_image_manager; ?>',
 			close: function (event, ui) {
-				console.log(field.val());
 				if (field.val()) {
 					$.ajax({
 						url: 'index.php?route=common/filemanager/image&token=<?php echo $token; ?>&image=' + encodeURIComponent(field.val()),
 						dataType: 'text',
 						success: function(data) {
-							thumb.replaceWith('<img src="' + data + '" alt="" id="' + thumb.attr('id') + '" />');
+							thumb.replaceWith('<img src="' + data + '" alt="" />');
 						}
 					});
 				}
