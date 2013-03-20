@@ -197,15 +197,14 @@
 						<?php } ?>
 						<?php } ?>
 
-						<?php /* ?>
 						<?php if ($attr['attribute_type'] == MsAttribute::TYPE_IMAGE) { ?>
 						<?php foreach ($attr['values'] as $attr_value) { ?>
-							<input type="radio" name="product_attributes[<?php echo $attr['attribute_id']; ?>]" value="<?php echo $attr_value['attribute_value_id']; ?>" <?php if (isset($normal_attribute_values[$attr['attribute_id']]) && array_key_exists($attr_value['attribute_value_id'], $normal_attribute_values[$attr['attribute_id']])) { ?>checked="checked"<?php } ?> />
+							<input type="radio" name="product_attributes[<?php echo $attr['attribute_id']; ?>]" value="<?php echo $attr_value['attribute_value_id']; ?>" <?php if (isset($normal_attribute_values[$attr['attribute_id']]) && array_key_exists($attr_value['attribute_value_id'], $normal_attribute_values[$attr['attribute_id']])) { ?>checked="checked"<?php } ?> style="vertical-align: middle"/>
 							<label><?php echo $attr_value['name']; ?></label>
+							<img src="<?php echo $attr_value['image']; ?>" style="vertical-align: middle; padding: 1px; border: 1px solid #DDDDDD; margin-bottom: 10px" />
 							<br />
 						<?php } ?>
 						<?php } ?>
-						<?php */ ?>
 						
 						<?php if ($attr['attribute_type'] == MsAttribute::TYPE_CHECKBOX) { ?>
 						<?php foreach ($attr['values'] as $attr_value) { ?>

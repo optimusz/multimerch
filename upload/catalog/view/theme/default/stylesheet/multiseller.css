@@ -106,9 +106,9 @@ table.list td, table.list thead td  {
 .ms-product .ms-download .ms-buttons a,
 .ms-product .ms-download .ms-buttons span.disabled {
 	display: inline-block;
-	width: 30px;
-	height: 30px;
-	margin: 0 2px;
+	width: 32px;
+	height: 32px;
+	margin: 0 1px;
 }
 
 .ms-product .ms-button-upload {
@@ -131,19 +131,19 @@ table.list td, table.list thead td  {
 }
 
 .ms-product .ms-download .ms-button-delete {
-	background-image: url(../image/ms-delete-30px.png);
+	background-image: url(../image/ms-cross.png);
 }
 
 .ms-product .ms-download .ms-button-delete.disabled {
-	background-image: url(../image/ms-delete-30px-bw.png);
+	background-image: url(../image/ms-cross-bw.png);
 }
 
 .ms-product .ms-download .ms-button-update {
-	background-image: url(../image/ms-update-30px.png);
+	background-image: url(../image/ms-refresh.png);
 }
 
 .ms-product .ms-download span.ms-button-update.disabled {
-	background-image: url(../image/ms-update-30px-bw.png);
+	background-image: url(../image/ms-refresh-bw.png);
 }
 
 .ms-product .uploadify-queue {
@@ -151,15 +151,15 @@ table.list td, table.list thead td  {
 }
 
 .ms-product .ms-download .ms-button-pdf {
-	background-image: url(../image/ms-pdf-30px.png);
+	background-image: url(../image/ms-pdf.png);
 }
 
 .ms-product .ms-download .ms-button-download {
-	background-image: url(../image/ms-download-30px.png);
+	background-image: url(../image/ms-arrowdown.png);
 }
 
 .ms-product .ms-download .ms-button-download.disabled {
-	background-image: url(../image/ms-download-30px-bw.png);
+	background-image: url(../image/ms-arrowdown-bw.png);
 }
 
 .ms-product .ms-remove {
@@ -554,9 +554,9 @@ div.ms-jquery-dialog.ui-widget-content,
 /* seller account product list*/
 .ms-button {
 	display: inline-block;
-	width: 30px;
-	height: 30px;
-	margin: 0 2px;
+	width: 32px;
+	height: 32px;
+	margin: 0 1px;
 }
 
 .ms-account-product table.list tbody td {
@@ -571,25 +571,25 @@ div.ms-jquery-dialog.ui-widget-content,
 }
 
 .ms-account-product-form .ms-button-delete {
-	background-image: url(../image/ms-delete-20px.png);
+	background-image: url(../image/ms-cross.png);
 }
 
 .ms-button-view {
-	background-image: url(../image/ms-view-30px.png);
+	background-image: url(../image/ms-magnifier.png);
 }
 
 .ms-button-publish {
-	background-image: url(../image/ms-publish-30px.png);
+	background-image: url(../image/ms-plus.png);
 }
 
 .ms-button-unpublish {
-	background-image: url(../image/ms-unpublish-30px.png);
+	background-image: url(../image/ms-minus.png);
 }
 
 .ms-button-edit {
-	background-image: url(../image/ms-edit-30px.png);
+	background-image: url(../image/ms-pencil.png);
 }
 
 .ms-button-delete {
-	background-image: url(../image/ms-delete-30px.png);
+	background-image: url(../image/ms-cross.png);
 }
