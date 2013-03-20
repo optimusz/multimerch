@@ -328,10 +328,11 @@ $_['ms_seller_group_entry_name'] = 'Name';
 $_['ms_seller_group_entry_description'] = 'Description';
 $_['ms_seller_group_entry_language'] = 'Language';
 
-$_['ms_error_seller_group_name'] = 'Error: Name is not entered';
+$_['ms_error_seller_group_name'] = 'Error: Name must be between 3 and 32 symbols long';
 $_['ms_error_seller_group_language'] = 'Error: Language not selected';
 $_['ms_error_seller_group_default'] = 'Error: Default seller group can not be deleted!';
-
+$_['ms_success_seller_group_created'] = 'Seller group created';
+$_['ms_success_seller_group_updated'] = 'Seller group updated';
 
 // Finances - Withdrawals
 $_['ms_finances_withdrawals_heading'] = 'Withdrawals';
@@ -367,7 +368,7 @@ $_['ms_error_attribute_name'] = 'Attribute name must be between 1 and 128 charac
 $_['ms_error_attribute_type'] = 'This attribute type requires attribute values';
 $_['ms_error_attribute_value_name'] = 'Attribute value name must be between 1 and 128 characters';
 $_['ms_success_attribute_created'] = 'Attribute successfully created';
-$_['ms_success_attribute_updated'] = 'Attribute successfully created';
+$_['ms_success_attribute_updated'] = 'Attribute successfully updated';
 
 $_['button_cancel'] = 'Cancel';
 $_['button_save'] = 'Save';

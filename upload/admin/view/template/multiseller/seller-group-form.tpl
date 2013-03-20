@@ -32,18 +32,17 @@
 						<?php } ?>
 						</td>
 					</tr>
-					
-					<?php foreach ($languages as $language) { ?>
+
 					<tr>
 						<td><?php echo $ms_description; ?></td>
-						<td>
+						<td>					
+					<?php foreach ($languages as $language) { ?>
 							<textarea name="seller_group[description][<?php echo $language['language_id']; ?>][description]" cols="40" rows="5"><?php echo $seller_group['description'][$language['language_id']]['description']; ?></textarea>
 							<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" align="top" />
 							<p class="error" id="error_description"></p>
+					<?php } ?>
 						</td>
 					</tr>
-					<?php } ?>
-					
 				</table>
 				</div>
 				
