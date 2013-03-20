@@ -556,10 +556,9 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 	
 	public function create() {
 		$this->load->model('catalog/category');
-		//$this->document->addScript('catalog/view/javascript/jquery.uploadify.js');
-		//$this->document->addScript('http://bp.yahooapis.com/2.4.21/browserplus-min.js');
 		$this->document->addScript('catalog/view/javascript/plupload/plupload.full.js');
-		$this->document->addScript('catalog/view/javascript/plupload/jquery.plupload.queue/jquery.plupload.queue.js');		
+		$this->document->addScript('catalog/view/javascript/plupload/jquery.plupload.queue/jquery.plupload.queue.js');
+		$this->document->addScript('catalog/view/javascript/jquery/ui/jquery-ui-timepicker-addon.js');
 		
 		if ($this->config->get('msconf_enable_pdf_generator') && extension_loaded('imagick')) {
 			$this->document->addScript('catalog/view/javascript/dialog-pdf.js');
@@ -749,10 +748,10 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		$this->load->model('catalog/category');
 		$this->load->model('catalog/product');
 		$this->load->model('localisation/currency');
-		//$this->document->addScript('catalog/view/javascript/jquery.uploadify.js');
-		$this->document->addScript('http://bp.yahooapis.com/2.4.21/browserplus-min.js');
+		
 		$this->document->addScript('catalog/view/javascript/plupload/plupload.full.js');
 		$this->document->addScript('catalog/view/javascript/plupload/jquery.plupload.queue/jquery.plupload.queue.js');		
+		$this->document->addScript('catalog/view/javascript/jquery/ui/jquery-ui-timepicker-addon.js');
 		
 		if ($this->config->get('msconf_enable_pdf_generator') && extension_loaded('imagick')) {
 			$this->document->addScript('catalog/view/javascript/dialog-pdf.js');

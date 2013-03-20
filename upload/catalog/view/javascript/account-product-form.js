@@ -6,6 +6,17 @@ $(function() {
 	$("body").delegate(".date", "focusin", function(){
 		$(this).datepicker({dateFormat: 'yy-mm-dd'});
 	});
+
+	$("body").delegate(".datetime", "focusin", function(){
+		$(this).datetimepicker({
+			dateFormat: 'yy-mm-dd',
+			timeFormat: 'h:m'
+		});
+	});
+	
+	$("body").delegate(".time", "focusin", function(){
+		$(this).timepicker({timeFormat: 'h:m'});
+	});
 	
 	$('body').delegate("a.ms-button-delete", "click", function() {	
 		$(this).parents('tr').remove();
