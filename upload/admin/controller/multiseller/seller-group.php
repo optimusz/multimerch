@@ -272,6 +272,8 @@ class ControllerMultisellerSellerGroup extends ControllerMultisellerBase {
 			}
 		}
 
+		var_dump($data);
+
 		if (!empty($data['seller_group_id']) && $this->config->get('msconf_default_seller_group_id') == $data['seller_group_id']) {
 			foreach ($data['commission_rates'] as &$rate) {
 				if (empty($rate['flat'])) $rate['flat'] = 0;
@@ -279,6 +281,9 @@ class ControllerMultisellerSellerGroup extends ControllerMultisellerBase {
 			}
 			unset($rate);
 		}
+
+var_dump($data);
+
 
 		if (empty($json['errors'])) {
 			if (empty($data['seller_group_id'])) {

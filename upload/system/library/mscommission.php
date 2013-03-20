@@ -9,7 +9,7 @@ class MsCommission extends Model {
 	
 	public function createCommission($rates) {
 		foreach ($rates as $type => $rate) {
-			if ( (!isset($rate['flat']) || empty($rate['flat'])) && (!isset($rate['percent']) || empty($rate['percent'])) ) {
+			if ( (!isset($rate['flat']) || $rate['flat'] === '') && (!isset($rate['percent']) || $rate['percent'] === '') ) {
 				unset($rates[$type]);
 			}
 		}
@@ -23,8 +23,8 @@ class MsCommission extends Model {
 				$sql = "INSERT INTO " . DB_PREFIX . "ms_commission_rate
 						SET commission_id = " . (int)$commission_id . ",
 							rate_type = " . (int)$type . ",
-							flat = " . (isset($rate['flat']) && !empty($rate['flat']) ? $rate['flat'] : 'NULL') . ",
-							percent = " . (isset($rate['percent']) && !empty($rate['percent']) ? $rate['percent'] : 'NULL');
+							flat = " . (isset($rate['flat']) && $rate['flat'] !== '' ? (float)$rate['flat'] : 'NULL') . ",
+							percent = " . (isset($rate['percent']) && $rate['percent'] !== '' ? (float)$rate['percent'] : 'NULL');
 
 				$this->db->query($sql);	
 			}
@@ -37,14 +37,14 @@ class MsCommission extends Model {
 	
 	public function editCommission($commission_id, $rates) {
 		foreach ($rates as $type => $rate) {
-			if ( (!isset($rate['flat']) || empty($rate['flat'])) && (!isset($rate['percent']) || empty($rate['percent'])) ) {
+			if ( (!isset($rate['flat']) || $rate['flat'] === '') && (!isset($rate['percent']) || $rate['percent'] === '') ) {
 				$sql = "DELETE FROM " . DB_PREFIX . "ms_commission_rate WHERE rate_id = " . (int)$rate['rate_id'];
 				$this->db->query($sql);
 				unset($rates[$type]);
 			} else {
 				$sql = "UPDATE " . DB_PREFIX . "ms_commission_rate
-						SET flat = " . (isset($rate['flat']) && !empty($rate['flat']) ? $rate['flat'] : 'NULL') . ",
-							percent = " . (isset($rate['percent']) && !empty($rate['percent']) ? $rate['percent'] : 'NULL') . "
+						SET flat = " . (isset($rate['flat']) && $rate['flat'] !== '' ? (float)$rate['flat'] : 'NULL') . ",
+							percent = " . (isset($rate['percent']) && $rate['percent'] !== '' ? (float)$rate['percent'] : 'NULL') . "
 						WHERE rate_id = " . (int)$rate['rate_id'];
 				$this->db->query($sql);
 			}

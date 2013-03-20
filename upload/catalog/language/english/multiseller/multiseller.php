@@ -463,7 +463,7 @@ $_['ms_comments_captcha']     = 'Enter the code in the box below:';
 $_['ms_comments_no_comments_yet'] = 'No comments added yet';
 $_['ms_comments_tab_comments']       = 'Comments (%s)';
 
-$_['ms_footer']       = '<br>Digital Multiseller Marketplace by <a href="http://ffct.cc/">ffct.cc</a>';
+$_['ms_footer']       = '<br>MultiMerch Digital Marketplace by <a href="http://ffct.cc/">ffct.cc</a>';
 
 
 // Catalog - Sellers list
