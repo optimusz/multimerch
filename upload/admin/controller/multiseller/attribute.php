@@ -82,8 +82,8 @@ class ControllerMultisellerAttribute extends ControllerMultisellerBase {
 		
 		$this->data['cancel'] = $this->url->link('multiseller/attribute', 'token=' . $this->session->data['token'], 'SSL');
 		$this->data['token'] = $this->session->data['token'];
-		$this->data['heading'] = $this->language->get('ms_attribute_heading');
-		$this->document->setTitle($this->language->get('ms_attribute_heading'));
+		$this->data['heading'] = $this->language->get('ms_attribute_create');
+		$this->document->setTitle($this->language->get('ms_attribute_create'));
 		
 		$this->data['breadcrumbs'] = $this->MsLoader->MsHelper->admSetBreadcrumbs(array(
 			array(
@@ -93,11 +93,7 @@ class ControllerMultisellerAttribute extends ControllerMultisellerBase {
 			array(
 				'text' => $this->language->get('ms_attribute_breadcrumbs'),
 				'href' => $this->url->link('multiseller/attribute', '', 'SSL'),
-			),
-			array(
-				'text' => $this->language->get('ms_attribute_breadcrumbs'),
-				'href' => $this->url->link('multiseller/attribute', '', 'SSL'),
-			)			
+			)
 		));
 		
 		list($this->template, $this->children) = $this->MsLoader->MsHelper->admLoadTemplate('attribute-form');
@@ -126,8 +122,8 @@ class ControllerMultisellerAttribute extends ControllerMultisellerBase {
 		
 		$this->data['cancel'] = $this->url->link('multiseller/attribute', 'token=' . $this->session->data['token'], 'SSL');
 		$this->data['token'] = $this->session->data['token'];
-		$this->data['heading'] = $this->language->get('ms_attribute_heading');
-		$this->document->setTitle($this->language->get('ms_attribute_heading'));
+		$this->data['heading'] = $this->language->get('ms_attribute_edit');
+		$this->document->setTitle($this->language->get('ms_attribute_edit'));
 		
 		$this->data['breadcrumbs'] = $this->MsLoader->MsHelper->admSetBreadcrumbs(array(
 			array(
@@ -137,11 +133,7 @@ class ControllerMultisellerAttribute extends ControllerMultisellerBase {
 			array(
 				'text' => $this->language->get('ms_attribute_breadcrumbs'),
 				'href' => $this->url->link('multiseller/attribute', '', 'SSL'),
-			),
-			array(
-				'text' => $this->language->get('ms_attribute_breadcrumbs'),
-				'href' => $this->url->link('multiseller/attribute', '', 'SSL'),
-			)			
+			)
 		));
 		
 		list($this->template, $this->children) = $this->MsLoader->MsHelper->admLoadTemplate('attribute-form');

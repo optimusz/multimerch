@@ -351,6 +351,8 @@ $_['ms_action'] = 'Action';
 // Attributes
 $_['ms_attribute_heading'] = 'Attributes';
 $_['ms_attribute_breadcrumbs'] = 'Attributes';
+$_['ms_attribute_create'] = 'New attribute';
+$_['ms_attribute_edit'] = 'Edit attribute';
 $_['ms_attribute_value'] = 'Attribute value';
 
 $_['ms_attribute_text_type'] = 'Text input type';
