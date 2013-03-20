@@ -40,7 +40,7 @@ class ModelMultisellerSettings extends Model {
 					$option_ids = implode(',',$this->config->get('msconf_product_options'));
 					if (empty($option_ids)) return true;
 						
-					$res = $this->db->query("SELECT * FROM " . DB_PREFIX . "option WHERE  option_id IN ($option_ids)");
+					$res = $this->db->query("SELECT * FROM `" . DB_PREFIX . "option` WHERE  option_id IN ($option_ids)");
 					foreach ($res->rows as $option) {
 						switch($option["type"]) {
 							case "checkbox":

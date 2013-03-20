@@ -358,11 +358,13 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 				continue;
 			} else if ($attribute['attribute_type'] == MsAttribute::TYPE_CHECKBOX) {
 				// checkbox
-				foreach ($product_attributes[$attribute_id] as $key => $attribute_value_id) {
-					if ((int)$attribute_value_id != 0) {
-						// @TODO check for permitted value id
-						$data['product_attributes'][$attribute_id]['attribute_type']  = $attribute['attribute_type'];
-						$data['product_attributes'][$attribute_id]['values'][]  = (int)$attribute_value_id;
+				if (isset($product_attributes[$attribute_id])) {
+					foreach ($product_attributes[$attribute_id] as $key => $attribute_value_id) {
+						if ((int)$attribute_value_id != 0) {
+							// @TODO check for permitted value id
+							$data['product_attributes'][$attribute_id]['attribute_type']  = $attribute['attribute_type'];
+							$data['product_attributes'][$attribute_id]['values'][]  = (int)$attribute_value_id;
+						}
 					}
 				}
 				continue;
