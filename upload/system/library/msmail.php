@@ -85,12 +85,11 @@ class MsMail extends Model {
 			$seller_id = $this->MsLoader->MsProduct->getSellerId($product['product_id']);
 			
 			if ($seller_id) {
-				$mails[] = array(
+				$mails[$seller_id] = array(
 					'type' => MsMail::SMT_PRODUCT_PURCHASED,
 					'data' => array(
 						'recipients' => $this->MsLoader->MsSeller->getSellerEmail($seller_id),
 						'addressee' => $this->MsLoader->MsSeller->getSellerName($seller_id),
-						'quantity' => $product['quantity'],
 						'product_id' => $product['product_id'],
 						'order_id' => $order_id
 					)
@@ -188,11 +187,11 @@ class MsMail extends Model {
 				break;
 			
 			case self::SMT_PRODUCT_PURCHASED:
+				var_dump($order_info);
+				return;
 				$mail_subject .= $this->language->get('ms_mail_subject_product_purchased');
 				if ($data['quantity'] <= 1) {
-					$mail_text .= sprintf($this->language->get('ms_mail_product_purchased'), $product['name'], $this->config->get('config_name'), $order_info['firstname'] . ' ' . $order_info['lastname'], $order_info['email']);
-				} else {
-					$mail_text .= sprintf($this->language->get('ms_mail_product_purchased_multiple'), $this->config->get('config_name'), $data['quantity'], $product['name'], $order_info['firstname'] . ' ' . $order_info['lastname'], $order_info['email']);
+					$mail_text .= sprintf($this->language->get('ms_mail_product_purchased'), $this->config->get('config_name'), $order_info['firstname'] . ' ' . $order_info['lastname'], $order_info['email']);
 				}
 
 				if ($this->config->get('msconf_provide_buyerinfo') == 1 || ($this->config->get('msconf_provide_buyerinfo') == 2 && $product['shipping'] == 1))

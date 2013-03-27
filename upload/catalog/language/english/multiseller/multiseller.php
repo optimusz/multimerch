@@ -24,6 +24,8 @@ $_['ms_create_product'] = 'Create product';
 $_['ms_delete']      = 'Delete';
 $_['ms_update']      = 'Update';
 
+$_['ms_date_created']      = 'Date created';
+
 
 $_['ms_button_submit']      = 'Submit';
 $_['ms_button_add_special']      = 'Define a new special price';
@@ -80,9 +82,12 @@ EOT;
 
 $_['ms_mail_subject_product_purchased']      = 'Product purchased';
 $_['ms_mail_product_purchased'] = <<<EOT
-Your product %s has been purchased from %s.
+Your product(s) have been purchased from %s.
 
 Customer: %s (%s)
+
+Products:
+%s
 EOT;
 $_['ms_mail_product_purchased_multiple'] = <<<EOT
 Your products have been purchased from %s: %s x %s.
@@ -247,6 +252,7 @@ $_['ms_account_newproduct']      = 'New product';
 $_['ms_account_products']       = 'Products';
 $_['ms_account_sellerstatus']      = 'Account status';
 $_['ms_account_transactions']       = 'Transactions';
+$_['ms_account_orders']       = 'Orders';
 $_['ms_account_withdraw']       = 'Request earnings';
 
 
@@ -402,12 +408,22 @@ $_['ms_account_transactions_breadcrumbs']       = 'Your Transactions';
 
 $_['ms_account_transactions_balance']      = 'Your current balance:';
 $_['ms_account_transactions_earnings']      = 'Your earnings to date:';
-$_['ms_account_transactions_date_created']      = 'Date created';
-$_['ms_account_transactions_date_modified']      = 'Date modified';
 $_['ms_account_transactions_description']       = 'Description';
 $_['ms_account_transactions_amount']      = 'Amount';
 $_['ms_account_transactions_status']      = 'Status';
 $_['ms_account_transactions_notransactions']       = 'You don\'t have any transactions yet!';
+
+
+// Account - Orders
+
+$_['ms_account_orders_heading']      = 'Your Orders';
+$_['ms_account_orders_breadcrumbs']       = 'Your Orders';
+$_['ms_account_orders_id']      = 'Order #';
+$_['ms_account_orders_customer']      = 'Customer';
+$_['ms_account_orders_products']      = 'Products';
+$_['ms_account_orders_total']      = 'Total amount';
+$_['ms_account_orders_noorders']       = 'You don\'t have any orders yet!';
+
 
 // Account - Request withdrawal
 

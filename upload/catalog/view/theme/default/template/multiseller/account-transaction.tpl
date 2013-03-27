@@ -25,7 +25,7 @@
 	<table class="list">
 		<thead>
 			<tr>
-				<td class="left"><?php echo $ms_account_transactions_date_created; ?></td>
+				<td class="left"><?php echo $ms_date_created; ?></td>
 				<td class="left"><?php echo $ms_account_transactions_description; ?></td>
 				<td class="left"><?php echo $ms_account_transactions_amount; ?></td>
 			</tr>

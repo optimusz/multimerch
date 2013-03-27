@@ -4,6 +4,47 @@ class MsOrderData extends Model {
   		parent::__construct($registry);
 	}
 
+	public function getOrders($data = array(), $sort = array()) {
+		$sql = "SELECT *
+				FROM `" . DB_PREFIX . "order` o
+				WHERE order_id IN (
+					SELECT * FROM (
+						SELECT order_id
+						FROM `" . DB_PREFIX . "ms_order_product_data` mopd
+						WHERE seller_id = " . (int)$data['seller_id'] . "
+						GROUP BY order_id" 
+	    				. (isset($sort['limit']) ? " LIMIT ".(int)$sort['offset'].', '.(int)($sort['limit']) : '') . "
+					) as t
+    			)"
+				. (isset($sort['order_by']) ? " ORDER BY {$sort['order_by']} {$sort['order_way']}" : '');
+
+		$res = $this->db->query($sql);
+
+		return $res->rows;		
+	}
+
+	public function getOrderTotal($order_id, $data) {
+		$sql = "SELECT SUM(seller_net_amt) as 'total'
+				FROM `" . DB_PREFIX . "ms_order_product_data` mopd
+				WHERE order_id = " . (int)$order_id
+				. (isset($data['seller_id']) ? " AND seller_id =  " .  (int)$data['seller_id'] : ''); 
+
+		$res = $this->db->query($sql);
+
+		return $res->row['total'];		
+	}
+
+	public function getTotalOrders($data = array(), $sort = array()) {
+		$sql = "SELECT COUNT(DISTINCT order_id) as 'total'
+				FROM `" . DB_PREFIX . "ms_order_product_data` mopd
+				WHERE seller_id = " . (int)$data['seller_id'];
+
+		$res = $this->db->query($sql);
+
+		return $res->row['total'];
+	}
+
+
 
 	/*
 	public function existsOrderData($order_id) {
@@ -46,11 +87,15 @@ class MsOrderData extends Model {
 		return $res->rows;
 	}
 	
-	public function getOrderProductData($order_id, $product_id) {
+	public function getOrderProducts($data) {
 		$sql = "SELECT *
-				FROM " . DB_PREFIX . "ms_order_product_data
-				WHERE order_id = " . (int)$order_id . "
-				AND product_id = " . (int)$product_id;
+				FROM " . DB_PREFIX . "order_product
+				LEFT JOIN " . DB_PREFIX . "ms_order_product_data
+					USING(order_id, product_id)
+				WHERE 1 = 1"
+				. (isset($data['order_id']) ? " AND order_id =  " .  (int)$data['order_id'] : '')
+				. (isset($data['seller_id']) ? " AND seller_id =  " .  (int)$data['seller_id'] : '');
+
 		$res = $this->db->query($sql);
 
 		return $res->rows;

@@ -91,6 +91,7 @@ class MsCommission extends Model {
 				WHERE seller_id = " . (int)$seller_id;
 		$res = $this->db->query($sql);
 		
+		//!
 		$seller_group_id = $res->row['seller_group'];
 		$seller_commission_id = $res->row['commission_id'];
 

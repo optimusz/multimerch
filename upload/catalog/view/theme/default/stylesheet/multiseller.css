@@ -593,3 +593,18 @@ div.ms-jquery-dialog.ui-widget-content,
 .ms-button-delete {
 	background-image: url(../image/ms-cross.png);
 }
+
+
+.ms-account-order .products p {
+	display: inline-block;
+	width: 100%;
+	margin: 0;
+}
+
+.ms-account-order .products .name {
+	float: left;
+}
+
+.ms-account-order .products .total {
+	float: right;
+}
