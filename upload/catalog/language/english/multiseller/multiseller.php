@@ -80,7 +80,7 @@ Your product %s at %s is awaiting moderation.
 You will receive an email as soon as it is processed.
 EOT;
 
-$_['ms_mail_subject_product_purchased']      = 'Product purchased';
+$_['ms_mail_subject_product_purchased']      = 'New order';
 $_['ms_mail_product_purchased'] = <<<EOT
 Your product(s) have been purchased from %s.
 
@@ -88,6 +88,7 @@ Customer: %s (%s)
 
 Products:
 %s
+Total: %s
 EOT;
 $_['ms_mail_product_purchased_multiple'] = <<<EOT
 Your products have been purchased from %s: %s x %s.

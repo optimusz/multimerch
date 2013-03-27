@@ -83,20 +83,18 @@ class MsMail extends Model {
 		$mails = array();
 		foreach ($order_products as $product) {
 			$seller_id = $this->MsLoader->MsProduct->getSellerId($product['product_id']);
-			
 			if ($seller_id) {
 				$mails[$seller_id] = array(
 					'type' => MsMail::SMT_PRODUCT_PURCHASED,
 					'data' => array(
 						'recipients' => $this->MsLoader->MsSeller->getSellerEmail($seller_id),
 						'addressee' => $this->MsLoader->MsSeller->getSellerName($seller_id),
-						'product_id' => $product['product_id'],
-						'order_id' => $order_id
+						'order_id' => $order_id,
+						'seller_id' => $seller_id
 					)
 				);
 			}
 		}
-		
 		$this->sendMails($mails);
 	}
 	
@@ -187,12 +185,18 @@ class MsMail extends Model {
 				break;
 			
 			case self::SMT_PRODUCT_PURCHASED:
-				var_dump($order_info);
-				return;
-				$mail_subject .= $this->language->get('ms_mail_subject_product_purchased');
-				if ($data['quantity'] <= 1) {
-					$mail_text .= sprintf($this->language->get('ms_mail_product_purchased'), $this->config->get('config_name'), $order_info['firstname'] . ' ' . $order_info['lastname'], $order_info['email']);
+				$order_products = $this->MsLoader->MsOrderData->getOrderProducts(array('order_id' => $data['order_id'], 'seller_id' => $data['seller_id']));
+			
+				$products = '';
+				foreach ($order_products as $p) {
+					if ($p['quantity'] > 1) $products .= "{$p['quantity']} x "; 
+					$products .= "{$p['name']}\t" . $this->currency->format($p['seller_net_amt'], $this->config->get('config_currency')) . "\n";
 				}
+			
+				$total = $this->currency->format($this->MsLoader->MsOrderData->getOrderTotal($data['order_id'], array('seller_id' => $data['seller_id'])), $this->config->get('config_currency'));
+			
+				$mail_subject .= $this->language->get('ms_mail_subject_product_purchased');
+				$mail_text .= sprintf($this->language->get('ms_mail_product_purchased'), $this->config->get('config_name'), $order_info['firstname'] . ' ' . $order_info['lastname'], $order_info['email'], $products, $total);
 
 				if ($this->config->get('msconf_provide_buyerinfo') == 1 || ($this->config->get('msconf_provide_buyerinfo') == 2 && $product['shipping'] == 1))
 				{
