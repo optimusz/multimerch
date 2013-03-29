@@ -64,6 +64,7 @@ $_['ms_success_transactions'] = 'Transactions successfully completed';
 $_['ms_success_withdrawals_marked'] = 'Withdrawal requests marked as paid';
 $_['ms_transaction_withdrawal']      = 'Withdrawal: %s';
 
+$_['ms_none'] = 'None';
 $_['ms_seller'] = 'Seller';
 $_['ms_all_sellers'] = 'All sellers';
 $_['ms_amount'] = 'Amount';
@@ -217,6 +218,14 @@ $_['ms_config_allow_free_products_note'] = 'Allow sellers to add free products';
 
 $_['ms_config_allow_multiple_categories'] = 'Allow multiple categories';
 $_['ms_config_allow_multiple_categories_note'] = 'Allow sellers to add products to multiple categories';
+
+$_['ms_config_additional_category_restrictions'] = 'Additional category restrictions';
+$_['ms_config_additional_category_restrictions_note'] = '<u>Disallow</u> sellers from listing products in specific categories';
+$_['ms_topmost_categories'] = 'Topmost categories';
+$_['ms_parent_categories'] = 'All parent categories';
+
+$_['ms_config_restrict_categories'] = 'Restrict categories';
+$_['ms_config_restrict_categories_note'] = '<u>Disallow</u> sellers from listing products in these categories';
 
 $_['ms_config_provide_buyerinfo'] = 'Mail buyer information';
 $_['ms_config_provide_buyerinfo_note'] = 'Include buyer address in the "Product purchased" email';

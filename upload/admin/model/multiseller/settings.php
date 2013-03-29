@@ -20,14 +20,8 @@ class ModelMultisellerSettings extends Model {
 	public function update($version) {
 		if (!$this->checkDbVersion($version)) {
 			switch ($version) {
-				case "2.2":
-					$this->db->query("ALTER TABLE " . DB_PREFIX . "ms_comments ADD `parent_id` int(11) DEFAULT NULL AFTER `id`");
-					$this->db->query("ALTER TABLE " . DB_PREFIX . "ms_comments CHANGE `id_product` `product_id` int(11) NOT NULL");
-					$this->db->query("ALTER TABLE " . DB_PREFIX . "ms_comments CHANGE `id_customer` `customer_id` int(11) DEFAULT NULL");
-					$this->db->query("ALTER TABLE " . DB_PREFIX . "ms_comments ADD `user_id` int(11) DEFAULT NULL AFTER `customer_id`");
-					$this->db->query("ALTER TABLE " . DB_PREFIX . "ms_comments CHANGE `name` `name` varchar(128) NOT NULL DEFAULT ''");
-					$this->db->query("ALTER TABLE " . DB_PREFIX . "ms_comments CHANGE `create_time` `create_time` int(11) NOT NULL");
-					$this->db->query("ALTER TABLE " . DB_PREFIX . "ms_comments CHANGE `display` `display` tinyint(1) NOT NULL");
+				case "2.4":
+					$this->db->query("ALTER TABLE " . DB_PREFIX . "ms_seller CHANGE `nickname` `nickname` VARCHAR(255) NOT NULL");
 				
 				case "2.3":
 					$this->db->query("ALTER TABLE " . DB_PREFIX . "ms_product_attribute CHANGE `option_id` `attribute_id` int(11) NOT NULL");
@@ -68,6 +62,15 @@ class ModelMultisellerSettings extends Model {
 						$this->model_user_user_group->addPermission($this->user->getId(), 'access', 'multiseller/attribute');
 						$this->model_user_user_group->addPermission($this->user->getId(), 'modify', 'multiseller/attribute');
 					}
+
+				case "2.2":
+					$this->db->query("ALTER TABLE " . DB_PREFIX . "ms_comments ADD `parent_id` int(11) DEFAULT NULL AFTER `id`");
+					$this->db->query("ALTER TABLE " . DB_PREFIX . "ms_comments CHANGE `id_product` `product_id` int(11) NOT NULL");
+					$this->db->query("ALTER TABLE " . DB_PREFIX . "ms_comments CHANGE `id_customer` `customer_id` int(11) DEFAULT NULL");
+					$this->db->query("ALTER TABLE " . DB_PREFIX . "ms_comments ADD `user_id` int(11) DEFAULT NULL AFTER `customer_id`");
+					$this->db->query("ALTER TABLE " . DB_PREFIX . "ms_comments CHANGE `name` `name` varchar(128) NOT NULL DEFAULT ''");
+					$this->db->query("ALTER TABLE " . DB_PREFIX . "ms_comments CHANGE `create_time` `create_time` int(11) NOT NULL");
+					$this->db->query("ALTER TABLE " . DB_PREFIX . "ms_comments CHANGE `display` `display` tinyint(1) NOT NULL");
 					
 				default:
 					break;

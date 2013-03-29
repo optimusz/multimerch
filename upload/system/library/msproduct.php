@@ -26,7 +26,7 @@ class MsProduct extends Model {
 	
 	private function _getPath($category_id) {
 		$query = $this->db->query("SELECT name, parent_id FROM " . DB_PREFIX . "category c LEFT JOIN " . DB_PREFIX . "category_description cd ON (c.category_id = cd.category_id) WHERE c.category_id = '" . (int)$category_id . "' AND cd.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY c.sort_order, cd.name ASC");
-		
+		var_dump($query->row);
 		if ($query->row['parent_id']) {
 			return $this->getPath($query->row['parent_id'], $this->config->get('config_language_id')) . $this->language->get('text_separator') . $query->row['name'];
 		} else {
@@ -44,7 +44,8 @@ class MsProduct extends Model {
 			$sql = "SELECT
 					c.category_id,
 					c.parent_id,
-					cd.name
+					cd.name,
+					(SELECT COUNT(*) FROM `" . DB_PREFIX . "category` cc WHERE cc.parent_id = c.category_id) as children
 			FROM `" . DB_PREFIX . "category` c
 			LEFT JOIN `" . DB_PREFIX . "category_description` cd
 				ON (c.category_id = cd.category_id)
@@ -54,13 +55,14 @@ class MsProduct extends Model {
 			ORDER BY c.sort_order, cd.name ASC";
 			
 			$query = $this->db->query($sql);
-			//"SELECT * FROM " . DB_PREFIX . "category c LEFT JOIN " . DB_PREFIX . "category_description cd ON (c.category_id = cd.category_id) WHERE c.parent_id = '" . (int)$parent_id . "' AND cd.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY c.sort_order, cd.name ASC");
 		
 			foreach ($query->rows as $result) {
 				$category_data[] = array(
 					'category_id' => $result['category_id'],
 					'parent_id' => $result['parent_id'],
 					'name'        => $result['name'],
+					'children'        => $result['children'],
+					'disabled' => ((in_array($result['category_id'], $this->config->get('msconf_restrict_categories')) || ($this->config->get('msconf_additional_category_restrictions') == 1 && $result['parent_id'] == 0) || ($this->config->get('msconf_additional_category_restrictions') == 2 && $result['children'] > 0)) ? TRUE : FALSE)
 				);
 			
 				//Recursive call of the function and merge of all the categories together
@@ -77,6 +79,9 @@ class MsProduct extends Model {
 				$category_data_indented[] = array(
 					'category_id' => $category['category_id'],
 					'name'        => str_repeat('&nbsp;&nbsp;&nbsp;',$this->_getDepth($category_data, $category['category_id'])) . $category['name'],
+					'parent_id' => $category['parent_id'],
+					'children' => $category['children'],
+					'disabled' => $category['disabled'],
 				);
 			}
 			return $category_data_indented;
@@ -84,31 +89,6 @@ class MsProduct extends Model {
 		
 		return $category_data;
 	}
-	
-	public function getMultipleCategories($parent_id = 0) {
-		$category_data = $this->cache->get('category.' . (int)$this->config->get('config_language_id') . '.' . (int)$parent_id);
-	
-		if (!$category_data) {
-			$category_data = array();
-			
-			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "category c LEFT JOIN " . DB_PREFIX . "category_description cd ON (c.category_id = cd.category_id) WHERE c.parent_id = '" . (int)$parent_id . "' AND cd.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY c.sort_order, cd.name ASC");
-			
-			foreach ($query->rows as $result) {
-				$category_data[] = array(
-					'category_id' => $result['category_id'],
-					'name'        => $this->_getPath($result['category_id'], $this->config->get('config_language_id')),
-					'status'  	  => $result['status'],
-					'sort_order'  => $result['sort_order']
-				);
-			
-				$category_data = array_merge($category_data, $this->getCategories($result['category_id']));
-			}
-	
-			$this->cache->set('category.' . (int)$this->config->get('config_language_id') . '.' . (int)$parent_id, $category_data);
-		}
-		
-		return $category_data;
-	}	
 	
 	public function getSellerId($product_id) {
 		$sql = "SELECT seller_id FROM " . DB_PREFIX . "ms_product

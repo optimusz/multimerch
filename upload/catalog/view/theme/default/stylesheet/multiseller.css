@@ -63,6 +63,16 @@ table.list td, table.list thead td  {
 	background: #E4EEF7;
 }
 
+.ms-product .scrollbox div.odd.disabled {
+	background: #EDEDED;
+	color: #848484; 
+}
+
+.ms-product .scrollbox div.even.disabled {
+	background: #F8F8F8;
+	color: #848484; 
+}
+
 .ms-product tr > td {
 	padding-bottom: 10px;
 	vertical-align: top;

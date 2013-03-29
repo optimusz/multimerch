@@ -123,7 +123,7 @@
 						<select name="product_category">
 							<option value=""><?php echo ''; ?></option>
 							<?php foreach ($categories as $category) { ?>
-								<option value="<?php echo $category['category_id']; ?>" <?php if (in_array($category['category_id'], explode(',',$product['category_id']))) { ?>selected="selected"<?php } ?>><?php echo $category['name']; ?></option>
+								<option value="<?php echo $category['category_id']; ?>" <?php if (in_array($category['category_id'], explode(',',$product['category_id'])) && !$category['disabled']) { ?>selected="selected"<?php } ?> <?php echo ($category['disabled'] ? 'disabled' : ''); ?>><?php echo $category['name']; ?></option>
 							<?php } ?>
 						</select>
 						
@@ -133,8 +133,8 @@
 						<?php $class = 'odd'; ?>
 						<?php foreach ($categories as $category) { ?>
 							<?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
-							<div class="<?php echo $class; ?>">
-								<input type="checkbox" name="product_category[]" value="<?php echo $category['category_id']; ?>" <?php if (in_array($category['category_id'], explode(',',$product['category_id']))) { ?>checked="checked"<?php } ?> />
+							<div class="<?php echo $class; ?> <?php echo ($category['disabled'] ? 'disabled' : ''); ?>">
+								<input type="checkbox" name="product_category[]" value="<?php echo $category['category_id']; ?>" <?php if (in_array($category['category_id'], explode(',',$product['category_id'])) && !$category['disabled']) { ?>checked="checked"<?php } ?> <?php if ($category['disabled']) { ?>disabled="disabled"<?php } ?>/>
 								<?php echo $category['name']; ?>
 							</div>
 						<?php } ?>

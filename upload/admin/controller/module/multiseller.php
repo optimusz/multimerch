@@ -37,6 +37,8 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		"ms_sellerdropdown_module" => "",	
 		"msconf_allow_free_products" => 0,
 		"msconf_allow_multiple_categories" => 0,
+		"msconf_additional_category_restrictions" => 0, // 0 - none, 1 - topmost, 2 - all parents
+		"msconf_restrict_categories" => array(),		
 		"msconf_images_limits" => array(0,0),
 		"msconf_downloads_limits" => array(0,0),		
 		"msconf_enable_shipping" => 0, // 0 - no, 1 - yes, 2 - seller select
@@ -182,6 +184,9 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		
 		if (!isset($this->request->post['msconf_product_options']))
 			$this->request->post['msconf_product_options'] = array();
+
+		if (!isset($this->request->post['msconf_restrict_categories']))
+			$this->request->post['msconf_restrict_categories'] = array();
 		
 		// todo setting validation
 		$this->_editSettings();
@@ -226,7 +231,8 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 
 		$this->load->model('catalog/information');
 		$this->data['informations'] = $this->model_catalog_information->getInformations();
-
+		$this->data['categories'] = $this->MsLoader->MsProduct->getCategories();
+		
 		$this->document->setTitle($this->language->get('ms_settings_heading'));
 
 		$this->data['breadcrumbs'] = $this->MsLoader->MsHelper->admSetBreadcrumbs(array(

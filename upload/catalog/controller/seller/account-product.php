@@ -305,17 +305,27 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		}		
 		
 		if (isset($data['product_category']) && !empty($data['product_category'])) {
-			if (is_array($data['product_category'])) {
-				if (!$this->config->get('msconf_allow_multiple_categories')) {
-					$data['product_category'] = $data['product_category'][0];
-				}
-			} else {
-				$data['product_category'] = array($data['product_category']);
+			$categories = $this->MsLoader->MsProduct->getCategories();
+			$disabled = array();
+			foreach ($categories as $k => $c) {
+				if ($c['disabled']) $disabled[] = $c['category_id'];
 			}
-		} else {
+
+			// convert to array if needed
+			$data['product_category'] = is_array($data['product_category']) ? $data['product_category'] : array($data['product_category']);
+			
+			// remove disabled categories if set
+			$data['product_category'] = array_diff($data['product_category'], $disabled);				
+			
+			if (!$this->config->get('msconf_allow_multiple_categories') && count($data['product_category']) > 1) {
+				$data['product_category'] = array($data['product_category'][0]);
+			}
+		}
+
+		// data array could have been modified in the previous step
+		if (!isset($data['product_category']) || empty($data['product_category'])) {
 			$json['errors']['product_category'] = $this->language->get('ms_error_product_category_empty'); 		
 		}
-		
 		
 		// generic attributes
 		$attributes = array();
@@ -571,11 +581,8 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		
 		$this->data['seller'] = $this->MsLoader->MsSeller->getSeller($this->customer->getId());
 		$this->data['salt'] = $this->MsLoader->MsSeller->getSalt($this->customer->getId());
-		if (!$this->config->get('msconf_allow_multiple_categories'))
-			$this->data['categories'] = $this->MsLoader->MsProduct->getCategories();		
-		else
-			$this->data['categories'] = $this->MsLoader->MsProduct->getMultipleCategories(0);
-
+		$this->data['categories'] = $this->MsLoader->MsProduct->getCategories();
+var_dump($this->data['categories']);
 		// attributes
 		$attributes = $this->MsLoader->MsAttribute->getAttributes(
 			array(
@@ -763,12 +770,8 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		$this->document->addScript('catalog/view/javascript/jquery/tabs.js');
 		
 		$this->data['seller'] = $this->MsLoader->MsSeller->getSeller($this->customer->getId());
-		
-		if (!$this->config->get('msconf_allow_multiple_categories'))
-			$this->data['categories'] = $this->MsLoader->MsProduct->getCategories();		
-		else
-			$this->data['categories'] = $this->MsLoader->MsProduct->getMultipleCategories(0);
-
+		$this->data['categories'] = $this->MsLoader->MsProduct->getCategories();		
+			
 		$this->load->model('localisation/language');
 		$this->data['languages'] = $this->model_localisation_language->getLanguages();		
 		

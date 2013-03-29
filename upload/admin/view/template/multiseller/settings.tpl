@@ -208,7 +208,7 @@
 					  	</td>
 					</tr>
 
-		   			<tr>
+					<tr>
 						<td>
 							<span><?php echo $ms_config_allow_multiple_categories; ?></span>
 							<span class="help"><?php echo $ms_config_allow_multiple_categories_note; ?></span>
@@ -219,7 +219,41 @@
 							<input type="radio" name="msconf_allow_multiple_categories" value="0" <?php if($msconf_allow_multiple_categories == 0) { ?> checked="checked" <?php } ?>  />
 							<?php echo $text_no; ?>
 					  	</td>
-					</tr>	
+					</tr>
+
+					<tr>
+						<td>
+							<span><?php echo $ms_config_additional_category_restrictions; ?></span>
+							<span class="help"><?php echo $ms_config_additional_category_restrictions_note; ?></span>
+						</td>
+						<td>
+							<input type="radio" name="msconf_additional_category_restrictions" value="0" <?php if($msconf_additional_category_restrictions == 0) { ?> checked="checked" <?php } ?>  />
+							<?php echo $ms_none; ?>
+							<input type="radio" name="msconf_additional_category_restrictions" value="1" <?php if($msconf_additional_category_restrictions == 1) { ?> checked="checked" <?php } ?>  />
+							<?php echo $ms_topmost_categories; ?>
+							<input type="radio" name="msconf_additional_category_restrictions" value="2" <?php if($msconf_additional_category_restrictions == 2) { ?> checked="checked" <?php } ?>  />
+							<?php echo $ms_parent_categories; ?>							
+					  	</td>
+					</tr>
+					
+		   			<tr>
+						<td>
+							<span><?php echo $ms_config_restrict_categories; ?></span>
+							<span class="help"><?php echo $ms_config_restrict_categories_note; ?></span>
+						</td>
+						<td>
+							<div class="scrollbox">
+							<?php $class = 'odd'; ?>
+							<?php foreach ($categories as $category) { ?>
+								<?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+								<div class="<?php echo $class; ?>">
+									<input type="checkbox" name="msconf_restrict_categories[]" value="<?php echo $category['category_id']; ?>" <?php if (isset($msconf_restrict_categories) && in_array($category['category_id'], $msconf_restrict_categories)) { ?>checked="checked"<?php } ?> />
+									<?php echo $category['name']; ?>
+								</div>
+							<?php } ?>
+							</div>						
+					  	</td>
+					</tr>						
 					
 					<tr>
 						  <td>
