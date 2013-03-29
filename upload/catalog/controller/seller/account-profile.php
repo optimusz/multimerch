@@ -40,14 +40,14 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 		
 		if (empty($seller)) {
 			// seller doesn't exist yet
-			if (empty($data['sellerinfo_nickname'])) {
-				$json['errors']['sellerinfo_nickname'] = $this->language->get('ms_error_sellerinfo_nickname_empty'); 
-			} else if (!ctype_alnum($data['sellerinfo_nickname'])) {
-				$json['errors']['sellerinfo_nickname'] = $this->language->get('ms_error_sellerinfo_nickname_alphanumeric');
-			} else if (mb_strlen($data['sellerinfo_nickname']) < 4 || mb_strlen($data['sellerinfo_nickname']) > 50 ) {
-				$json['errors']['sellerinfo_nickname'] = $this->language->get('ms_error_sellerinfo_nickname_length');			
-			} else if ($this->MsLoader->MsSeller->nicknameTaken($data['sellerinfo_nickname'])) {
-				$json['errors']['sellerinfo_nickname'] = $this->language->get('ms_error_sellerinfo_nickname_taken');
+			if (empty($data['seller']['nickname'])) {
+				$json['errors']['seller[nickname]'] = $this->language->get('ms_error_sellerinfo_nickname_empty'); 
+			} else if (!ctype_alnum($data['seller']['nickname'])) {
+				$json['errors']['seller[nickname]'] = $this->language->get('ms_error_sellerinfo_nickname_alphanumeric');
+			} else if (mb_strlen($data['seller']['nickname']) < 4 || mb_strlen($data['seller']['nickname']) > 50 ) {
+				$json['errors']['seller[nickname]'] = $this->language->get('ms_error_sellerinfo_nickname_length');			
+			} else if ($this->MsLoader->MsSeller->nicknameTaken($data['seller']['nickname'])) {
+				$json['errors']['seller[nickname]'] = $this->language->get('ms_error_sellerinfo_nickname_taken');
 			}
 			
 			if ($this->config->get('msconf_seller_terms_page')) {
@@ -55,33 +55,34 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 				$information_info = $this->model_catalog_information->getInformation($this->config->get('msconf_seller_terms_page'));
 				
 				if ($information_info && !isset($data['accept_terms'])) {
-	      			$json['errors']['sellerinfo_terms'] = htmlspecialchars_decode(sprintf($this->language->get('ms_error_sellerinfo_terms'), $information_info['title']));
+	      			$json['errors']['seller[terms]'] = htmlspecialchars_decode(sprintf($this->language->get('ms_error_sellerinfo_terms'), $information_info['title']));
 				}
 			}			
 		}
 		
-		if (mb_strlen($data['sellerinfo_company']) > 50 ) {
-			$json['errors']['sellerinfo_company'] = $this->language->get('ms_error_sellerinfo_company_length');			
+		if (mb_strlen($data['seller']['company']) > 50 ) {
+			$json['errors']['seller[company]'] = $this->language->get('ms_error_sellerinfo_company_length');			
 		}
 		
-		if (mb_strlen($data['sellerinfo_description']) > 1000) {
-			$json['errors']['sellerinfo_description'] = $this->language->get('ms_error_sellerinfo_description_length');			
+		if (mb_strlen($data['seller']['description']) > 1000) {
+			$json['errors']['seller[description]'] = $this->language->get('ms_error_sellerinfo_description_length');			
 		}
 
-		if (mb_strlen($data['sellerinfo_paypal']) > 256) {
-			$json['errors']['sellerinfo_paypal'] = $this->language->get('ms_error_sellerinfo_paypal');			
+		if (mb_strlen($data['seller']['paypal']) > 256) {
+			$json['errors']['seller[paypal]'] = $this->language->get('ms_error_sellerinfo_paypal');			
 		}
 		
-		if (isset($data['sellerinfo_avatar_name']) && !empty($data['sellerinfo_avatar_name'])) {
-			if (!$this->MsLoader->MsFile->checkFileAgainstSession($data['sellerinfo_avatar_name'])) {
-				$json['errors']['sellerinfo_avatar'] = $this->language->get('ms_error_file_upload_error');
+		if (isset($data['seller']['avatar_name']) && !empty($data['seller']['avatar_name'])) {
+			if (!$this->MsLoader->MsFile->checkFileAgainstSession($data['seller']['avatar_name'])) {
+				$json['errors']['seller[avatar]'] = $this->language->get('ms_error_file_upload_error');
 			}
 		}
 		
 		if (empty($json['errors'])) {
 			$mails = array();
+			unset($data['seller']['commission']);
 			if (empty($seller)) {
-				$data['seller_approved'] = 0;
+				$data['seller']['approved'] = 0;
 				// create new seller
 				switch ($this->config->get('msconf_seller_validation')) {
 					/*
@@ -97,10 +98,10 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 						$mails[] = array(
 							'type' => MsMail::AMT_SELLER_ACCOUNT_AWAITING_MODERATION,
 							'data' => array(
-								'message' => $data['sellerinfo_reviewer_message']
+								'message' => $data['seller']['reviewer_message']
 							)
 						);
-						$data['seller_status'] = MsSeller::STATUS_INACTIVE;
+						$data['seller']['status'] = MsSeller::STATUS_INACTIVE;
 						break;
 					
 					case MsSeller::MS_SELLER_VALIDATION_NONE:
@@ -111,32 +112,32 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 						$mails[] = array(
 							'type' => MsMail::AMT_SELLER_ACCOUNT_CREATED
 						);					
-						$data['seller_status'] = MsSeller::STATUS_ACTIVE;
-						$data['seller_approved'] = 1;
+						$data['seller']['status'] = MsSeller::STATUS_ACTIVE;
+						$data['seller']['approved'] = 1;
 						break;
 				}
 				
 				// SEO urls generation for sellers
 				if ($this->config->get('msconf_enable_seo_urls_seller')) {
 					$latin_check = '/[^\x{0030}-\x{007f}]/u';
-					$non_latin_chars = preg_match($latin_check, $data['sellerinfo_nickname']);
+					$non_latin_chars = preg_match($latin_check, $data['seller']['nickname']);
 					if ($this->config->get('msconf_enable_non_alphanumeric_seo') && $non_latin_chars) {
-						$data['keyword'] = implode("-", str_replace("-", "", explode(" ", strtolower($data['sellerinfo_nickname']))));
+						$data['keyword'] = implode("-", str_replace("-", "", explode(" ", strtolower($data['seller']['nickname']))));
 					}
 					else {
-						$data['keyword'] = implode("-", str_replace("-", "", explode(" ", preg_replace("/[^A-Za-z0-9 ]/", '', strtolower($data['sellerinfo_nickname'])))));
+						$data['keyword'] = implode("-", str_replace("-", "", explode(" ", preg_replace("/[^A-Za-z0-9 ]/", '', strtolower($data['seller']['nickname'])))));
 					}
 				}
 				
-				$data['seller_id'] = $this->customer->getId();
-				$data['sellerinfo_product_validation'] = $this->config->get('msconf_product_validation'); 
-				$this->MsLoader->MsSeller->createSeller($data);
+				$data['seller']['seller_id'] = $this->customer->getId();
+				$data['seller']['product_validation'] = $this->config->get('msconf_product_validation'); 
+				$this->MsLoader->MsSeller->createSeller($data['seller']);
 				$this->MsLoader->MsMail->sendMails($mails);
 				$this->session->data['success'] = $this->language->get('ms_account_sellerinfo_saved');
 			} else {
 				// edit seller
-				$data['seller_id'] = $seller['seller_id'];
-				$this->MsLoader->MsSeller->editSeller($data);
+				$data['seller']['seller_id'] = $seller['seller_id'];
+				$this->MsLoader->MsSeller->editSeller($data['seller']);
 				$this->session->data['success'] = $this->language->get('ms_account_sellerinfo_saved');
 			}
 		}

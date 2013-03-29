@@ -4,59 +4,140 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 	public function jxSaveSellerInfo() {
 		$this->validate(__FUNCTION__);
 		$data = $this->request->post;
-		$seller = $this->MsLoader->MsSeller->getSeller($data['seller_id']);
+		$seller = $this->MsLoader->MsSeller->getSeller($data['seller']['seller_id']);
 		$json = array();
-		if (empty($seller)) {
-			if (empty($data['sellerinfo_nickname'])) {
-				$json['errors']['sellerinfo_nickname'] = 'Username cannot be empty'; 
-			} else if (!ctype_alnum($data['sellerinfo_nickname'])) {
-				$json['errors']['sellerinfo_nickname'] = 'Username can only contain alphanumeric characters';
-			} else if (strlen($data['sellerinfo_nickname']) < 4 || strlen($data['sellerinfo_nickname']) > 50 ) {
-				$json['errors']['sellerinfo_nickname'] = 'Username should be between 4 and 50 characters';			
-			} else if ($this->MsLoader->MsSeller->nicknameTaken($data['sellerinfo_nickname'])) {
-				$json['errors']['sellerinfo_nickname'] = 'This username is already taken';
+		$this->load->model('sale/customer');
+		
+		if (empty($data['seller']['seller_id'])) {
+			// creating new seller
+			if (empty($data['seller']['nickname'])) {
+				$json['errors']['seller[nickname]'] = 'Username cannot be empty'; 
+			} else if (!ctype_alnum($data['seller']['nickname'])) {
+				$json['errors']['seller[nickname]'] = 'Username can only contain alphanumeric characters';
+			} else if (strlen($data['seller']['nickname']) < 4 || strlen($data['seller']['nickname']) > 50 ) {
+				$json['errors']['seller[nickname]'] = 'Username should be between 4 and 50 characters';			
+			} else if ($this->MsLoader->MsSeller->nicknameTaken($data['seller']['nickname'])) {
+				$json['errors']['seller[nickname]'] = 'This username is already taken';
+			}
+			
+			if (empty($data['customer']['customer_id'])) {
+				// creating new customer
+				$this->language->load('sale/customer');
+
+		    	if ((mb_strlen($data['customer']['firstname']) < 1) || (mb_strlen($data['customer']['firstname']) > 32)) {
+		      		$json['errors']['customer[firstname]'] = $this->language->get('error_firstname');
+		    	}
+		
+		    	if ((mb_strlen($data['customer']['lastname']) < 1) || (mb_strlen($data['customer']['lastname']) > 32)) {
+		      		$json['errors']['customer[lastname]'] = $this->language->get('error_lastname');
+		    	}
+		
+				if ((mb_strlen($data['customer']['email']) > 96) || !preg_match('/^[^\@]+@.*\.[a-z]{2,6}$/i', $data['customer']['email'])) {
+		      		$json['errors']['customer[email]'] = $this->language->get('error_email');
+		    	}
+				
+				$customer_info = $this->model_sale_customer->getCustomerByEmail($data['customer']['email']);
+				
+				if (!isset($this->request->get['customer_id'])) {
+					if ($customer_info) {
+						$json['errors']['customer[email]'] = $this->language->get('error_exists');
+					}
+				} else {
+					if ($customer_info && ($this->request->get['customer_id'] != $customer_info['customer_id'])) {
+						$json['errors']['customer[email]'] = $this->language->get('error_exists');
+					}
+				}
+				
+		    	if ($data['customer']['password'] || (!isset($this->request->get['customer_id']))) {
+		      		if ((mb_strlen($data['customer']['password']) < 4) || (mb_strlen($data['customer']['password']) > 20)) {
+		        		$json['errors']['customer[password]'] = $this->language->get('error_password');
+		      		}
+			
+			  		if ($data['customer']['password'] != $data['customer']['password_confirm']) {
+			    		$json['errors']['customer[password_confirm]'] = $this->language->get('error_confirm');
+			  		}
+		    	}				
 			}
 		}
 		
-		if (strlen($data['sellerinfo_company']) > 50 ) {
-			$json['errors']['sellerinfo_company'] = 'Company name cannot be longer than 50 characters';
+		if (strlen($data['seller']['company']) > 50 ) {
+			$json['errors']['seller[company]'] = 'Company name cannot be longer than 50 characters';
 		}
-		
 		if (empty($json['errors'])) {
 			$mails = array();
-			$mails[] = array(
-				'type' => MsMail::SMT_SELLER_ACCOUNT_MODIFIED,
-				'data' => array(
-					'recipients' => $seller['c.email'],
-					'addressee' => $seller['ms.nickname'],
-					'message' => (isset($data['sellerinfo_message']) ? $data['sellerinfo_message'] : ''),
-					'seller_id' => $seller['seller_id']
-				)
-			);		
+			if (empty($data['seller']['seller_id'])) {
+				// creating new seller
+				if (empty($data['customer']['customer_id'])) {
+					// creating new customer
+					$this->model_sale_customer->addCustomer(
+						array_merge(
+							$data['customer'],
+							array(
+								'telephone' => '',
+								'fax' => '',
+								'customer_group_id' => $this->config->get('config_customer_group_id'),
+								'newsletter' => 1,
+								'status' => 1
+							)
+						)
+					);
+					
+					$customer_info = $this->model_sale_customer->getCustomerByEmail($data['customer']['email']);
+					$data['seller']['seller_id'] = $customer_info['customer_id'];
+				} else {
+					$data['seller']['seller_id'] = $data['customer']['customer_id'];
+				}
 
-			switch ($data['seller_status']) {
-				case MsSeller::STATUS_INACTIVE:
-				case MsSeller::STATUS_DISABLED:
-				case MsSeller::STATUS_DELETED:
-					$products = $this->MsLoader->MsProduct->getProducts(array(
+				$this->MsLoader->MsSeller->createSeller(
+					array_merge(
+						$data['seller'],
+						array(
+							'approved' => 1,
+						)
+					)
+				);
+			} else {
+				// edit seller
+				$mails[] = array(
+					'type' => MsMail::SMT_SELLER_ACCOUNT_MODIFIED,
+					'data' => array(
+						'recipients' => $seller['c.email'],
+						'addressee' => $seller['ms.nickname'],
+						'message' => (isset($data['seller']['message']) ? $data['seller']['message'] : ''),
 						'seller_id' => $seller['seller_id']
-					));
-					
-					foreach ($products as $p) {
-						$this->MsLoader->MsProduct->changeStatus($p['product_id'], $data['seller_status']);
-					}
-					
-					$data['seller_approved'] = 0;
-					break;
-				case MsSeller::STATUS_ACTIVE:
-					$data['seller_approved'] = 1;
-					break;
+					)
+				);
+	
+				switch ($data['seller']['status']) {
+					case MsSeller::STATUS_INACTIVE:
+					case MsSeller::STATUS_DISABLED:
+					case MsSeller::STATUS_DELETED:
+						$products = $this->MsLoader->MsProduct->getProducts(array(
+							'seller_id' => $seller['seller_id']
+						));
+						
+						foreach ($products as $p) {
+							$this->MsLoader->MsProduct->changeStatus($p['product_id'], $data['seller']['status']);
+						}
+						
+						$data['seller']['approved'] = 0;
+						break;
+					case MsSeller::STATUS_ACTIVE:
+						$data['seller']['approved'] = 1;
+						break;
+				}
+							
+				$this->MsLoader->MsSeller->adminEditSeller(
+					array_merge(
+						$data['seller'],
+						array(
+							'approved' => 1,
+						)
+					)				
+				);
 			}
-
-			// edit seller
-			$this->MsLoader->MsSeller->adminEditSeller($data);
 			
-			if ($data['sellerinfo_notify']) {
+			if ($data['seller']['notify']) {
 				$this->MsLoader->MsMail->sendMails($mails);
 			}
 			
@@ -153,6 +234,7 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 		*/
 		$this->data['token'] = $this->session->data['token'];		
 		$this->data['heading'] = $this->language->get('ms_catalog_sellers_heading');
+		$this->data['link_create_seller'] = $this->url->link('multiseller/seller/create', 'token=' . $this->session->data['token'], 'SSL');
 		$this->document->setTitle($this->language->get('ms_catalog_sellers_heading'));
 		
 		$this->data['breadcrumbs'] = $this->MsLoader->MsHelper->admSetBreadcrumbs(array(
@@ -169,6 +251,39 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 		list($this->template, $this->children) = $this->MsLoader->MsHelper->admLoadTemplate('seller');
 		$this->response->setOutput($this->render());
 	}
+	
+	public function create() {
+		$this->validate(__FUNCTION__);
+		$this->load->model('localisation/country');
+    	$this->data['countries'] = $this->model_localisation_country->getCountries();
+		$this->data['customers'] = $this->MsLoader->MsSeller->getCustomers(array('seller_id' => 'NULL'));
+		$this->data['seller_statuses'] =$this->MsLoader->MsSeller->getStatuses();
+		$this->data['seller_groups'] =$this->MsLoader->MsSellerGroup->getSellerGroups();  
+		$this->data['seller'] = FALSE;
+
+		$this->data['currency_code'] = $this->config->get('config_currency');
+		$this->data['token'] = $this->session->data['token'];
+		$this->data['heading'] = $this->language->get('ms_catalog_sellerinfo_heading');
+		$this->document->setTitle($this->language->get('ms_catalog_sellerinfo_heading'));
+		
+		$this->data['breadcrumbs'] = $this->MsLoader->MsHelper->admSetBreadcrumbs(array(
+			array(
+				'text' => $this->language->get('ms_menu_multiseller'),
+				'href' => $this->url->link('multiseller/dashboard', '', 'SSL'),
+			),
+			array(
+				'text' => $this->language->get('ms_catalog_sellers_breadcrumbs'),
+				'href' => $this->url->link('multiseller/seller', '', 'SSL'),
+			),			
+			array(
+				'text' => $this->language->get('ms_catalog_sellers_newseller'),
+				'href' => $this->url->link('multiseller/seller/create', 'SSL'),
+			)
+		));		
+		
+		list($this->template, $this->children) = $this->MsLoader->MsHelper->admLoadTemplate('seller-form');
+		$this->response->setOutput($this->render());
+	}	
 	
 	public function update() {
 		$this->validate(__FUNCTION__);

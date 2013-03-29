@@ -113,6 +113,8 @@ $_['ms_menu_reports_sales'] = 'Sales';
 // Seller - List
 $_['ms_catalog_sellers_heading'] = 'Sellers';
 $_['ms_catalog_sellers_breadcrumbs'] = 'Sellers';
+$_['ms_catalog_sellers_newseller'] = 'New seller';
+$_['ms_catalog_sellers_create'] = 'Create new seller';
 
 $_['ms_catalog_sellers_total_balance'] = 'Total amount on all balances: <b>%s</b> (active sellers: <b>%s</b>)';
 $_['ms_catalog_sellers_name'] = 'Name';
@@ -286,8 +288,21 @@ $_['ms_config_carousel_image']        = 'Image width &amp; height dimensions req
 
 // Customer-seller form
 $_['ms_catalog_sellerinfo_heading'] = 'Seller';
+$_['ms_catalog_sellerinfo_seller_data'] = 'Seller data';
 $_['ms_catalog_sellerinfo_breadcrumbs'] = 'Seller';
 $_['ms_catalog_sellerinfo_sellertab'] = 'Seller tab';
+
+$_['ms_catalog_sellerinfo_customer'] = 'Customer';
+$_['ms_catalog_sellerinfo_customer_data'] = 'Customer data';
+$_['ms_catalog_sellerinfo_customer_new'] = 'New customer';
+$_['ms_catalog_sellerinfo_customer_existing'] = 'Existing customer';
+$_['ms_catalog_sellerinfo_customer_create_new'] = 'Create new customer';
+$_['ms_catalog_sellerinfo_customer_firstname'] = 'First Name';
+$_['ms_catalog_sellerinfo_customer_lastname'] = 'Last Name';
+$_['ms_catalog_sellerinfo_customer_email'] = 'Email';
+$_['ms_catalog_sellerinfo_customer_password'] = 'Password';
+$_['ms_catalog_sellerinfo_customer_password_confirm'] = 'Confirm password';
+
 $_['ms_catalog_sellerinfo_nickname']    = 'Nickname';
 $_['ms_catalog_sellerinfo_description']    = 'Description';
 $_['ms_catalog_sellerinfo_company']     = 'Company';

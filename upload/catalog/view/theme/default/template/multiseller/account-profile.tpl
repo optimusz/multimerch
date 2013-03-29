@@ -11,9 +11,7 @@
 	
 	<h1><?php echo $ms_account_sellerinfo_heading; ?></h1>
 	
-	<?php if (isset($error_warning) && ($error_warning)) { ?>
-		<div class="warning"><?php echo $error_warning; ?></div>
-	<?php } ?>	
+	<div class="error"></div>
 	
 	<?php if (isset($success) && ($success)) { ?>
 		<div class="success"><?php echo $success; ?></div>
@@ -41,9 +39,8 @@
 					<?php } else { ?>
 						<td><span class="required">*</span> <?php echo $ms_account_sellerinfo_nickname; ?></td>
 						<td>
-							<input type="text" name="sellerinfo_nickname" value="<?php echo $seller['ms.nickname']; ?>" />
+							<input type="text" name="seller[nickname]" value="<?php echo $seller['ms.nickname']; ?>" />
 							<p class="ms-note"><?php echo $ms_account_sellerinfo_nickname_note; ?></p>
-							<p class="error" id="error_sellerinfo_nickname"></p>
 						</td>
 					<?php } ?>
 				</tr>
@@ -51,41 +48,37 @@
 				<tr>
 					<td><?php echo $ms_account_sellerinfo_description; ?></td>
 					<td>
-						<textarea name="sellerinfo_description"><?php echo $seller['ms.description']; ?></textarea>
+						<textarea name="seller[description]"><?php echo $seller['ms.description']; ?></textarea>
 						<p class="ms-note"><?php echo $ms_account_sellerinfo_description_note; ?></p>
-						<p class="error" id="error_sellerinfo_description"></p>
 					</td>
 				</tr>
 				
 				<tr>
 					<td><?php echo $ms_account_sellerinfo_company; ?></td>
 					<td>
-						<input type="text" name="sellerinfo_company" value="<?php echo $seller['ms.company']; ?>" />
+						<input type="text" name="seller[company]" value="<?php echo $seller['ms.company']; ?>" />
 						<p class="ms-note"><?php echo $ms_account_sellerinfo_company_note; ?></p>
-						<p class="error" id="error_sellerinfo_company"></p>
 					</td>
 				</tr>
 				
 				<tr>
 					<td><?php echo $ms_account_sellerinfo_country; ?></td>
 					<td>
-						<select name="sellerinfo_country">
+						<select name="seller[country]">
 							<option value="" selected="selected"><?php echo $ms_account_sellerinfo_country_dont_display; ?></option>
 							<?php foreach ($countries as $country) { ?>
 							<option value="<?php echo $country['country_id']; ?>" <?php if ($seller['ms.country_id'] == $country['country_id']) { ?>selected="selected"<?php } ?>><?php echo $country['name']; ?></option>
 							<?php } ?>
 						</select>
 						<p class="ms-note"><?php echo $ms_account_sellerinfo_country_note; ?></p>
-						<p class="error" id="error_sellerinfo_country"></p>
 					</td>
 				</tr>
 				
 				<tr>
 					<td><?php echo $ms_account_sellerinfo_paypal; ?></td>
 					<td>
-						<input type="text" name="sellerinfo_paypal" value="<?php echo $seller['ms.paypal']; ?>" />
+						<input type="text" name="seller[paypal]" value="<?php echo $seller['ms.paypal']; ?>" />
 						<p class="ms-note"><?php echo $ms_account_sellerinfo_paypal_note; ?></p>
-						<p class="error" id="error_sellerinfo_paypal"></p>
 					</td>
 				</tr>
 				
@@ -100,7 +93,7 @@
 						<div id="sellerinfo_avatar_files">
 						<?php if (!empty($seller['avatar'])) { ?>
 							<div class="ms-image">
-								<input type="hidden" name="sellerinfo_avatar_name" value="<?php echo $seller['avatar']['name']; ?>" />
+								<input type="hidden" name="seller[avatar_name]" value="<?php echo $seller['avatar']['name']; ?>" />
 								<img src="<?php echo $seller['avatar']['thumb']; ?>" />
 								<img class="ms-remove" src="catalog/view/theme/default/image/remove.png" />
 							</div>
@@ -117,7 +110,6 @@
 							<input type="checkbox" name="accept_terms" value="1" />
 							<?php echo $ms_account_sellerinfo_terms_note; ?>
 						</p>
-						<p class="error" id="error_sellerinfo_terms"></p>
 					</td>
 				</tr>
 				<?php } ?>
@@ -126,9 +118,8 @@
 				<tr>
 					<td><?php echo $ms_account_sellerinfo_reviewer_message; ?></td>
 					<td>
-						<textarea name="sellerinfo_reviewer_message"></textarea>
+						<textarea name="seller[reviewer_message]"></textarea>
 						<p class="ms-note"><?php echo $ms_account_sellerinfo_reviewer_message_note; ?></p>
-						<p class="error" id="error_sellerinfo_review_message"></p>
 					</td>
 				</tr>
 				<?php } ?>

@@ -74,25 +74,30 @@ final class MsSeller extends Model {
 	}
 		
 	public function createSeller($data) {
-		if (isset($data['sellerinfo_avatar_name'])) {
-			$avatar = $this->MsLoader->MsFile->moveImage($data['sellerinfo_avatar_name']);
+		if (isset($data['avatar_name'])) {
+			$avatar = $this->MsLoader->MsFile->moveImage($data['avatar_name']);
 		} else {
 			$avatar = '';
 		}
 		
+		if (isset($data['commission']))
+			$commission_id = $this->MsLoader->MsCommission->createCommission($data['commission']);
+		
 		$sql = "INSERT INTO " . DB_PREFIX . "ms_seller
 				SET seller_id = " . (int)$data['seller_id'] . ",
-					seller_status = " . (int)$data['seller_status'] . ",
-					seller_approved = " . (int)$data['seller_approved'] . ",
-					nickname = '" . $this->db->escape($data['sellerinfo_nickname']) . "',
-					description = '" . $this->db->escape($data['sellerinfo_description']) . "',
-					company = '" . $this->db->escape($data['sellerinfo_company']) . "',
-					country_id = " . (int)$data['sellerinfo_country'] . ",
-					product_validation = " . (int)$data['sellerinfo_product_validation'] . ",
-					paypal = '" . $this->db->escape($data['sellerinfo_paypal']) . "',
+					seller_status = " . (int)$data['status'] . ",
+					seller_approved = " . (int)$data['approved'] . ",
+					seller_group = " .  (isset($data['seller_group']) ? (int)$data['seller_group'] : $this->config->get('msconf_default_seller_group_id'))  .  ",
+					nickname = '" . $this->db->escape($data['nickname']) . "',
+					description = '" . $this->db->escape($data['description']) . "',
+					company = '" . $this->db->escape($data['company']) . "',
+					country_id = " . (int)$data['country'] . ",
+					commission_id = " . (isset($commission_id) ? $commission_id : 'NULL') . ",
+					product_validation = " . (int)$data['product_validation'] . ",
+					paypal = '" . $this->db->escape($data['paypal']) . "',
 					avatar = '" . $this->db->escape($avatar) . "',
 					date_created = NOW()";
-		
+
 		$this->db->query($sql);
 		$seller_id = $this->db->getLastId();
 		
@@ -122,13 +127,13 @@ final class MsSeller extends Model {
 
 		$old_avatar = $this->getSellerAvatar($seller_id);
 		
-		if (!isset($data['sellerinfo_avatar_name']) || ($old_avatar['avatar'] != $data['sellerinfo_avatar_name'])) {
+		if (!isset($data['avatar_name']) || ($old_avatar['avatar'] != $data['avatar_name'])) {
 			$this->MsLoader->MsFile->deleteImage($old_avatar['avatar']);
 		}
 		
-		if (isset($data['sellerinfo_avatar_name'])) {
-			if ($old_avatar['avatar'] != $data['sellerinfo_avatar_name']) {			
-				$avatar = $this->MsLoader->MsFile->moveImage($data['sellerinfo_avatar_name']);
+		if (isset($data['avatar_name'])) {
+			if ($old_avatar['avatar'] != $data['avatar_name']) {			
+				$avatar = $this->MsLoader->MsFile->moveImage($data['avatar_name']);
 			} else {
 				$avatar = $old_avatar['avatar'];
 			}
@@ -137,12 +142,12 @@ final class MsSeller extends Model {
 		}
 
 		$sql = "UPDATE " . DB_PREFIX . "ms_seller
-				SET description = '" . $this->db->escape($data['sellerinfo_description']) . "',
-					company = '" . $this->db->escape($data['sellerinfo_company']) . "',
-					country_id = " . (int)$data['sellerinfo_country'] . ","
-					. (isset($data['seller_status']) ? "seller_status=  " .  (int)$data['seller_status'] . "," : '')
-					. (isset($data['seller_approved']) ? "seller_approved=  " .  (int)$data['seller_approved'] . "," : '')					
-					. "paypal = '" . $this->db->escape($data['sellerinfo_paypal']) . "',
+				SET description = '" . $this->db->escape($data['description']) . "',
+					company = '" . $this->db->escape($data['company']) . "',
+					country_id = " . (int)$data['country'] . ","
+					. (isset($data['status']) ? "seller_status=  " .  (int)$data['status'] . "," : '')
+					. (isset($data['approved']) ? "seller_approved=  " .  (int)$data['approved'] . "," : '')					
+					. "paypal = '" . $this->db->escape($data['paypal']) . "',
 					avatar = '" . $this->db->escape($avatar) . "'
 				WHERE seller_id = " . (int)$seller_id;
 		
@@ -211,22 +216,22 @@ final class MsSeller extends Model {
 	public function adminEditSeller($data) {
 		$seller_id = (int)$data['seller_id'];
 
-		if (!$data['sellerinfo_commission_id']) {
-			$commission_id = $this->MsLoader->MsCommission->createCommission($data['sellerinfo_commission']);
+		if (!$data['commission_id']) {
+			$commission_id = $this->MsLoader->MsCommission->createCommission($data['commission']);
 		} else {
-			$commission_id = $this->MsLoader->MsCommission->editCommission($data['sellerinfo_commission_id'], $data['sellerinfo_commission']);
+			$commission_id = $this->MsLoader->MsCommission->editCommission($data['commission_id'], $data['commission']);
 		}
 		
 		$sql = "UPDATE " . DB_PREFIX . "ms_seller
-				SET description = '" . $this->db->escape($data['sellerinfo_description']) . "',
-					company = '" . $this->db->escape($data['sellerinfo_company']) . "',
-					country_id = " . (int)$data['sellerinfo_country'] . ",
-					paypal = '" . $this->db->escape($data['sellerinfo_paypal']) . "',
-					seller_status = '" .  (int)$data['seller_status'] .  "',
-					seller_approved = '" .  (int)$data['seller_approved'] .  "',
-					product_validation = '" .  (int)$data['sellerinfo_product_validation'] .  "',
+				SET description = '" . $this->db->escape($data['description']) . "',
+					company = '" . $this->db->escape($data['company']) . "',
+					country_id = " . (int)$data['country'] . ",
+					paypal = '" . $this->db->escape($data['paypal']) . "',
+					seller_status = '" .  (int)$data['status'] .  "',
+					seller_approved = '" .  (int)$data['approved'] .  "',
+					product_validation = '" .  (int)$data['product_validation'] .  "',
 					commission_id = " . (!is_null($commission_id) ? (int)$commission_id : 'NULL' ) . ",
-					seller_group = '" .  (int)$data['sellerinfo_seller_group'] .  "'
+					seller_group = '" .  (int)$data['seller_group'] .  "'
 				WHERE seller_id = " . (int)$seller_id;
 		
 		$this->db->query($sql);	
@@ -288,7 +293,7 @@ final class MsSeller extends Model {
 			return $res->row;
 	}	
 	
-	public function getSellers($data, $sort = array()) {
+	public function getSellers($data = array(), $sort = array()) {
 		$sql = "SELECT  CONCAT(c.firstname, ' ', c.lastname) as 'c.name',
 						c.email as 'c.email',
 						ms.seller_id as 'seller_id',
@@ -318,6 +323,25 @@ final class MsSeller extends Model {
 		
 		return $res->rows;
 	}
+	
+	public function getCustomers($data = array(), $sort = array()) {
+		$sql = "SELECT  CONCAT(c.firstname, ' ', c.lastname) as 'c.name',
+						c.email as 'c.email',
+						c.customer_id as 'c.customer_id',
+						ms.seller_id as 'seller_id'
+				FROM `" . DB_PREFIX . "customer` c
+				LEFT JOIN `" . DB_PREFIX . "ms_seller` ms
+					ON (c.customer_id = ms.seller_id)
+				WHERE 1 = 1 "
+				. (isset($data['seller_id']) ? " AND ms.seller_id IS NULL" : "")
+				. " GROUP BY ms.seller_id"
+				. (isset($sort['order_by']) ? " ORDER BY {$sort['order_by']} {$sort['order_way']}" : '')
+    			. (isset($sort['limit']) ? " LIMIT ".(int)$sort['offset'].', '.(int)($sort['limit']) : '');
+
+		$res = $this->db->query($sql);
+		
+		return $res->rows;
+	}	
 	
 	public function getStatusText($seller_status) {
 		$status_text = '';

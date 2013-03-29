@@ -1,33 +1,38 @@
 $(function() {
 	$("#ms-submit-button").click(function() {
 		$('.success').remove();
+		var button = $(this);
 		var id = $(this).attr('id');
 	    $.ajax({
 			type: "POST",
 			dataType: "json",
 			url: 'index.php?route=seller/account-profile/jxsavesellerinfo',
 			data: $(this).parents("form").serialize(),
-		    beforeSend: function() {
-		    	$('#ms-submit-button').hide().before('<span class="wait">&nbsp;<img src="catalog/view/theme/default/image/loading.gif" alt="" /></span>');
-		    },			
+			beforeSend: function() {
+				button.hide().before('<span class="wait">&nbsp;<img src="catalog/view/theme/default/image/loading.gif" alt="" /></span>');
+				$('p.error').remove();
+			},
+			complete: function(jqXHR, textStatus) {
+				button.show().prev('span.wait').remove();
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				$('#content').firstAll('.error').text(textStatus);
+			},
 			success: function(jsonData) {
 				if (!jQuery.isEmptyObject(jsonData.errors)) {
 					$('#ms-submit-button').show().prev('span.wait').remove();				
 					$('.error').text('');
 					for (error in jsonData.errors) {
-					    if (!jsonData.errors.hasOwnProperty(error)) {
-					        continue;
-					    }
-					    
-					    if ($('#error_'+error).length > 0) {
+						
+						if ($('[name="'+error+'"]').length > 0)
+							$('[name="'+error+'"]').parents('td').append('<p class="error">' + jsonData.errors[error] + '</p>');
+						else if ($('#error_'+error).length > 0)
 					    	$('#error_'+error).text(jsonData.errors[error]);
-					    } else {
-					    	$('#error_'+id).text(jsonData.errors[error]);
-					   	}
+					    else
+					    	$('#content').firstAll('.error').text(jsonData.errors[error]);
 					}
 					window.scrollTo(0,0);
 				} else {
-					window.scrollTo(0,0);
 					window.location.reload();
 				}
 	       	}
@@ -85,7 +90,7 @@ $(function() {
 					for (var i = 0; i < data.files.length; i++) {
 						$("#sellerinfo_avatar_files").html(
 						'<div class="ms-image">' +
-						'<input type="hidden" value="'+data.files[i].name+'" name="sellerinfo_avatar_name" />' +
+						'<input type="hidden" value="'+data.files[i].name+'" name="seller[avatar_name]" />' +
 						'<img src="'+data.files[i].thumb+'" />' +
 						'<span class="ms-remove"></span>' +
 						'</div>').children(':last').hide().fadeIn(2000);
