@@ -152,6 +152,19 @@
 							</select>
 						</td>
 					</tr>
+					
+					<tr>
+						<td>
+							<span><?php echo $ms_config_graphical_sellermenu; ?></span>
+							<span class="help"><?php echo $ms_config_graphical_sellermenu_note; ?></span>
+						</td>
+						<td>
+							<input type="radio" name="msconf_graphical_sellermenu" value="1" <?php if($msconf_graphical_sellermenu == 1) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_yes; ?>
+							<input type="radio" name="msconf_graphical_sellermenu" value="0" <?php if($msconf_graphical_sellermenu == 0) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_no; ?>
+					  	</td>
+					</tr>					
 				</table>
 				</div>
 				<!-- END GENERAL TAB -->

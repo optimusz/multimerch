@@ -248,7 +248,7 @@ $_['ms_error_contact_allfields'] = 'Please fill in all fields';
 
 $_['ms_account_create']      = 'Create seller account';
 $_['ms_account_seller_account']      = 'Seller Account';
-$_['ms_account_sellerinfo']       = 'Seller information';
+$_['ms_account_sellerinfo']       = 'Seller profile';
 $_['ms_account_newproduct']      = 'New product';
 $_['ms_account_products']       = 'Products';
 $_['ms_account_sellerstatus']      = 'Account status';
@@ -314,8 +314,8 @@ $_['ms_account_editproduct_breadcrumbs']       = 'Edit Product';
 
 // Account - Seller info
 
-$_['ms_account_sellerinfo_heading']      = 'Seller Information';
-$_['ms_account_sellerinfo_breadcrumbs']       = 'Seller Information';
+$_['ms_account_sellerinfo_heading']      = 'Seller profile';
+$_['ms_account_sellerinfo_breadcrumbs']       = 'Seller profile';
 
 $_['ms_account_sellerinfo_activation_notice'] = 'Please complete the following form to activate your seller account';
 

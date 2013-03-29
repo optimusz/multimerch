@@ -618,3 +618,24 @@ div.ms-jquery-dialog.ui-widget-content,
 .ms-account-order .products .total {
 	float: right;
 }
+
+ul.ms-sellermenu.graphical li {
+	text-align: center;
+	width: 16.5%;
+	height: 128px;
+	display: inline-block;
+	float: left;
+}
+
+ul.ms-sellermenu.graphical li img {
+	display: block;
+	margin: auto;
+	margin-bottom: 10px;
+	width: 96px;
+	height: 96px;
+}
+
+ul.ms-sellermenu.graphical li a {
+	text-decoration: none;
+	font-weight: bold;
+}

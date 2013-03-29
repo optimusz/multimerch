@@ -270,6 +270,9 @@ $_['ms_config_comments_enable_customer_captcha_note'] = 'Enable captcha for regi
 $_['ms_config_comments_maxlen'] = 'Maximum comment length';
 $_['ms_config_comments_maxlen_note'] = 'Maximum comment length when posting comments in front store';
 
+$_['ms_config_graphical_sellermenu'] = 'Graphical seller menu';
+$_['ms_config_graphical_sellermenu_note'] = 'Graphical seller menu';
+
 $_['ms_config_carousel']       = 'Seller carousel';
 $_['ms_config_topsellers']       = 'Top sellers';
 $_['ms_config_modules']       = 'Modules';

@@ -58,6 +58,7 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		"msconf_allow_specials" => 1,
 		"msconf_allow_discounts" => 1,
 		"msconf_withdrawal_waiting_period" => 0,
+		"msconf_graphical_sellermenu" => 1,
 		
 		"msconf_comments_enable" => 1,
 		"msconf_comments_allow_guests" => 0,

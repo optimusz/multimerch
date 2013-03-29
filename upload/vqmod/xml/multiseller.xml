@@ -109,23 +109,63 @@
 				<h2><?php echo $text_my_newsletter; ?></h2>
 			]]></search>
 			<add><![CDATA[
-			  <h2><?php echo $ms_account_seller_account; ?></h2>
-			  <div class="content">
-			    <ul>
-				  <?php if ($ms_seller_created) { ?>
-				      <li><a href="<?php echo $ms_link_sellerinfo; ?>"><?php echo $ms_account_sellerinfo; ?></a></li>
-				      <li><a href="<?php echo $ms_link_newproduct; ?>"><?php echo $ms_account_newproduct; ?></a></li>
-				      <li><a href="<?php echo $ms_link_products; ?>"><?php echo $ms_account_products; ?></a></li>
-				      <li><a href="<?php echo $ms_link_orders; ?>"><?php echo $ms_account_orders; ?></a></li>
-				      <li><a href="<?php echo $ms_link_transactions; ?>"><?php echo $ms_account_transactions; ?></a></li>
-				      <?php if ($this->config->get('msconf_allow_withdrawal_requests')) { ?>
-				      	<li><a href="<?php echo $ms_link_withdraw; ?>"><?php echo $ms_account_withdraw; ?></a></li>
-				      <?php } ?>
-				  <?php } else { ?>
-				  	  <li><a href="<?php echo $ms_link_sellerinfo; ?>"><?php echo $ms_account_create; ?></a></li>
-				  <?php } ?>
-			    </ul>
-			  </div>
+				<h2><?php echo $ms_account_seller_account; ?></h2>
+				<div class="content">
+					<ul class="ms-sellermenu <?php if ($this->config->get('msconf_graphical_sellermenu')) { ?>graphical<?php } ?>">
+							<li>
+								<a href="<?php echo $ms_link_sellerinfo; ?>">
+									<?php if($this->config->get('msconf_graphical_sellermenu')) { ?>
+										<img src="catalog/view/theme/<?php echo $this->config->get('config_template'); ?>/image/ms-profile-96.png" />
+									<?php } ?>								
+									<?php echo $ms_account_sellerinfo; ?>
+								</a>
+							</li>	
+							<?php if ($ms_seller_created) { ?>
+									<li>
+										<a href="<?php echo $ms_link_newproduct; ?>">
+											<?php if($this->config->get('msconf_graphical_sellermenu')) { ?>
+												<img src="catalog/view/theme/<?php echo $this->config->get('config_template'); ?>/image/ms-folder-plus-96.png" />
+											<?php } ?>
+											<?php echo $ms_account_newproduct; ?>
+										</a>
+									</li>
+									<li>
+										<a href="<?php echo $ms_link_products; ?>">
+											<?php if($this->config->get('msconf_graphical_sellermenu')) { ?>
+												<img src="catalog/view/theme/<?php echo $this->config->get('config_template'); ?>/image/ms-folder-96.png" />
+											<?php } ?>
+											<?php echo $ms_account_products; ?>
+										</a>
+									</li>
+									<li>
+										<a href="<?php echo $ms_link_orders; ?>">
+											<?php if($this->config->get('msconf_graphical_sellermenu')) { ?>
+												<img src="catalog/view/theme/<?php echo $this->config->get('config_template'); ?>/image/ms-cart-96.png" />
+											<?php } ?>										
+											<?php echo $ms_account_orders; ?>
+										</a>
+									</li>
+									<li>
+										<a href="<?php echo $ms_link_transactions; ?>">
+											<?php if($this->config->get('msconf_graphical_sellermenu')) { ?>
+												<img src="catalog/view/theme/<?php echo $this->config->get('config_template'); ?>/image/ms-book-96.png" />
+											<?php } ?>										
+											<?php echo $ms_account_transactions; ?>
+										</a>
+									</li>
+									<?php if ($this->config->get('msconf_allow_withdrawal_requests')) { ?>
+										<li>
+											<a href="<?php echo $ms_link_withdraw; ?>">
+												<?php if($this->config->get('msconf_graphical_sellermenu')) { ?>
+													<img src="catalog/view/theme/<?php echo $this->config->get('config_template'); ?>/image/ms-coin-96.png" />
+												<?php } ?>											
+												<?php echo $ms_account_withdraw; ?>
+											</a>
+										</li>
+									<?php } ?>
+							<?php } ?>
+					</ul>
+				</div>
 			]]></add>
 		</operation>
 	</file>
@@ -156,19 +196,17 @@
 			]]></search>
 			<add><![CDATA[
 				<br />
-			  <li style="list-style-type: none"><b><?php echo $ms_account_seller_account; ?></b></li>
-			  <?php if ($ms_seller_created) { ?>
-			      <li><a href="<?php echo $ms_link_sellerinfo; ?>"><?php echo $ms_account_sellerinfo; ?></a></li>
-			      <li><a href="<?php echo $ms_link_newproduct; ?>"><?php echo $ms_account_newproduct; ?></a></li>
-			      <li><a href="<?php echo $ms_link_products; ?>"><?php echo $ms_account_products; ?></a></li>
-			      <li><a href="<?php echo $ms_link_orders; ?>"><?php echo $ms_account_orders; ?></a></li>
-			      <li><a href="<?php echo $ms_link_transactions; ?>"><?php echo $ms_account_transactions; ?></a></li>
-			      <?php if ($this->config->get('msconf_allow_withdrawal_requests')) { ?>
-			      <li><a href="<?php echo $ms_link_withdraw; ?>"><?php echo $ms_account_withdraw; ?></a></li>
-			      <?php } ?>
-			  <?php } else { ?>
-			  	  <li><a href="<?php echo $ms_link_sellerinfo; ?>"><?php echo $ms_account_create; ?></a></li>
-			  <?php } ?>
+				<li style="list-style-type: none"><b><?php echo $ms_account_seller_account; ?></b></li>
+				<li><a href="<?php echo $ms_link_sellerinfo; ?>"><?php echo $ms_account_sellerinfo; ?></a></li>
+				<?php if ($ms_seller_created) { ?>
+						<li><a href="<?php echo $ms_link_newproduct; ?>"><?php echo $ms_account_newproduct; ?></a></li>
+						<li><a href="<?php echo $ms_link_products; ?>"><?php echo $ms_account_products; ?></a></li>
+						<li><a href="<?php echo $ms_link_orders; ?>"><?php echo $ms_account_orders; ?></a></li>
+						<li><a href="<?php echo $ms_link_transactions; ?>"><?php echo $ms_account_transactions; ?></a></li>
+						<?php if ($this->config->get('msconf_allow_withdrawal_requests')) { ?>
+						<li><a href="<?php echo $ms_link_withdraw; ?>"><?php echo $ms_account_withdraw; ?></a></li>
+						<?php } ?>
+				<?php } ?>
 			]]></add>
 		</operation>
 	</file>
