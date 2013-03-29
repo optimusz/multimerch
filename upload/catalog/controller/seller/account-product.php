@@ -582,7 +582,6 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		$this->data['seller'] = $this->MsLoader->MsSeller->getSeller($this->customer->getId());
 		$this->data['salt'] = $this->MsLoader->MsSeller->getSalt($this->customer->getId());
 		$this->data['categories'] = $this->MsLoader->MsProduct->getCategories();
-var_dump($this->data['categories']);
 		// attributes
 		$attributes = $this->MsLoader->MsAttribute->getAttributes(
 			array(
