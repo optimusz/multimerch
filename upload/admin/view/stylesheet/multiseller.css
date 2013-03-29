@@ -7,3 +7,28 @@ td h3 {
 tr.ffSample {
 	display: none;
 }
+
+table.list td.checkbox {
+	width: 10px;
+}
+
+table.list td.comment {
+	width: 650px;
+}
+
+.ms-button {
+	width: 32px;
+	height: 32px;
+	display: inline-block;
+	margin: 0 1px;
+}
+
+.ms-button-small {
+	width: 16px;
+	height: 16px;
+	
+}
+
+.ms-button-delete {
+	background-image: url(../image/multiseller/ms-cross.png);
+}

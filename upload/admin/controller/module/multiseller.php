@@ -10,7 +10,8 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		"multiseller/request-withdrawal",
 		"multiseller/seller",
 		"multiseller/transaction",
-		"multiseller/seller-group"
+		"multiseller/seller-group",
+		"multiseller/comment"
 	);
 		
 	private $settings = array(

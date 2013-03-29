@@ -107,6 +107,7 @@ $_['ms_menu_products'] = 'Products';
 $_['ms_menu_transactions'] = 'Transactions';
 $_['ms_menu_requests'] = 'Withdrawals';
 $_['ms_menu_settings'] = 'Settings';
+$_['ms_menu_comments'] = 'Comments';
 $_['ms_menu_reports'] = 'Reports';
 $_['ms_menu_reports_sales'] = 'Sales';
 
@@ -357,6 +358,12 @@ $_['ms_error_seller_group_language'] = 'Error: Language not selected';
 $_['ms_error_seller_group_default'] = 'Error: Default seller group can not be deleted!';
 $_['ms_success_seller_group_created'] = 'Seller group created';
 $_['ms_success_seller_group_updated'] = 'Seller group updated';
+
+// Finances - Comments
+$_['ms_comments_heading'] = 'Comments';
+$_['ms_comments_breadcrumbs'] = 'Comments';
+$_['ms_comments_comment'] = 'Comment';
+$_['ms_success_comments_deleted'] = 'Comments deleted';
 
 // Finances - Withdrawals
 $_['ms_finances_withdrawals_heading'] = 'Withdrawals';

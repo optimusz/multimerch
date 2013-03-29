@@ -728,6 +728,7 @@
 						<li><a href="<?php echo $ms_link_products; ?>"><?php echo $ms_menu_products; ?></a></li>
 						<li><a href="<?php echo $ms_link_transactions; ?>"><?php echo $ms_menu_transactions; ?></a></li>
 						<li><a href="<?php echo $ms_link_requests; ?>"><?php echo $ms_menu_requests; ?></a></li>
+						<li><a href="<?php echo $ms_link_comments; ?>"><?php echo $ms_menu_comments; ?></a></li>
 						<li><a href="<?php echo $ms_link_settings; ?>"><?php echo $ms_menu_settings; ?></a></li>
 					</ul>
 				</li>
@@ -756,6 +757,7 @@
 			$this->data['ms_link_products'] = $this->url->link('multiseller/product', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['ms_link_requests'] = $this->url->link('multiseller/request-withdrawal', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['ms_link_transactions'] = $this->url->link('multiseller/transaction', 'token=' . $this->session->data['token'], 'SSL');
+			$this->data['ms_link_comments'] = $this->url->link('multiseller/comment', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['ms_link_settings'] = $this->url->link('module/multiseller', 'token=' . $this->session->data['token'], 'SSL'); 
 			]]></add>
 		</operation>		

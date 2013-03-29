@@ -679,6 +679,7 @@ class MsProduct extends Model {
 	
 	//todo
 	public function getProduct($product_id) {
+		var_dump($product_id);
 		$sql = "SELECT 	p.price,
 						p.product_id as 'product_id',
 						mp.product_status as 'mp.product_status',
@@ -689,11 +690,12 @@ class MsProduct extends Model {
 						group_concat(ptc.category_id separator ',') as category_id,
 						mp.product_status
 				FROM `" . DB_PREFIX . "product` p
-				INNER JOIN `" . DB_PREFIX . "product_to_category` ptc
+				LEFT JOIN `" . DB_PREFIX . "product_to_category` ptc
 					ON p.product_id = ptc.product_id
-				INNER JOIN `" . DB_PREFIX . "ms_product` mp
+				LEFT JOIN `" . DB_PREFIX . "ms_product` mp
 					ON ptc.product_id = mp.product_id
 				WHERE p.product_id = " . (int)$product_id;
+				var_dump($sql);
 		$res = $this->db->query($sql);
 
 		if (strcmp(VERSION,'1.5.4') >= 0) {

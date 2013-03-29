@@ -22,7 +22,11 @@ class ModelMultisellerSettings extends Model {
 			switch ($version) {
 				case "2.4":
 					$this->db->query("ALTER TABLE " . DB_PREFIX . "ms_seller CHANGE `nickname` `nickname` VARCHAR(255) NOT NULL");
-				
+						$this->load->model('user/user_group');
+						$this->model_user_user_group->addPermission($this->user->getId(), 'access', 'multiseller/comment');
+						$this->model_user_user_group->addPermission($this->user->getId(), 'modify', 'multiseller/comment');
+					break;
+					
 				case "2.3":
 					$this->db->query("ALTER TABLE " . DB_PREFIX . "ms_product_attribute CHANGE `option_id` `attribute_id` int(11) NOT NULL");
 					$this->db->query("ALTER TABLE " . DB_PREFIX . "ms_product_attribute CHANGE `option_value_id` `attribute_value_id` int(11) NOT NULL");

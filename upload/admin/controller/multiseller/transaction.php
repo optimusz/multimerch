@@ -9,7 +9,7 @@ class ControllerMultisellerTransaction extends ControllerMultisellerBase {
 			'order_by'  => 'mb.date_created',
 			'order_way' => 'DESC',
 			'page' => $page,
-			'limit' => 5
+			'limit' => $this->config->get('config_admin_limit')
 		);
 
 		$balance_entries = $this->MsLoader->MsBalance->getBalanceEntries($sort);

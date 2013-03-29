@@ -68,5 +68,9 @@ class MsComments extends Model {
 			}
 		};
 	}
+	
+	public function deleteComment($comment_id) {
+		$this->db->query("DELETE FROM " . DB_PREFIX . "ms_comments WHERE id = " . (int)$comment_id);
+	}
 }
 ?>

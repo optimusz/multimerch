@@ -30,7 +30,7 @@ $(function() {
 					$('#comment-title').after('<div class="warning"><ul>' + errors + '</ul></div>');
 				} else {
 					$('#comment-title').after('<div class="success">' + jsonData.success + '</div>');
-					$('#tab-comments input[type="text"], #tab-comments textarea').val('');
+					$('#tab-comments input[type="text"]:not(:disabled), #tab-comments textarea:not(:disabled)').val('');
 					$('#tab-comments .pcComments').load('index.php?route=module/ms-comments/renderComments&product_id='+ms_comments_product_id);
 				}
 			}
