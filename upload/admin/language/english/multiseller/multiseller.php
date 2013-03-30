@@ -6,8 +6,6 @@ $_['ms_disabled']      = 'Disabled';
 $_['ms_apply']      = 'Apply';
 $_['ms_approved']      = 'Approved';
 
-$_['ms_days'] = 'days';
-
 $_['ms_status_active'] = 'Active';
 $_['ms_status_inactive'] = 'Inactive';
 $_['ms_status_published'] = 'Published';
@@ -70,6 +68,9 @@ $_['ms_all_sellers'] = 'All sellers';
 $_['ms_amount'] = 'Amount';
 $_['ms_product'] = 'Product';
 $_['ms_net_amount'] = 'Net amount';
+$_['ms_days'] = 'days';
+$_['ms_from'] = 'From';
+$_['ms_to'] = 'To';
 $_['ms_paypal'] = 'PayPal';
 $_['ms_date_created'] = 'Date created';
 $_['ms_status'] = 'Status';
@@ -375,8 +376,14 @@ $_['ms_withdrawal_pending'] = 'Total pending';
 $_['ms_withdrawal_paid'] = 'Total paid out';
 
 // Finances - Transactions
-$_['ms_finances_transactions_heading'] = 'Transactions';
-$_['ms_finances_transactions_breadcrumbs'] = 'Transactions';
+$_['ms_transactions_heading'] = 'Transactions';
+$_['ms_transactions_breadcrumbs'] = 'Transactions';
+$_['ms_transactions_new'] = 'New transaction';
+
+$_['ms_error_transaction_fromto'] = 'Please specify at least the source or the destination seller';
+$_['ms_error_transaction_fromto_same'] = 'Source and destination cannot be the same';
+$_['ms_error_transaction_amount'] = 'Please specify a valid positive amount';
+$_['ms_success_transaction_created'] = 'Transaction successfully created';
 
 $_['button_cancel'] = 'Cancel';
 $_['button_save'] = 'Save';

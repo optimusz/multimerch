@@ -6,7 +6,6 @@ class ControllerMultisellerBase extends Controller {
 	public function __construct($registry) {
 		parent::__construct($registry);		
 		$this->registry = $registry;
-		
 		$parts = explode('/', $this->request->request['route']);
 		if (!isset($parts[2]) || !in_array($parts[2], array('install','uninstall'))) {
 		}

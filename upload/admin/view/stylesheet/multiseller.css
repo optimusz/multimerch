@@ -8,6 +8,10 @@ tr.ffSample {
 	display: none;
 }
 
+table.list tbody tr {
+	height: 20px;
+}
+
 table.list td.checkbox {
 	width: 10px;
 }

@@ -3,6 +3,7 @@ class MsBalance extends Model {
 	const MS_BALANCE_TYPE_SALE = 1;
 	const MS_BALANCE_TYPE_REFUND = 2;
 	const MS_BALANCE_TYPE_WITHDRAWAL = 3;
+	const MS_BALANCE_TYPE_GENERIC = 4;
 	
   	public function __construct($registry) {
   		parent::__construct($registry);

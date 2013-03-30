@@ -16,7 +16,7 @@
       <h1><img src="view/image/customer.png" alt="" /> <?php echo $ms_catalog_sellers_heading; ?></h1>
 		<div class="buttons">
 			<a onclick="location = '<?php echo $link_create_seller; ?>'" class="button"><?php echo $ms_catalog_sellers_create; ?></a>
-		</div>      
+		</div>
     </div>
     <div class="content">
 		<?php echo $total_balance; ?><br /><br />

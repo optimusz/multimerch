@@ -17,7 +17,10 @@
 	
 	<div class="box">
 		<div class="heading">
-			<h1><img src="view/image/customer.png" alt="" /> <?php echo $ms_finances_transactions_heading; ?></h1>
+			<h1><img src="view/image/customer.png" alt="" /> <?php echo $ms_transactions_heading; ?></h1>
+			<div class="buttons">
+				<a onclick="location = '<?php echo $link_create_transaction; ?>'" class="button"><?php echo $ms_transactions_new; ?></a>
+			</div>			
 		</div>
 		
 		<div class="content">
@@ -25,7 +28,7 @@
 		<table class="list" style="text-align: center">
 		<thead>
 			<tr>
-			<td><input type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);" /></td>
+			<td><!--<input type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);" />--></td>
 			<td><?php echo $ms_seller; ?></a></td>
 			<td><?php echo $ms_net_amount; ?></a></td>
 			<td><?php echo $ms_description; ?></a></td>
@@ -37,7 +40,7 @@
 			<?php if (isset($transactions) && $transactions) { ?>
 			<?php foreach ($transactions as $transaction) { ?>
 			<tr>
-				<td><input type="checkbox" name="selected[]" value="<?php echo $transaction['request_id']; ?>" /></td>
+				<td><!--<input type="checkbox" name="selected[]" value="" />--></td>
 				<td><?php echo $transaction['seller']; ?></td>
 				<td><?php echo $transaction['net_amount']; ?></td>
 				<td><?php echo $transaction['description']; ?></td>
