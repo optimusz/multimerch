@@ -148,7 +148,11 @@ $_['ms_config_product_validation'] = 'Product validation';
 $_['ms_config_product_validation_note'] = 'Product validation';
 $_['ms_config_product_validation_none'] = 'No validation';
 $_['ms_config_product_validation_approval'] = 'Manual approval';
-
+$_['ms_config_nickname_rules'] = 'Seller nickname rules';
+$_['ms_config_nickname_rules_note'] = 'Character sets allowed in seller nicknames';
+$_['ms_config_nickname_rules_alnum'] = 'Alphanumeric';
+$_['ms_config_nickname_rules_ext'] = 'Extended latin';
+$_['ms_config_nickname_rules_utf'] = 'Full UTF-8';
 $_['ms_config_enable_seo_urls_seller'] = 'Generate SEO URLs for new sellers';
 $_['ms_config_enable_seo_urls_seller_note'] = 'This option will generate SEO-friendly URLs for new sellers. SEO URLs need to be enabled in OpenCart to use this.';
 $_['ms_config_enable_seo_urls_product'] = 'Generate SEO URLs for new products (experimental)';

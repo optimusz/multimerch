@@ -72,6 +72,21 @@
 					
 					<tr>
 						<td>
+							<span><?php echo $ms_config_nickname_rules; ?></span>
+							<span class="help"><?php echo $ms_config_nickname_rules_note; ?></span>
+						</td>
+						<td>
+							<input type="radio" name="msconf_nickname_rules" value="0" <?php if($msconf_nickname_rules == 0) { ?> checked="checked" <?php } ?>  />
+							<?php echo $ms_config_nickname_rules_alnum; ?>
+							<input type="radio" name="msconf_nickname_rules" value="1" <?php if($msconf_nickname_rules == 1) { ?> checked="checked" <?php } ?>  />
+							<?php echo $ms_config_nickname_rules_ext; ?>
+							<input type="radio" name="msconf_nickname_rules" value="2" <?php if($msconf_nickname_rules == 2) { ?> checked="checked" <?php } ?>  />
+							<?php echo $ms_config_nickname_rules_utf; ?>
+					  	</td>
+					</tr>					
+					
+					<tr>
+						<td>
 							<span><?php echo $ms_config_enable_seo_urls_seller; ?></span>
 							<span class="help"><?php echo $ms_config_enable_seo_urls_seller_note; ?></span>
 						</td>

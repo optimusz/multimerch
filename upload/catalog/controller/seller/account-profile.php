@@ -42,12 +42,34 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 			// seller doesn't exist yet
 			if (empty($data['seller']['nickname'])) {
 				$json['errors']['seller[nickname]'] = $this->language->get('ms_error_sellerinfo_nickname_empty'); 
-			} else if (!ctype_alnum($data['seller']['nickname'])) {
-				$json['errors']['seller[nickname]'] = $this->language->get('ms_error_sellerinfo_nickname_alphanumeric');
-			} else if (mb_strlen($data['seller']['nickname']) < 4 || mb_strlen($data['seller']['nickname']) > 50 ) {
+			} else if (mb_strlen($data['seller']['nickname']) < 4 || mb_strlen($data['seller']['nickname']) > 128 ) {
 				$json['errors']['seller[nickname]'] = $this->language->get('ms_error_sellerinfo_nickname_length');			
 			} else if ($this->MsLoader->MsSeller->nicknameTaken($data['seller']['nickname'])) {
 				$json['errors']['seller[nickname]'] = $this->language->get('ms_error_sellerinfo_nickname_taken');
+			} else {
+				switch($this->config->get('msconf_nickname_rules')) {
+					case 1:
+						// extended latin
+						if(!preg_match("/^[a-zA-Z0-9_\-\s\x{00C0}-\x{017F}]+$/u", $data['seller']['nickname'])) {
+							$json['errors']['seller[nickname]'] = 'only extended latin';
+						}
+						break;
+						
+					case 2:
+						// utf8
+						if(!preg_match("/((?:[\x01-\x7F]|[\xC0-\xDF][\x80-\xBF]|[\xE0-\xEF][\x80-\xBF]{2}|[\xF0-\xF7][\x80-\xBF]{3}){1,100})./x", $data['seller']['nickname'])) {
+							$json['errors']['seller[nickname]'] = 'invalid ebanij';
+						}
+						break;
+						
+					case 0:
+					default:
+						// alnum
+						if(!preg_match("/^[a-zA-Z0-9_\-\s]+$/", $data['seller']['nickname'])) {
+							$json['errors']['seller[nickname]'] = 'only alphanumerics allowed';
+						}
+						break;
+				}
 			}
 			
 			if ($this->config->get('msconf_seller_terms_page')) {
