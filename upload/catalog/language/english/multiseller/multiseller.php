@@ -84,11 +84,6 @@ Products:
 %s
 Total: %s
 EOT;
-$_['ms_mail_product_purchased_multiple'] = <<<EOT
-Your products have been purchased from %s: %s x %s.
-
-Customer: %s (%s)
-EOT;
 
 $_['ms_mail_subject_seller_contact'] = 'New customer message';
 $_['ms_mail_seller_contact'] = <<<EOT
