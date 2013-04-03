@@ -45,6 +45,7 @@ $_['ms_button_select_files']      = 'Select files';
 
 $_['ms_transaction_sale']      = 'Sale: %s (-%s commission)';
 $_['ms_transaction_refund']      = 'Refund: %s';
+$_['ms_transaction_listing']      = 'Product listing: %s (%s)';
 $_['ms_request_submitted']      = 'Your request is submitted';
 
 $_['ms_totals_line']      = 'Currently %s sellers and %s products for sale!';
@@ -279,6 +280,13 @@ $_['ms_account_product_tags_note']    = 'Specify tags for your product.';
 $_['ms_account_product_price_attributes']    = 'Price & Attributes';
 $_['ms_account_product_price']     = 'Price';
 $_['ms_account_product_price_note']    = 'Choose a price for your product';
+
+$_['ms_account_product_listing_flat'] = 'Listing fee for this product is <span>%s</span>';
+$_['ms_account_product_listing_percent'] = 'Listing fee for this product is based on the product price. Current listing fee: <span>%s</span>';
+$_['ms_account_product_listing_balance'] = 'This amount will be deducted from your balance.';
+$_['ms_account_product_listing_gateway'] = 'You will be redirected to the payment page after product submission.';
+$_['ms_account_product_listing_combined'] = 'The available amount will be deducted from your balance and you will be able to pay the rest after product submission.';
+
 $_['ms_account_product_category']     = 'Category';
 $_['ms_account_product_category_note']    = 'Select category for your product';
 $_['ms_account_product_enable_shipping']     = 'Enable shipping';

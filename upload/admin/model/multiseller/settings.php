@@ -21,10 +21,21 @@ class ModelMultisellerSettings extends Model {
 		if (!$this->checkDbVersion($version)) {
 			switch ($version) {
 				case "2.4":
+				
+					// nickname length
 					$this->db->query("ALTER TABLE " . DB_PREFIX . "ms_seller CHANGE `nickname` `nickname` VARCHAR(255) NOT NULL");
-						$this->load->model('user/user_group');
-						$this->model_user_user_group->addPermission($this->user->getId(), 'access', 'multiseller/comment');
-						$this->model_user_user_group->addPermission($this->user->getId(), 'modify', 'multiseller/comment');
+					
+					// comments admin area
+					$this->load->model('user/user_group');
+					$this->model_user_user_group->addPermission($this->user->getId(), 'access', 'multiseller/comment');
+					$this->model_user_user_group->addPermission($this->user->getId(), 'modify', 'multiseller/comment');
+					
+					// listing commissions
+					$q = $this->db->query("SELECT commission_id FROM " . DB_PREFIX . "ms_seller_group WHERE seller_group_id = " .$this->config->get('msconf_default_seller_group_id'));
+					$commission_id = $q['commission_id'];
+					$this->db->query("INSERT INTO " . DB_PREFIX . "ms_commission_rate (rate_type, commission_id, flat, percent) VALUES(" . MsCommission::RATE_LISTING . ", $commission_id, 0,0)");
+	
+							
 					break;
 					
 				case "2.3":
@@ -362,7 +373,10 @@ class ModelMultisellerSettings extends Model {
 		
 		$rate_type = MsCommission::RATE_SALE;
 		$this->db->query("INSERT INTO " . DB_PREFIX . "ms_commission_rate (rate_type, commission_id, flat, percent) VALUES($rate_type, $commission_id, 0,0)");
-        $rate_id = $this->db->getLastId();
+        
+        // listing commissions
+		$rate_type = MsCommission::RATE_LISTING;
+		$this->db->query("INSERT INTO " . DB_PREFIX . "ms_commission_rate (rate_type, commission_id, flat, percent) VALUES($rate_type, $commission_id, 0,0)");
         
 		$this->db->query("INSERT INTO " . DB_PREFIX . "ms_seller_group (commission_id) VALUES($commission_id)");
         $seller_group_id = $this->db->getLastId();

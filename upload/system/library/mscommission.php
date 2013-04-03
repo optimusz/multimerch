@@ -1,6 +1,11 @@
 <?php
 class MsCommission extends Model {
 	const RATE_SALE = 1;
+	const RATE_LISTING = 2;
+	
+	const PAYMENT_TYPE_BALANCE = 1;
+	const PAYMENT_TYPE_GATEWAY = 2;
+	const PAYMENT_TYPE_COMBINED = 3;
 	
 	const TYPE_SALES_QUANTITY = 1;
 	const TYPE_SALES_AMOUNT = 2;

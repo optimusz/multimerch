@@ -2,6 +2,10 @@ $(function() {
 	$('#language-tabs a.lang').tabs();
 	$('#general-tabs a').tabs();
 	$( "#product_image_files" ).sortable();
+
+	$("body").delegate(".ms-price-dynamic", "propertychange input paste focusout", function(){
+		$(".attention.ms-commission span").load("index.php?route=seller/account-product/jxGetFee&price=" + $(".ms-price-dynamic").val());
+	});	
 	
 	$("body").delegate(".date", "focusin", function(){
 		$(this).datepicker({dateFormat: 'yy-mm-dd'});

@@ -140,6 +140,20 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		return $this->response->setOutput(json_encode($json));
 	}
 	
+	public function jxGetFee() {
+		$data = $this->request->get;
+		if (isset($data['price']) && (float)$data['price'] == 0) {
+			if (!is_numeric($data['price'])) {
+				echo "--"; return;
+			}
+		} else if (!isset($data['price'])) {
+			echo "--"; return;
+		}
+		
+		$rates = $this->MsLoader->MsCommission->calculateCommission($this->customer->getId());
+		echo $this->currency->format((float)$rates[MsCommission::RATE_LISTING]['flat'] + ((float)$rates[MsCommission::RATE_LISTING]['percent'] * $data['price'] / 100), $this->config->get('config_currency'));
+	}
+	
 	public function jxSubmitProduct() {
 		$data = $this->request->post;
 		
@@ -515,7 +529,29 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 				$product_id = $this->MsLoader->MsProduct->editProduct($data);
 				$this->session->data['success'] = $this->language->get('ms_success_product_updated');
 			} else {
+				$commissions = $this->MsLoader->MsCommission->calculateCommission($this->customer->getId());
+				$fee = (float)$commissions[MsCommission::RATE_LISTING]['flat'] + $commissions[MsCommission::RATE_LISTING]['percent'] * $data['product_price'] / 100;
+				
 				$product_id = $this->MsLoader->MsProduct->saveProduct($data);
+				
+				if ($fee > 0) {
+				// todo
+					switch(MsCommission::PAYMENT_TYPE_BALANCE) {
+						case MsCommission::PAYMENT_TYPE_BALANCE:
+							// deduct from balance
+							$this->MsLoader->MsBalance->addBalanceEntry($this->customer->getId(),
+								array(
+									'product_id' => $product_id,
+									'balance_type' => MsBalance::MS_BALANCE_TYPE_LISTING,
+									'amount' => -$fee,
+									'description' => sprintf($this->language->get('ms_transaction_listing'), $data['languages'][$default]['product_name'], $this->currency->format(-$fee, $this->config->get('config_currency')))
+								)
+							);
+							
+							break;
+					}
+				}
+				
 				$this->session->data['success'] = $this->language->get('ms_success_product_created');
 			}
 
@@ -580,6 +616,8 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		$this->document->addScript('catalog/view/javascript/jquery/tabs.js');
 		
 		$this->data['seller'] = $this->MsLoader->MsSeller->getSeller($this->customer->getId());
+		$this->data['seller']['commissions'] = $this->MsLoader->MsCommission->calculateCommission($this->customer->getId());
+		$this->data['ms_commission_payment_type'] = $this->language->get('ms_account_product_listing_balance');
 		$this->data['salt'] = $this->MsLoader->MsSeller->getSalt($this->customer->getId());
 		$this->data['categories'] = $this->MsLoader->MsProduct->getCategories();
 		// attributes

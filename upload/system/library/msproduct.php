@@ -26,7 +26,6 @@ class MsProduct extends Model {
 	
 	private function _getPath($category_id) {
 		$query = $this->db->query("SELECT name, parent_id FROM " . DB_PREFIX . "category c LEFT JOIN " . DB_PREFIX . "category_description cd ON (c.category_id = cd.category_id) WHERE c.category_id = '" . (int)$category_id . "' AND cd.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY c.sort_order, cd.name ASC");
-		var_dump($query->row);
 		if ($query->row['parent_id']) {
 			return $this->getPath($query->row['parent_id'], $this->config->get('config_language_id')) . $this->language->get('text_separator') . $query->row['name'];
 		} else {
@@ -679,7 +678,6 @@ class MsProduct extends Model {
 	
 	//todo
 	public function getProduct($product_id) {
-		var_dump($product_id);
 		$sql = "SELECT 	p.price,
 						p.product_id as 'product_id',
 						mp.product_status as 'mp.product_status',
@@ -695,7 +693,6 @@ class MsProduct extends Model {
 				LEFT JOIN `" . DB_PREFIX . "ms_product` mp
 					ON ptc.product_id = mp.product_id
 				WHERE p.product_id = " . (int)$product_id;
-				var_dump($sql);
 		$res = $this->db->query($sql);
 
 		if (strcmp(VERSION,'1.5.4') >= 0) {

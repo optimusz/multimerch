@@ -82,6 +82,7 @@ $_['ms_date'] = 'Date';
 $_['ms_description'] = 'Description';
 $_['ms_commission'] = 'Commission';
 $_['ms_commission_sale'] = 'Per sale';
+$_['ms_commission_listing'] = 'Per listing';
 $_['ms_sort_order'] = 'Sort order';
 $_['ms_name'] = 'Name';
 $_['ms_description'] = 'Description';

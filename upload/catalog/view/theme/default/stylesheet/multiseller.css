@@ -182,6 +182,10 @@ table.list td, table.list thead td  {
 	cursor: pointer;
 }
 
+.ms-product .attention.ms-commission span {
+	font-weight: bold;
+}
+
 .ms-account-product-form #general-tabs {
 	margin-bottom: 2px;
 }
