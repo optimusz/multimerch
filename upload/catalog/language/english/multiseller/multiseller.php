@@ -1,6 +1,7 @@
 <?php
+
 // **********
-// * Hujobal*
+// * Global *
 // **********
 $_['ms_status_active'] = 'Active';
 $_['ms_status_inactive'] = 'Inactive';
