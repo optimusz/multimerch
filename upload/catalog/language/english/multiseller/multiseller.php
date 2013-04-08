@@ -41,6 +41,7 @@ $_['ms_button_select_files'] = 'Select files';
 $_['ms_transaction_sale'] = 'Sale: %s (-%s commission)';
 $_['ms_transaction_refund'] = 'Refund: %s';
 $_['ms_transaction_listing'] = 'Product listing: %s (%s)';
+$_['ms_transaction_signup']      = 'Sign up fee at %s';
 $_['ms_request_submitted'] = 'Your request is submitted';
 
 $_['ms_totals_line'] = 'Currently %s sellers and %s products for sale!';
@@ -334,6 +335,8 @@ $_['ms_account_sellerinfo_reviewer_message_note'] = 'Your message to the reviewe
 
 $_['ms_account_sellerinfo_terms'] = 'Accept terms';
 $_['ms_account_sellerinfo_terms_note'] = 'I have read and agree to the <a class="colorbox" href="%s" alt="%s"><b>%s</b></a>';
+$_['ms_account_sellerinfo_fee_flat'] = 'There is a sign up fee of <span>%s</span> to become a seller at %s.';
+$_['ms_account_sellerinfo_fee_balance'] = 'This amount will be deducted from your initial balance.';
 
 $_['ms_account_sellerinfo_mail_account_thankyou'] = 'Thank you for signing up as a seller at %s!';
 $_['ms_account_sellerinfo_mail_account_created_subject'] = '[%s] Seller account created';
