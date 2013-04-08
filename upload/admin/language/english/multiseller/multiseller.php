@@ -81,8 +81,10 @@ $_['ms_date_modified'] = 'Date modified';
 $_['ms_date'] = 'Date';
 $_['ms_description'] = 'Description';
 $_['ms_commission'] = 'Commission';
+$_['ms_commissions_fees'] = 'Commissions & fees';
 $_['ms_commission_sale'] = 'Per sale';
-$_['ms_commission_listing'] = 'Per listing';
+$_['ms_commission_listing'] = 'Per product listing';
+$_['ms_commission_signup'] = 'Sign up fee';
 $_['ms_sort_order'] = 'Sort order';
 $_['ms_name'] = 'Name';
 $_['ms_description'] = 'Description';
@@ -327,8 +329,6 @@ $_['ms_catalog_sellerinfo_description']    = 'Description';
 $_['ms_catalog_sellerinfo_company']     = 'Company';
 $_['ms_catalog_sellerinfo_country']    = 'Country';
 $_['ms_catalog_sellerinfo_sellergroup']    = 'Seller group';
-
-$_['ms_catalog_sellerinfo_commission_sale']    = 'Per sale:';
 
 $_['ms_catalog_sellerinfo_country_dont_display']    = 'Do not display country';
 $_['ms_catalog_sellerinfo_website']    = 'Website';

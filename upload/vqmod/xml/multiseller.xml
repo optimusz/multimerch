@@ -287,7 +287,7 @@
 						if (!$balance_entry) {
 							// don't calculate fees for free products
 							if ($order_product['total'] > 0) {
-								$commissions = $this->MsLoader->MsCommission->calculateCommission($seller_id);
+								$commissions = $this->MsLoader->MsCommission->calculateCommission(array('seller_id' => $seller_id));
 								$store_commission_flat = $commissions[MsCommission::RATE_SALE]['flat'];
 								$store_commission_pct = $order_product['total'] * $commissions[MsCommission::RATE_SALE]['percent'] / 100;
 								$seller_net_amt = $order_product['total'] - ($store_commission_flat + $store_commission_pct);
@@ -654,7 +654,7 @@
 					);
 					
 					if (!$balance_entry) {
-						$commissions = $this->MsLoader->MsCommission->calculateCommission($seller_id);
+						$commissions = $this->MsLoader->MsCommission->calculateCommission(array('seller_id' => $seller_id));
 						
 						if ($order_product['total'] > 0) {
 							$store_commission_flat = $commissions[MsCommission::RATE_SALE]['flat'];

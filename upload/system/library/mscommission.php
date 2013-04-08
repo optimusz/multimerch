@@ -2,6 +2,7 @@
 class MsCommission extends Model {
 	const RATE_SALE = 1;
 	const RATE_LISTING = 2;
+	const RATE_SIGNUP = 3;
 	
 	const PAYMENT_TYPE_BALANCE = 1;
 	const PAYMENT_TYPE_GATEWAY = 2;
@@ -86,19 +87,26 @@ class MsCommission extends Model {
 		return $rates;
 	}
 	
-	public function calculateCommission($seller_id) {
+	public function calculateCommission($data) {
 		$default_seller_group = $this->MsLoader->MsSellerGroup->getSellerGroup($this->config->get('msconf_default_seller_group_id'));
 		$default_commission_id = $default_seller_group['msg.commission_id'];
 		
-		$sql = "SELECT seller_group as `seller_group`,
-						commission_id as `commission_id`
-				FROM `" . DB_PREFIX . "ms_seller`
-				WHERE seller_id = " . (int)$seller_id;
-		$res = $this->db->query($sql);
-		
-		//!
-		$seller_group_id = $res->row['seller_group'];
-		$seller_commission_id = $res->row['commission_id'];
+		if (isset($data['seller_id'])) {
+			$sql = "SELECT seller_group as `seller_group`,
+							commission_id as `commission_id`
+					FROM `" . DB_PREFIX . "ms_seller`
+					WHERE seller_id = " . (int)$data['seller_id'];
+			$res = $this->db->query($sql);
+			
+			//!
+			$seller_group_id = $res->row['seller_group'];
+			$seller_commission_id = $res->row['commission_id'];
+		} else if (isset($data['seller_group_id'])) {
+			$seller_group_id = $data['seller_group_id'];
+			$seller_commission_id = NULL;
+		} else {
+			 return FALSE;
+		}
 
 		$sql = "SELECT commission_id as `commission_id`
 				FROM `" . DB_PREFIX . "ms_seller_group`

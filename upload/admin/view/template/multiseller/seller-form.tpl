@@ -15,7 +15,7 @@
 		<input type="hidden" id="seller_id" name="seller[seller_id]" value="<?php echo $seller['seller_id']; ?>" />
 		<div id="tabs" class="htabs">
 			<a href="#tab-general"><?php echo $tab_general; ?></a>
-			<a href="#tab-commission"><?php echo $ms_commission; ?></a>
+			<a href="#tab-commission"><?php echo $ms_commissions_fees; ?></a>
 		</div>
 		<div id="tab-general">	  
 		<table class="ms-product form" id="ms-sellerinfo">
@@ -208,14 +208,28 @@
 		<table class="form">
 		<input type="hidden" name="seller[commission_id]" value="<?php echo $seller['commission_id']; ?>" />
 		<tr>
-			<td><?php echo $ms_catalog_sellerinfo_commission_sale; ?></td>
+			<td><?php echo $ms_commission_sale; ?></td>
 			<td>
 				<input type="hidden" name="seller[commission][<?php echo MsCommission::RATE_SALE; ?>][rate_id]" value="<?php echo $seller['commission_rates'][MsCommission::RATE_SALE]['rate_id']; ?>" />
-				<input type="hidden" name="seller[commission][<?php echo MsCommission::RATE_SALE; ?>][rate_type]" value="<?php echo MsCommission::RATE_SALE; ?>" /> 
-				<input type="text" name="seller[commission][<?php echo MsCommission::RATE_SALE; ?>][flat]" value="<?php echo isset($seller['commission_rates'][MsCommission::RATE_SALE]['flat']) ? $this->currency->format($seller['commission_rates'][MsCommission::RATE_SALE]['flat'], $this->config->get('config_currency'), '', FALSE) : '' ?>" size="3"/><?php echo $this->config->get('config_currency'); ?>
-				+<input type="text" name="seller[commission][<?php echo MsCommission::RATE_SALE; ?>][percent]" value="<?php echo $seller['commission_rates'][MsCommission::RATE_SALE]['percent']; ?>" size="3"/>%
+				<input type="hidden" name="seller[commission][<?php echo MsCommission::RATE_SALE; ?>][rate_type]" value="<?php echo MsCommission::RATE_SALE; ?>" />
+				<?php echo $this->currency->getSymbolLeft(); ?>
+				<input type="text" name="seller[commission][<?php echo MsCommission::RATE_SALE; ?>][flat]" value="<?php echo isset($seller['commission_rates'][MsCommission::RATE_SALE]['flat']) ? $this->currency->format($seller['commission_rates'][MsCommission::RATE_SALE]['flat'], $this->config->get('config_currency'), '', FALSE) : '' ?>" size="3"/>
+				<?php echo $this->currency->getSymbolRight(); ?>
+				+<input type="text" name="seller[commission][<?php echo MsCommission::RATE_SALE; ?>][percent]" value="<?php echo isset($seller['commission_rates'][MsCommission::RATE_SALE]['percent']) ? $seller['commission_rates'][MsCommission::RATE_SALE]['percent'] : ''; ?>" size="3"/>%
 			</td>
-		</tr>		
+		</tr>
+		
+		<tr>
+			<td><?php echo $ms_commission_listing; ?></td>
+			<td>
+				<input type="hidden" name="seller[commission][<?php echo MsCommission::RATE_LISTING; ?>][rate_id]" value="<?php echo $seller['commission_rates'][MsCommission::RATE_LISTING]['rate_id']; ?>" />
+				<input type="hidden" name="seller[commission][<?php echo MsCommission::RATE_LISTING; ?>][rate_type]" value="<?php echo MsCommission::RATE_LISTING; ?>" /> 
+				<?php echo $this->currency->getSymbolLeft(); ?>
+				<input type="text" name="seller[commission][<?php echo MsCommission::RATE_LISTING; ?>][flat]" value="<?php echo isset($seller['commission_rates'][MsCommission::RATE_LISTING]['flat']) ? $this->currency->format($seller['commission_rates'][MsCommission::RATE_LISTING]['flat'], $this->config->get('config_currency'), '', FALSE) : '' ?>" size="3"/>
+				<?php echo $this->currency->getSymbolRight(); ?>
+				+<input type="text" name="seller[commission][<?php echo MsCommission::RATE_LISTING; ?>][percent]" value="<?php echo isset($seller['commission_rates'][MsCommission::RATE_LISTING]['percent']) ? $seller['commission_rates'][MsCommission::RATE_LISTING]['percent'] : ''; ?>" size="3"/>%
+			</td>
+		</tr>
 		</table>
 		</div>
 	</div>

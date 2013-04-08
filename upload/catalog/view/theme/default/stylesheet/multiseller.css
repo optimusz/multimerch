@@ -182,7 +182,8 @@ table.list td, table.list thead td  {
 	cursor: pointer;
 }
 
-.ms-product .attention.ms-commission span {
+.ms-product .attention.ms-commission span,
+.ms-account-profile .attention.ms-commission span {
 	font-weight: bold;
 }
 

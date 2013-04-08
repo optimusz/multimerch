@@ -154,6 +154,27 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 				$data['seller']['seller_id'] = $this->customer->getId();
 				$data['seller']['product_validation'] = $this->config->get('msconf_product_validation'); 
 				$this->MsLoader->MsSeller->createSeller($data['seller']);
+				
+				$commissions = $this->MsLoader->MsCommission->calculateCommission(array('seller_group_id' => $this->config->get('msconf_default_seller_group_id')));
+				$fee = (float)$commissions[MsCommission::RATE_SIGNUP]['flat'];
+				
+				if ($fee > 0) {
+				// 	todo
+					switch(MsCommission::PAYMENT_TYPE_BALANCE) {
+						case MsCommission::PAYMENT_TYPE_BALANCE:
+							// deduct from balance
+							$this->MsLoader->MsBalance->addBalanceEntry($this->customer->getId(),
+								array(
+									'balance_type' => MsBalance::MS_BALANCE_TYPE_SIGNUP,
+									'amount' => -$fee,
+									'description' => sprintf($this->language->get('ms_transaction_signup'), $this->config->get('config_name'))
+								)
+							);
+							
+							break;
+					}
+				}
+
 				$this->MsLoader->MsMail->sendMails($mails);
 				$this->session->data['success'] = $this->language->get('ms_account_sellerinfo_saved');
 			} else {
@@ -228,7 +249,9 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 			*/
 		} else {
 			$this->data['seller'] = FALSE;
+			$this->data['group_commissions'] = $this->MsLoader->MsCommission->calculateCommission(array('seller_group_id' => $this->config->get('msconf_default_seller_group_id')));
 			$this->data['statustext'] = $this->language->get('ms_account_status_please_fill_in');
+			$this->data['ms_fee_payment_type'] = $this->language->get('ms_account_sellerinfo_fee_balance');
 			
 			if ($this->config->get('msconf_seller_terms_page')) {
 				$this->load->model('catalog/information');

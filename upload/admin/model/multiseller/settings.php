@@ -35,7 +35,10 @@ class ModelMultisellerSettings extends Model {
 					$commission_id = $q['commission_id'];
 					$this->db->query("INSERT INTO " . DB_PREFIX . "ms_commission_rate (rate_type, commission_id, flat, percent) VALUES(" . MsCommission::RATE_LISTING . ", $commission_id, 0,0)");
 	
-							
+					// signup fees
+					$q = $this->db->query("SELECT commission_id FROM " . DB_PREFIX . "ms_seller_group WHERE seller_group_id = " .$this->config->get('msconf_default_seller_group_id'));
+					$commission_id = $q['commission_id'];
+					$this->db->query("INSERT INTO " . DB_PREFIX . "ms_commission_rate (rate_type, commission_id, flat, percent) VALUES(" . MsCommission::RATE_SIGNUP . ", $commission_id, 0,0)");							
 					break;
 					
 				case "2.3":
