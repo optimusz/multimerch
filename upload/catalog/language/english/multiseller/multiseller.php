@@ -213,7 +213,6 @@ $_['ms_error_product_price_empty'] = 'Please specify a price for your product';
 $_['ms_error_product_price_invalid'] = 'Invalid price';
 $_['ms_error_product_price_low'] = 'Price too low';
 $_['ms_error_product_category_empty'] = 'Please select a category';
-$_['ms_error_product_thumbnail_empty'] = 'Please upload a thumbnail for your product';
 $_['ms_error_product_download_empty'] = 'Please add a download for your product';
 $_['ms_error_product_image_count'] = 'Please upload at least %s image(s) for your product';
 $_['ms_error_product_download_count'] = 'Please submit at least %s download(s) for your product';
@@ -263,7 +262,7 @@ $_['ms_account_product_description'] = 'Description';
 $_['ms_account_product_description_note'] = 'Describe your product';
 $_['ms_account_product_short_description'] = 'Short description';
 $_['ms_account_product_tags'] = 'Tags';
-$_['ms_account_product_tags_note'] = 'Specify tags for your product.';
+$_['ms_account_product_tags_note'] = 'Specify tags for your product';
 
 
 $_['ms_account_product_price_attributes'] = 'Price & Attributes';
@@ -272,16 +271,16 @@ $_['ms_account_product_price_note'] = 'Choose a price for your product';
 
 $_['ms_account_product_listing_flat'] = 'Listing fee for this product is <span>%s</span>';
 $_['ms_account_product_listing_percent'] = 'Listing fee for this product is based on the product price. Current listing fee: <span>%s</span>';
-$_['ms_account_product_listing_balance'] = 'This amount will be deducted from your balance.';
-$_['ms_account_product_listing_gateway'] = 'You will be redirected to the payment page after product submission.';
-$_['ms_account_product_listing_combined'] = 'The available amount will be deducted from your balance and you will be able to pay the rest after product submission.';
+$_['ms_account_product_listing_balance'] = 'This amount will be deducted from your balance';
+$_['ms_account_product_listing_gateway'] = 'You will be redirected to the payment page after product submission';
+$_['ms_account_product_listing_combined'] = 'The available amount will be deducted from your balance and you will be able to pay the rest after product submission';
 
 $_['ms_account_product_category'] = 'Category';
 $_['ms_account_product_category_note'] = 'Select category for your product';
 $_['ms_account_product_enable_shipping'] = 'Enable shipping';
 $_['ms_account_product_enable_shipping_note'] = 'Specify whether your product requires shipping';
 $_['ms_account_product_quantity'] = 'Quantity';
-$_['ms_account_product_quantity_note']    = 'Specify the quantity of your product';
+$_['ms_account_product_quantity_note'] = 'Specify the quantity of your product';
 
 $_['ms_account_product_files'] = 'Files';
 $_['ms_account_product_download'] = 'Downloads';
@@ -309,25 +308,25 @@ $_['ms_account_editproduct_breadcrumbs'] = 'Edit Product';
 
 // Account - Seller info
 
-$_['ms_account_sellerinfo_heading'] = 'Seller profile';
-$_['ms_account_sellerinfo_breadcrumbs'] = 'Seller profile';
+$_['ms_account_sellerinfo_heading'] = 'Seller Profile';
+$_['ms_account_sellerinfo_breadcrumbs'] = 'Seller Profile';
 
 $_['ms_account_sellerinfo_activation_notice'] = 'Please complete the following form to activate your seller account';
 
 $_['ms_account_sellerinfo_nickname'] = 'Nickname';
-$_['ms_account_sellerinfo_nickname_note'] = 'Specify your seller nickname.';
+$_['ms_account_sellerinfo_nickname_note'] = 'Specify your seller nickname';
 $_['ms_account_sellerinfo_description'] = 'Description';
 $_['ms_account_sellerinfo_description_note'] = 'Describe yourself';
 $_['ms_account_sellerinfo_company'] = 'Company';
 $_['ms_account_sellerinfo_company_note'] = 'Your company (optional)';
 $_['ms_account_sellerinfo_country'] = 'Country';
 $_['ms_account_sellerinfo_country_dont_display'] = 'Do not display my country';
-$_['ms_account_sellerinfo_country_note'] = 'Select your country.';
+$_['ms_account_sellerinfo_country_note'] = 'Select your country';
 $_['ms_account_sellerinfo_website'] = 'Website';
 $_['ms_account_sellerinfo_website_note'] = 'Specify your website';
 $_['ms_account_sellerinfo_avatar'] = 'Avatar';
 $_['ms_account_sellerinfo_avatar_note'] = 'Select your avatar';
-$_['ms_account_sellerinfo_paypal'] = 'Paypal';
+$_['ms_account_sellerinfo_paypal'] = 'PayPal';
 $_['ms_account_sellerinfo_paypal_note'] = 'Specify your PayPal address';
 $_['ms_account_sellerinfo_reviewer_message'] = 'Message to the reviewer';
 $_['ms_account_sellerinfo_reviewer_message_note'] = 'Your message to the reviewer';
@@ -433,10 +432,10 @@ $_['ms_account_balance_waiting_formatted'] = '-%s waiting period';
 
 
 $_['ms_account_withdraw_amount'] = 'Amount:';
-$_['ms_account_withdraw_amount_note'] = 'Amount note';
+$_['ms_account_withdraw_amount_note'] = 'Withdrawal amount';
 
 $_['ms_account_withdraw_method'] = 'Payment method:';
-$_['ms_account_withdraw_method_note'] = 'Method note';
+$_['ms_account_withdraw_method_note'] = 'Preferred withdrawal payment method';
 $_['ms_account_withdraw_method_paypal'] = 'PayPal';
 
 $_['ms_account_withdraw_all'] = 'All earnings currently available';
