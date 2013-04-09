@@ -51,14 +51,14 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 					case 1:
 						// extended latin
 						if(!preg_match("/^[a-zA-Z0-9_\-\s\x{00C0}-\x{017F}]+$/u", $data['seller']['nickname'])) {
-							$json['errors']['seller[nickname]'] = 'only extended latin';
+							$json['errors']['seller[nickname]'] = $this->language->get('ms_error_sellerinfo_nickname_latin');
 						}
 						break;
 						
 					case 2:
 						// utf8
 						if(!preg_match("/((?:[\x01-\x7F]|[\xC0-\xDF][\x80-\xBF]|[\xE0-\xEF][\x80-\xBF]{2}|[\xF0-\xF7][\x80-\xBF]{3}){1,100})./x", $data['seller']['nickname'])) {
-							$json['errors']['seller[nickname]'] = 'invalid ebanij';
+							$json['errors']['seller[nickname]'] = $this->language->get('ms_error_sellerinfo_nickname_utf8');
 						}
 						break;
 						
@@ -66,7 +66,7 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 					default:
 						// alnum
 						if(!preg_match("/^[a-zA-Z0-9_\-\s]+$/", $data['seller']['nickname'])) {
-							$json['errors']['seller[nickname]'] = 'only alphanumerics allowed';
+							$json['errors']['seller[nickname]'] = $this->language->get('ms_error_sellerinfo_nickname_alphanumeric');
 						}
 						break;
 				}
@@ -77,9 +77,9 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 				$information_info = $this->model_catalog_information->getInformation($this->config->get('msconf_seller_terms_page'));
 				
 				if ($information_info && !isset($data['accept_terms'])) {
-	      			$json['errors']['seller[terms]'] = htmlspecialchars_decode(sprintf($this->language->get('ms_error_sellerinfo_terms'), $information_info['title']));
+	 				$json['errors']['seller[terms]'] = htmlspecialchars_decode(sprintf($this->language->get('ms_error_sellerinfo_terms'), $information_info['title']));
 				}
-			}			
+			}
 		}
 		
 		if (mb_strlen($data['seller']['company']) > 50 ) {
