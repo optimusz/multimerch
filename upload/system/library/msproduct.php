@@ -4,6 +4,7 @@ class MsProduct extends Model {
 	const STATUS_INACTIVE = 2;
 	const STATUS_DISABLED = 3;
 	const STATUS_DELETED = 4;
+	const STATUS_UNPAID = 5;
 	
 	const MS_PRODUCT_VALIDATION_NONE = 1;
 	const MS_PRODUCT_VALIDATION_APPROVAL = 2;
@@ -124,6 +125,12 @@ class MsProduct extends Model {
 		}
 		
 		return $images;
+	}
+
+	public function getProductCategories($product_id) {
+		$sql = "SELECT group_concat(ptc.category_id separator ',') as category_id FROM `" . DB_PREFIX . "product_to_category` ptc WHERE product_id = " . (int)$product_id;
+		$res = $this->db->query($sql);
+		return $res->row['category_id'];
 	}
 
 	public function getProductDownloads($product_id) {
@@ -685,15 +692,14 @@ class MsProduct extends Model {
 						p.image as thumbnail,
 						p.shipping as shipping,
 						p.quantity as quantity,
-						group_concat(ptc.category_id separator ',') as category_id,
 						mp.product_status
 				FROM `" . DB_PREFIX . "product` p
-				LEFT JOIN `" . DB_PREFIX . "product_to_category` ptc
-					ON p.product_id = ptc.product_id
 				LEFT JOIN `" . DB_PREFIX . "ms_product` mp
-					ON ptc.product_id = mp.product_id
+					ON p.product_id = mp.product_id
 				WHERE p.product_id = " . (int)$product_id;
 		$res = $this->db->query($sql);
+
+		if (!$res->num_rows) return FALSE;
 
 		if (strcmp(VERSION,'1.5.4') >= 0) {
 			$sql = "SELECT pd.*,
@@ -713,8 +719,6 @@ class MsProduct extends Model {
 					WHERE pd.product_id = " . (int)$product_id . "
 					GROUP BY language_id";
 		}
-		
-
 
 		$descriptions = $this->db->query($sql);
 		$product_description_data = array();
@@ -791,6 +795,9 @@ class MsProduct extends Model {
 			case MsProduct::STATUS_DELETED:
 				$status_text = $this->language->get('ms_status_deleted');
 				break;
+			case MsProduct::STATUS_UNPAID:
+				$status_text = $this->language->get('ms_status_unpaid');
+				break;				
 			default:
 				$status_text = '';
 				break;				

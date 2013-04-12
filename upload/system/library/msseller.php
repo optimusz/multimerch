@@ -146,7 +146,7 @@ final class MsSeller extends Model {
 					company = '" . $this->db->escape($data['company']) . "',
 					country_id = " . (int)$data['country'] . ","
 					. (isset($data['status']) ? "seller_status=  " .  (int)$data['status'] . "," : '')
-					. (isset($data['approved']) ? "seller_approved=  " .  (int)$data['approved'] . "," : '')					
+					. (isset($data['approved']) ? "seller_approved=  " .  (int)$data['approved'] . "," : '')
 					. "paypal = '" . $this->db->escape($data['paypal']) . "',
 					avatar = '" . $this->db->escape($avatar) . "'
 				WHERE seller_id = " . (int)$seller_id;

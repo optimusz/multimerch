@@ -25,6 +25,7 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		"msconf_minimum_withdrawal_amount" => "50",
 		"msconf_allow_partial_withdrawal" => 1,
 		"msconf_paypal_sandbox" => 1,			
+		"msconf_paypal_address" => "",
 		"msconf_paypal_api_username" => "",
 		"msconf_paypal_api_password" => "",
 		"msconf_paypal_api_signature" => "",

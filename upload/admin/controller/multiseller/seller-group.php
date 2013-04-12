@@ -276,6 +276,7 @@ class ControllerMultisellerSellerGroup extends ControllerMultisellerBase {
 			foreach ($data['commission_rates'] as &$rate) {
 				if (empty($rate['flat'])) $rate['flat'] = 0;
 				if (empty($rate['percent'])) $rate['percent'] = 0;
+				if (!isset($rate['payment_method']) || (int)$rate['payment_method'] == 0) $rate['payment_method'] = 1;
 			}
 			unset($rate);
 		}

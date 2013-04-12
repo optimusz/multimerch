@@ -20,26 +20,46 @@ class ModelMultisellerSettings extends Model {
 	public function update($version) {
 		if (!$this->checkDbVersion($version)) {
 			switch ($version) {
-				case "2.4":
-				
+				case "3.0":
 					// nickname length
-					$this->db->query("ALTER TABLE " . DB_PREFIX . "ms_seller CHANGE `nickname` `nickname` VARCHAR(255) NOT NULL");
+					$this->db->query("ALTER TABLE `" . DB_PREFIX . "ms_seller` CHANGE `nickname` `nickname` VARCHAR(255) NOT NULL");
 					
 					// comments admin area
 					$this->load->model('user/user_group');
 					$this->model_user_user_group->addPermission($this->user->getId(), 'access', 'multiseller/comment');
 					$this->model_user_user_group->addPermission($this->user->getId(), 'modify', 'multiseller/comment');
+
+					// fee payment types
+					$this->db->query("ALTER TABLE `" . DB_PREFIX . "ms_commission_rate` ADD `payment_method` TINYINT DEFAULT NULL");
 					
 					// listing commissions
-					$q = $this->db->query("SELECT commission_id FROM " . DB_PREFIX . "ms_seller_group WHERE seller_group_id = " .$this->config->get('msconf_default_seller_group_id'));
+					$q = $this->db->query("SELECT commission_id FROM `" . DB_PREFIX . "ms_seller_group` WHERE seller_group_id = " .$this->config->get('msconf_default_seller_group_id'));
 					$commission_id = $q['commission_id'];
-					$this->db->query("INSERT INTO " . DB_PREFIX . "ms_commission_rate (rate_type, commission_id, flat, percent) VALUES(" . MsCommission::RATE_LISTING . ", $commission_id, 0,0)");
+					$this->db->query("INSERT INTO `" . DB_PREFIX . "ms_commission_rate` (rate_type, commission_id, flat, percent, payment_method) VALUES(" . MsCommission::RATE_LISTING . ", $commission_id, 0,0," . MsPayment::METHOD_BALANCE . ")");
 	
 					// signup fees
-					$q = $this->db->query("SELECT commission_id FROM " . DB_PREFIX . "ms_seller_group WHERE seller_group_id = " .$this->config->get('msconf_default_seller_group_id'));
+					$q = $this->db->query("SELECT commission_id FROM `" . DB_PREFIX . "ms_seller_group` WHERE seller_group_id = " .$this->config->get('msconf_default_seller_group_id'));
 					$commission_id = $q['commission_id'];
-					$this->db->query("INSERT INTO " . DB_PREFIX . "ms_commission_rate (rate_type, commission_id, flat, percent) VALUES(" . MsCommission::RATE_SIGNUP . ", $commission_id, 0,0)");							
-					break;
+					$this->db->query("INSERT INTO `" . DB_PREFIX . "ms_commission_rate` (rate_type, commission_id, flat, percent, payment_method) VALUES(" . MsCommission::RATE_SIGNUP . ", $commission_id, 0,0," . MsPayment::METHOD_BALANCE . ")");
+					
+					// payments
+					$sql = "
+						CREATE TABLE " . DB_PREFIX . "ms_payment (
+						 `payment_id` int(11) NOT NULL AUTO_INCREMENT,
+						 `seller_id` int(11) NOT NULL,
+						 `product_id` int(11) DEFAULT NULL,
+						 `payment_type` int(11) NOT NULL,
+						 `payment_status` int(11) NOT NULL,
+						 `payment_method` int(11) NOT NULL,
+						 `payment_data` TEXT NOT NULL DEFAULT '',
+						 `amount` DECIMAL(15,4) NOT NULL,
+						 `currency_id` int(11) NOT NULL,
+						 `currency_code` VARCHAR(3) NOT NULL,
+						 `description` TEXT NOT NULL DEFAULT '',
+						 `date_created` DATETIME NOT NULL,
+						PRIMARY KEY (`payment_id`)) default CHARSET=utf8";
+					$this->db->query($sql);
+					break;							
 					
 				case "2.3":
 					$this->db->query("ALTER TABLE " . DB_PREFIX . "ms_product_attribute CHANGE `option_id` `attribute_id` int(11) NOT NULL");
@@ -99,58 +119,58 @@ class ModelMultisellerSettings extends Model {
 	public function createTable() {
 		$sql = "
 			CREATE TABLE `" . DB_PREFIX . "ms_commission` (
-             `commission_id` int(11) NOT NULL AUTO_INCREMENT,
-        	PRIMARY KEY (`commission_id`)) default CHARSET=utf8";
-        
-        $this->db->query($sql);
+			 `commission_id` int(11) NOT NULL AUTO_INCREMENT,
+			PRIMARY KEY (`commission_id`)) default CHARSET=utf8";
+		
+		$this->db->query($sql);
 		
 		$sql = "
 			CREATE TABLE `" . DB_PREFIX . "ms_commission_rate` (
-             `rate_id` int(11) NOT NULL AUTO_INCREMENT,
-             `rate_type` int(11) NOT NULL,
+			 `rate_id` int(11) NOT NULL AUTO_INCREMENT,
+			 `rate_type` int(11) NOT NULL,
 			 `commission_id` int(11) NOT NULL,
 			 `flat` DECIMAL(15,4),
 			 `percent` DECIMAL(15,2),
-        	PRIMARY KEY (`rate_id`)) default CHARSET=utf8";
-        
-        $this->db->query($sql);
-        
+			PRIMARY KEY (`rate_id`)) default CHARSET=utf8";
+		
+		$this->db->query($sql);
+		
 		$sql = "
 			CREATE TABLE `" . DB_PREFIX . "ms_seller_group` (
-             `seller_group_id` int(11) NOT NULL AUTO_INCREMENT,
+			 `seller_group_id` int(11) NOT NULL AUTO_INCREMENT,
 			 `commission_id` int(11) DEFAULT NULL,
-        	PRIMARY KEY (`seller_group_id`)) default CHARSET=utf8";
-        
-        $this->db->query($sql);
-        		
+			PRIMARY KEY (`seller_group_id`)) default CHARSET=utf8";
+		
+		$this->db->query($sql);
+				
 		$sql = "
 			CREATE TABLE `" . DB_PREFIX . "ms_seller_group_description` (
-             `seller_group_description_id` int(11) NOT NULL AUTO_INCREMENT,
+			 `seller_group_description_id` int(11) NOT NULL AUTO_INCREMENT,
 			 `seller_group_id` int(11) NOT NULL,
 			 `name` VARCHAR(32) NOT NULL DEFAULT '',
-             `description` TEXT NOT NULL DEFAULT '',
+			 `description` TEXT NOT NULL DEFAULT '',
 			 `language_id` int(11) DEFAULT NULL,
-        	PRIMARY KEY (`seller_group_description_id`)) default CHARSET=utf8";
-        
-        $this->db->query($sql);
+			PRIMARY KEY (`seller_group_description_id`)) default CHARSET=utf8";
+		
+		$this->db->query($sql);
 		
 		$sql = "
 			CREATE TABLE `" . DB_PREFIX . "ms_product` (
-             `product_id` int(11) NOT NULL,
-             `seller_id` int(11) DEFAULT NULL,
-             `number_sold` int(11) NOT NULL DEFAULT '0',
+			 `product_id` int(11) NOT NULL,
+			 `seller_id` int(11) DEFAULT NULL,
+			 `number_sold` int(11) NOT NULL DEFAULT '0',
 			 `product_status` TINYINT NOT NULL,
 			 `product_approved` TINYINT NOT NULL,
-        	PRIMARY KEY (`product_id`)) default CHARSET=utf8";
-        $this->db->query($sql);
-        
+			PRIMARY KEY (`product_id`)) default CHARSET=utf8";
+		$this->db->query($sql);
+		
 		$sql = "
 			CREATE TABLE `" . DB_PREFIX . "ms_seller` (
-             `seller_id` int(11) NOT NULL AUTO_INCREMENT,
-             `nickname` VARCHAR(32) NOT NULL DEFAULT '',
-             `company` VARCHAR(32) NOT NULL DEFAULT '',
-             `website` VARCHAR(2083) NOT NULL DEFAULT '',
-             `description` TEXT NOT NULL DEFAULT '',
+			 `seller_id` int(11) NOT NULL AUTO_INCREMENT,
+			 `nickname` VARCHAR(32) NOT NULL DEFAULT '',
+			 `company` VARCHAR(32) NOT NULL DEFAULT '',
+			 `website` VARCHAR(2083) NOT NULL DEFAULT '',
+			 `description` TEXT NOT NULL DEFAULT '',
 			 `country_id` INT(11) NOT NULL DEFAULT '0',
 			 `avatar` VARCHAR(255) DEFAULT NULL,
 			 `paypal` VARCHAR(255) DEFAULT NULL,
@@ -160,160 +180,160 @@ class ModelMultisellerSettings extends Model {
 			 `product_validation` tinyint(4) NOT NULL DEFAULT '1',
 			 `seller_group` int(11) NOT NULL DEFAULT '1',
 			 `commission_id` int(11) DEFAULT NULL,
-        	PRIMARY KEY (`seller_id`)) default CHARSET=utf8";
-        $this->db->query($sql);
-        
+			PRIMARY KEY (`seller_id`)) default CHARSET=utf8";
+		$this->db->query($sql);
+		
 		$createTable = "
 			CREATE TABLE " . DB_PREFIX . "ms_comments (
-	         `id` int(11) NOT NULL AUTO_INCREMENT,
-	         `parent_id` int(11) DEFAULT NULL,
-	         `product_id` int(11) NOT NULL,
-	         `seller_id` int(11) DEFAULT NULL,
-	         `customer_id` int(11) DEFAULT NULL,
+			 `id` int(11) NOT NULL AUTO_INCREMENT,
+			 `parent_id` int(11) DEFAULT NULL,
+			 `product_id` int(11) NOT NULL,
+			 `seller_id` int(11) DEFAULT NULL,
+			 `customer_id` int(11) DEFAULT NULL,
 			 `user_id` int(11) DEFAULT NULL,
-	         `name` varchar(128) NOT NULL DEFAULT '',
-	         `email` varchar(128) NOT NULL DEFAULT '',
-	         `comment` text NOT NULL,
-	         `display` tinyint(1) NOT NULL DEFAULT 1,
-	         `create_time` int(11) NOT NULL,
-	    	PRIMARY KEY (`id`)) default CHARSET=utf8";
-        $this->db->query($createTable);
+			 `name` varchar(128) NOT NULL DEFAULT '',
+			 `email` varchar(128) NOT NULL DEFAULT '',
+			 `comment` text NOT NULL,
+			 `display` tinyint(1) NOT NULL DEFAULT 1,
+			 `create_time` int(11) NOT NULL,
+			PRIMARY KEY (`id`)) default CHARSET=utf8";
+		$this->db->query($createTable);
 	
 		$sql = "
 			CREATE TABLE `" . DB_PREFIX . "ms_balance` (
-             `balance_id` int(11) NOT NULL AUTO_INCREMENT,
-             `seller_id` int(11) NOT NULL,
-             `order_id` int(11) DEFAULT NULL,
-             `product_id` int(11) DEFAULT NULL,
-             `withdrawal_id` int(11) DEFAULT NULL,
-             `balance_type` int(11) DEFAULT NULL,
-             `amount` DECIMAL(15,4) NOT NULL,
-             `balance` DECIMAL(15,4) NOT NULL,
-             `description` TEXT NOT NULL DEFAULT '',
+			 `balance_id` int(11) NOT NULL AUTO_INCREMENT,
+			 `seller_id` int(11) NOT NULL,
+			 `order_id` int(11) DEFAULT NULL,
+			 `product_id` int(11) DEFAULT NULL,
+			 `withdrawal_id` int(11) DEFAULT NULL,
+			 `balance_type` int(11) DEFAULT NULL,
+			 `amount` DECIMAL(15,4) NOT NULL,
+			 `balance` DECIMAL(15,4) NOT NULL,
+			 `description` TEXT NOT NULL DEFAULT '',
 			 `date_created` DATETIME NOT NULL,
 			 `date_modified` DATETIME DEFAULT NULL,
-        	PRIMARY KEY (`balance_id`)) default CHARSET=utf8";
-        
-        $this->db->query($sql);
+			PRIMARY KEY (`balance_id`)) default CHARSET=utf8";
+		
+		$this->db->query($sql);
 	
 		$sql = "
 			CREATE TABLE `" . DB_PREFIX . "ms_order_product_data` (
-             `order_product_data_id` int(11) NOT NULL AUTO_INCREMENT,
-             `order_id` int(11) NOT NULL,
-             `product_id` int(11) NOT NULL,
-             `seller_id` int(11) DEFAULT NULL,
-             `store_commission_flat` DECIMAL(15,4) NOT NULL,
-             `store_commission_pct` DECIMAL(15,4) NOT NULL,
-             `seller_net_amt` DECIMAL(15,4) NOT NULL,
-        	PRIMARY KEY (`order_product_data_id`)) default CHARSET=utf8";
-        
-        $this->db->query($sql);
-        
+			 `order_product_data_id` int(11) NOT NULL AUTO_INCREMENT,
+			 `order_id` int(11) NOT NULL,
+			 `product_id` int(11) NOT NULL,
+			 `seller_id` int(11) DEFAULT NULL,
+			 `store_commission_flat` DECIMAL(15,4) NOT NULL,
+			 `store_commission_pct` DECIMAL(15,4) NOT NULL,
+			 `seller_net_amt` DECIMAL(15,4) NOT NULL,
+			PRIMARY KEY (`order_product_data_id`)) default CHARSET=utf8";
+		
+		$this->db->query($sql);
+		
 		$sql = "
 			CREATE TABLE `" . DB_PREFIX . "ms_withdrawal` (
-             `withdrawal_id` int(11) NOT NULL AUTO_INCREMENT,
-             `seller_id` int(11) NOT NULL,
-             `amount` DECIMAL(15,4) NOT NULL,
-             `withdrawal_method_id` int(11) DEFAULT NULL,
-             `withdrawal_method_data` TEXT NOT NULL DEFAULT '',
+			 `withdrawal_id` int(11) NOT NULL AUTO_INCREMENT,
+			 `seller_id` int(11) NOT NULL,
+			 `amount` DECIMAL(15,4) NOT NULL,
+			 `withdrawal_method_id` int(11) DEFAULT NULL,
+			 `withdrawal_method_data` TEXT NOT NULL DEFAULT '',
 			 `withdrawal_status` TINYINT NOT NULL,
-             `currency_id` int(11) NOT NULL,
-             `currency_code` VARCHAR(3) NOT NULL,
-             `currency_value` DECIMAL(15,8) NOT NULL,
+			 `currency_id` int(11) NOT NULL,
+			 `currency_code` VARCHAR(3) NOT NULL,
+			 `currency_value` DECIMAL(15,8) NOT NULL,
 			 `description` TEXT NOT NULL DEFAULT '',
-             `processed_by` int(11) DEFAULT NULL,
+			 `processed_by` int(11) DEFAULT NULL,
 			 `date_created` DATETIME NOT NULL,
 			 `date_processed` DATETIME DEFAULT NULL,
-        	PRIMARY KEY (`withdrawal_id`)) default CHARSET=utf8";
-        	
-        $this->db->query($sql);
+			PRIMARY KEY (`withdrawal_id`)) default CHARSET=utf8";
+			
+		$this->db->query($sql);
 /*
 		$sql = "
 			CREATE TABLE `" . DB_PREFIX . "ms_request_seller` (
-             `request_seller_id` int(11) NOT NULL AUTO_INCREMENT,
+			 `request_seller_id` int(11) NOT NULL AUTO_INCREMENT,
 			 `request_id` int(11) NOT NULL,
-             `seller_id` int(11) NOT NULL,
+			 `seller_id` int(11) NOT NULL,
 			 `request_type` TINYINT NOT NULL,
-        	PRIMARY KEY (`request_seller_id`)) default CHARSET=utf8";
-        
-        $this->db->query($sql);
+			PRIMARY KEY (`request_seller_id`)) default CHARSET=utf8";
+		
+		$this->db->query($sql);
 
 		$sql = "
 			CREATE TABLE `" . DB_PREFIX . "ms_request_product` (
-             `request_product_id` int(11) NOT NULL AUTO_INCREMENT,
+			 `request_product_id` int(11) NOT NULL AUTO_INCREMENT,
 			 `request_id` int(11) NOT NULL,
-             `product_id` int(11) NOT NULL,
+			 `product_id` int(11) NOT NULL,
 			 `request_type` TINYINT NOT NULL,
-        	PRIMARY KEY (`request_product_id`)) default CHARSET=utf8";
-        
-        $this->db->query($sql);
+			PRIMARY KEY (`request_product_id`)) default CHARSET=utf8";
+		
+		$this->db->query($sql);
 
 		$sql = "
 			CREATE TABLE `" . DB_PREFIX . "ms_request` (
-             `request_id` int(11) NOT NULL AUTO_INCREMENT,
+			 `request_id` int(11) NOT NULL AUTO_INCREMENT,
 			 `request_status` TINYINT NOT NULL,
 			 `resolution_type` TINYINT DEFAULT NULL,
-             `processed_by` int(11) DEFAULT NULL,
+			 `processed_by` int(11) DEFAULT NULL,
 			 `date_created` DATETIME NOT NULL,
 			 `date_processed` DATETIME DEFAULT NULL,
-             `message_created` TEXT NOT NULL DEFAULT '',
-             `message_processed` TEXT NOT NULL DEFAULT '',
-        	PRIMARY KEY (`request_id`)) default CHARSET=utf8";
-        
+			 `message_created` TEXT NOT NULL DEFAULT '',
+			 `message_processed` TEXT NOT NULL DEFAULT '',
+			PRIMARY KEY (`request_id`)) default CHARSET=utf8";
+		
 		// ms_seller_group - table with seller groups
-        $this->db->query($sql);
+		$this->db->query($sql);
 */
 		
 		
 		// ms_criteria - criterias table
 		$sql = "
 			CREATE TABLE `" . DB_PREFIX . "ms_criteria` (
-             `criteria_id` int(11) NOT NULL AUTO_INCREMENT,
+			 `criteria_id` int(11) NOT NULL AUTO_INCREMENT,
 			 `criteria_type` TINYINT NOT NULL,
 			 `range_id` int(11) NOT NULL,
-        	PRIMARY KEY (`criteria_id`)) default CHARSET=utf8";
-        
-        $this->db->query($sql);
+			PRIMARY KEY (`criteria_id`)) default CHARSET=utf8";
+		
+		$this->db->query($sql);
 		
 		// ms_range_int - int criteria range table
 		$sql = "
 			CREATE TABLE `" . DB_PREFIX . "ms_range_int` (
-             `range_id` int(11) NOT NULL AUTO_INCREMENT,
+			 `range_id` int(11) NOT NULL AUTO_INCREMENT,
 			 `from` int(11) NOT NULL,
 			 `to` int(11) NOT NULL,
-        	PRIMARY KEY (`range_id`)) default CHARSET=utf8";
-        
-        $this->db->query($sql);
+			PRIMARY KEY (`range_id`)) default CHARSET=utf8";
+		
+		$this->db->query($sql);
 		
 		// ms_range_decimal - decimal criteria range table
 		$sql = "
 			CREATE TABLE `" . DB_PREFIX . "ms_range_decimal` (
-             `range_id` int(11) NOT NULL AUTO_INCREMENT,
+			 `range_id` int(11) NOT NULL AUTO_INCREMENT,
 			 `from` DECIMAL(15,4) NOT NULL,
 			 `to` DECIMAL(15,4) NOT NULL,
-        	PRIMARY KEY (`range_id`)) default CHARSET=utf8";
-        
-        $this->db->query($sql);
+			PRIMARY KEY (`range_id`)) default CHARSET=utf8";
+		
+		$this->db->query($sql);
 		
 		// ms_range_periodic - periodic criteria range table
 		$sql = "
 			CREATE TABLE `" . DB_PREFIX . "ms_range_date` (
-             `range_id` int(11) NOT NULL AUTO_INCREMENT,
+			 `range_id` int(11) NOT NULL AUTO_INCREMENT,
 			 `from` DATETIME,
 			 `to` DATETIME NOT NULL,
-        	PRIMARY KEY (`range_id`)) default CHARSET=utf8";
-        
-        $this->db->query($sql);
+			PRIMARY KEY (`range_id`)) default CHARSET=utf8";
+		
+		$this->db->query($sql);
 		
 		// ms_seller_group_criteria - table, which connects concrete commissions for criterias in the seller groups
 		$sql = "
 			CREATE TABLE `" . DB_PREFIX . "ms_seller_group_criteria` (
-             `seller_group_criteria_id` int(11) NOT NULL AUTO_INCREMENT,
+			 `seller_group_criteria_id` int(11) NOT NULL AUTO_INCREMENT,
 			 `commission_id` int(11) NOT NULL,
 			 `criteria_id` int(11) NOT NULL,
-        	PRIMARY KEY (`seller_group_criteria_id`)) default CHARSET=utf8";
-        
-        $this->db->query($sql);
+			PRIMARY KEY (`seller_group_criteria_id`)) default CHARSET=utf8";
+		
+		$this->db->query($sql);
 		
 		
 		// new attributes
@@ -361,12 +381,29 @@ class ModelMultisellerSettings extends Model {
 		$this->db->query($sql);
 		
 		$sql = "
-			CREATE TABLE " . DB_PREFIX . "ms_product_attribute (
+			CREATE TABLE `" . DB_PREFIX . "ms_product_attribute` (
 			 `product_id` int(11) NOT NULL,
 			 `attribute_id` int(11) NOT NULL,
 			 `attribute_value_id` int(11) NOT NULL,
-        	PRIMARY KEY (`product_id`,`attribute_id`,`attribute_value_id`)) default CHARSET=utf8";
-        $this->db->query($sql);		
+			PRIMARY KEY (`product_id`,`attribute_id`,`attribute_value_id`)) default CHARSET=utf8";
+		$this->db->query($sql);
+
+		$sql = "
+			CREATE TABLE `" . DB_PREFIX . "ms_payment` (
+			 `payment_id` int(11) NOT NULL AUTO_INCREMENT,
+			 `seller_id` int(11) NOT NULL,
+			 `product_id` int(11) DEFAULT NULL,
+			 `payment_type` int(11) NOT NULL,
+			 `payment_status` int(11) NOT NULL,
+			 `payment_method` int(11) NOT NULL,
+			 `payment_data` TEXT NOT NULL DEFAULT '',
+			 `amount` DECIMAL(15,4) NOT NULL,
+			 `currency_id` int(11) NOT NULL,
+			 `currency_code` VARCHAR(3) NOT NULL,
+			 `description` TEXT NOT NULL DEFAULT '',
+			 `date_created` DATETIME NOT NULL,
+			PRIMARY KEY (`payment_id`)) default CHARSET=utf8";
+		$this->db->query($sql);		
 		
 	}
 	
@@ -374,25 +411,30 @@ class ModelMultisellerSettings extends Model {
 		$this->db->query("INSERT INTO " . DB_PREFIX . "ms_commission () VALUES()");
 		$commission_id = $this->db->getLastId();
 		
+		// sale commissions
 		$rate_type = MsCommission::RATE_SALE;
 		$this->db->query("INSERT INTO " . DB_PREFIX . "ms_commission_rate (rate_type, commission_id, flat, percent) VALUES($rate_type, $commission_id, 0,0)");
-        
-        // listing commissions
+		
+		// listing commissions
 		$rate_type = MsCommission::RATE_LISTING;
 		$this->db->query("INSERT INTO " . DB_PREFIX . "ms_commission_rate (rate_type, commission_id, flat, percent) VALUES($rate_type, $commission_id, 0,0)");
-        
+
+		// signup commissions
+		$rate_type = MsCommission::RATE_SIGNUP;
+		$this->db->query("INSERT INTO " . DB_PREFIX . "ms_commission_rate (rate_type, commission_id, flat, percent) VALUES($rate_type, $commission_id, 0,0)");
+		
+		// default seller group commissions
 		$this->db->query("INSERT INTO " . DB_PREFIX . "ms_seller_group (commission_id) VALUES($commission_id)");
-        $seller_group_id = $this->db->getLastId();
-        
+		$seller_group_id = $this->db->getLastId();
+		
+		// default seller group description
 		$this->load->model('localisation/language');
 		$languages = $this->model_localisation_language->getLanguages();
-
 		foreach ($languages as $code => $language) {
 			$this->db->query("INSERT INTO " . DB_PREFIX . "ms_seller_group_description SET seller_group_id = '" . (int)$seller_group_id . "', language_id = '" . (int)$language['language_id'] . "', name = 'Default', description = 'Default seller group'");
 		}
 	}
 	
-	// ToDo: drop databases
 	public function dropTable() {
 		$sql = "DROP TABLE IF EXISTS
 				`" . DB_PREFIX . "ms_product`,
@@ -414,7 +456,8 @@ class ModelMultisellerSettings extends Model {
 				`" . DB_PREFIX . "ms_attribute_description`,
 				`" . DB_PREFIX . "ms_attribute_value`,
 				`" . DB_PREFIX . "ms_attribute_value_description`,
-				`" . DB_PREFIX . "ms_product_attribute`";
+				`" . DB_PREFIX . "ms_product_attribute`,
+				`" . DB_PREFIX . "ms_payment`";				
 				
 		$this->db->query($sql);
 	}

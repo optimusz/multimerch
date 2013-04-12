@@ -12,6 +12,7 @@ $_['ms_status_published'] = 'Published';
 $_['ms_status_notpublished'] = 'Not published';
 $_['ms_status_disabled'] = 'Disabled';
 $_['ms_status_deleted'] = 'Deleted';
+$_['ms_status_unpaid'] = 'Unpaid listing fee';
 
 $_['ms_type'] = 'Type';
 $_['ms_type_checkbox'] = 'Checkbox';
@@ -27,8 +28,6 @@ $_['ms_type_time']           = 'Time';
 
 $_['text_success']        = 'Success: You have modified options!';
 $_['text_choose']         = 'Choose';
-
-
 $_['text_file']           = 'File';
 $_['text_date']           = 'Date';
 $_['text_datetime']       = 'Date &amp; Time';
@@ -37,8 +36,6 @@ $_['text_image_manager']  = 'Image Manager';
 $_['text_browse']         = 'Browse';
 $_['text_clear']          = 'Clear';
 
-
-
 $_['ms_error_directory'] = "Warning: Could not create directory: %s. Please create it manually and make it server-writable before proceeding. <br />";
 $_['ms_error_directory_notwritable'] = "Warning: Directory already exists and is not writable: %s. Please make sure it's empty and make it server-writable before proceeding. <br />";
 $_['ms_error_directory_exists'] = "Warning: Directory already exists: %s. Please make sure it's empty before proceeding. <br />";
@@ -46,7 +43,6 @@ $_['ms_error_product_publish'] = 'Failed to publish some products: seller accoun
 
 $_['ms_success_installed']      = 'Extension successfully installed';
 $_['ms_success_product_status']      = 'Successfully changed product status.';
-
 
 $_['heading_title']    = '[ffct.cc] OpenCart Digital Marketplace';
 $_['text_module']         = 'Modules';
@@ -210,17 +206,20 @@ $_['ms_config_allow_withdrawal_requests_note'] = 'Allow withdrawal requests';
 $_['ms_config_paypal_sandbox'] = 'PayPal Sandbox mode';
 $_['ms_config_paypal_sandbox_note'] = 'PayPal Sandbox mode note';
 
+$_['ms_config_paypal_address'] = 'PayPal account email';
+$_['ms_config_paypal_address_note'] = 'Your PayPal account email for listing and signup commissions';
+
 $_['ms_config_paypal_api_username'] = 'PayPal API username';
-$_['ms_config_paypal_api_username_note'] = 'PayPal API username note';
+$_['ms_config_paypal_api_username_note'] = 'Your PayPal API username for MassPay payouts';
 
 $_['ms_config_paypal_api_password'] = 'PayPal API password';
-$_['ms_config_paypal_api_password_note'] = 'PayPal API password note';
+$_['ms_config_paypal_api_password_note'] = 'Your PayPal API password for MassPay payouts';
 
 $_['ms_config_paypal_api_signature'] = 'PayPal API signature';
-$_['ms_config_paypal_api_signature_note'] = 'PayPal API signature note';
+$_['ms_config_paypal_api_signature_note'] = 'Your PayPal API signature for MassPay payouts';
 
-$_['ms_config_notification_email'] = 'Email for admin notifications';
-$_['ms_config_notification_email_note'] = 'Email for admin notifications note';
+$_['ms_config_notification_email'] = 'Admin email for notifications';
+$_['ms_config_notification_email_note'] = 'Email address for various notification mails';
 
 $_['ms_config_allow_free_products'] = 'Allow free products';
 $_['ms_config_allow_free_products_note'] = 'Allow sellers to add free products';
@@ -466,4 +465,9 @@ $_['ms_text_seller_all']      = 'All sellers';
 
 $_['ms_transaction_sale']      = 'Sale: %s (-%s commission)';
 $_['ms_transaction_refund']      = 'Refund: %s';
+
+$_['ms_payment_method'] = 'Payment method';
+$_['ms_payment_method_balance'] = 'Seller balance';
+$_['ms_payment_method_paypal'] = 'PayPal';
+$_['ms_payment_method_inherit'] = 'Inherit';
 ?>

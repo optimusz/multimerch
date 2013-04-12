@@ -8,16 +8,12 @@ class MsBalance extends Model {
 	const MS_BALANCE_TYPE_SIGNUP = 6;
 	const MS_BALANCE_TYPE_RECURRING = 7;
 	
-  	public function __construct($registry) {
-  		parent::__construct($registry);
-	}
-	
 	public function getSellerBalanceEntries($seller_id, $sort) {
 		$sql = "SELECT *
 				FROM " . DB_PREFIX . "ms_balance
 				WHERE seller_id = " . (int)$seller_id . "
-    			ORDER BY {$sort['order_by']} {$sort['order_way']}"
-    			. ($sort['limit'] ? " LIMIT ".(int)(($sort['page'] - 1) * $sort['limit']).', '.(int)($sort['limit']) : '');
+				ORDER BY {$sort['order_by']} {$sort['order_way']}"
+				. ($sort['limit'] ? " LIMIT ".(int)(($sort['page'] - 1) * $sort['limit']).', '.(int)($sort['limit']) : '');
 		$res = $this->db->query($sql);
 
 		return $res->rows;

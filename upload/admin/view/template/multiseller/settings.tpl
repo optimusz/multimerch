@@ -485,6 +485,16 @@
 
 					<tr>
 						<td>
+							<span><?php echo $ms_config_paypal_address; ?></span>
+							<span class="help"><?php echo $ms_config_paypal_address_note; ?></span>
+						</td>
+						<td>
+							<input type="text" name="msconf_paypal_address" value="<?php echo $msconf_paypal_address; ?>" size="30"/>
+						</td>
+					</tr>
+
+					<tr>
+						<td>
 							<span><?php echo $ms_config_paypal_api_username; ?></span>
 							<span class="help"><?php echo $ms_config_paypal_api_username_note; ?></span>
 						</td>

@@ -71,6 +71,15 @@
 							<input type="text" name="seller_group[commission_rates][<?php echo MsCommission::RATE_LISTING; ?>][flat]" value="<?php echo isset($seller_group['commission_rates'][MsCommission::RATE_LISTING]['flat']) ? $this->currency->format($seller_group['commission_rates'][MsCommission::RATE_LISTING]['flat'], $this->config->get('config_currency'), '', FALSE) : '' ?>" size="3"/>
 							<?php echo $this->currency->getSymbolRight(); ?>
 							+<input type="text" name="seller_group[commission_rates][<?php echo MsCommission::RATE_LISTING; ?>][percent]" value="<?php echo isset($seller_group['commission_rates'][MsCommission::RATE_LISTING]['percent']) ? $seller_group['commission_rates'][MsCommission::RATE_LISTING]['percent'] : ''; ?>" size="3"/>%
+							<select name="seller_group[commission_rates][<?php echo MsCommission::RATE_LISTING; ?>][payment_method]">
+								<optgroup label="<?php echo $ms_payment_method; ?>">
+									<?php if($seller_group['seller_group_id'] != $this->config->get('msconf_default_seller_group_id')) { ?>
+									<option value="0" <?php if($seller_group['commission_rates'][MsCommission::RATE_LISTING]['payment_method'] == 0) { ?> selected="selected" <?php } ?>><?php echo $ms_payment_method_inherit; ?></option>
+									<?php } ?>
+									<option value="<?php echo MsPayment::METHOD_BALANCE; ?>" <?php if($seller_group['commission_rates'][MsCommission::RATE_LISTING]['payment_method'] == MsPayment::METHOD_BALANCE) { ?> selected="selected" <?php } ?>><?php echo $ms_payment_method_balance; ?></option>
+									<option value="<?php echo MsPayment::METHOD_PAYPAL; ?>" <?php if($seller_group['commission_rates'][MsCommission::RATE_LISTING]['payment_method'] == MsPayment::METHOD_PAYPAL) { ?> selected="selected" <?php } ?>><?php echo $ms_payment_method_paypal; ?></option>
+								</optgroup>
+							</select>
 							<p class="error" id="error_commission_percent"></p>
 						</td>
 					</tr>
@@ -84,6 +93,15 @@
 							<?php echo $this->currency->getSymbolLeft(); ?>
 							<input type="text" name="seller_group[commission_rates][<?php echo MsCommission::RATE_SIGNUP; ?>][flat]" value="<?php echo isset($seller_group['commission_rates'][MsCommission::RATE_SIGNUP]['flat']) ? $this->currency->format($seller_group['commission_rates'][MsCommission::RATE_SIGNUP]['flat'], $this->config->get('config_currency'), '', FALSE) : '' ?>" size="3"/>
 							<?php echo $this->currency->getSymbolRight(); ?>
+							<select name="seller_group[commission_rates][<?php echo MsCommission::RATE_SIGNUP; ?>][payment_method]">
+								<optgroup label="<?php echo $ms_payment_method; ?>">
+									<?php if($seller_group['seller_group_id'] != $this->config->get('msconf_default_seller_group_id')) { ?>
+									<option value="0" <?php if($seller_group['commission_rates'][MsCommission::RATE_SIGNUP]['payment_method'] == 0) { ?> selected="selected" <?php } ?>><?php echo $ms_payment_method_inherit; ?></option>
+									<?php } ?>
+									<option value="<?php echo MsPayment::METHOD_BALANCE; ?>" <?php if($seller_group['commission_rates'][MsCommission::RATE_SIGNUP]['payment_method'] == MsPayment::METHOD_BALANCE) { ?> selected="selected" <?php } ?>><?php echo $ms_payment_method_balance; ?></option>
+									<option value="<?php echo MsPayment::METHOD_PAYPAL; ?>" <?php if($seller_group['commission_rates'][MsCommission::RATE_SIGNUP]['payment_method'] == MsPayment::METHOD_PAYPAL) { ?> selected="selected" <?php } ?>><?php echo $ms_payment_method_paypal; ?></option>
+								</optgroup>
+							</select>
 							<p class="error" id="error_commission_signup"></p>
 						</td>
 					</tr>

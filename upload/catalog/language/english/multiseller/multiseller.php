@@ -11,6 +11,7 @@ $_['ms_status_disabled'] = 'Disabled';
 $_['ms_status_deleted'] = 'Deleted';
 $_['ms_status_pending_approval'] = 'Pending approval';
 $_['ms_status_pending_deletion'] = 'Pending deletion';
+$_['ms_status_unpaid'] = 'Unpaid listing fee';
 
 $_['ms_viewinstore'] = 'View in store';
 $_['ms_publish'] = 'Publish';
@@ -274,10 +275,11 @@ $_['ms_account_product_price'] = 'Price';
 $_['ms_account_product_price_note'] = 'Choose a price for your product';
 
 $_['ms_account_product_listing_flat'] = 'Listing fee for this product is <span>%s</span>';
-$_['ms_account_product_listing_percent'] = 'Listing fee for this product is based on the product price. Current listing fee: <span>%s</span>';
-$_['ms_account_product_listing_balance'] = 'This amount will be deducted from your balance.';
-$_['ms_account_product_listing_gateway'] = 'You will be redirected to the payment page after product submission.';
+$_['ms_account_product_listing_percent'] = 'Listing fee for this product is based on the product price. Current listing fee: <span>%s</span>.';
+$_['ms_account_product_listing_balance'] = 'This amount will be deducted from your seller balance.';
+$_['ms_account_product_listing_paypal'] = 'You will be redirected to the PayPal payment page after product submission.';
 $_['ms_account_product_listing_combined'] = 'The available amount will be deducted from your balance and you will be able to pay the rest after product submission.';
+$_['ms_account_product_listing_itemname'] = 'Product listing fee at %s';
 
 $_['ms_account_product_category'] = 'Category';
 $_['ms_account_product_category_note'] = 'Select category for your product';

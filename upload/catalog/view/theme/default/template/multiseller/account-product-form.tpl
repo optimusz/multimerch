@@ -108,23 +108,9 @@
 				<tr>
 					<td><span class="required">*</span> <?php echo $ms_account_product_price; ?></td>
 					<td>
-						<input type="text" name="product_price" value="<?php echo $product['price']; ?>" <?php if ($seller['commissions'][MsCommission::RATE_LISTING]['percent'] > 0) { ?>class="ms-price-dynamic"<?php } ?> />
+						<input type="text" name="product_price" value="<?php echo $product['price']; ?>" <?php if (isset($seller['commissions']) && $seller['commissions'][MsCommission::RATE_LISTING]['percent'] > 0) { ?>class="ms-price-dynamic"<?php } ?> />
 						<p class="ms-note"><?php echo $ms_account_product_price_note; ?></p>
 						<p class="error" id="error_product_price"></p>
-						<?php if ($seller['commissions'][MsCommission::RATE_LISTING]['percent'] > 0) { ?>
-						<input type="hidden" name="fee_percent" value="<?php echo $this->currency->format($seller['commissions'][MsCommission::RATE_LISTING]['percent'], $this->config->get('config_currency'), '', FALSE); ?>" />
-						<input type="hidden" name="fee_flat" value="<?php echo $this->currency->format($seller['commissions'][MsCommission::RATE_LISTING]['flat'], $this->config->get('config_currency'), '', FALSE); ?>" />
-						<p class="attention ms-commission">
-							<?php echo sprintf($this->language->get('ms_account_product_listing_percent'),$this->currency->format($seller['commissions'][MsCommission::RATE_LISTING]['flat'], $this->config->get('config_currency'))); ?>
-							<br/ ><?php echo $ms_commission_payment_type; ?>
-						</p>
-						<?php } else if ($seller['commissions'][MsCommission::RATE_LISTING]['flat'] > 0) { ?>
-						<input type="hidden" name="fee_flat" value="<?php echo $seller['commissions'][MsCommission::RATE_LISTING]['flat']; ?>" />
-						<p class="attention ms-commission">
-							<?php echo sprintf($this->language->get('ms_account_product_listing_flat'),$this->currency->format($seller['commissions'][MsCommission::RATE_LISTING]['flat'], $this->config->get('config_currency'))); ?>
-							<br/ ><?php echo $ms_commission_payment_type; ?>
-						</p>
-						<?php } ?> 
 					</td>
 				</tr>
 				
@@ -437,8 +423,24 @@
 			</table>
 		</div>		
 		<?php } ?>
-		
 		</div>
+		</form>
+		
+		<?php if (isset($seller['commissions']) && ($seller['commissions'][MsCommission::RATE_LISTING]['percent'] > 0 || $seller['commissions'][MsCommission::RATE_LISTING]['flat'] > 0)) { ?>
+			<?php if ($seller['commissions'][MsCommission::RATE_LISTING]['percent'] > 0) { ?>
+			<p class="attention ms-commission">
+				<?php echo sprintf($this->language->get('ms_account_product_listing_percent'),$this->currency->format($seller['commissions'][MsCommission::RATE_LISTING]['flat'], $this->config->get('config_currency'))); ?>
+				<?php echo $ms_commission_payment_type; ?>
+			</p>
+			<?php } else if ($seller['commissions'][MsCommission::RATE_LISTING]['flat'] > 0) { ?>
+			<p class="attention ms-commission">
+				<?php echo sprintf($this->language->get('ms_account_product_listing_flat'),$this->currency->format($seller['commissions'][MsCommission::RATE_LISTING]['flat'], $this->config->get('config_currency'))); ?>
+				<?php echo $ms_commission_payment_type; ?>
+			</p>
+			<?php } ?>
+			
+			<?php if(isset($payment_form)) { ?><div class="ms-payment-form"><?php echo $payment_form; ?></div><?php } ?>
+		<?php } ?>
 		
 		<div class="buttons">
 			<div class="left">
@@ -452,7 +454,6 @@
 				</a>
 			</div>
 		</div>
-	</form>
 	
 	<?php echo $content_bottom; ?>
 </div>

@@ -71,7 +71,7 @@ $(function() {
 			type: "POST",
 			dataType: "json",
 			url: 'index.php?route=seller/account-product/'+url,
-			data: $(this).parents("form").serialize(),
+			data: $("form#ms-new-product").serialize(),
 			beforeSend: function() {
 				button.hide().before('<span class="wait">&nbsp;<img src="catalog/view/theme/default/image/loading.gif" alt="" /></span>');
 			},			
@@ -91,6 +91,11 @@ $(function() {
 						
 						window.scrollTo(0,0);
 					}				
+				} else if (!jQuery.isEmptyObject(jsonData.data) && jsonData.data.amount) {
+					console.log(jsonData.data);
+					$(".ms-payment-form form input[name='custom']").val(jsonData.data.custom);
+					$(".ms-payment-form form input[name='amount']").val(jsonData.data.amount);
+					$(".ms-payment-form form").submit();
 				} else {
 					location = jsonData['redirect'];
 				}
