@@ -12,6 +12,7 @@ $_['ms_status_deleted'] = 'Deleted';
 $_['ms_status_pending_approval'] = 'Pending approval';
 $_['ms_status_pending_deletion'] = 'Pending deletion';
 $_['ms_status_unpaid'] = 'Unpaid listing fee';
+$_['ms_status_signup_unpaid'] = 'Unpaid signup fee';
 
 $_['ms_viewinstore'] = 'View in store';
 $_['ms_publish'] = 'Publish';
@@ -341,6 +342,8 @@ $_['ms_account_sellerinfo_terms'] = 'Accept terms';
 $_['ms_account_sellerinfo_terms_note'] = 'I have read and agree to the <a class="colorbox" href="%s" alt="%s"><b>%s</b></a>';
 $_['ms_account_sellerinfo_fee_flat'] = 'There is a sign up fee of <span>%s</span> to become a seller at %s.';
 $_['ms_account_sellerinfo_fee_balance'] = 'This amount will be deducted from your initial balance.';
+$_['ms_account_sellerinfo_fee_paypal'] = 'You will be redirected to the PayPal payment page after form submission.';
+$_['ms_account_sellerinfo_signup_itemname'] = 'Seller account registration at %s';
 
 $_['ms_account_sellerinfo_mail_account_thankyou'] = 'Thank you for signing up as a seller at %s!';
 $_['ms_account_sellerinfo_mail_account_created_subject'] = '[%s] Seller account created';

@@ -218,7 +218,7 @@
 				+<input type="text" name="seller[commission][<?php echo MsCommission::RATE_SALE; ?>][percent]" value="<?php echo isset($seller['commission_rates'][MsCommission::RATE_SALE]['percent']) ? $seller['commission_rates'][MsCommission::RATE_SALE]['percent'] : ''; ?>" size="3"/>%
 			</td>
 		</tr>
-		
+
 		<tr>
 			<td><?php echo $ms_commission_listing; ?></td>
 			<td>
@@ -230,9 +230,9 @@
 				+<input type="text" name="seller[commission][<?php echo MsCommission::RATE_LISTING; ?>][percent]" value="<?php echo isset($seller['commission_rates'][MsCommission::RATE_LISTING]['percent']) ? $seller['commission_rates'][MsCommission::RATE_LISTING]['percent'] : ''; ?>" size="3"/>%
 				<select name="seller_group[commission_rates][<?php echo MsCommission::RATE_LISTING; ?>][payment_method]">
 					<optgroup label="<?php echo $ms_payment_method; ?>">
-						<option value="0" <?php if($seller['commission_rates'][MsCommission::RATE_LISTING]['payment_method'] == 0) { ?> selected="selected" <?php } ?>><?php echo $ms_payment_method_inherit; ?></option>
-						<option value="<?php echo MsPayment::METHOD_BALANCE; ?>" <?php if($seller['commission_rates'][MsCommission::RATE_LISTING]['payment_method'] == MsPayment::METHOD_BALANCE) { ?> selected="selected" <?php } ?>><?php echo $ms_payment_method_balance; ?></option>
-						<option value="<?php echo MsPayment::METHOD_PAYPAL; ?>" <?php if($seller['commission_rates'][MsCommission::RATE_LISTING]['payment_method'] == MsPayment::METHOD_PAYPAL) { ?> selected="selected" <?php } ?>><?php echo $ms_payment_method_paypal; ?></option>
+						<option value="0" <?php if(isset($seller['commission_rates'][MsCommission::RATE_LISTING]) && $seller['commission_rates'][MsCommission::RATE_LISTING]['payment_method'] == 0) { ?> selected="selected" <?php } ?>><?php echo $ms_payment_method_inherit; ?></option>
+						<option value="<?php echo MsPayment::METHOD_BALANCE; ?>" <?php if(isset($seller['commission_rates'][MsCommission::RATE_LISTING]) && $seller['commission_rates'][MsCommission::RATE_LISTING]['payment_method'] == MsPayment::METHOD_BALANCE) { ?> selected="selected" <?php } ?>><?php echo $ms_payment_method_balance; ?></option>
+						<option value="<?php echo MsPayment::METHOD_PAYPAL; ?>" <?php if(isset($seller['commission_rates'][MsCommission::RATE_LISTING]) && $seller['commission_rates'][MsCommission::RATE_LISTING]['payment_method'] == MsPayment::METHOD_PAYPAL) { ?> selected="selected" <?php } ?>><?php echo $ms_payment_method_paypal; ?></option>
 					</optgroup>
 				</select>
 			</td>

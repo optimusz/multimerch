@@ -74,10 +74,10 @@
 							<select name="seller_group[commission_rates][<?php echo MsCommission::RATE_LISTING; ?>][payment_method]">
 								<optgroup label="<?php echo $ms_payment_method; ?>">
 									<?php if($seller_group['seller_group_id'] != $this->config->get('msconf_default_seller_group_id')) { ?>
-									<option value="0" <?php if($seller_group['commission_rates'][MsCommission::RATE_LISTING]['payment_method'] == 0) { ?> selected="selected" <?php } ?>><?php echo $ms_payment_method_inherit; ?></option>
+									<option value="0" <?php if(isset($seller_group['commission_rates'][MsCommission::RATE_LISTING]) && $seller_group['commission_rates'][MsCommission::RATE_LISTING]['payment_method'] == 0) { ?> selected="selected" <?php } ?>><?php echo $ms_payment_method_inherit; ?></option>
 									<?php } ?>
-									<option value="<?php echo MsPayment::METHOD_BALANCE; ?>" <?php if($seller_group['commission_rates'][MsCommission::RATE_LISTING]['payment_method'] == MsPayment::METHOD_BALANCE) { ?> selected="selected" <?php } ?>><?php echo $ms_payment_method_balance; ?></option>
-									<option value="<?php echo MsPayment::METHOD_PAYPAL; ?>" <?php if($seller_group['commission_rates'][MsCommission::RATE_LISTING]['payment_method'] == MsPayment::METHOD_PAYPAL) { ?> selected="selected" <?php } ?>><?php echo $ms_payment_method_paypal; ?></option>
+									<option value="<?php echo MsPayment::METHOD_BALANCE; ?>" <?php if(isset($seller_group['commission_rates'][MsCommission::RATE_LISTING]) && $seller_group['commission_rates'][MsCommission::RATE_LISTING]['payment_method'] == MsPayment::METHOD_BALANCE) { ?> selected="selected" <?php } ?>><?php echo $ms_payment_method_balance; ?></option>
+									<option value="<?php echo MsPayment::METHOD_PAYPAL; ?>" <?php if(isset($seller_group['commission_rates'][MsCommission::RATE_LISTING]) && $seller_group['commission_rates'][MsCommission::RATE_LISTING]['payment_method'] == MsPayment::METHOD_PAYPAL) { ?> selected="selected" <?php } ?>><?php echo $ms_payment_method_paypal; ?></option>
 								</optgroup>
 							</select>
 							<p class="error" id="error_commission_percent"></p>
@@ -96,10 +96,10 @@
 							<select name="seller_group[commission_rates][<?php echo MsCommission::RATE_SIGNUP; ?>][payment_method]">
 								<optgroup label="<?php echo $ms_payment_method; ?>">
 									<?php if($seller_group['seller_group_id'] != $this->config->get('msconf_default_seller_group_id')) { ?>
-									<option value="0" <?php if($seller_group['commission_rates'][MsCommission::RATE_SIGNUP]['payment_method'] == 0) { ?> selected="selected" <?php } ?>><?php echo $ms_payment_method_inherit; ?></option>
+									<option value="0" <?php if(isset($seller_group['commission_rates'][MsCommission::RATE_SIGNUP]) && $seller_group['commission_rates'][MsCommission::RATE_SIGNUP]['payment_method'] == 0) { ?> selected="selected" <?php } ?>><?php echo $ms_payment_method_inherit; ?></option>
 									<?php } ?>
-									<option value="<?php echo MsPayment::METHOD_BALANCE; ?>" <?php if($seller_group['commission_rates'][MsCommission::RATE_SIGNUP]['payment_method'] == MsPayment::METHOD_BALANCE) { ?> selected="selected" <?php } ?>><?php echo $ms_payment_method_balance; ?></option>
-									<option value="<?php echo MsPayment::METHOD_PAYPAL; ?>" <?php if($seller_group['commission_rates'][MsCommission::RATE_SIGNUP]['payment_method'] == MsPayment::METHOD_PAYPAL) { ?> selected="selected" <?php } ?>><?php echo $ms_payment_method_paypal; ?></option>
+									<option value="<?php echo MsPayment::METHOD_BALANCE; ?>" <?php if(isset($seller_group['commission_rates'][MsCommission::RATE_SIGNUP]) && $seller_group['commission_rates'][MsCommission::RATE_SIGNUP]['payment_method'] == MsPayment::METHOD_BALANCE) { ?> selected="selected" <?php } ?>><?php echo $ms_payment_method_balance; ?></option>
+									<option value="<?php echo MsPayment::METHOD_PAYPAL; ?>" <?php if(isset($seller_group['commission_rates'][MsCommission::RATE_SIGNUP]) && $seller_group['commission_rates'][MsCommission::RATE_SIGNUP]['payment_method'] == MsPayment::METHOD_PAYPAL) { ?> selected="selected" <?php } ?>><?php echo $ms_payment_method_paypal; ?></option>
 								</optgroup>
 							</select>
 							<p class="error" id="error_commission_signup"></p>

@@ -4,6 +4,7 @@ final class MsSeller extends Model {
 	const STATUS_INACTIVE = 2;
 	const STATUS_DISABLED = 3;
 	const STATUS_DELETED = 4;
+	const STATUS_UNPAID = 5;
 		
 	const MS_SELLER_VALIDATION_NONE = 1;
 	const MS_SELLER_VALIDATION_ACTIVATION = 2;
@@ -358,6 +359,9 @@ final class MsSeller extends Model {
 			case MsSeller::STATUS_DELETED:
 				$status_text = $this->language->get('ms_status_deleted');
 				break;
+			case MsSeller::STATUS_UNPAID:
+				$status_text = $this->language->get('ms_status_signup_unpaid');
+				break;				
 		}
 		
 		return $status_text;
@@ -368,7 +372,8 @@ final class MsSeller extends Model {
 			MsSeller::STATUS_ACTIVE =>  $this->language->get('ms_status_active'),
 			MsSeller::STATUS_INACTIVE => $this->language->get('ms_status_inactive'),
 			MsSeller::STATUS_DISABLED => $this->language->get('ms_status_disabled'),
-			MsSeller::STATUS_DELETED => $this->language->get('ms_status_deleted')
+			MsSeller::STATUS_DELETED => $this->language->get('ms_status_deleted'),
+			MsSeller::STATUS_UNPAID => $this->language->get('ms_status_signup_unpaid')
 		);
 	}
 	
@@ -381,6 +386,25 @@ final class MsSeller extends Model {
 		
 		return $res->row['total'];
 	}
+	
+	public function changeStatus($seller_id, $seller_status) {
+		$sql = "UPDATE " . DB_PREFIX . "ms_seller
+				SET	seller_status =  " .  (int)$seller_status . "
+				WHERE seller_id = " . (int)$seller_id;
+		
+		$res = $this->db->query($sql);
+		/*
+		if ($product_status == MsProduct::STATUS_ACTIVE)
+			$enabled = 1;
+		else
+			$enabled = 0;
+		
+		$sql = "UPDATE " . DB_PREFIX . "product
+				SET status = " . (int)$enabled . " WHERE product_id = " . (int)$product_id;
+		
+		$res = $this->db->query($sql);
+		*/
+	}	
 }
 
 ?>

@@ -158,10 +158,36 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 				$commissions = $this->MsLoader->MsCommission->calculateCommission(array('seller_group_id' => $this->config->get('msconf_default_seller_group_id')));
 				$fee = (float)$commissions[MsCommission::RATE_SIGNUP]['flat'];
 				
+				$this->MsLoader->MsMail->sendMails($mails);
+				
 				if ($fee > 0) {
-				// 	todo
-					switch(MsCommission::PAYMENT_TYPE_BALANCE) {
-						case MsCommission::PAYMENT_TYPE_BALANCE:
+					switch($commissions[MsCommission::RATE_SIGNUP]['payment_method']) {
+						case MsPayment::METHOD_PAYPAL:
+							// initiate paypal payment
+							// set product status to unpaid
+							$this->MsLoader->MsSeller->changeStatus($this->customer->getId(), MsSeller::STATUS_UNPAID);
+							
+							// add payment details
+							$payment_id = $this->MsLoader->MsPayment->createPayment(array(
+								'seller_id' => $this->customer->getId(),
+								'payment_type' => MsPayment::TYPE_SIGNUP,
+								'payment_status' => MsPayment::STATUS_UNPAID,
+								'payment_method' => MsPayment::METHOD_PAYPAL,
+								'amount' => $fee,
+								'currency_id' => $this->currency->getId($this->config->get('config_currency')),
+								'currency_code' => $this->currency->getCode($this->config->get('config_currency')),
+								'description' => sprintf($this->language->get('ms_transaction_signup'), $this->config->get('config_name'))
+							));
+							
+							// assign payment variables
+							$json['data']['amount'] = $fee;
+							$json['data']['custom'] = $payment_id;
+		
+							return $this->response->setOutput(json_encode($json));
+							break;
+
+						case MsPayment::METHOD_BALANCE:
+						default:
 							// deduct from balance
 							$this->MsLoader->MsBalance->addBalanceEntry($this->customer->getId(),
 								array(
@@ -174,13 +200,78 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 							break;
 					}
 				}
-
-				$this->MsLoader->MsMail->sendMails($mails);
+				
 				$this->session->data['success'] = $this->language->get('ms_account_sellerinfo_saved');
 			} else {
 				// edit seller
 				$data['seller']['seller_id'] = $seller['seller_id'];
 				$this->MsLoader->MsSeller->editSeller($data['seller']);
+				
+				if ($seller['ms.seller_status'] == MsSeller::STATUS_UNPAID) {
+					$commissions = $this->MsLoader->MsCommission->calculateCommission(array('seller_group_id' => $this->config->get('msconf_default_seller_group_id')));
+					$fee = (float)$commissions[MsCommission::RATE_SIGNUP]['flat'];
+					
+					if ($fee > 0) {
+						switch($commissions[MsCommission::RATE_SIGNUP]['payment_method']) {
+							case MsPayment::METHOD_PAYPAL:
+								// initiate paypal payment
+								
+								// set product status to unpaid
+								$this->MsLoader->MsSeller->changeStatus($this->customer->getId(), MsSeller::STATUS_UNPAID);
+								
+								// check if payment exists
+								$payment = $this->MsLoader->MsPayment->getPayments(array(
+									'seller_id' => $this->customer->getId(),
+									'payment_type' => array(MsPayment::TYPE_SIGNUP),
+									'payment_status' => array(MsPayment::STATUS_UNPAID),
+									'payment_method' => array(MsPayment::METHOD_PAYPAL)
+								));
+								
+								if (!$payment) {
+									// create new payment
+									$payment_id = $this->MsLoader->MsPayment->createPayment(array(
+										'seller_id' => $this->customer->getId(),
+										'payment_type' => MsPayment::TYPE_SIGNUP,
+										'payment_status' => MsPayment::STATUS_UNPAID,
+										'payment_method' => MsPayment::METHOD_PAYPAL,
+										'amount' => $fee,
+										'currency_id' => $this->currency->getId($this->config->get('config_currency')),
+										'currency_code' => $this->currency->getCode($this->config->get('config_currency')),
+										'description' => sprintf($this->language->get('ms_transaction_signup'), $this->config->get('config_name'))
+									));
+								} else {
+									$payment_id = $payment['payment_id'];
+									
+									// edit payment
+									$this->MsLoader->MsPayment->updatePayment($payment_id, array(
+										'amount' => $fee,
+										'date_created' => 1,
+										'description' => sprintf($this->language->get('ms_transaction_signup'), $this->config->get('config_name'))
+									));									
+								}
+								// assign payment variables
+								$json['data']['amount'] = $fee;
+								$json['data']['custom'] = $payment_id;
+			
+								return $this->response->setOutput(json_encode($json));
+								break;
+	
+							case MsPayment::METHOD_BALANCE:
+							default:
+								// deduct from balance
+								$this->MsLoader->MsBalance->addBalanceEntry($this->customer->getId(),
+									array(
+										'balance_type' => MsBalance::MS_BALANCE_TYPE_SIGNUP,
+										'amount' => -$fee,
+										'description' => sprintf($this->language->get('ms_transaction_signup'), $this->config->get('config_name'))
+									)
+								);
+								
+								break;
+						}
+					}
+				}
+				
 				$this->session->data['success'] = $this->language->get('ms_account_sellerinfo_saved');
 			}
 		}
@@ -189,9 +280,12 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 	}
 
 	public function index() {
+		// paypal listing payment confirmation
+		if (isset($this->request->post['payment_status']) && strtolower($this->request->post['payment_status']) == 'completed') {
+			$this->data['success'] = $this->language->get('ms_account_sellerinfo_saved');
+		}		
+		
 		$this->document->addScript('catalog/view/javascript/account-seller-profile.js');
-		//$this->document->addScript('catalog/view/javascript/jquery.uploadify.js');
-		//$this->document->addScript('http://bp.yahooapis.com/2.4.21/browserplus-min.js');
 		$this->document->addScript('catalog/view/javascript/plupload/plupload.full.js');
 		$this->document->addScript('catalog/view/javascript/plupload/jquery.plupload.queue/jquery.plupload.queue.js');
 		
@@ -204,6 +298,9 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 		$this->data['statusclass'] = 'attention';
 		if ($seller) {
 			switch ($seller['ms.seller_status']) {
+				case MsSeller::STATUS_UNPAID:
+					$this->data['statusclass'] = 'attention';
+					break;				
 				case MsSeller::STATUS_ACTIVE:
 					$this->data['statusclass'] = 'success';
 					break;
@@ -227,31 +324,9 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 			}
 			
 			$this->data['ms_account_sellerinfo_terms_note'] = '';
-			/*			
-			switch ($status_data['seller_status']['id']) {
-				case MsSeller::STATUS_DELETED:
-					 //$this->data['statustext'] .= $this->language->get('ms_account_status_activation');
-					break;
-				case MsSeller::STATUS_INACTIVE:
-					//$this->data['statustext'] .=  $this->language->get('ms_account_status') . $this->language->get('ms_account_status_approval');
-					break;
-				case MsSeller::STATUS_DISABLED:
-					//$this->data['statustext'] .= $this->language->get('ms_account_status_disabled');
-					break;					
-				case MsSeller::STATUS_ACTIVE:
-				default:
-					$this->data['statustext'] = '';
-					//$this->data['statustext'] = $this->language->get('ms_account_status') . $this->language->get('ms_account_status_active');
-					//$this->data['statustext'] .= '<br />' . $this->language->get('ms_account_status_fullaccess');
-					break;
-			
-			}
-			*/
 		} else {
 			$this->data['seller'] = FALSE;
-			$this->data['group_commissions'] = $this->MsLoader->MsCommission->calculateCommission(array('seller_group_id' => $this->config->get('msconf_default_seller_group_id')));
 			$this->data['statustext'] = $this->language->get('ms_account_status_please_fill_in');
-			$this->data['ms_fee_payment_type'] = $this->language->get('ms_account_sellerinfo_fee_balance');
 			
 			if ($this->config->get('msconf_seller_terms_page')) {
 				$this->load->model('catalog/information');
@@ -265,6 +340,36 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 				}
 			} else {
 				$this->data['ms_account_sellerinfo_terms_note'] = '';
+			}
+		}
+		
+		if (!$seller || $seller['ms.seller_status'] == MsSeller::STATUS_UNPAID) {
+			$this->data['group_commissions'] = $this->MsLoader->MsCommission->calculateCommission(array('seller_group_id' => $this->config->get('msconf_default_seller_group_id')));
+			switch($this->data['group_commissions'][MsCommission::RATE_SIGNUP]['payment_method']) {
+				case MsPayment::METHOD_PAYPAL:
+					$this->data['ms_commission_payment_type'] = $this->language->get('ms_account_sellerinfo_fee_paypal');
+					$this->data['payment_data'] = array(
+						'sandbox' => $this->config->get('msconf_paypal_sandbox'),
+						'action' => $this->config->get('msconf_paypal_sandbox') ? "https://www.sandbox.paypal.com/cgi-bin/webscr" : "https://www.paypal.com/cgi-bin/webscr",
+						'business' => $this->config->get('msconf_paypal_address'),
+						'item_name' => sprintf($this->language->get('ms_account_sellerinfo_signup_itemname'), $this->config->get('config_name')),
+						'item_number' => isset($this->request->get['seller_id']) ? (int)$this->request->get['seller_id'] : '',
+						'amount' => '',
+						'currency_code' => $this->config->get('config_currency'),
+						'return' => $this->url->link('seller/account-profile'),
+						'cancel_return' => $this->url->link('account/account'),
+						'notify_url' => $this->url->link('payment/multimerch-paypal/signupIPN'),
+						'custom' => 'custom'
+					);
+					
+					list($this->template, $this->children) = $this->MsLoader->MsHelper->loadTemplate('payment-paypal');
+					$this->data['payment_form'] = $this->render();
+					break;
+					
+				case MsPayment::METHOD_BALANCE:
+				default:
+					$this->data['ms_commission_payment_type'] = $this->language->get('ms_account_sellerinfo_fee_balance');
+					break;
 			}
 		}
 

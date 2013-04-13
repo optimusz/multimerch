@@ -559,7 +559,8 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 										'payment_method' => MsPayment::METHOD_PAYPAL,
 										'amount' => $fee,
 										'currency_id' => $this->currency->getId($this->config->get('config_currency')),
-										'currency_code' => $this->currency->getCode($this->config->get('config_currency'))
+										'currency_code' => $this->currency->getCode($this->config->get('config_currency')),
+										'description' => sprintf($this->language->get('ms_transaction_listing'), $data['languages'][$default]['product_name'], $this->currency->format(-$fee, $this->config->get('config_currency')))
 									));
 								} else {
 									$payment_id = $payment['payment_id'];
@@ -624,7 +625,8 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 								'payment_method' => MsPayment::METHOD_PAYPAL,
 								'amount' => $fee,
 								'currency_id' => $this->currency->getId($this->config->get('config_currency')),
-								'currency_code' => $this->currency->getCode($this->config->get('config_currency'))
+								'currency_code' => $this->currency->getCode($this->config->get('config_currency')),
+								'description' => sprintf($this->language->get('ms_transaction_listing'), $data['languages'][$default]['product_name'], $this->currency->format(-$fee, $this->config->get('config_currency')))								
 							));
 							
 							// assign payment variables

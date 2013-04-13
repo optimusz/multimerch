@@ -105,6 +105,29 @@ class ControllerPaymentMultiMerchPayPal extends Controller {
 		}
 	}
 	
+	private function _validateResponse() {
+		$request = 'cmd=_notify-validate';
+	
+		foreach ($this->request->post as $key => $value) {
+			$request .= '&' . $key . '=' . urlencode(html_entity_decode($value, ENT_QUOTES, 'UTF-8'));
+		}
+		
+		if (!$this->config->get('msconf_paypal_sandbox')) {
+			$curl = curl_init('https://www.paypal.com/cgi-bin/webscr');
+		} else {
+			$curl = curl_init('https://www.sandbox.paypal.com/cgi-bin/webscr');
+		}
+
+		curl_setopt($curl, CURLOPT_POST, true);
+		curl_setopt($curl, CURLOPT_POSTFIELDS, $request);
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($curl, CURLOPT_HEADER, false);
+		curl_setopt($curl, CURLOPT_TIMEOUT, 30);
+		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+		
+		return curl_exec($curl);		
+	}
+	
 	public function listingIPN() {
 		if (isset($this->request->post['custom'])) {
 			$payment_id = (int)$this->request->post['custom'];
@@ -125,26 +148,7 @@ class ControllerPaymentMultiMerchPayPal extends Controller {
 		if ($product_id <= 0)
 			return $this->log->write("MMERCH PP LISTING PAYMENT #$payment_id: Invalid or no product id for this payment");
 		
-		$request = 'cmd=_notify-validate';
-	
-		foreach ($this->request->post as $key => $value) {
-			$request .= '&' . $key . '=' . urlencode(html_entity_decode($value, ENT_QUOTES, 'UTF-8'));
-		}
-		
-		if (!$this->config->get('msconf_paypal_sandbox')) {
-			$curl = curl_init('https://www.paypal.com/cgi-bin/webscr');
-		} else {
-			$curl = curl_init('https://www.sandbox.paypal.com/cgi-bin/webscr');
-		}
-
-		curl_setopt($curl, CURLOPT_POST, true);
-		curl_setopt($curl, CURLOPT_POSTFIELDS, $request);
-		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($curl, CURLOPT_HEADER, false);
-		curl_setopt($curl, CURLOPT_TIMEOUT, 30);
-		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-		
-		$response = curl_exec($curl);
+		$response = $this->_validateResponse();
 		
 		if (!$response)
 			return $this->log->write("MMERCH PP LISTING PAYMENT #$payment_id: CURL failed ' . curl_error($curl) . '(' . curl_errno($curl) . ')");
@@ -174,99 +178,54 @@ class ControllerPaymentMultiMerchPayPal extends Controller {
 		}
 	}
 	
-	public function callback() {
+	public function signupIPN() {
 		if (isset($this->request->post['custom'])) {
-			$order_id = $this->request->post['custom'];
+			$payment_id = (int)$this->request->post['custom'];
 		} else {
-			$order_id = 0;
+			$payment_id = 0;
 		}
 		
-		$this->load->model('checkout/order');
-				
-		$order_info = $this->model_checkout_order->getOrder($order_id);
+		if ($payment_id <= 0)
+			return $this->log->write("MMERCH PP SIGNUP PAYMENT #$payment_id: Invalid or no payment id received");
 		
-		if ($order_info) {
-			$request = 'cmd=_notify-validate';
+		$payment = $this->MsLoader->MsPayment->getPayments(array('payment_id' => $payment_id));
 		
-			foreach ($this->request->post as $key => $value) {
-				$request .= '&' . $key . '=' . urlencode(html_entity_decode($value, ENT_QUOTES, 'UTF-8'));
-			}
-			
-			if (!$this->config->get('pp_standard_test')) {
-				$curl = curl_init('https://www.paypal.com/cgi-bin/webscr');
-			} else {
-				$curl = curl_init('https://www.sandbox.paypal.com/cgi-bin/webscr');
-			}
+		if (!$payment)
+			return $this->log->write("MMERCH PP SIGNUP PAYMENT #$payment_id: Invalid payment id received");
+		
+		$seller_id = $payment['seller_id'];
 
-			curl_setopt($curl, CURLOPT_POST, true);
-			curl_setopt($curl, CURLOPT_POSTFIELDS, $request);
-			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($curl, CURLOPT_HEADER, false);
-			curl_setopt($curl, CURLOPT_TIMEOUT, 30);
-			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+		if ($seller_id <= 0)
+			return $this->log->write("MMERCH PP SIGNUP PAYMENT #$payment_id: Invalid or no seller id for this payment");
+		
+		$response = $this->_validateResponse();
+		
+		if (!$response)
+			return $this->log->write("MMERCH PP SIGNUP PAYMENT #$payment_id: CURL failed ' . curl_error($curl) . '(' . curl_errno($curl) . ')");
+		
+		if ($response == 'INVALID')
+			return $this->log->write("MMERCH PP SIGNUP PAYMENT #$payment_id: IPN response INVALID");
+		
+		if ($response == 'VERIFIED' && isset($this->request->post['payment_status'])) {
+			switch($this->request->post['payment_status']) {
+				case 'Completed':
+					// check receiver
+					if ((strtolower($this->request->post['receiver_email']) != strtolower($this->config->get('msconf_paypal_address'))))
+						return $this->log->write("MMERCH PP SIGNUP PAYMENT #$payment_id: IPN receiver email mismatch");
 					
-			$response = curl_exec($curl);
-			
-			if (!$response) {
-				$this->log->write('PP_STANDARD :: CURL failed ' . curl_error($curl) . '(' . curl_errno($curl) . ')');
-			}
+					// check amount
+					if ((float)$this->request->post['mc_gross'] != $this->currency->format($payment['amount'], $payment['currency_code'], 1, false))
+						return $this->log->write("MMERCH PP SIGNUP PAYMENT #$payment_id: IPN amount mismatch");
 					
-			if ($this->config->get('pp_standard_debug')) {
-				$this->log->write('PP_STANDARD :: IPN REQUEST: ' . $request);
-				$this->log->write('PP_STANDARD :: IPN RESPONSE: ' . $response);
-			}
-						
-			if ((strcmp($response, 'VERIFIED') == 0 || strcmp($response, 'UNVERIFIED') == 0) && isset($this->request->post['payment_status'])) {
-				$order_status_id = $this->config->get('config_order_status_id');
+					// change payment and product status
+					$this->MsLoader->MsPayment->changeStatus($payment_id, MsPayment::STATUS_PAID);
+					$this->MsLoader->MsSeller->changeStatus($seller_id, MsSeller::STATUS_ACTIVE);
+					break;
 				
-				switch($this->request->post['payment_status']) {
-					case 'Canceled_Reversal':
-						$order_status_id = $this->config->get('pp_standard_canceled_reversal_status_id');
-						break;
-					case 'Completed':
-						if ((strtolower($this->request->post['receiver_email']) == strtolower($this->config->get('pp_standard_email'))) && ((float)$this->request->post['mc_gross'] == $this->currency->format($order_info['total'], $order_info['currency_code'], $order_info['currency_value'], false))) {
-							$order_status_id = $this->config->get('pp_standard_completed_status_id');
-						} else {
-							$this->log->write('PP_STANDARD :: RECEIVER EMAIL MISMATCH! ' . strtolower($this->request->post['receiver_email']));
-						}
-						break;
-					case 'Denied':
-						$order_status_id = $this->config->get('pp_standard_denied_status_id');
-						break;
-					case 'Expired':
-						$order_status_id = $this->config->get('pp_standard_expired_status_id');
-						break;
-					case 'Failed':
-						$order_status_id = $this->config->get('pp_standard_failed_status_id');
-						break;
-					case 'Pending':
-						$order_status_id = $this->config->get('pp_standard_pending_status_id');
-						break;
-					case 'Processed':
-						$order_status_id = $this->config->get('pp_standard_processed_status_id');
-						break;
-					case 'Refunded':
-						$order_status_id = $this->config->get('pp_standard_refunded_status_id');
-						break;
-					case 'Reversed':
-						$order_status_id = $this->config->get('pp_standard_reversed_status_id');
-						break;	 
-					case 'Voided':
-						$order_status_id = $this->config->get('pp_standard_voided_status_id');
-						break;								
-				}
-				
-				if (!$order_info['order_status_id']) {
-					$this->model_checkout_order->confirm($order_id, $order_status_id);
-				} else {
-					$this->model_checkout_order->update($order_id, $order_status_id);
-				}
-			} else {
-				$this->model_checkout_order->confirm($order_id, $this->config->get('config_order_status_id'));
+				default:
+					break;
 			}
-			
-			curl_close($curl);
-		}	
+		}
 	}
 }
 ?>

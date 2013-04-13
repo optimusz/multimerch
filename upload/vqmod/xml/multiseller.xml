@@ -120,7 +120,7 @@
 									<?php echo $ms_account_sellerinfo; ?>
 								</a>
 							</li>	
-							<?php if ($ms_seller_created) { ?>
+							<?php if ($ms_seller_created && $this->MsLoader->MsSeller->getStatus($this->customer->getId()) == MsSeller::STATUS_ACTIVE) { ?>
 									<li>
 										<a href="<?php echo $ms_link_newproduct; ?>">
 											<?php if($this->config->get('msconf_graphical_sellermenu')) { ?>
@@ -198,7 +198,7 @@
 				<br />
 				<li style="list-style-type: none"><b><?php echo $ms_account_seller_account; ?></b></li>
 				<li><a href="<?php echo $ms_link_sellerinfo; ?>"><?php echo $ms_account_sellerinfo; ?></a></li>
-				<?php if ($ms_seller_created) { ?>
+				<?php if ($ms_seller_created && $this->MsLoader->MsSeller->getStatus($this->customer->getId()) == MsSeller::STATUS_ACTIVE) { ?>
 						<li><a href="<?php echo $ms_link_newproduct; ?>"><?php echo $ms_account_newproduct; ?></a></li>
 						<li><a href="<?php echo $ms_link_products; ?>"><?php echo $ms_account_products; ?></a></li>
 						<li><a href="<?php echo $ms_link_orders; ?>"><?php echo $ms_account_orders; ?></a></li>

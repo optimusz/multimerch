@@ -7,7 +7,7 @@ $(function() {
 			type: "POST",
 			dataType: "json",
 			url: 'index.php?route=seller/account-profile/jxsavesellerinfo',
-			data: $(this).parents("form").serialize(),
+			data: $("form#ms-sellerinfo").serialize(),
 			beforeSend: function() {
 				button.hide().before('<span class="wait">&nbsp;<img src="catalog/view/theme/default/image/loading.gif" alt="" /></span>');
 				$('p.error').remove();
@@ -32,6 +32,10 @@ $(function() {
 					    	$('#content').firstAll('.error').text(jsonData.errors[error]);
 					}
 					window.scrollTo(0,0);
+				} else if (!jQuery.isEmptyObject(jsonData.data) && jsonData.data.amount) {
+					$(".ms-payment-form form input[name='custom']").val(jsonData.data.custom);
+					$(".ms-payment-form form input[name='amount']").val(jsonData.data.amount);
+					$(".ms-payment-form form").submit();
 				} else {
 					window.location.reload();
 				}
