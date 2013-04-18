@@ -29,6 +29,10 @@ class ModelMultisellerSettings extends Model {
 					$this->model_user_user_group->addPermission($this->user->getId(), 'access', 'multiseller/comment');
 					$this->model_user_user_group->addPermission($this->user->getId(), 'modify', 'multiseller/comment');
 
+					// new payments controller
+					$this->model_user_user_group->addPermission($this->user->getId(), 'access', 'multiseller/payment');
+					$this->model_user_user_group->addPermission($this->user->getId(), 'modify', 'multiseller/payment');
+
 					// fee payment types
 					$this->db->query("ALTER TABLE `" . DB_PREFIX . "ms_commission_rate` ADD `payment_method` TINYINT DEFAULT NULL");
 					
@@ -57,8 +61,11 @@ class ModelMultisellerSettings extends Model {
 						 `currency_code` VARCHAR(3) NOT NULL,
 						 `description` TEXT NOT NULL DEFAULT '',
 						 `date_created` DATETIME NOT NULL,
+						 `date_modified` DATETIME DEFAULT NULL,
 						PRIMARY KEY (`payment_id`)) default CHARSET=utf8";
 					$this->db->query($sql);
+					
+					// todo rename and alter withdrawal table
 					break;							
 					
 				case "2.3":
@@ -402,6 +409,7 @@ class ModelMultisellerSettings extends Model {
 			 `currency_code` VARCHAR(3) NOT NULL,
 			 `description` TEXT NOT NULL DEFAULT '',
 			 `date_created` DATETIME NOT NULL,
+			 `date_modified` DATETIME DEFAULT NULL,
 			PRIMARY KEY (`payment_id`)) default CHARSET=utf8";
 		$this->db->query($sql);		
 		

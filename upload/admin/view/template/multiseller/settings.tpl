@@ -9,7 +9,7 @@
 	<div class="error" id="error"></div>
 	<div class="box">
 		<div class="heading">
-			<h1><img src="view/image/module.png"/><?php echo $heading_title; ?></h1>
+			<h1><img src="view/image/multiseller/ms-gear.png"/><?php echo $heading_title; ?></h1>
 			<div class="buttons">
 				<?php if (isset($updates)) { ?>
 				<?php foreach ($updates as $v => $link) { ?>

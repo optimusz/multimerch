@@ -5,8 +5,10 @@ class MsPayment extends Model {
 	
 	const TYPE_SIGNUP = 1;
 	const TYPE_LISTING = 2;
-	const TYPE_RECURRING = 3;
-	
+	const TYPE_PAYOUT = 3;
+	const TYPE_PAYOUT_REQUEST = 4;
+	const TYPE_RECURRING = 5;
+		
 	const STATUS_UNPAID = 1;
 	const STATUS_PAID = 2;
 	
@@ -41,7 +43,8 @@ class MsPayment extends Model {
 					. (isset($data['currency_id']) ? ", currency_id = " . (int)$data['currency_id'] : '')
 					. (isset($data['currency_code']) ? ", currency_code = " . $this->db->escape($data['currency_code']) : '')
 					. (isset($data['description']) ? ", description = '" . $this->db->escape($data['description']) . "'" : '')
-					. (isset($data['date_created']) ? ", date_created = NOW()" : '') . "
+					. (isset($data['date_created']) ? ", date_created = NOW()" : '')
+					. (isset($data['date_paid']) && !is_null($data['date_paid']) ? ", date_paid = '" . $this->db->escape($data['date_paid']) . "'" : ", date_paid = NULL") . "
 				WHERE payment_id = " . (int)$payment_id;
 
 		return $this->db->query($sql);
@@ -56,9 +59,11 @@ class MsPayment extends Model {
 						amount,
 						currency_code,
 						mpay.date_created as 'mpay.date_created',
+						mpay.date_paid as 'mpay.date_paid',
 						mpay.description as 'mpay.description',
 						ms.seller_id as 'seller_id',
 						ms.nickname,
+						ms.paypal,
 						product_id
 				FROM `" . DB_PREFIX . "ms_payment` mpay
 				INNER JOIN `" . DB_PREFIX . "ms_seller` ms
@@ -95,15 +100,24 @@ class MsPayment extends Model {
 		return $res->row['total'];		
 	}
 	
-	public function changeStatus($payment_id, $payment_status) {
-		$sql = "UPDATE `" . DB_PREFIX . "ms_payment`
-				SET	payment_status =  " .  (int)$payment_status . "
+	public function getTotalAmount($data) {
+		$sql = "SELECT SUM(amount) as 'total'
+				FROM `" . DB_PREFIX . "ms_payment`
+				WHERE 1 = 1 "
+				. (isset($data['seller_id']) ? " AND seller_id =  " .  (int)$data['seller_id'] : '')
+				. (isset($data['payment_type']) ? " AND payment_type IN  (" .  $this->db->escape(implode(',', $data['payment_type'])) . ")" : '')
+				. (isset($data['payment_status']) ? " AND payment_status IN  (" .  $this->db->escape(implode(',', $data['payment_status'])) . ")" : '');
+				
+		$res = $this->db->query($sql);
+
+		return $res->row['total'];		
+	}	
+	
+	public function deletePayment($payment_id) {
+		$sql = "DELETE FROM `" . DB_PREFIX . "ms_payment`
 				WHERE payment_id = " . (int)$payment_id;
 		
 		$this->db->query($sql);
-	}
-	
-	public function deletePayment($data) {
 	}
 }
 ?>

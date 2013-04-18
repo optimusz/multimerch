@@ -31,12 +31,16 @@ class ControllerSellerAccountWithdrawal extends ControllerSellerAccount {
 		}
 		
 		if (empty($json['errors'])) {
-			$this->MsLoader->MsWithdrawal->createWithdrawal($this->customer->getId(),
-				array(
+			$this->MsLoader->MsPayment->createPayment(array(
+					'seller_id' => $this->customer->getId(),
+					'payment_type' => MsPayment::TYPE_PAYOUT_REQUEST,
+					'payment_status' => MsPayment::STATUS_UNPAID,
+					'payment_method' => MsPayment::METHOD_PAYPAL,
+					'payment_data' => $seller['ms.paypal'],
 					'amount' => $data['withdraw_amount'],
 					'currency_id' => $this->currency->getId($this->config->get('config_currency')),
 					'currency_code' => $this->currency->getCode($this->config->get('config_currency')),
-					'currency_value' => "1",
+					'description' => sprintf($this->language->get('ms_account_withdraw_description'), $this->language->get('ms_account_withdraw_method_paypal'), $seller['ms.paypal'], date($this->language->get('date_format_short'))),
 				)
 			);
 			

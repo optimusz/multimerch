@@ -7,7 +7,7 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		"multiseller/base",
 		"multiseller/product",
 		"multiseller/attribute",
-		"multiseller/request-withdrawal",
+		"multiseller/payment",
 		"multiseller/seller",
 		"multiseller/transaction",
 		"multiseller/seller-group",

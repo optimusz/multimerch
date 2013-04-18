@@ -147,6 +147,50 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 		$this->response->setOutput(json_encode($json));
 	}	
 	
+	public function jxPayBalance() {
+		$json = array();
+		$seller_id = isset($this->request->get['seller_id']) ? $this->request->get['seller_id'] : 0;
+		$seller = $this->MsLoader->MsSeller->getSeller($seller_id);
+		
+		if (!$seller) return;
+		
+		$amount = $this->getSellerBalance($seller_id) - $this->getReservedSellerFunds($seller_id);
+		
+		if (!$amount) return;
+
+		//create payment
+		$payment_id = $this->MsLoader->MsPayment->createPayment(array(
+			'seller_id' => $seller_id,
+			'payment_type' => MsPayment::TYPE_PAYOUT,
+			'payment_status' => MsPayment::STATUS_UNPAID,
+			'payment_method' => MsPayment::METHOD_PAYPAL,
+			'amount' => $amount,
+			'currency_id' => $this->currency->getId($this->config->get('config_currency')),
+			'currency_code' => $this->currency->getCode($this->config->get('config_currency')),
+			'description' => sprintf($this->language->get('ms_payment_royalty_payout'), $seller['name'], $this->config->get('config_name'))
+		));
+		
+		// render paypal form
+		$this->data['payment_data'] = array(
+			'sandbox' => $this->config->get('msconf_paypal_sandbox'),
+			'action' => $this->config->get('msconf_paypal_sandbox') ? "https://www.sandbox.paypal.com/cgi-bin/webscr" : "https://www.paypal.com/cgi-bin/webscr",
+			'business' => $this->config->get('msconf_paypal_address'),
+			'item_name' => sprintf($this->language->get('ms_payment_royalty_payout'), $seller['name'], $this->config->get('config_name')),
+			'amount' => $amount,
+			'currency_code' => $this->config->get('config_currency'),
+			'return' => $this->url->link('multiseller/seller', 'token=' . $this->session->data['token']),
+			'cancel_return' => $this->url->link('multiseller/seller', 'token=' . $this->session->data['token']),
+			'notify_url' => HTTP_CATALOG . 'index.php?route=payment/multimerch-paypal/paymentIPN',
+			'custom' => $payment_id
+		);
+		
+		list($this->template) = $this->MsLoader->MsHelper->admLoadTemplate('payment/multimerch-paypal');
+		
+		$json['form'] = $this->render();
+		$json['success'] = 1;
+		$this->response->setOutput(json_encode($json));
+	}
+	
 	public function index() {
 		$this->validate(__FUNCTION__);
 		
@@ -195,11 +239,6 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 			$result['earnings'] = $this->currency->format($this->MsLoader->MsSeller->getTotalEarnings($result['seller_id']), $this->config->get('config_currency'));
 			$result['total_sales'] = $this->MsLoader->MsSeller->getSalesForSeller($result['seller_id']);
 			$result['status'] = $this->MsLoader->MsSeller->getStatusText($result['ms.seller_status']);
-			$result['actions'][] = array(
-				'text' => $this->language->get('text_edit'),
-				'href' => $this->url->link('multiseller/seller/update', 'token=' . $this->session->data['token'] . '&seller_id=' . $result['seller_id'], 'SSL')
-			);
-			
 			$result['customer_link'] = $this->url->link('sale/customer/update', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['seller_id'], 'SSL');
 		}
 			

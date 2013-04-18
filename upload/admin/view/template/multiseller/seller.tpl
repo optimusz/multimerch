@@ -13,7 +13,7 @@
   <?php } ?>
   <div class="box">
     <div class="heading">
-      <h1><img src="view/image/customer.png" alt="" /> <?php echo $ms_catalog_sellers_heading; ?></h1>
+      <h1><img src="view/image/multiseller/ms-profile.png" alt="" /> <?php echo $ms_catalog_sellers_heading; ?></h1>
 		<div class="buttons">
 			<a onclick="location = '<?php echo $link_create_seller; ?>'" class="button"><?php echo $ms_catalog_sellers_create; ?></a>
 		</div>
@@ -33,7 +33,7 @@
 				<td><?php echo $ms_catalog_sellers_current_balance; ?></td>												
 				<td><?php echo $ms_catalog_sellers_status; ?></td>
 				<td><?php echo $ms_catalog_sellers_date_created; ?></td>
-				<td><?php echo $ms_action; ?></td>
+				<td style="width: 120px"><?php echo $ms_action; ?></td>
             </tr>
           </thead>
           <tbody>
@@ -45,7 +45,10 @@
                 <input type="checkbox" name="selected[]" value="<?php echo $seller['seller_id']; ?>" />
               </td>
               -->
-              <td><a href="<?php echo $seller['customer_link']; ?>"><?php echo $seller['c.name'] . ' (' . $seller['ms.nickname'] . ')'; ?></a></td>
+              <td>
+              	<input type="hidden" value="<?php echo $seller['seller_id']; ?>" />
+              	<a href="<?php echo $seller['customer_link']; ?>"><?php echo $seller['c.name'] . ' (' . $seller['ms.nickname'] . ')'; ?></a>
+              </td>
               <td><?php echo $seller['c.email']; ?></td>
               <td><?php echo $seller['total_products']; ?></td>
               <td><?php echo $seller['total_sales']; ?></td>
@@ -53,9 +56,14 @@
               <td><?php echo $seller['current_balance']; ?></td>
               <td><?php echo $seller['status']; ?></td>
               <td><?php echo $seller['ms.date_created']; ?></td>
-              <td class="left"><?php foreach ($seller['actions'] as $action) { ?>
-                [ <a href="<?php echo $action['href']; ?>"><?php echo $action['text']; ?></a> ]
-                <?php } ?></td>                            
+              <td class="right">
+                <?php if ($this->MsLoader->MsBalance->getSellerBalance($seller['seller_id']) - $this->MsLoader->MsBalance->getReservedSellerFunds($seller['seller_id']) > 0) { ?>
+                <a class="ms-button ms-button-paypal" title="<?php echo $ms_catalog_sellers_balance_paypal; ?>"></a>
+                <?php } ?>
+
+                <a class="ms-button ms-button-edit" href="<?php echo $this->url->link('multiseller/seller/update', 'token=' . $this->session->data['token'] . '&seller_id=' . $seller['seller_id'], 'SSL'); ?>" title="<?php echo $text_edit; ?>"></a>
+                <a class="ms-button ms-button-delete" href="<?php echo $this->url->link('multiseller/seller/update', 'token=' . $this->session->data['token'] . '&seller_id=' . $seller['seller_id'], 'SSL'); ?>" title="<?php echo $text_edit; ?>"></a>
+              </td>
             </tr>
             <?php } ?>
             <?php } else { ?>
@@ -73,6 +81,24 @@
 <script type="text/javascript"><!--
 $(document).ready(function() {
 	$('#date').datepicker({dateFormat: 'yy-mm-dd'});
+	
+	$(".ms-button-paypal").click(function() {
+		var button = $(this);
+		var seller_id = button.parents('tr').children('td:first').find('input:hidden').val();
+		$(this).hide().before('<img src="view/image/loading.gif" alt="" />');
+	    $.ajax({
+			type: "POST",
+			dataType: "json",
+			url: 'index.php?route=multiseller/seller/jxPayBalance&seller_id='+ seller_id +'&token=<?php echo $token; ?>',
+			success: function(jsonData) {
+				if (jsonData.success) {
+					$("<div style='display:none'>" + jsonData.form + "</div>").appendTo('body').children("form").submit();
+				} else {
+					button.show().prev().remove();
+				}
+			}
+		});
+	});	
 });
 //--></script>
 <?php echo $footer; ?> 

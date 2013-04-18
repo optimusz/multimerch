@@ -55,6 +55,7 @@ $_['ms_error_withdraw_response'] = 'Error: no response';
 $_['ms_error_withdraw_status'] = 'Error: unsuccessful transaction';
 $_['ms_success'] = 'Success';
 $_['ms_success_transactions'] = 'Transactions successfully completed';
+$_['ms_success_payment_deleted'] = 'Payment deleted';
 $_['ms_success_withdrawals_marked'] = 'Withdrawal requests marked as paid';
 $_['ms_transaction_withdrawal']      = 'Withdrawal: %s';
 
@@ -74,6 +75,7 @@ $_['ms_image'] = 'Image';
 $_['ms_processed_by'] = 'Processed by';
 $_['ms_date_processed'] = 'Date processed';
 $_['ms_date_modified'] = 'Date modified';
+$_['ms_date_paid'] = 'Date paid';
 $_['ms_date'] = 'Date';
 $_['ms_description'] = 'Description';
 $_['ms_commission'] = 'Commission';
@@ -93,19 +95,17 @@ $_['ms_edit'] = 'Edit';
 $_['ms_delete'] = 'Delete';
 $_['ms_change_status'] = 'Change status';
 
-$_['ms_button_pay'] = 'Pay';
-$_['ms_button_mark_paid'] = 'Mark as paid';
-
+$_['ms_button_pay_masspay'] = 'Pay via MassPay';
 
 // Menu
-$_['ms_menu_multiseller'] = 'Multiseller';
+$_['ms_menu_multiseller'] = 'MultiMerch';
 $_['ms_menu_dashboard'] = 'Dashboard';
 $_['ms_menu_sellers'] = 'Sellers';
 $_['ms_menu_seller_groups'] = 'Seller groups';
 $_['ms_menu_attributes'] = 'Attributes';
 $_['ms_menu_products'] = 'Products';
 $_['ms_menu_transactions'] = 'Transactions';
-$_['ms_menu_requests'] = 'Withdrawals';
+$_['ms_menu_payment'] = 'Payments';
 $_['ms_menu_settings'] = 'Settings';
 $_['ms_menu_comments'] = 'Comments';
 $_['ms_menu_reports'] = 'Reports';
@@ -131,6 +131,9 @@ $_['ms_catalog_sellers_date_created'] = 'Date created';
 $_['ms_catalog_sellers_status_tobeactivated'] = 'Waiting for activation';
 $_['ms_catalog_sellers_status_tobeapproved'] = 'Waiting for approval';
 $_['ms_catalog_sellers_status_active'] = 'Active';
+$_['ms_catalog_sellers_balance_paypal'] = 'Balance payout via PayPal';
+
+
 
 // Settings
 
@@ -367,17 +370,31 @@ $_['ms_error_seller_group_default'] = 'Error: Default seller group can not be de
 $_['ms_success_seller_group_created'] = 'Seller group created';
 $_['ms_success_seller_group_updated'] = 'Seller group updated';
 
-// Finances - Comments
+// Comments
 $_['ms_comments_heading'] = 'Comments';
 $_['ms_comments_breadcrumbs'] = 'Comments';
 $_['ms_comments_comment'] = 'Comment';
 $_['ms_success_comments_deleted'] = 'Comments deleted';
 
-// Finances - Withdrawals
-$_['ms_finances_withdrawals_heading'] = 'Withdrawals';
-$_['ms_finances_withdrawals_breadcrumbs'] = 'Withdrawals';
-$_['ms_withdrawal_pending'] = 'Total pending';
-$_['ms_withdrawal_paid'] = 'Total paid out';
+// Payments
+$_['ms_payment_heading'] = 'Payments';
+$_['ms_payment_breadcrumbs'] = 'Payments';
+$_['ms_payment_payout_requests'] = 'Payout requests';
+$_['ms_payment_payouts'] = 'Manual payouts';
+$_['ms_payment_pending'] = 'Pending';
+$_['ms_payment_paid'] = 'Paid';
+$_['ms_payment_payout_paypal'] = 'Pay out via PayPal';
+$_['ms_payment_mark'] = 'Mark as paid';
+$_['ms_payment_delete'] = 'Delete payment record';
+
+$_['ms_payment_type_' . MsPayment::TYPE_SIGNUP] = 'Signup fee';
+$_['ms_payment_type_' . MsPayment::TYPE_LISTING] = 'Lising fee';
+$_['ms_payment_type_' . MsPayment::TYPE_PAYOUT] = 'Manual payout';
+$_['ms_payment_type_' . MsPayment::TYPE_PAYOUT_REQUEST] = 'Payout request';
+$_['ms_payment_type_' . MsPayment::TYPE_RECURRING] = 'Recurring payment';
+
+$_['ms_payment_status_' . MsPayment::STATUS_UNPAID] = 'Unpaid';
+$_['ms_payment_status_' . MsPayment::STATUS_PAID] = 'Paid';
 
 // Finances - Transactions
 $_['ms_transactions_heading'] = 'Transactions';
@@ -470,4 +487,6 @@ $_['ms_payment_method'] = 'Payment method';
 $_['ms_payment_method_balance'] = 'Seller balance';
 $_['ms_payment_method_paypal'] = 'PayPal';
 $_['ms_payment_method_inherit'] = 'Inherit';
+
+$_['ms_payment_royalty_payout'] = 'Royalty payout to %s at %s';
 ?>

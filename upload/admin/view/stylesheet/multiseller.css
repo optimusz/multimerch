@@ -30,9 +30,39 @@ table.list td.comment {
 .ms-button-small {
 	width: 16px;
 	height: 16px;
-	
 }
 
 .ms-button-delete {
 	background-image: url(../image/multiseller/ms-cross.png);
+}
+
+.ms-button-edit {
+	background-image: url(../image/multiseller/ms-pencil.png);
+}
+
+.ms-button-paypal {
+	background-image: url(../image/multiseller/ms-paypal.png);
+}
+
+.ms-button-mark {
+	background-image: url(../image/multiseller/ms-tick.png);
+}
+
+.ms-loading {
+	background: url(../image/loading.gif) no-repeat center;
+}
+
+.ms-button-apply {
+	background-image: url(../image/success.png);
+	display: inline-block;
+	cursor: pointer;
+	vertical-align: middle;	
+}
+
+.ms-payout table.list tbody tr {
+	height: 50px;
+}
+
+h1 img {
+	width: 22px;
 }

@@ -17,7 +17,7 @@
 	
 	<div class="box">
 		<div class="heading">
-			<h1><img src="view/image/customer.png" alt="" /> <?php echo $ms_comments_heading; ?></h1>
+			<h1><img src="view/image/multiseller/ms-bubble.png" alt="" /> <?php echo $ms_comments_heading; ?></h1>
 		</div>
 		
 		<div class="content">

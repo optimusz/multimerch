@@ -105,7 +105,6 @@ class MsBalance extends Model {
 
 	public function getAvailableSellerFunds($seller_id) {
 		return max(0, $this->getSellerBalance($seller_id) - $this->getReservedSellerFunds($seller_id) - $this->getWaitingSellerFunds($seller_id, $this->config->get('msconf_withdrawal_waiting_period')));
-	
 	}
 
 	public function getReservedSellerFunds($seller_id) {

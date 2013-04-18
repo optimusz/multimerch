@@ -393,17 +393,6 @@ final class MsSeller extends Model {
 				WHERE seller_id = " . (int)$seller_id;
 		
 		$res = $this->db->query($sql);
-		/*
-		if ($product_status == MsProduct::STATUS_ACTIVE)
-			$enabled = 1;
-		else
-			$enabled = 0;
-		
-		$sql = "UPDATE " . DB_PREFIX . "product
-				SET status = " . (int)$enabled . " WHERE product_id = " . (int)$product_id;
-		
-		$res = $this->db->query($sql);
-		*/
 	}	
 }
 

@@ -286,7 +286,7 @@ $(function() {
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
 				$('.warning').text(textStatus).show();
-			},			
+			},
 			success: function(jsonData) {
 				if (!jQuery.isEmptyObject(jsonData.errors)) {
 					$('#error_'+id).text('');

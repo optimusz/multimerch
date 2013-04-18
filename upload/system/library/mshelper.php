@@ -63,7 +63,11 @@ class MsHelper extends Model {
 	}
 
 	public function admLoadTemplate($templateName, $children = FALSE) {
-		$template = "multiseller/$templateName.tpl";
+		// ugly
+		if(strpos($templateName, '/') !== false)
+			$template = "$templateName.tpl";
+		else
+			$template = "multiseller/$templateName.tpl";
 		
 		if ($children === FALSE) {
 			$children = array(

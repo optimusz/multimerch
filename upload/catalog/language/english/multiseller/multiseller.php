@@ -440,7 +440,7 @@ $_['ms_account_withdraw_balance_available'] = 'Available for withdrawal:';
 $_['ms_account_withdraw_minimum'] = 'Minimum withdrawal amount:';
 $_['ms_account_balance_reserved_formatted'] = '-%s pending withdrawal';
 $_['ms_account_balance_waiting_formatted'] = '-%s waiting period';
-
+$_['ms_account_withdraw_description'] = 'Payout request via %s (%s) on %s';
 
 $_['ms_account_withdraw_amount'] = 'Amount:';
 $_['ms_account_withdraw_amount_note'] = 'Amount note';

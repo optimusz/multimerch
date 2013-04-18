@@ -17,7 +17,7 @@
 	
 	<div class="box">
 		<div class="heading">
-			<h1><img src="view/image/customer.png" alt="" /> <?php echo $ms_transactions_heading; ?></h1>
+			<h1><img src="view/image/multiseller/ms-book.png" alt="" /> <?php echo $ms_transactions_heading; ?></h1>
 			<div class="buttons">
 				<a onclick="location = '<?php echo $link_create_transaction; ?>'" class="button"><?php echo $ms_transactions_new; ?></a>
 			</div>			

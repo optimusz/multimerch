@@ -10,7 +10,7 @@
 	
 	<div class="box">
 		<div class="heading">
-			<h1><img src="view/image/order.png" alt="" /> <?php echo $heading; ?></h1>
+			<h1><img src="view/image/multiseller/ms-book.png" alt="" /> <?php echo $heading; ?></h1>
 			<div class="buttons">
 				<a id="ms-submit-button" class="button"><?php echo $button_save; ?></a>
 				<a onclick="location = '<?php echo $cancel; ?>';" class="button"><?php echo $button_cancel; ?></a>
