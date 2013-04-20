@@ -50,14 +50,14 @@ $_['text_seller_select']         = 'Seller select';
 $_['text_shipping_dependent']         = 'Shipping dependent';
 $_['text_no_results'] = 'No results';
 $_['error_permission'] = 'Warning: You do not have permission to modify module!';
-$_['ms_error_withdraw_norequests'] = 'Error: no withdrawals to process';
+$_['ms_error_withdraw_norequests'] = 'Error: no payouts to process';
 $_['ms_error_withdraw_response'] = 'Error: no response';
 $_['ms_error_withdraw_status'] = 'Error: unsuccessful transaction';
 $_['ms_success'] = 'Success';
 $_['ms_success_transactions'] = 'Transactions successfully completed';
 $_['ms_success_payment_deleted'] = 'Payment deleted';
-$_['ms_success_withdrawals_marked'] = 'Withdrawal requests marked as paid';
-$_['ms_transaction_withdrawal']      = 'Withdrawal: %s';
+$_['ms_success_withdrawals_marked'] = 'Payout requests marked as paid';
+$_['ms_transaction_withdrawal']      = 'Payout: %s';
 
 $_['ms_none'] = 'None';
 $_['ms_seller'] = 'Seller';
@@ -197,20 +197,20 @@ $_['ms_config_credit_order_statuses_note'] = 'Seller balance will be funded for 
 $_['ms_config_debit_order_statuses'] = 'Charge statuses';
 $_['ms_config_debit_order_statuses_note'] = 'Seller balance will be charged for orders with charge statuses';
 
-$_['ms_config_minimum_withdrawal'] = 'Minimum withdrawal amount';
-$_['ms_config_minimum_withdrawal_note'] = 'Minimum withdrawal amount note';
+$_['ms_config_minimum_withdrawal'] = 'Minimum payout amount';
+$_['ms_config_minimum_withdrawal_note'] = 'Minimum balance amount required to request payout';
 
-$_['ms_config_allow_partial_withdrawal'] = 'Allow partial withdrawal';
-$_['ms_config_allow_partial_withdrawal_note'] = 'Allow partial withdrawal note';
+$_['ms_config_allow_partial_withdrawal'] = 'Allow partial payouts';
+$_['ms_config_allow_partial_withdrawal_note'] = 'Allow sellers to request partial payouts';
 
-$_['ms_config_allow_withdrawal_requests'] = 'Allow withdrawal requests';
-$_['ms_config_allow_withdrawal_requests_note'] = 'Allow withdrawal requests';
+$_['ms_config_allow_withdrawal_requests'] = 'Allow payout requests';
+$_['ms_config_allow_withdrawal_requests_note'] = 'Allow sellers to request payouts';
 
 $_['ms_config_paypal_sandbox'] = 'PayPal Sandbox mode';
-$_['ms_config_paypal_sandbox_note'] = 'PayPal Sandbox mode note';
+$_['ms_config_paypal_sandbox_note'] = 'Use PayPal in Sandbox mode for testing and debugging';
 
-$_['ms_config_paypal_address'] = 'PayPal account email';
-$_['ms_config_paypal_address_note'] = 'Your PayPal account email for listing and signup commissions';
+$_['ms_config_paypal_address'] = 'PayPal address';
+$_['ms_config_paypal_address_note'] = 'Your PayPal address for listing and signup fees';
 
 $_['ms_config_paypal_api_username'] = 'PayPal API username';
 $_['ms_config_paypal_api_username_note'] = 'Your PayPal API username for MassPay payouts';
@@ -230,13 +230,13 @@ $_['ms_config_allow_free_products_note'] = 'Allow sellers to add free products';
 $_['ms_config_allow_multiple_categories'] = 'Allow multiple categories';
 $_['ms_config_allow_multiple_categories_note'] = 'Allow sellers to add products to multiple categories';
 
-$_['ms_config_additional_category_restrictions'] = 'Additional category restrictions';
-$_['ms_config_additional_category_restrictions_note'] = '<u>Disallow</u> sellers from listing products in specific categories';
+$_['ms_config_additional_category_restrictions'] = 'Bulk disallow categories';
+$_['ms_config_additional_category_restrictions_note'] = '<u>Disallow</u> sellers to list products in specific categories';
 $_['ms_topmost_categories'] = 'Topmost categories';
 $_['ms_parent_categories'] = 'All parent categories';
 
-$_['ms_config_restrict_categories'] = 'Restrict categories';
-$_['ms_config_restrict_categories_note'] = '<u>Disallow</u> sellers from listing products in these categories';
+$_['ms_config_restrict_categories'] = 'Disallowed categories';
+$_['ms_config_restrict_categories_note'] = '<u>Disallow</u> sellers to list products in these categories';
 
 $_['ms_config_provide_buyerinfo'] = 'Mail buyer information';
 $_['ms_config_provide_buyerinfo_note'] = 'Include buyer address in the "Product purchased" email';
@@ -259,8 +259,8 @@ $_['ms_config_allow_specials_note'] = 'Allow sellers to define special prices';
 $_['ms_config_allow_discounts'] = 'Allow quantity discounts';
 $_['ms_config_allow_discounts_note'] = 'Allow sellers to define quantity discounts';
 
-$_['ms_config_withdrawal_waiting_period'] = 'Withdrawal waiting period';
-$_['ms_config_withdrawal_waiting_period_note'] = 'Seller balance entries newer than this value will not be available for withdrawal';
+$_['ms_config_withdrawal_waiting_period'] = 'Payout waiting period';
+$_['ms_config_withdrawal_waiting_period_note'] = 'Seller balance entries newer than this value will not be available for payout requests';
 
 $_['ms_config_comments_enable'] = 'Enable comments';
 $_['ms_config_comments_enable_note'] = 'Enable or disable comments functionality';

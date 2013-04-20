@@ -378,12 +378,13 @@ final class MsSeller extends Model {
 	}
 	
 	public function getTotalEarnings($seller_id) {
-		$sql = "SELECT SUM(seller_net_amt) as total
-				FROM `" . DB_PREFIX . "ms_order_product_data`
-				WHERE seller_id = " . (int)$seller_id;
-		
+		$sql = "SELECT COALESCE(SUM(amount),0)
+					   - (SELECT COALESCE(SUM(amount),0) FROM `" . DB_PREFIX . "ms_balance` WHERE seller_id = " . (int)$seller_id . " AND balance_type = ". MsBalance::MS_BALANCE_TYPE_REFUND . ") as total
+				FROM `" . DB_PREFIX . "ms_balance`
+				WHERE seller_id = " . (int)$seller_id . "
+				AND balance_type = ". MsBalance::MS_BALANCE_TYPE_SALE;
+
 		$res = $this->db->query($sql);
-		
 		return $res->row['total'];
 	}
 	

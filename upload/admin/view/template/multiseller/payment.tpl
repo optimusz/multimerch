@@ -32,8 +32,8 @@
           <thead>
             <tr>
               	<td width="1" style="text-align: center;"><input type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);" /></td>
-				<td style="width: 250px"><?php echo $ms_type; ?></td>
-				<td><?php echo $ms_seller; ?></td>
+				<td style="width: 150px"><?php echo $ms_type; ?></td>
+				<td style="width: 150px"><?php echo $ms_seller; ?></td>
 				<td style="width: 50px"><?php echo $ms_amount; ?></td>
 				<td><?php echo $ms_description; ?></td>
 				<td style="width: 100px"><?php echo $ms_status; ?></td>

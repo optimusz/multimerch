@@ -154,7 +154,7 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 		
 		if (!$seller) return;
 		
-		$amount = $this->getSellerBalance($seller_id) - $this->getReservedSellerFunds($seller_id);
+		$amount = $this->MsLoader->MsBalance->getSellerBalance($seller_id) - $this->MsLoader->MsBalance->getReservedSellerFunds($seller_id);
 		
 		if (!$amount) return;
 

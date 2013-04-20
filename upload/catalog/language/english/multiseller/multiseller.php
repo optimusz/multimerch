@@ -121,19 +121,19 @@ Comments:
 %s
 EOT;
 
-$_['ms_mail_subject_withdraw_request_submitted'] = 'Withdrawal request submitted';
+$_['ms_mail_subject_withdraw_request_submitted'] = 'Payout request submitted';
 $_['ms_mail_withdraw_request_submitted'] = <<<EOT
-We have received your withdrawal request. You will receive your earnings as soon as it is processed.
+We have received your payout request. You will receive your earnings as soon as it is processed.
 EOT;
 
-$_['ms_mail_subject_withdraw_request_completed'] = 'Withdrawal completed';
+$_['ms_mail_subject_withdraw_request_completed'] = 'Payout completed';
 $_['ms_mail_withdraw_request_completed'] = <<<EOT
-Your withdrawal request has been processed. You should now receive your earnings.
+Your payout request has been processed. You should now receive your earnings.
 EOT;
 
-$_['ms_mail_subject_withdraw_request_declined'] = 'Withdrawal request declined';
+$_['ms_mail_subject_withdraw_request_declined'] = 'Payout request declined';
 $_['ms_mail_withdraw_request_declined'] = <<<EOT
-Your withdrawal request has been declined. Your funds have been returned to your balance at %s.
+Your payout request has been declined. Your funds have been returned to your balance at %s.
 EOT;
 
 $_['ms_mail_subject_transaction_performed'] = 'New transaction';
@@ -178,9 +178,9 @@ Product %s at %s has been edited and is awaiting moderation.
 You can process it in the Multiseller - Products section in back office.
 EOT;
 
-$_['ms_mail_admin_subject_withdraw_request_submitted'] = 'Withdrawal request awaiting moderation';
+$_['ms_mail_admin_subject_withdraw_request_submitted'] = 'Payout request awaiting moderation';
 $_['ms_mail_admin_withdraw_request_submitted'] = <<<EOT
-New withdrawal request has been submitted.
+New payout request has been submitted.
 
 You can process it in the Multiseller - Finances section in back office.
 EOT;
@@ -437,22 +437,22 @@ $_['ms_account_withdraw_breadcrumbs'] = 'Request Earnings';
 
 $_['ms_account_withdraw_balance'] = 'Your current balance:';
 $_['ms_account_withdraw_balance_available'] = 'Available for withdrawal:';
-$_['ms_account_withdraw_minimum'] = 'Minimum withdrawal amount:';
+$_['ms_account_withdraw_minimum'] = 'Minimum payout amount:';
 $_['ms_account_balance_reserved_formatted'] = '-%s pending withdrawal';
 $_['ms_account_balance_waiting_formatted'] = '-%s waiting period';
 $_['ms_account_withdraw_description'] = 'Payout request via %s (%s) on %s';
 
 $_['ms_account_withdraw_amount'] = 'Amount:';
-$_['ms_account_withdraw_amount_note'] = 'Amount note';
+$_['ms_account_withdraw_amount_note'] = 'Please specify the payout amount';
 
 $_['ms_account_withdraw_method'] = 'Payment method:';
-$_['ms_account_withdraw_method_note'] = 'Method note';
+$_['ms_account_withdraw_method_note'] = 'Please select the payout method';
 $_['ms_account_withdraw_method_paypal'] = 'PayPal';
 
 $_['ms_account_withdraw_all'] = 'All earnings currently available';
-$_['ms_account_withdraw_minimum_not_reached'] = 'Your total balance is less than the minimum withdrawal amount!';
+$_['ms_account_withdraw_minimum_not_reached'] = 'Your total balance is less than the minimum payout amount!';
 $_['ms_account_withdraw_no_funds'] = 'No funds to withdraw.';
-$_['ms_account_withdraw_disabled'] = 'We don\'t accept withdrawal requests. You will be paid automatically.';
+$_['ms_account_withdraw_disabled'] = 'We don\'t accept payout requests. You will be paid automatically.';
 $_['ms_account_withdraw_no_paypal'] = 'Please <a href="index.php?route=seller/account-profile">specify your PayPal address</a> first!';
 
 

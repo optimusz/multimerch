@@ -136,6 +136,26 @@ $(function() {
 				$('#error_product_image').html('');
 				up.start();
 			},
+
+			StateChanged: function(up) {
+				if (up.state == plupload.STARTED) {
+					$('<div class="ms-image progress"><div></div></div>').appendTo("#product_image_files").children("div").progressbar({
+						value: 0
+					});
+				} else {
+					// todo remove
+					//$("#product_download_files").children(".progress:last").progressbar("destroy").remove();
+				}
+			},
+			
+			UploadProgress: function(up, file) {
+				console.log(up.total.percent);
+				$("#product_image_files").children(".progress:last").progressbar("value", up.total.percent);
+			},	
+			
+			UploadProgress: function(up, file) {
+				console.log(up.total.percent);
+			},
 			
 			FileUploaded: function(up, file, info) {
 				try {
@@ -211,6 +231,22 @@ $(function() {
 				$('#error_product_download').html('');
 				up.start();
 			},
+			
+			StateChanged: function(up) {
+				if (up.state == plupload.STARTED) {
+					$('<div class="ms-download progress"></div>').appendTo("#product_download_files").progressbar({
+						value: 0
+					});
+				} else {
+					// todo remove
+					//$("#product_download_files").children(".progress:last").progressbar("destroy").remove();
+				}
+			},
+			
+			UploadProgress: function(up, file) {
+				console.log(up.total.percent);
+				$("#product_download_files").children(".progress:last").progressbar("value", up.total.percent);
+			},			
 			
 			FileUploaded: function(up, file, info) {
 				try {

@@ -125,7 +125,6 @@ class MsCommission extends Model {
 		// Apply group commissions
 		if ($group_commission_id != $default_commission_id) {
 			$group_commissions = $this->getCommissionRates($group_commission_id);
-			var_dump($group_commissions);
 			foreach ($group_commissions as $rate_type => $rate_val) {
 					if (!is_null($rate_val['flat'])) $commissions[$rate_type]['flat'] = $rate_val['flat'];
 					if (!is_null($rate_val['percent'])) $commissions[$rate_type]['percent'] = $rate_val['percent'];
@@ -136,15 +135,12 @@ class MsCommission extends Model {
 		// Apply individual seller commissions
 		if (!is_null($seller_commission_id)) {
 			$seller_commissions = $this->getCommissionRates($seller_commission_id);
-			var_dump($seller_commissions);
 			foreach ($seller_commissions as $rate_type => $rate_val) {
 					if (!is_null($rate_val['flat'])) $commissions[$rate_type]['flat'] = $rate_val['flat'];
 					if (!is_null($rate_val['percent'])) $commissions[$rate_type]['percent'] = $rate_val['percent'];
 					if (!is_null($rate_val['payment_method'])) $commissions[$rate_type]['payment_method'] = $rate_val['payment_method'];
 			}
 		}
-		
-		//var_dump($commissions);
 		
 		return $commissions;
 	}

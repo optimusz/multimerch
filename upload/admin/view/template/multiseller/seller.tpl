@@ -21,11 +21,11 @@
     <div class="content">
 		<?php echo $total_balance; ?><br /><br />
       <form action="" method="post" enctype="multipart/form-data" id="form">
-        <table class="list">
+        <table class="list" style="text-align: center">
           <thead>
             <tr>
               	<!--<td width="1" style="text-align: center;"><input type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);" /></td>-->
-				<td><?php echo $ms_seller; ?></td>
+				<td style="width:220px"><?php echo $ms_seller; ?></td>
 				<td><?php echo $ms_catalog_sellers_email; ?></td>
 				<td><?php echo $ms_catalog_sellers_total_products; ?></td>
 				<td><?php echo $ms_catalog_sellers_total_sales; ?></td>
@@ -55,7 +55,7 @@
               <td><?php echo $seller['earnings']; ?></td>
               <td><?php echo $seller['current_balance']; ?></td>
               <td><?php echo $seller['status']; ?></td>
-              <td><?php echo $seller['ms.date_created']; ?></td>
+              <td><?php echo $seller['date_created']; ?></td>
               <td class="right">
                 <?php if ($this->MsLoader->MsBalance->getSellerBalance($seller['seller_id']) - $this->MsLoader->MsBalance->getReservedSellerFunds($seller['seller_id']) > 0) { ?>
                 <a class="ms-button ms-button-paypal" title="<?php echo $ms_catalog_sellers_balance_paypal; ?>"></a>

@@ -35,20 +35,17 @@ class ModelMultisellerSettings extends Model {
 
 					// fee payment types
 					$this->db->query("ALTER TABLE `" . DB_PREFIX . "ms_commission_rate` ADD `payment_method` TINYINT DEFAULT NULL");
-					
-					// listing commissions
-					$q = $this->db->query("SELECT commission_id FROM `" . DB_PREFIX . "ms_seller_group` WHERE seller_group_id = " .$this->config->get('msconf_default_seller_group_id'));
-					$commission_id = $q['commission_id'];
-					$this->db->query("INSERT INTO `" . DB_PREFIX . "ms_commission_rate` (rate_type, commission_id, flat, percent, payment_method) VALUES(" . MsCommission::RATE_LISTING . ", $commission_id, 0,0," . MsPayment::METHOD_BALANCE . ")");
-	
-					// signup fees
-					$q = $this->db->query("SELECT commission_id FROM `" . DB_PREFIX . "ms_seller_group` WHERE seller_group_id = " .$this->config->get('msconf_default_seller_group_id'));
-					$commission_id = $q['commission_id'];
-					$this->db->query("INSERT INTO `" . DB_PREFIX . "ms_commission_rate` (rate_type, commission_id, flat, percent, payment_method) VALUES(" . MsCommission::RATE_SIGNUP . ", $commission_id, 0,0," . MsPayment::METHOD_BALANCE . ")");
+
+					// new fee types for default seller group
+					foreach (array(MsCommission::RATE_SIGNUP, MsCommission::RATE_LISTING) as $type) {
+						$q = $this->db->query("SELECT commission_id FROM `" . DB_PREFIX . "ms_seller_group` WHERE seller_group_id = " .$this->config->get('msconf_default_seller_group_id'));
+						$commission_id = $q['commission_id'];
+						$this->db->query("INSERT INTO `" . DB_PREFIX . "ms_commission_rate` (rate_type, commission_id, flat, percent, payment_method) VALUES(" . $type . ", $commission_id, 0,0," . MsPayment::METHOD_BALANCE . ")");
+					}
 					
 					// payments
 					$sql = "
-						CREATE TABLE " . DB_PREFIX . "ms_payment (
+						CREATE TABLE `" . DB_PREFIX . "ms_payment` (
 						 `payment_id` int(11) NOT NULL AUTO_INCREMENT,
 						 `seller_id` int(11) NOT NULL,
 						 `product_id` int(11) DEFAULT NULL,
@@ -61,12 +58,19 @@ class ModelMultisellerSettings extends Model {
 						 `currency_code` VARCHAR(3) NOT NULL,
 						 `description` TEXT NOT NULL DEFAULT '',
 						 `date_created` DATETIME NOT NULL,
-						 `date_modified` DATETIME DEFAULT NULL,
+						 `date_paid` DATETIME DEFAULT NULL,
 						PRIMARY KEY (`payment_id`)) default CHARSET=utf8";
 					$this->db->query($sql);
 					
-					// todo rename and alter withdrawal table
-					break;							
+					// merge withdrawals into payments
+					// delete withdrawals table manually
+					$this->db->query("INSERT INTO `" . DB_PREFIX . "ms_payment` (payment_id, seller_id, product_id, payment_type, payment_status, payment_method, payment_data, amount, currency_id, currency_code, description, date_created, date_paid)
+									  SELECT withdrawal_id, seller_id, product_id, 4, withdrawal_status, 2, '', amount, currency_id, currency_code, description, date_created, date_processed
+									  FROM `" . DB_PREFIX . "ms_withdrawal`");
+									  
+					$this->db->query("UPDATE `" . DB_PREFIX . "ms_payment` SET payment_status = 2 WHERE payment_status = 3");
+					
+					break;
 					
 				case "2.3":
 					$this->db->query("ALTER TABLE " . DB_PREFIX . "ms_product_attribute CHANGE `option_id` `attribute_id` int(11) NOT NULL");
@@ -236,62 +240,6 @@ class ModelMultisellerSettings extends Model {
 		
 		$this->db->query($sql);
 		
-		$sql = "
-			CREATE TABLE `" . DB_PREFIX . "ms_withdrawal` (
-			 `withdrawal_id` int(11) NOT NULL AUTO_INCREMENT,
-			 `seller_id` int(11) NOT NULL,
-			 `amount` DECIMAL(15,4) NOT NULL,
-			 `withdrawal_method_id` int(11) DEFAULT NULL,
-			 `withdrawal_method_data` TEXT NOT NULL DEFAULT '',
-			 `withdrawal_status` TINYINT NOT NULL,
-			 `currency_id` int(11) NOT NULL,
-			 `currency_code` VARCHAR(3) NOT NULL,
-			 `currency_value` DECIMAL(15,8) NOT NULL,
-			 `description` TEXT NOT NULL DEFAULT '',
-			 `processed_by` int(11) DEFAULT NULL,
-			 `date_created` DATETIME NOT NULL,
-			 `date_processed` DATETIME DEFAULT NULL,
-			PRIMARY KEY (`withdrawal_id`)) default CHARSET=utf8";
-			
-		$this->db->query($sql);
-/*
-		$sql = "
-			CREATE TABLE `" . DB_PREFIX . "ms_request_seller` (
-			 `request_seller_id` int(11) NOT NULL AUTO_INCREMENT,
-			 `request_id` int(11) NOT NULL,
-			 `seller_id` int(11) NOT NULL,
-			 `request_type` TINYINT NOT NULL,
-			PRIMARY KEY (`request_seller_id`)) default CHARSET=utf8";
-		
-		$this->db->query($sql);
-
-		$sql = "
-			CREATE TABLE `" . DB_PREFIX . "ms_request_product` (
-			 `request_product_id` int(11) NOT NULL AUTO_INCREMENT,
-			 `request_id` int(11) NOT NULL,
-			 `product_id` int(11) NOT NULL,
-			 `request_type` TINYINT NOT NULL,
-			PRIMARY KEY (`request_product_id`)) default CHARSET=utf8";
-		
-		$this->db->query($sql);
-
-		$sql = "
-			CREATE TABLE `" . DB_PREFIX . "ms_request` (
-			 `request_id` int(11) NOT NULL AUTO_INCREMENT,
-			 `request_status` TINYINT NOT NULL,
-			 `resolution_type` TINYINT DEFAULT NULL,
-			 `processed_by` int(11) DEFAULT NULL,
-			 `date_created` DATETIME NOT NULL,
-			 `date_processed` DATETIME DEFAULT NULL,
-			 `message_created` TEXT NOT NULL DEFAULT '',
-			 `message_processed` TEXT NOT NULL DEFAULT '',
-			PRIMARY KEY (`request_id`)) default CHARSET=utf8";
-		
-		// ms_seller_group - table with seller groups
-		$this->db->query($sql);
-*/
-		
-		
 		// ms_criteria - criterias table
 		$sql = "
 			CREATE TABLE `" . DB_PREFIX . "ms_criteria` (
@@ -341,7 +289,6 @@ class ModelMultisellerSettings extends Model {
 			PRIMARY KEY (`seller_group_criteria_id`)) default CHARSET=utf8";
 		
 		$this->db->query($sql);
-		
 		
 		// new attributes
 		$sql = "
@@ -395,6 +342,7 @@ class ModelMultisellerSettings extends Model {
 			PRIMARY KEY (`product_id`,`attribute_id`,`attribute_value_id`)) default CHARSET=utf8";
 		$this->db->query($sql);
 
+		// new payments
 		$sql = "
 			CREATE TABLE `" . DB_PREFIX . "ms_payment` (
 			 `payment_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -409,29 +357,21 @@ class ModelMultisellerSettings extends Model {
 			 `currency_code` VARCHAR(3) NOT NULL,
 			 `description` TEXT NOT NULL DEFAULT '',
 			 `date_created` DATETIME NOT NULL,
-			 `date_modified` DATETIME DEFAULT NULL,
+			 `date_paid` DATETIME DEFAULT NULL,
 			PRIMARY KEY (`payment_id`)) default CHARSET=utf8";
 		$this->db->query($sql);		
-		
 	}
 	
 	public function addData() {
 		$this->db->query("INSERT INTO " . DB_PREFIX . "ms_commission () VALUES()");
 		$commission_id = $this->db->getLastId();
 		
-		// sale commissions
-		$rate_type = MsCommission::RATE_SALE;
-		$this->db->query("INSERT INTO " . DB_PREFIX . "ms_commission_rate (rate_type, commission_id, flat, percent) VALUES($rate_type, $commission_id, 0,0)");
+		// default fee rates
+		foreach (array(MsCommission::RATE_SALE, MsCommission::RATE_SIGNUP, MsCommission::RATE_LISTING) as $type) {
+			$this->db->query("INSERT INTO `" . DB_PREFIX . "ms_commission_rate` (rate_type, commission_id, flat, percent, payment_method) VALUES(" . $type . ", $commission_id, 0,0," . MsPayment::METHOD_BALANCE . ")");
+		}		
 		
-		// listing commissions
-		$rate_type = MsCommission::RATE_LISTING;
-		$this->db->query("INSERT INTO " . DB_PREFIX . "ms_commission_rate (rate_type, commission_id, flat, percent) VALUES($rate_type, $commission_id, 0,0)");
-
-		// signup commissions
-		$rate_type = MsCommission::RATE_SIGNUP;
-		$this->db->query("INSERT INTO " . DB_PREFIX . "ms_commission_rate (rate_type, commission_id, flat, percent) VALUES($rate_type, $commission_id, 0,0)");
-		
-		// default seller group commissions
+		// default seller group fees
 		$this->db->query("INSERT INTO " . DB_PREFIX . "ms_seller_group (commission_id) VALUES($commission_id)");
 		$seller_group_id = $this->db->getLastId();
 		
