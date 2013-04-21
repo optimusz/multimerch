@@ -204,10 +204,13 @@ $_['ms_error_sellerinfo_company_length'] = 'Company name cannot be longer than 5
 $_['ms_error_sellerinfo_description_length'] = 'Description cannot be longer than 1000 characters';
 $_['ms_error_sellerinfo_paypal'] = 'Invalid PayPal address';
 $_['ms_error_sellerinfo_terms'] = 'Warning: You must agree to the %s!';
+
 $_['ms_error_file_extension'] = 'Invalid extension';
 $_['ms_error_file_type'] = 'Invalid file type';
 $_['ms_error_file_size'] = 'File too big';
 $_['ms_error_file_upload_error'] = 'File upload error';
+$_['ms_error_form_submit_error'] = 'Error occured when submitting the form. Please contact the store owner for more information.';
+$_['ms_error_form_notice'] = 'Please check all form tabs for errors.';
 
 $_['ms_error_product_name_empty'] = 'Product name cannot be empty';
 $_['ms_error_product_name_length'] = 'Product name should be between %s and %s characters';

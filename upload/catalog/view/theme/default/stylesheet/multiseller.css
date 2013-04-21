@@ -44,11 +44,13 @@ table.list td, table.list thead td  {
 	margin: 0;
 }
 
+.ms-account-product-form p.warning.main {
+	display: none;
+}
+
 .ms-product .progress div .ui-widget-content,
 .ms-product .progress div .ui-widget-header {
 	background-image: none !important;
-	/*border: 1px solid #aaaaaa;
-	background-color: #cccccc !important;*/
 	border: 1px solid #6db1f2;
 	background-color: #92c6f9 !important;
 }

@@ -74,10 +74,22 @@ $(function() {
 			data: $("form#ms-new-product").serialize(),
 			beforeSend: function() {
 				button.hide().before('<span class="wait">&nbsp;<img src="catalog/view/theme/default/image/loading.gif" alt="" /></span>');
-			},			
+			},
+			complete: function(jqXHR, textStatus) {
+				if (textStatus != 'success') {
+					button.show().prev('span.wait').remove();
+					$(".warning.main").text(msGlobals.formError).show();
+					window.scrollTo(0,0);					
+				}
+			},
 			success: function(jsonData) {
 				$('.error').text('');
-				if (!jQuery.isEmptyObject(jsonData.errors)) {
+				$('.warning.main').text('').hide();
+
+				if (jsonData.fail) {
+					$(".warning.main").text(msGlobals.formError).show();
+					window.scrollTo(0,0);
+				} else 	if (!jQuery.isEmptyObject(jsonData.errors)) {
 					button.show().prev('span.wait').remove();
 					for (error in jsonData.errors) {
 						if (!jsonData.errors.hasOwnProperty(error)) {
@@ -88,9 +100,9 @@ $(function() {
 							$('#error_'+error).text(jsonData.errors[error]);
 						else
 							$('[name^="'+error+'"]').nextAll('.error:first').text(jsonData.errors[error]);
-						
-						window.scrollTo(0,0);
-					}				
+					}
+					$(".warning.main").text(msGlobals.formNotice).show();
+					window.scrollTo(0,0);
 				} else if (!jQuery.isEmptyObject(jsonData.data) && jsonData.data.amount) {
 					console.log(jsonData.data);
 					$(".ms-payment-form form input[name='custom']").val(jsonData.data.custom);
@@ -104,7 +116,6 @@ $(function() {
 	});
 	
 	var uploaderParams = {
-		blah: 'lol',
 		runtimes : 'html5,html4,flash,silverlight',
 		flash_swf_url: 'catalog/view/javascript/plupload/plupload.flash.swf',
 		silverlight_xap_url : 'catalog/view/javascript/plupload/plupload.silverlight.xap',		     
@@ -148,7 +159,6 @@ $(function() {
 			},
 			
 			Error: function(up, args) {
-				console.log('hj');
 				$("."+up.id+".error").append(msGlobals.uploadError).hide().fadeIn(2000);
 			}
 		}
@@ -233,7 +243,7 @@ $(function() {
 				}
 
 				if (!$.isEmptyObject(data.files)) {
-					var lastFileTag = $('#product_download_files .ms-download:last').find('input:hidden[name$="[filename]"]').attr('name');
+					var lastFileTag = $('.product_download_files .ms-download:last').find('input:hidden[name$="[filename]"]').attr('name');
 					if (typeof lastFileTag == "undefined") {
 						var newFileNum = 0;
 					} else {
@@ -250,10 +260,8 @@ $(function() {
 			  				(data.files[i].filePages ? '<a href="index.php?route=seller/account-product/jxRenderPdfgenDialog" class="ms-button-pdf" title="'+msGlobals.button_generate+'"></a>' : '') +
 			  				'<span class="ms-button-download disabled"></span>' +
 			  				'<span class="ms-button-update disabled"></span>' +
-				  			//'<a class="ms-button-delete" title="'+msGlobals.text_delete+'"></a>' +
 				  			'</div>' +
 				  			'</div>');
-						//$("#product_download_files").append(downloadTag);//.children(':last').hide().fadeIn(1000);
 					}
 					
 					if (msGlobals.product_id.length > 0) {

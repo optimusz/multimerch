@@ -11,10 +11,7 @@
 	
 	<h1><?php echo $heading; ?></h1>
 	
-	<?php if (isset($error_warning) && ($error_warning)) { ?>
-		<div class="warning"><?php echo $error_warning; ?></div>
-	<?php } ?>
-	
+	<p class="warning main"></p>
 	<form id="ms-new-product" method="post" enctype="multipart/form-data">
 		<input type="hidden" name="product_id" value="<?php echo $product['product_id']; ?>" />
 		<input type="hidden" name="action" id="ms_action" />
@@ -468,7 +465,9 @@
 		token : '<?php echo md5($salt . $timestamp); ?>',
 		session_id: '<?php echo session_id(); ?>',
 		product_id: '<?php echo $product['product_id']; ?>',
-		uploadError: '<?php echo $ms_error_file_upload_error; ?>'
+		uploadError: '<?php echo $ms_error_file_upload_error; ?>',
+		formError: '<?php echo $ms_error_form_submit_error; ?>',
+		formNotice: '<?php echo $ms_error_form_notice; ?>'
 	};
 </script>
 <?php echo $footer; ?>

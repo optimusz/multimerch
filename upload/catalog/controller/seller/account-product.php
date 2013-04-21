@@ -155,8 +155,9 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 	}
 	
 	public function jxSubmitProduct() {
+		//ob_start();
 		$data = $this->request->post;
-		
+
 		$seller = $this->MsLoader->MsSeller->getSeller($this->customer->getId());
 
 		if (isset($data['product_id']) && !empty($data['product_id'])) {
@@ -657,7 +658,13 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 			
 			$json['redirect'] = $this->url->link('seller/account-product', '', 'SSL');
 		}
-
+		
+		$output = ob_get_clean();
+		if ($output) {
+			$this->log->write('MMERCH PRODUCT FORM: ' . $output);
+			if (!$this->session->data['success']) $json['fail'] = 1;
+		}
+		
 		$this->response->setOutput(json_encode($json));
 	}
 
