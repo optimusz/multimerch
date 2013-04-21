@@ -137,6 +137,7 @@ table.list td, table.list thead td  {
 .ms-product .ms-download {
 	margin: 10px 0;
 	height: 30px;
+	clear: both;
 	line-height: 28px;
 }
 
