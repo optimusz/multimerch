@@ -103,13 +103,11 @@ $(function() {
 		});
 	});
 	
-	new plupload.Uploader({
-		runtimes : 'gears,html5,flash',
-		//runtimes : 'flash',
-		browse_button: 'ms-file-addimages',
-		url: 'index.php?route=seller/account-product/jxUploadImages',
+	var uploaderParams = {
+		blah: 'lol',
+		runtimes : 'html5,html4,flash,silverlight',
 		flash_swf_url: 'catalog/view/javascript/plupload/plupload.flash.swf',
-		silverlight_xap_url : 'catalog/view/javascript/plupload/plupload.silverlight.xap',
+		silverlight_xap_url : 'catalog/view/javascript/plupload/plupload.silverlight.xap',		     
 		
 		multipart_params : {
 			'timestamp' : msGlobals.timestamp,
@@ -118,65 +116,77 @@ $(function() {
 			'product_id': msGlobals.product_id
 		},
 		
-		filters : [
-			//{title : "Image files", extensions : "png,jpg,jpeg"},
-		],
-		
 		preinit : {
-			Init: function(up, info) {
-			},
- 
 			UploadFile: function(up, file) {
-				up.settings.multipart_params.imageCount = $('.ms-image').length;
+				up.settings.multipart_params.fileCount = $('#' + up.id + " div").length;
 			}
 		},
 		
-		init : {
+		init: {
 			StateChanged: function(up) {
 				if (up.state == plupload.STOPPED) {
-					$(".image.progress").fadeOut(500, function() { $(this).remove(); });
+					$("."+up.id+".progress").fadeOut(500, function() { $(this).html("").hide(); });
+				} else {
+					$("."+up.id+".progress").show();
 				}
 			},
 			
 			UploadProgress: function(up, file) {
 				$("#"+file.id).progressbar("value", file.percent);
 				$("#"+file.id + ' div.label').text("Uploading " + file.name + ": " + file.percent + "%");
-			},	
-			
+			},
+
 			FilesAdded: function(up, files) {
-				$("#product_image_files").before("<div class='image progress'></div>");
 				plupload.each(files, function(file) {
-					$('<div id="'+file.id+'"><div class="label"></div></div>').appendTo(".image.progress").progressbar({
+					$('<div id="'+file.id+'"><div class="label"></div></div>').appendTo("."+up.id+".progress").progressbar({
 						value: 0
 					});
 				});
-				$('#error_product_image').html('');
+				
+				$("."+up.id+".error").html('');
 				up.start();
 			},
 			
+			Error: function(up, args) {
+				console.log('hj');
+				$("."+up.id+".error").append(msGlobals.uploadError).hide().fadeIn(2000);
+			}
+		}
+	}
+	
+	new plupload.Uploader($.extend(true, uploaderParams, {
+		browse_button: 'ms-file-addimages',
+		url: 'index.php?route=seller/account-product/jxUploadImages',
+		
+		preinit : {
+			Init: function(up, info) {
+				$(".product_image_files").attr("id", up.id);
+				$(".image.progress, #error_product_image").addClass(up.id);
+			}
+		},
+		
+		init : {
 			FileUploaded: function(up, file, info) {
 				$("#"+file.id).fadeOut(500, function() { $(this).progressbar("destroy"); $(this).remove(); });
 				
 				try {
-   					data = $.parseJSON(info.response);
+					data = $.parseJSON(info.response);
 				} catch(e) {
-					console.log('Invalid JSON response: ');
-					console.log(info.response);
-					$('#error_product_image').append(msGlobals.uploadError).hide().fadeIn(2000);
-					return;
+					//console.log(info.response);
+					data.errors.push(msGlobals.uploadError);
 				}
-				
+
 				if (!$.isEmptyObject(data.errors)) {
 					var errorText = '';
 					for (var i = 0; i < data.errors.length; i++) {
-						errorText += data.errors[i] + '<br />';
+						errorText += '<p>' + file.name + ': ' + data.errors[i] + '</p>';
 					}
-					$('#error_product_image').append(errorText).hide().fadeIn(2000);
+					$("."+up.id+".error").append(errorText).fadeIn(1000);
 				}
 
 				if (!$.isEmptyObject(data.files)) {
 					for (var i = 0; i < data.files.length; i++) {
-						$("#product_image_files").append(
+						$(".product_image_files").append(
 						'<div class="ms-image">' +
 						'<input type="hidden" value="'+data.files[i].name+'" name="product_images[]" />' +
 						'<img src="'+data.files[i].thumb+'" />' +
@@ -188,85 +198,38 @@ $(function() {
 				if (data.cancel) {
 					up.stop();
 				}
-			},
-			
-			Error: function(up, args) {
-				$('#error_product_image').append(msGlobals.uploadError).hide().fadeIn(2000);
-				console.log('[error] ', args);
 			}
 		}
-	}).init();
+	})).init();
 	
-	new plupload.Uploader({
-		runtimes : 'gears,html5,flash,silverlight',
-		//runtimes : 'flash',
+	new plupload.Uploader($.extend(true, uploaderParams, {
 		browse_button: 'ms-file-addfiles',
 		url: 'index.php?route=seller/account-product/jxUploadDownloads',
-		flash_swf_url: 'catalog/view/javascript/plupload/plupload.flash.swf',
-		silverlight_xap_url : 'catalog/view/javascript/plupload/plupload.silverlight.xap',
-		
-		multipart_params : {
-			'timestamp' : msGlobals.timestamp,
-			'token'	 : msGlobals.token,
-			'session_id': msGlobals.session_id,
-			'product_id': msGlobals.product_id
-		},
-		
-		filters : [
-			//{title : "Archives", extensions : "rar,zip"},
-		],
 		
 		preinit : {
 			Init: function(up, info) {
-			},
- 
-			UploadFile: function(up, file) {
-				up.settings.multipart_params.downloadCount = $('.ms-download').length;
+				$(".product_download_files").attr("id", up.id);
+				$(".download.progress, #error_product_download").addClass(up.id);
 			}
 		},
 		
 		init : {
-			StateChanged: function(up) {
-				if (up.state == plupload.STOPPED) {
-					$(".download.progress").fadeOut(500, function() { $(this).remove(); });
-				}
-			},
-			
-			UploadProgress: function(up, file) {
-				$("#"+file.id).progressbar("value", file.percent);
-				$("#"+file.id + ' div.label').text("Uploading " + file.name + ": " + file.percent + "%");
-			},	
-			
-			FilesAdded: function(up, files) {
-				$("#product_download_files").before("<div class='download progress'></div>");
-				plupload.each(files, function(file) {
-					$('<div id="'+file.id+'"><div class="label"></div></div>').appendTo(".download.progress").progressbar({
-						value: 0
-					});
-				});
-				$('#error_product_download').html('');
-				up.start();
-			},
-			
 			FileUploaded: function(up, file, info) {
 				$("#"+file.id).fadeOut(500, function() { $(this).progressbar("destroy"); $(this).remove(); });
 				
 				try {
-   					data = $.parseJSON(info.response);
+					data = $.parseJSON(info.response);
 				} catch(e) {
-					console.log('Invalid JSON response: ');
-					console.log(info.response);
-					$('#error_product_download').append(msGlobals.uploadError).hide().fadeIn(2000);
-					return;
+					//console.log(info.response);
+					data.errors.push(msGlobals.uploadError);
 				}
 				
 				if (!$.isEmptyObject(data.errors)) {
 					var errorText = '';
 					for (var i = 0; i < data.errors.length; i++) {
-						errorText += '<span>' + data.errors[i] + '</span><br />';
+						errorText += '<p>' + file.name + ': ' + data.errors[i] + '</p>';
 					}
-					console.log(errorText);
-					$('#error_product_download').append(errorText).children('span:last').hide().fadeIn(1000);
+					$("."+up.id+".error").append(errorText).fadeIn(1000);
 				}
 
 				if (!$.isEmptyObject(data.files)) {
@@ -276,9 +239,9 @@ $(function() {
 					} else {
 						var newFileNum = parseInt(lastFileTag.match(/[0-9]+/)) + 1;
 					}				
-				
+					
 					for (var i = 0; i < data.files.length; i++) {
-						var downloadTag = 
+						$(".product_download_files").append(
 							'<div class="ms-download">' +
 			  				'<input type="hidden" name="product_downloads[' + newFileNum + '][filename]" value="' + data.files[i].fileName + '" />' +
 			  				(data.files[i].filePages ? '<input type="hidden" name="product_downloads[' + newFileNum + '][filePages]" value="' + data.files[i].filePages + '" />' : '') +
@@ -289,8 +252,8 @@ $(function() {
 			  				'<span class="ms-button-update disabled"></span>' +
 				  			//'<a class="ms-button-delete" title="'+msGlobals.text_delete+'"></a>' +
 				  			'</div>' +
-				  			'</div>';
-						$("#product_download_files").append(downloadTag).children(':last').hide().fadeIn(1000);
+				  			'</div>');
+						//$("#product_download_files").append(downloadTag);//.children(':last').hide().fadeIn(1000);
 					}
 					
 					if (msGlobals.product_id.length > 0) {
@@ -301,39 +264,21 @@ $(function() {
 				if (data.cancel) {
 					up.stop();
 				}
-			},
-			
-			Error: function(up, args) {
-				console.log('[error] ', args);
-				$('#error_product_download').append(uploadError).children('span:last').hide().fadeIn(1000);
 			}
 		}
-	}).init();	
+	})).init();
 	
 	$('.ms-file-updatedownload').each(function() {
 		var fileTag = $(this);
 		var parentContainer = $(this).parents('.ms-download');
-		new plupload.Uploader({
-			runtimes : 'gears,html5,flash',
-			//runtimes : 'flash',
+		new plupload.Uploader($.extend(true, uploaderParams, {
 			browse_button: fileTag.attr('id'),
 			url: 'index.php?route=seller/account-product/jxUpdateFile',
-			flash_swf_url: 'catalog/view/javascript/plupload/plupload.flash.swf',
-			silverlight_xap_url : 'catalog/view/javascript/plupload/plupload.silverlight.xap',
-			
-			multipart_params : {
-				'timestamp' : msGlobals.timestamp,
-				'token'	 : msGlobals.token,
-				'session_id': msGlobals.session_id,
-				'product_id': msGlobals.product_id
-			},
-			
-			filters : [
-				//{title : "Archives", extensions : "zip,rar"},
-			],
-			
+
 			preinit : {
 				Init: function(up, info) {
+					$(".product_download_files").attr("id", up.id);
+					$(".download.progress, #error_product_download").addClass(up.id);
 				},
 	 
 				UploadFile: function(up, file) {
@@ -342,27 +287,22 @@ $(function() {
 			},
 			
 			init : {
-				FilesAdded: function(up, files) {
-					$('#error_product_download').html('');
-					up.start();
-				},
-				
 				FileUploaded: function(up, file, info) {
+					$("#"+file.id).fadeOut(500, function() { $(this).progressbar("destroy"); $(this).remove(); });
+					
 					try {
-	   					data = $.parseJSON(info.response);
+						data = $.parseJSON(info.response);
 					} catch(e) {
-						console.log('Invalid JSON response: ');
-						console.log(info.response);
-						$('#error_product_download').append(msGlobals.uploadError).hide().fadeIn(2000);
-						return;
+						//console.log(info.response);
+						data.errors.push(msGlobals.uploadError);
 					}
 					
 					if (!$.isEmptyObject(data.errors)) {
 						var errorText = '';
 						for (var i = 0; i < data.errors.length; i++) {
-							errorText += data.errors[i] + '<br />';
+							errorText += '<p>' + file.name + ': ' + data.errors[i] + '</p>';
 						}
-						$('#error_product_download').append(errorText).hide().fadeIn(2000);
+						$("."+up.id+".error").append(errorText).fadeIn(1000);
 					}
 
 					if (!$.isEmptyObject(data.fileName)) {
@@ -372,13 +312,8 @@ $(function() {
 						
 						$("#push_downloads").parent('div').fadeIn(1000);
 					}
-				},
-				
-				Error: function(up, args) {
-					$('#error_product_download').append(msGlobals.uploadError).hide().fadeIn(2000);
-					console.log('[error] ', args);
 				}
 			}
-		}).init();
+		})).init();
 	});
 });

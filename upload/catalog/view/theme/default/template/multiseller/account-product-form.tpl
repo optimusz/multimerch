@@ -255,8 +255,9 @@
 						<!--<input type="file" name="ms-file-addimages" id="ms-file-addimages" />-->
 						<a name="ms-file-addimages" id="ms-file-addimages" class="button"><span><?php echo $ms_button_select_images; ?></span></a>
 						<p class="ms-note"><?php echo $ms_account_product_image_note; ?></p>
-						<p class="error" id="error_product_image"></p>
-						<div id="product_image_files">
+						<div class="error" id="error_product_image"></div>
+						<div class="image progress"></div>
+						<div class="product_image_files">
 						<?php if (isset($product['images'])) { ?>
 						<?php $i = 0; ?> 	
 						<?php foreach ($product['images'] as $image) { ?>
@@ -278,9 +279,9 @@
 						<!--<input type="file" name="ms-file-addfiles" id="ms-file-addfiles" />-->
 						<a name="ms-file-addfiles" id="ms-file-addfiles" class="button"><span><?php echo $ms_button_select_files; ?></span></a>
 						<p class="ms-note"><?php echo $ms_account_product_download_note; ?></p>
-						<p class="error" id="error_product_download"></p>
-						
-						<div id="product_download_files">
+						<div class="error" id="error_product_download"></div>
+						<div class="download progress"></div>
+						<div class="product_download_files">
 						<?php if (isset($product['downloads'])) { ?>
 						<?php $i = 0; ?> 
 						<?php foreach ($product['downloads'] as $download) { ?>

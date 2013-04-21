@@ -70,7 +70,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		// allow a maximum of N images
 		$msconf_images_limits = $this->config->get('msconf_images_limits');
 		foreach ($_FILES as $file) {
-			if ($msconf_images_limits[1] > 0 && $this->request->post['imageCount'] >= $msconf_images_limits[1]) {
+			if ($msconf_images_limits[1] > 0 && $this->request->post['fileCount'] >= $msconf_images_limits[1]) {
 				$json['errors'][] = sprintf($this->language->get('ms_error_product_image_maximum'),$msconf_images_limits[1]);
 				$json['cancel'] = 1;
 				$this->response->setOutput(json_encode($json));
@@ -107,7 +107,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		// allow a maximum of N images
 		$msconf_downloads_limits = $this->config->get('msconf_downloads_limits');
 		foreach ($_FILES as $file) {
-			if ($msconf_downloads_limits[1] > 0 && $this->request->post['downloadCount'] >= $msconf_downloads_limits[1]) {
+			if ($msconf_downloads_limits[1] > 0 && $this->request->post['fileCount'] >= $msconf_downloads_limits[1]) {
 				$json['errors'][] = sprintf($this->language->get('ms_error_product_download_maximum'),$msconf_downloads_limits[1]);
 				$json['cancel'] = 1;
 				$this->response->setOutput(json_encode($json));

@@ -36,6 +36,14 @@ table.list td, table.list thead td  {
 	position: absolute;
 }
 
+.ms-product div.error {
+	margin-top: 5px;
+}
+
+.ms-product div.error p {
+	margin: 0;
+}
+
 .ms-product .progress div .ui-widget-content,
 .ms-product .progress div .ui-widget-header {
 	background-image: none !important;
@@ -61,6 +69,7 @@ table.list td, table.list thead td  {
 .ms-product .progress {
 	width: 100%;
 	height: 100%;
+	display: none;
 }
 
 .ms-product .scrollbox {
