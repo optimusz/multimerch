@@ -36,22 +36,29 @@ table.list td, table.list thead td  {
 	position: absolute;
 }
 
-.ms-product .progress .ui-widget-content,
-.ms-product .progress .ui-widget-header {
+.ms-product .progress div .ui-widget-content,
+.ms-product .progress div .ui-widget-header {
 	background-image: none !important;
-	border: 1px solid #aaaaaa;
-	background-color: #cccccc !important;
+	/*border: 1px solid #aaaaaa;
+	background-color: #cccccc !important;*/
+	border: 1px solid #6db1f2;
+	background-color: #92c6f9 !important;
 }
 
-.ms-product .ms-image.progress {
-	width:100px;
-	height:103px;
-	display: inline-block;
-	float: left;
-	margin: 0 2px 0 0;
+.ms-product .progress div.ui-progressbar {
+	margin: 10px 0;
+	height: 20px;	
 }
 
-.ms-product .ms-image.progress div {
+.ms-product .progress div.ui-progressbar div.label {
+    float: left;
+    width:100%;
+    text-align:center;
+    margin-top: 3px;
+    font-weight: bold;
+}
+
+.ms-product .progress {
 	width: 100%;
 	height: 100%;
 }

@@ -132,32 +132,31 @@ $(function() {
 		},
 		
 		init : {
-			FilesAdded: function(up, files) {
-				$('#error_product_image').html('');
-				up.start();
-			},
-
 			StateChanged: function(up) {
-				if (up.state == plupload.STARTED) {
-					$('<div class="ms-image progress"><div></div></div>').appendTo("#product_image_files").children("div").progressbar({
-						value: 0
-					});
-				} else {
-					// todo remove
-					//$("#product_download_files").children(".progress:last").progressbar("destroy").remove();
+				if (up.state == plupload.STOPPED) {
+					$(".image.progress").fadeOut(500, function() { $(this).remove(); });
 				}
 			},
 			
 			UploadProgress: function(up, file) {
-				console.log(up.total.percent);
-				$("#product_image_files").children(".progress:last").progressbar("value", up.total.percent);
+				$("#"+file.id).progressbar("value", file.percent);
+				$("#"+file.id + ' div.label').text("Uploading " + file.name + ": " + file.percent + "%");
 			},	
 			
-			UploadProgress: function(up, file) {
-				console.log(up.total.percent);
+			FilesAdded: function(up, files) {
+				$("#product_image_files").before("<div class='image progress'></div>");
+				plupload.each(files, function(file) {
+					$('<div id="'+file.id+'"><div class="label"></div></div>').appendTo(".image.progress").progressbar({
+						value: 0
+					});
+				});
+				$('#error_product_image').html('');
+				up.start();
 			},
 			
 			FileUploaded: function(up, file, info) {
+				$("#"+file.id).fadeOut(500, function() { $(this).progressbar("destroy"); $(this).remove(); });
+				
 				try {
    					data = $.parseJSON(info.response);
 				} catch(e) {
@@ -227,28 +226,31 @@ $(function() {
 		},
 		
 		init : {
-			FilesAdded: function(up, files) {
-				$('#error_product_download').html('');
-				up.start();
-			},
-			
 			StateChanged: function(up) {
-				if (up.state == plupload.STARTED) {
-					$('<div class="ms-download progress"></div>').appendTo("#product_download_files").progressbar({
-						value: 0
-					});
-				} else {
-					// todo remove
-					//$("#product_download_files").children(".progress:last").progressbar("destroy").remove();
+				if (up.state == plupload.STOPPED) {
+					$(".download.progress").fadeOut(500, function() { $(this).remove(); });
 				}
 			},
 			
 			UploadProgress: function(up, file) {
-				console.log(up.total.percent);
-				$("#product_download_files").children(".progress:last").progressbar("value", up.total.percent);
-			},			
+				$("#"+file.id).progressbar("value", file.percent);
+				$("#"+file.id + ' div.label').text("Uploading " + file.name + ": " + file.percent + "%");
+			},	
+			
+			FilesAdded: function(up, files) {
+				$("#product_download_files").before("<div class='download progress'></div>");
+				plupload.each(files, function(file) {
+					$('<div id="'+file.id+'"><div class="label"></div></div>').appendTo(".download.progress").progressbar({
+						value: 0
+					});
+				});
+				$('#error_product_download').html('');
+				up.start();
+			},
 			
 			FileUploaded: function(up, file, info) {
+				$("#"+file.id).fadeOut(500, function() { $(this).progressbar("destroy"); $(this).remove(); });
+				
 				try {
    					data = $.parseJSON(info.response);
 				} catch(e) {

@@ -142,6 +142,7 @@ class ModelMultisellerSettings extends Model {
 			 `commission_id` int(11) NOT NULL,
 			 `flat` DECIMAL(15,4),
 			 `percent` DECIMAL(15,2),
+			 `payment_method` TINYINT DEFAULT NULL,
 			PRIMARY KEY (`rate_id`)) default CHARSET=utf8";
 		
 		$this->db->query($sql);
