@@ -4,7 +4,6 @@
 $_['ms_enabled']      = 'Enabled';
 $_['ms_disabled']      = 'Disabled';
 $_['ms_apply']      = 'Apply';
-$_['ms_approved']      = 'Approved';
 
 $_['ms_status_active'] = 'Active';
 $_['ms_status_inactive'] = 'Inactive';
@@ -26,12 +25,6 @@ $_['ms_type_text']           = 'Text';
 $_['ms_type_textarea']       = 'Textarea';
 $_['ms_type_time']           = 'Time';
 
-$_['text_success']        = 'Success: You have modified options!';
-$_['text_choose']         = 'Choose';
-$_['text_file']           = 'File';
-$_['text_date']           = 'Date';
-$_['text_datetime']       = 'Date &amp; Time';
-$_['text_time']           = 'Time';
 $_['text_image_manager']  = 'Image Manager';
 $_['text_browse']         = 'Browse';
 $_['text_clear']          = 'Clear';
@@ -45,7 +38,6 @@ $_['ms_success_installed']      = 'Extension successfully installed';
 $_['ms_success_product_status']      = 'Successfully changed product status.';
 
 $_['heading_title']    = '[ffct.cc] OpenCart Digital Marketplace';
-$_['text_module']         = 'Modules';
 $_['text_seller_select']         = 'Seller select';
 $_['text_shipping_dependent']         = 'Shipping dependent';
 $_['text_no_results'] = 'No results';
@@ -56,8 +48,6 @@ $_['ms_error_withdraw_status'] = 'Error: unsuccessful transaction';
 $_['ms_success'] = 'Success';
 $_['ms_success_transactions'] = 'Transactions successfully completed';
 $_['ms_success_payment_deleted'] = 'Payment deleted';
-$_['ms_success_withdrawals_marked'] = 'Payout requests marked as paid';
-$_['ms_transaction_withdrawal']      = 'Payout: %s';
 
 $_['ms_none'] = 'None';
 $_['ms_seller'] = 'Seller';
@@ -72,8 +62,6 @@ $_['ms_paypal'] = 'PayPal';
 $_['ms_date_created'] = 'Date created';
 $_['ms_status'] = 'Status';
 $_['ms_image'] = 'Image';
-$_['ms_processed_by'] = 'Processed by';
-$_['ms_date_processed'] = 'Date processed';
 $_['ms_date_modified'] = 'Date modified';
 $_['ms_date_paid'] = 'Date paid';
 $_['ms_date'] = 'Date';
@@ -89,17 +77,13 @@ $_['ms_description'] = 'Description';
 
 $_['ms_enable'] = 'Enable';
 $_['ms_disable'] = 'Disable';
-$_['ms_approve'] = 'Approve';
-$_['ms_decline'] = 'Decline';
 $_['ms_edit'] = 'Edit';
 $_['ms_delete'] = 'Delete';
-$_['ms_change_status'] = 'Change status';
 
 $_['ms_button_pay_masspay'] = 'Pay via MassPay';
 
 // Menu
 $_['ms_menu_multiseller'] = 'MultiMerch';
-$_['ms_menu_dashboard'] = 'Dashboard';
 $_['ms_menu_sellers'] = 'Sellers';
 $_['ms_menu_seller_groups'] = 'Seller groups';
 $_['ms_menu_attributes'] = 'Attributes';
@@ -108,8 +92,6 @@ $_['ms_menu_transactions'] = 'Transactions';
 $_['ms_menu_payment'] = 'Payments';
 $_['ms_menu_settings'] = 'Settings';
 $_['ms_menu_comments'] = 'Comments';
-$_['ms_menu_reports'] = 'Reports';
-$_['ms_menu_reports_sales'] = 'Sales';
 
 
 // Seller - List
@@ -119,8 +101,6 @@ $_['ms_catalog_sellers_newseller'] = 'New seller';
 $_['ms_catalog_sellers_create'] = 'Create new seller';
 
 $_['ms_catalog_sellers_total_balance'] = 'Total amount on all balances: <b>%s</b> (active sellers: <b>%s</b>)';
-$_['ms_catalog_sellers_name'] = 'Name';
-$_['ms_catalog_sellers_display_name'] = 'Display name';
 $_['ms_catalog_sellers_email'] = 'Email';
 $_['ms_catalog_sellers_total_products'] = 'Products';
 $_['ms_catalog_sellers_total_sales'] = 'Sales';
@@ -128,9 +108,6 @@ $_['ms_catalog_sellers_total_earnings'] = 'Earnings';
 $_['ms_catalog_sellers_current_balance'] = 'Balance';
 $_['ms_catalog_sellers_status'] = 'Status';
 $_['ms_catalog_sellers_date_created'] = 'Date created';
-$_['ms_catalog_sellers_status_tobeactivated'] = 'Waiting for activation';
-$_['ms_catalog_sellers_status_tobeapproved'] = 'Waiting for approval';
-$_['ms_catalog_sellers_status_active'] = 'Active';
 $_['ms_catalog_sellers_balance_paypal'] = 'Balance payout via PayPal';
 
 
@@ -164,8 +141,6 @@ $_['ms_config_enable_update_seo_urls_note'] = 'This setting enables new SEO URLs
 $_['ms_config_enable_non_alphanumeric_seo'] = 'Allow UTF8 in SEO URLs (experimental)';
 $_['ms_config_enable_non_alphanumeric_seo_note'] = 'This will not strip UTF8 symbols from SEO URLs. Use at your own risk.';
 
-$_['ms_config_seller_commission'] = 'Default store commission';
-$_['ms_config_seller_commission_note'] = 'Default store commission (flat fee + %)';
 
 $_['ms_config_minimum_product_price'] = 'Minimum product price';
 $_['ms_config_minimum_product_price_note'] = 'Minimum product price';
@@ -182,8 +157,6 @@ $_['ms_config_downloads_limits_note'] = 'Minimum and maximum number of downloads
 $_['ms_config_enable_pdf_generator'] = 'Enable PDF to image generator';
 $_['ms_config_enable_pdf_generator_note'] = 'Allow sellers to automatically generate product images from submitted PDF downloads (requires Imagick extension for PHP and Ghostscript installed)';
 
-$_['ms_config_max_images'] = 'Maximum images allowed';
-$_['ms_config_max_images_note'] = 'Maximum number of product images allowed when submitting a product';
 
 $_['ms_config_allowed_download_types'] = 'Allowed download extensions';
 $_['ms_config_allowed_download_types_note'] = 'Allowed download extensions';
@@ -204,7 +177,6 @@ $_['ms_config_allow_partial_withdrawal'] = 'Allow partial payouts';
 $_['ms_config_allow_partial_withdrawal_note'] = 'Allow sellers to request partial payouts';
 
 $_['ms_config_allow_withdrawal_requests'] = 'Allow payout requests';
-$_['ms_config_allow_withdrawal_requests_note'] = 'Allow sellers to request payouts';
 
 $_['ms_config_paypal_sandbox'] = 'PayPal Sandbox mode';
 $_['ms_config_paypal_sandbox_note'] = 'Use PayPal in Sandbox mode for testing and debugging';
@@ -247,8 +219,6 @@ $_['ms_config_enable_shipping_note'] = 'New products will be created to require 
 $_['ms_config_enable_quantities'] = 'Enable quantities';
 $_['ms_config_enable_quantities_note'] = 'Allow sellers to specify quantities for products';
 
-$_['ms_config_product_options'] = 'Product options';
-$_['ms_config_product_options_note'] = 'Enable product options on new product page';
 
 $_['ms_config_seller_terms_page'] = 'Seller account terms';
 $_['ms_config_seller_terms_page_note'] = 'Sellers have to agree to the terms when creating a seller account.';
@@ -298,22 +268,18 @@ $_['ms_config_top']    = 'Content Top';
 $_['ms_config_bottom'] = 'Content Bottom';
 $_['ms_config_column_left']    = 'Column Left';
 $_['ms_config_column_right']   = 'Column Right';
-$_['ms_config_banner']        = 'Banner:';
 $_['ms_config_limit']         = 'Limit:';
 $_['ms_config_scroll']        = 'Scroll:';
 $_['ms_config_image']         = 'Image (W x H):';
 $_['ms_config_layout']        = 'Layout:';
 $_['ms_config_position']      = 'Position:';
 $_['ms_config_sort_order']    = 'Sort Order:';
-$_['ms_config_carousel_image']        = 'Image width &amp; height dimensions required!';
 
 
 
 // Customer-seller form
 $_['ms_catalog_sellerinfo_heading'] = 'Seller';
 $_['ms_catalog_sellerinfo_seller_data'] = 'Seller data';
-$_['ms_catalog_sellerinfo_breadcrumbs'] = 'Seller';
-$_['ms_catalog_sellerinfo_sellertab'] = 'Seller tab';
 
 $_['ms_catalog_sellerinfo_customer'] = 'Customer';
 $_['ms_catalog_sellerinfo_customer_data'] = 'Customer data';
@@ -333,7 +299,6 @@ $_['ms_catalog_sellerinfo_country']    = 'Country';
 $_['ms_catalog_sellerinfo_sellergroup']    = 'Seller group';
 
 $_['ms_catalog_sellerinfo_country_dont_display']    = 'Do not display country';
-$_['ms_catalog_sellerinfo_website']    = 'Website';
 $_['ms_catalog_sellerinfo_avatar']    = 'Avatar';
 $_['ms_catalog_sellerinfo_paypal']    = 'Paypal';
 $_['ms_catalog_sellerinfo_message'] = 'Message';
@@ -360,12 +325,8 @@ $_['ms_seller_groups_column_action'] = 'Actions';
 $_['ms_catalog_insert_seller_group_heading'] = 'New Seller Group';
 $_['ms_catalog_edit_seller_group_heading'] = 'Edit Seller Group';
 
-$_['ms_seller_group_entry_name'] = 'Name';
-$_['ms_seller_group_entry_description'] = 'Description';
-$_['ms_seller_group_entry_language'] = 'Language';
 
 $_['ms_error_seller_group_name'] = 'Error: Name must be between 3 and 32 symbols long';
-$_['ms_error_seller_group_language'] = 'Error: Language not selected';
 $_['ms_error_seller_group_default'] = 'Error: Default seller group can not be deleted!';
 $_['ms_success_seller_group_created'] = 'Seller group created';
 $_['ms_success_seller_group_updated'] = 'Seller group updated';
@@ -460,9 +421,6 @@ $_['ms_mail_subject_product_purchased']      = 'Product purchased';
 $_['ms_mail_product_purchased'] = <<<EOT
 Your product %s has been purchased from %s.
 EOT;
-$_['ms_mail_product_purchased_multiple'] = <<<EOT
-Your products have been purchased from %s: %s x %s.
-EOT;
 
 $_['ms_mail_product_purchased_info'] = <<<EOT
 \n
@@ -478,7 +436,6 @@ Delivery address:
 EOT;
 
 // Sales - Mail
-$_['ms_text_seller_all']      = 'All sellers';
 
 $_['ms_transaction_sale']      = 'Sale: %s (-%s commission)';
 $_['ms_transaction_refund']      = 'Refund: %s';

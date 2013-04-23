@@ -9,8 +9,6 @@ $_['ms_status_published'] = 'Published';
 $_['ms_status_notpublished'] = 'Not published';
 $_['ms_status_disabled'] = 'Disabled';
 $_['ms_status_deleted'] = 'Deleted';
-$_['ms_status_pending_approval'] = 'Pending approval';
-$_['ms_status_pending_deletion'] = 'Pending deletion';
 $_['ms_status_unpaid'] = 'Unpaid listing fee';
 $_['ms_status_signup_unpaid'] = 'Unpaid signup fee';
 
@@ -30,11 +28,8 @@ $_['ms_button_submit'] = 'Submit';
 $_['ms_button_add_special'] = 'Define a new special price';
 $_['ms_button_add_discount'] = 'Define a new quantity discount';
 $_['ms_button_generate'] = 'Generate images from PDF';
-$_['ms_button_regenerate'] = 'Regenerate images';
 $_['ms_button_submit_request'] = 'Submit request';
 $_['ms_button_save'] = 'Save';
-$_['ms_button_save_draft'] = 'Save draft';
-$_['ms_button_save_draft_unpublish'] = 'This product will be unpublished';
 $_['ms_button_cancel'] = 'Cancel';
 
 $_['ms_button_select_image'] = 'Select image';
@@ -116,12 +111,6 @@ Delivery address:
 %s
 EOT;
 
-$_['ms_mail_product_purchased_comments'] = <<<EOT
-
-Comments:
-%s
-EOT;
-
 $_['ms_mail_subject_withdraw_request_submitted'] = 'Payout request submitted';
 $_['ms_mail_withdraw_request_submitted'] = <<<EOT
 We have received your payout request. You will receive your earnings as soon as it is processed.
@@ -192,7 +181,6 @@ $_['ms_success_product_published'] = 'Product published';
 $_['ms_success_product_unpublished'] = 'Product unpublished';
 $_['ms_success_product_created'] = 'Product created';
 $_['ms_success_product_updated'] = 'Product updated';
-$_['ms_success_product_created_approval'] = 'Product created. It will be published as soon as it is approved';
 $_['ms_success_product_deleted'] = 'Product deleted';
 // Errors
 $_['ms_error_sellerinfo_nickname_empty'] = 'Username cannot be empty';
@@ -222,8 +210,6 @@ $_['ms_error_product_price_empty'] = 'Please specify a price for your product';
 $_['ms_error_product_price_invalid'] = 'Invalid price';
 $_['ms_error_product_price_low'] = 'Price too low';
 $_['ms_error_product_category_empty'] = 'Please select a category';
-$_['ms_error_product_thumbnail_empty'] = 'Please upload a thumbnail for your product';
-$_['ms_error_product_download_empty'] = 'Please add a download for your product';
 $_['ms_error_product_image_count'] = 'Please upload at least %s image(s) for your product';
 $_['ms_error_product_download_count'] = 'Please submit at least %s download(s) for your product';
 $_['ms_error_product_image_maximum'] = 'No more than %s image(s) allowed';
@@ -250,7 +236,6 @@ $_['ms_account_seller_account'] = 'Seller Account';
 $_['ms_account_sellerinfo'] = 'Seller profile';
 $_['ms_account_newproduct'] = 'New product';
 $_['ms_account_products'] = 'Products';
-$_['ms_account_sellerstatus'] = 'Account status';
 $_['ms_account_transactions'] = 'Transactions';
 $_['ms_account_orders'] = 'Orders';
 $_['ms_account_withdraw'] = 'Request earnings';
@@ -270,7 +255,6 @@ $_['ms_account_product_name'] = 'Name';
 $_['ms_account_product_name_note'] = 'Specify a name for your product';
 $_['ms_account_product_description'] = 'Description';
 $_['ms_account_product_description_note'] = 'Describe your product';
-$_['ms_account_product_short_description'] = 'Short description';
 $_['ms_account_product_tags'] = 'Tags';
 $_['ms_account_product_tags_note'] = 'Specify tags for your product.';
 
@@ -283,7 +267,6 @@ $_['ms_account_product_listing_flat'] = 'Listing fee for this product is <span>%
 $_['ms_account_product_listing_percent'] = 'Listing fee for this product is based on the product price. Current listing fee: <span>%s</span>.';
 $_['ms_account_product_listing_balance'] = 'This amount will be deducted from your seller balance.';
 $_['ms_account_product_listing_paypal'] = 'You will be redirected to the PayPal payment page after product submission.';
-$_['ms_account_product_listing_combined'] = 'The available amount will be deducted from your balance and you will be able to pay the rest after product submission.';
 $_['ms_account_product_listing_itemname'] = 'Product listing fee at %s';
 
 $_['ms_account_product_category'] = 'Category';
@@ -306,7 +289,6 @@ $_['ms_account_product_message_reviewer'] = 'Message to the reviewer';
 $_['ms_account_product_message'] = 'Message';
 $_['ms_account_product_message_note'] = 'Your message to the reviewer';
 
-$_['ms_account_product_download_pages'] = 'Pages:';
 
 $_['ms_account_product_priority'] = 'Priority';
 $_['ms_account_product_date_start'] = 'Start date';
@@ -322,7 +304,6 @@ $_['ms_account_editproduct_breadcrumbs'] = 'Edit Product';
 $_['ms_account_sellerinfo_heading'] = 'Seller profile';
 $_['ms_account_sellerinfo_breadcrumbs'] = 'Seller profile';
 
-$_['ms_account_sellerinfo_activation_notice'] = 'Please complete the following form to activate your seller account';
 
 $_['ms_account_sellerinfo_nickname'] = 'Nickname';
 $_['ms_account_sellerinfo_nickname_note'] = 'Specify your seller nickname.';
@@ -333,8 +314,6 @@ $_['ms_account_sellerinfo_company_note'] = 'Your company (optional)';
 $_['ms_account_sellerinfo_country'] = 'Country';
 $_['ms_account_sellerinfo_country_dont_display'] = 'Do not display my country';
 $_['ms_account_sellerinfo_country_note'] = 'Select your country.';
-$_['ms_account_sellerinfo_website'] = 'Website';
-$_['ms_account_sellerinfo_website_note'] = 'Specify your website';
 $_['ms_account_sellerinfo_avatar'] = 'Avatar';
 $_['ms_account_sellerinfo_avatar_note'] = 'Select your avatar';
 $_['ms_account_sellerinfo_paypal'] = 'Paypal';
@@ -349,15 +328,8 @@ $_['ms_account_sellerinfo_fee_balance'] = 'This amount will be deducted from you
 $_['ms_account_sellerinfo_fee_paypal'] = 'You will be redirected to the PayPal payment page after form submission.';
 $_['ms_account_sellerinfo_signup_itemname'] = 'Seller account registration at %s';
 
-$_['ms_account_sellerinfo_mail_account_thankyou'] = 'Thank you for signing up as a seller at %s!';
-$_['ms_account_sellerinfo_mail_account_created_subject'] = '[%s] Seller account created';
-$_['ms_account_sellerinfo_mail_account_created_message'] = "You now have full access to your seller account and can start publishing your products!";
 
-$_['ms_account_sellerinfo_mail_account_pleaseactivate_subject'] = '[%s] Please activate your seller account';
-$_['ms_account_sellerinfo_mail_account_pleaseactivate_message'] = "Please click the link below to activate your account: ";
 
-$_['ms_account_sellerinfo_mail_account_needsapproval_subject'] = '[%s] Seller account approval';
-$_['ms_account_sellerinfo_mail_account_needsapproval_message'] = "As soon as your account is approved, you will receive a confirmation email.";
 
 $_['ms_account_sellerinfo_saved'] = 'Seller account data saved.';
 
@@ -365,31 +337,6 @@ $_['ms_account_sellerinfo_saved'] = 'Seller account data saved.';
 // Account - Seller account status
 $_['ms_account_status'] = 'Your seller account status is: ';
 $_['ms_account_status_tobeapproved'] = '<br />You will be able to use your account as soon as it is approved by the store owner.';
-
-$_['ms_seller_status_activation'] = <<<EOT
-Waiting for activation
-
-Please visit the link contained in the email we sent you to complete the activation process.
-EOT;
-
-/*
-$_['ms_seller_status_approval'] = <<<EOT
-<b>Waiting for approval</b>
-<br />
-As soon as your account is approved, you will receive a confirmation email.
-EOT;
-
-$_['ms_seller_status_active'] = <<<EOT
-<b>Active</b>
-<br />
-You have full access to your seller account.
-EOT;
-*/
-$_['ms_seller_status_disabled'] = <<<EOT
-<br />
-Your seller account has been disabled by the administrator.
-EOT;
-
 $_['ms_account_status_please_fill_in'] = 'Please complete the following form to create a seller account.';
 
 
@@ -398,14 +345,11 @@ $_['ms_account_products_heading'] = 'Your Products';
 $_['ms_account_products_breadcrumbs'] = 'Your Products';
 
 $_['ms_account_products_product'] = 'Product';
-$_['ms_account_products_publish'] = 'Published';
 $_['ms_account_products_sales'] = 'Sales';
 $_['ms_account_products_earnings'] = 'Earnings';
 $_['ms_account_products_status'] = 'Status';
 $_['ms_account_products_date'] = 'Date added';
 $_['ms_account_products_action'] = 'Action';
-$_['ms_account_products_action_edit'] = 'Edit';
-$_['ms_account_products_action_delete'] = 'Delete';
 $_['ms_account_products_noproducts'] = 'You don\'t have any products yet!';
 $_['ms_account_products_confirmdelete'] = 'Are you sure you want to delete your product?';
 
@@ -417,7 +361,6 @@ $_['ms_account_transactions_balance'] = 'Your current balance:';
 $_['ms_account_transactions_earnings'] = 'Your earnings to date:';
 $_['ms_account_transactions_description'] = 'Description';
 $_['ms_account_transactions_amount'] = 'Amount';
-$_['ms_account_transactions_status'] = 'Status';
 $_['ms_account_transactions_notransactions'] = 'You don\'t have any transactions yet!';
 
 
@@ -479,14 +422,11 @@ $_['ms_account_withdraw_method_paypal'] = 'PayPal';
 $_['ms_account_withdraw_all'] = 'All earnings currently available';
 $_['ms_account_withdraw_minimum_not_reached'] = 'Your total balance is less than the minimum payout amount!';
 $_['ms_account_withdraw_no_funds'] = 'No funds to withdraw.';
-$_['ms_account_withdraw_disabled'] = 'We don\'t accept payout requests. You will be paid automatically.';
 $_['ms_account_withdraw_no_paypal'] = 'Please <a href="index.php?route=seller/account-profile">specify your PayPal address</a> first!';
 
 
 // Product page - Seller information
 $_['ms_catalog_product_sellerinfo'] = 'Seller information';
-$_['ms_catalog_product_date_added'] = 'Date added:';
-$_['ms_catalog_product_sales'] = 'Sales:';
 $_['ms_catalog_product_contact'] = 'Contact this seller';
 
 
@@ -497,7 +437,6 @@ $_['ms_comments_name'] = 'Name';
 $_['ms_comments_note'] = '<span style="color: #FF0000;">Note:</span> HTML is not translated!';
 $_['ms_comments_email'] = 'E-mail';
 $_['ms_comments_comment'] = 'Comment';
-$_['ms_comments_button_continue'] = 'Submit';
 $_['ms_comments_wait'] = 'Please Wait!';
 
 $_['ms_comments_login_register'] = 'Please <a href="%s">login</a> or <a href="%s">register</a> to post a comment.';
@@ -516,7 +455,6 @@ $_['ms_footer'] = '<br>MultiMerch Digital Marketplace by <a href="http://ffct.cc
 
 // Catalog - Sellers list
 $_['ms_catalog_sellers_heading'] = 'Sellers';
-$_['ms_catalog_sellers_breadcrumbs'] = 'Sellers';
 
 $_['ms_catalog_sellers_country'] = 'Country:';
 $_['ms_catalog_sellers_website'] = 'Website:';
@@ -549,10 +487,6 @@ $_['ms_catalog_seller_products_heading'] = '%s\'s products';
 $_['ms_catalog_seller_products_breadcrumbs'] = '%s\'s products';
 
 $_['ms_catalog_seller_products_empty'] = 'This seller doesn\'t have any products yet!';
-$_['ms_catalog_seller_products_website'] = 'Website:';
-$_['ms_catalog_seller_products_company'] = 'Company:';
-$_['ms_catalog_seller_products_totalsales'] = 'Total sales:';
-$_['ms_catalog_seller_products_totalproducts'] = 'Total products:';
 
 // Catalog - Carousel
 $_['ms_carousel_sellers'] = 'Our sellers';
