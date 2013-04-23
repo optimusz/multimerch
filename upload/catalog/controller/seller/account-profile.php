@@ -383,6 +383,10 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 				'href' => $this->url->link('account/account', '', 'SSL'),
 			),
 			array(
+				'text' => $this->language->get('ms_account_dashboard_breadcrumbs'),
+				'href' => $this->url->link('seller/account-dashboard', '', 'SSL'),
+			),
+			array(
 				'text' => $this->language->get('ms_account_sellerinfo_breadcrumbs'),
 				'href' => $this->url->link('seller/account-profile', '', 'SSL'),
 			)

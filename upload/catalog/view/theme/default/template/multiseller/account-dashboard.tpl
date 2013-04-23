@@ -46,32 +46,32 @@
 	
 	<div class="nav">
 		<h3><?php echo $ms_account_dashboard_nav; ?></h3>
-		<a href="<?php echo $links['profile']; ?>">
+		<a href="<?php echo $this->url->link('seller/account-profile', '', 'SSL'); ?>">
 			<img src="catalog/view/theme/<?php echo $this->config->get('config_template'); ?>/image/ms-profile.png" />
 			<span><?php echo $ms_account_dashboard_nav_profile; ?></span>
 		</a>
 
-		<a href="<?php echo $links['profile']; ?>">
+		<a href="<?php echo $this->url->link('seller/account-product/create', '', 'SSL'); ?>">
 			<img src="catalog/view/theme/<?php echo $this->config->get('config_template'); ?>/image/ms-bag-plus.png" />
 			<span><?php echo $ms_account_dashboard_nav_product; ?></span>
 		</a>
 
-		<a href="<?php echo $links['profile']; ?>">
+		<a href="<?php echo $this->url->link('seller/account-product', '', 'SSL'); ?>">
 			<img src="catalog/view/theme/<?php echo $this->config->get('config_template'); ?>/image/ms-bag.png" />
 			<span><?php echo $ms_account_dashboard_nav_products; ?></span>
 		</a>
 		
-		<a href="<?php echo $links['profile']; ?>">
+		<a href="<?php echo $this->url->link('seller/account-order', '', 'SSL'); ?>">
 			<img src="catalog/view/theme/<?php echo $this->config->get('config_template'); ?>/image/ms-cart-96.png" />
 			<span><?php echo $ms_account_dashboard_nav_orders; ?></span>
 		</a>
 		
-		<a href="<?php echo $links['profile']; ?>">
+		<a href="<?php echo $this->url->link('seller/account-transaction', '', 'SSL'); ?>">
 			<img src="catalog/view/theme/<?php echo $this->config->get('config_template'); ?>/image/ms-book-96.png" />
 			<span><?php echo $ms_account_dashboard_nav_balance; ?></span>
 		</a>
 		
-		<a href="<?php echo $links['profile']; ?>">
+		<a href="<?php echo $this->url->link('seller/account-withdrawal', '', 'SSL'); ?>">
 			<img src="catalog/view/theme/<?php echo $this->config->get('config_template'); ?>/image/ms-dollar.png" />
 			<span><?php echo $ms_account_dashboard_nav_payout; ?></span>
 		</a>

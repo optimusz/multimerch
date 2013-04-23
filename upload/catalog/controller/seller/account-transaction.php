@@ -57,6 +57,10 @@ class ControllerSellerAccountTransaction extends ControllerSellerAccount {
 				'href' => $this->url->link('account/account', '', 'SSL'),
 			),
 			array(
+				'text' => $this->language->get('ms_account_dashboard_breadcrumbs'),
+				'href' => $this->url->link('seller/account-dashboard', '', 'SSL'),
+			),
+			array(
 				'text' => $this->language->get('ms_account_transactions_breadcrumbs'),
 				'href' => $this->url->link('seller/account-transaction', '', 'SSL'),
 			)

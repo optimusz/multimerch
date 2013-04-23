@@ -798,6 +798,10 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 				'href' => $this->url->link('account/account', '', 'SSL'),
 			),
 			array(
+				'text' => $this->language->get('ms_account_dashboard_breadcrumbs'),
+				'href' => $this->url->link('seller/account-dashboard', '', 'SSL'),
+			),
+			array(
 				'text' => $this->language->get('ms_account_products_breadcrumbs'),
 				'href' => $this->url->link('seller/account-product', '', 'SSL'),
 			)
@@ -822,11 +826,11 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		if ($this->config->get('msconf_enable_pdf_generator') && extension_loaded('imagick')) {
 			$this->document->addScript('catalog/view/javascript/dialog-pdf.js');
 		}		
-		
+
 		$this->data['seller'] = $this->MsLoader->MsSeller->getSeller($this->customer->getId());
 		$product_id = isset($this->request->get['product_id']) ? (int)$this->request->get['product_id'] : 0;
 		if ($product_id) $product_status = $this->MsLoader->MsProduct->getStatus($product_id);
-		
+
 		if (!$product_id || $product_status == MsProduct::STATUS_UNPAID) {
 			$this->data['seller']['commissions'] = $this->MsLoader->MsCommission->calculateCommission(array('seller_id' => $this->customer->getId()));
 			switch($this->data['seller']['commissions'][MsCommission::RATE_LISTING]['payment_method']) {
@@ -846,7 +850,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 						'custom' => 'custom'
 					);
 					
-					list($this->template, $this->children) = $this->MsLoader->MsHelper->loadTemplate('payment-paypal');
+					list($this->template, $this->children) = $this->MsLoader->MsHelper->loadTemplate('payment-paypal', array());
 					$this->data['payment_form'] = $this->render();
 					break;
 					
@@ -856,10 +860,9 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 					break;
 			} 
 		}
-		
 		$this->data['salt'] = $this->MsLoader->MsSeller->getSalt($this->customer->getId());
 		$this->data['categories'] = $this->MsLoader->MsProduct->getCategories();
-		
+
 		$attributes = $this->MsLoader->MsAttribute->getAttributes(
 			array(
 				// current language
@@ -908,12 +911,16 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		$this->data['product'] = FALSE;
 		$this->data['heading'] = $this->language->get('ms_account_newproduct_heading');
 		$this->document->setTitle($this->language->get('ms_account_newproduct_heading'));
-		
+
 		$this->data['breadcrumbs'] = $this->MsLoader->MsHelper->setBreadcrumbs(array(
 			array(
 				'text' => $this->language->get('text_account'),
 				'href' => $this->url->link('account/account', '', 'SSL'),
 			),
+			array(
+				'text' => $this->language->get('ms_account_dashboard_breadcrumbs'),
+				'href' => $this->url->link('seller/account-dashboard', '', 'SSL'),
+			),			
 			array(
 				'text' => $this->language->get('ms_account_products_breadcrumbs'),
 				'href' => $this->url->link('seller/account-product', '', 'SSL'),
@@ -1005,6 +1012,10 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 			array(
 				'text' => $this->language->get('text_account'),
 				'href' => $this->url->link('account/account', '', 'SSL'),
+			),
+			array(
+				'text' => $this->language->get('ms_account_dashboard_breadcrumbs'),
+				'href' => $this->url->link('seller/account-dashboard', '', 'SSL'),
 			),
 			array(
 				'text' => $this->language->get('ms_account_products_breadcrumbs'),

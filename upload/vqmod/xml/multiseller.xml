@@ -115,9 +115,9 @@
 					<ul class="ms-sellermenu <?php if ($this->config->get('msconf_graphical_sellermenu')) { ?>graphical<?php } ?>">
 							<?php if ($ms_seller_created && $this->MsLoader->MsSeller->getStatus($this->customer->getId()) == MsSeller::STATUS_ACTIVE) { ?>
 								<li>
-									<a href="<?php echo $ms_link_dashboard; ?>">
+									<a href="<?php echo $this->url->link('seller/account-dashboard', '', 'SSL'); ?>">
 										<?php if($this->config->get('msconf_graphical_sellermenu')) { ?>
-											<img src="catalog/view/theme/<?php echo $this->config->get('config_template'); ?>/image/ms-stats-96.png" />
+											<img src="catalog/view/theme/<?php echo $this->config->get('config_template'); ?>/image/ms-graph.png" />
 										<?php } ?>
 										<?php echo $ms_account_dashboard; ?>
 									</a>
@@ -125,9 +125,9 @@
 							<?php } ?>
 
 							<li>
-								<a href="<?php echo $ms_link_sellerinfo; ?>">
+								<a href="<?php echo $this->url->link('seller/account-profile', '', 'SSL'); ?>">
 									<?php if($this->config->get('msconf_graphical_sellermenu')) { ?>
-										<img src="catalog/view/theme/<?php echo $this->config->get('config_template'); ?>/image/ms-profile-96.png" />
+										<img src="catalog/view/theme/<?php echo $this->config->get('config_template'); ?>/image/ms-profile.png" />
 									<?php } ?>								
 									<?php echo $ms_account_sellerinfo; ?>
 								</a>
@@ -135,23 +135,23 @@
 							
 							<?php if ($ms_seller_created && $this->MsLoader->MsSeller->getStatus($this->customer->getId()) == MsSeller::STATUS_ACTIVE) { ?>
 								<li>
-									<a href="<?php echo $ms_link_newproduct; ?>">
+									<a href="<?php echo $this->url->link('seller/account-product/create', '', 'SSL'); ?>">
 										<?php if($this->config->get('msconf_graphical_sellermenu')) { ?>
-											<img src="catalog/view/theme/<?php echo $this->config->get('config_template'); ?>/image/ms-folder-plus-96.png" />
+											<img src="catalog/view/theme/<?php echo $this->config->get('config_template'); ?>/image/ms-bag-plus.png" />
 										<?php } ?>
 										<?php echo $ms_account_newproduct; ?>
 									</a>
 								</li>
 								<li>
-									<a href="<?php echo $ms_link_products; ?>">
+									<a href="<?php echo $this->url->link('seller/account-product', '', 'SSL'); ?>">
 										<?php if($this->config->get('msconf_graphical_sellermenu')) { ?>
-											<img src="catalog/view/theme/<?php echo $this->config->get('config_template'); ?>/image/ms-folder-96.png" />
+											<img src="catalog/view/theme/<?php echo $this->config->get('config_template'); ?>/image/ms-bag.png" />
 										<?php } ?>
 										<?php echo $ms_account_products; ?>
 									</a>
 								</li>
 								<li>
-									<a href="<?php echo $ms_link_orders; ?>">
+									<a href="<?php echo $this->url->link('seller/account-order', '', 'SSL'); ?>">
 										<?php if($this->config->get('msconf_graphical_sellermenu')) { ?>
 											<img src="catalog/view/theme/<?php echo $this->config->get('config_template'); ?>/image/ms-cart-96.png" />
 										<?php } ?>										
@@ -159,7 +159,7 @@
 									</a>
 								</li>
 								<li>
-									<a href="<?php echo $ms_link_transactions; ?>">
+									<a href="<?php echo $this->url->link('seller/account-transaction', '', 'SSL'); ?>">
 										<?php if($this->config->get('msconf_graphical_sellermenu')) { ?>
 											<img src="catalog/view/theme/<?php echo $this->config->get('config_template'); ?>/image/ms-book-96.png" />
 										<?php } ?>										
@@ -168,9 +168,9 @@
 								</li>
 								<?php if ($this->config->get('msconf_allow_withdrawal_requests')) { ?>
 									<li>
-										<a href="<?php echo $ms_link_withdraw; ?>">
+										<a href="<?php echo $this->url->link('seller/account-withdrawal', '', 'SSL'); ?>">
 											<?php if($this->config->get('msconf_graphical_sellermenu')) { ?>
-												<img src="catalog/view/theme/<?php echo $this->config->get('config_template'); ?>/image/ms-coin-96.png" />
+												<img src="catalog/view/theme/<?php echo $this->config->get('config_template'); ?>/image/ms-dollar.png" />
 											<?php } ?>											
 											<?php echo $ms_account_withdraw; ?>
 										</a>
@@ -191,13 +191,6 @@
 			<add><![CDATA[
 				$this->data['ms_seller_created'] = $this->MsLoader->MsSeller->isCustomerSeller($this->customer->getId());
 				$this->data = array_merge($this->data, $this->load->language('multiseller/multiseller'));
-				$this->data['ms_link_dashboard'] = $this->url->link('seller/account-dashboard', '', 'SSL');			
-				$this->data['ms_link_sellerinfo'] = $this->url->link('seller/account-profile', '', 'SSL');
-				$this->data['ms_link_newproduct'] = $this->url->link('seller/account-product/create', '', 'SSL');
-				$this->data['ms_link_products'] = $this->url->link('seller/account-product', '', 'SSL');
-				$this->data['ms_link_orders'] = $this->url->link('seller/account-order', '', 'SSL');
-				$this->data['ms_link_transactions'] = $this->url->link('seller/account-transaction', '', 'SSL');
-				$this->data['ms_link_withdraw'] = $this->url->link('seller/account-withdrawal', '', 'SSL');
 			]]></add>
 		</operation>
 	</file>
@@ -212,18 +205,18 @@
 				<br />
 				<li style="list-style-type: none"><b><?php echo $ms_account_seller_account; ?></b></li>
 				<?php if ($ms_seller_created && $this->MsLoader->MsSeller->getStatus($this->customer->getId()) == MsSeller::STATUS_ACTIVE) { ?>
-					<li><a href="<?php echo $ms_link_dashboard; ?>"><?php echo $ms_account_dashboard; ?></a></li>
+					<li><a href="<?php echo $this->url->link('seller/account-dashboard', '', 'SSL'); ?>"><?php echo $ms_account_dashboard; ?></a></li>
 				<?php } ?>
 				
-				<li><a href="<?php echo $ms_link_sellerinfo; ?>"><?php echo $ms_account_sellerinfo; ?></a></li>
+				<li><a href="<?php echo $this->url->link('seller/account-profile', '', 'SSL'); ?>"><?php echo $ms_account_sellerinfo; ?></a></li>
 				
 				<?php if ($ms_seller_created && $this->MsLoader->MsSeller->getStatus($this->customer->getId()) == MsSeller::STATUS_ACTIVE) { ?>
-					<li><a href="<?php echo $ms_link_newproduct; ?>"><?php echo $ms_account_newproduct; ?></a></li>
-					<li><a href="<?php echo $ms_link_products; ?>"><?php echo $ms_account_products; ?></a></li>
-					<li><a href="<?php echo $ms_link_orders; ?>"><?php echo $ms_account_orders; ?></a></li>
-					<li><a href="<?php echo $ms_link_transactions; ?>"><?php echo $ms_account_transactions; ?></a></li>
+					<li><a href="<?php echo $this->url->link('seller/account-product/create', '', 'SSL'); ?>"><?php echo $ms_account_newproduct; ?></a></li>
+					<li><a href="<?php echo $this->url->link('seller/account-product', '', 'SSL'); ?>"><?php echo $ms_account_products; ?></a></li>
+					<li><a href="<?php echo $this->url->link('seller/account-order', '', 'SSL'); ?>"><?php echo $ms_account_orders; ?></a></li>
+					<li><a href="<?php echo $this->url->link('seller/account-transaction', '', 'SSL'); ?>"><?php echo $ms_account_transactions; ?></a></li>
 					<?php if ($this->config->get('msconf_allow_withdrawal_requests')) { ?>
-					<li><a href="<?php echo $ms_link_withdraw; ?>"><?php echo $ms_account_withdraw; ?></a></li>
+					<li><a href="<?php echo $this->url->link('seller/account-withdrawal', '', 'SSL'); ?>"><?php echo $ms_account_withdraw; ?></a></li>
 					<?php } ?>
 				<?php } ?>
 			]]></add>
@@ -260,17 +253,9 @@
 			<add><![CDATA[
 				$this->data['ms_seller_created'] = $this->MsLoader->MsSeller->isCustomerSeller($this->customer->getId());			
 				$this->data = array_merge($this->data, $this->load->language('multiseller/multiseller'));
-				$this->data['ms_link_dashboard'] = $this->url->link('seller/account-dashboard', '', 'SSL');			
-				$this->data['ms_link_sellerinfo'] = $this->url->link('seller/account-profile', '', 'SSL');
-				$this->data['ms_link_newproduct'] = $this->url->link('seller/account-product/create', '', 'SSL');
-				$this->data['ms_link_products'] = $this->url->link('seller/account-product', '', 'SSL');
-				$this->data['ms_link_orders'] = $this->url->link('seller/account-order', '', 'SSL');
-				$this->data['ms_link_transactions'] = $this->url->link('seller/account-transaction', '', 'SSL');
-				$this->data['ms_link_withdraw'] = $this->url->link('seller/account-withdrawal', '', 'SSL');
 			]]></add>
 		</operation>
 	</file>
-
 
 	<!-- transactions for order -->
 	<file name="catalog/model/checkout/order.php">
