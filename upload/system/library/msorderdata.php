@@ -44,7 +44,7 @@ class MsOrderData extends Model {
 		return $res->row['total'];
 	}
 
-
+	
 
 	/*
 	public function existsOrderData($order_id) {
@@ -115,5 +115,23 @@ class MsOrderData extends Model {
 		$order_product_data_id = mysql_insert_id();
 		return $order_product_data_id;
 	}
+	
+	public function getTotalSales($data = array()) {
+		$sql = "SELECT SUM(DISTINCT quantity) as 'total'
+				FROM `" . DB_PREFIX . "ms_order_product_data` mopd
+				INNER JOIN `" . DB_PREFIX . "order_product` op
+					USING(order_id)
+				INNER JOIN `" . DB_PREFIX . "order` o
+					USING(order_id)
+				WHERE 1 = 1"
+				. (isset($data['order_id']) ? " AND mopd.order_id =  " .  (int)$data['order_id'] : '')
+				. (isset($data['seller_id']) ? " AND seller_id =  " .  (int)$data['seller_id'] : '')
+				. (isset($data['product_id']) ? " AND mopd.product_id =  " .  (int)$data['product_id'] : '')
+				. (isset($data['period_start']) ? " AND DATEDIFF(o.date_added, '{$data['period_start']}') >= 0" : "");
+
+		$res = $this->db->query($sql);
+
+		return (int)$res->row['total'];
+	}	
 }
 ?>

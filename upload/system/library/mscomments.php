@@ -14,7 +14,7 @@ class MsComments extends Model {
 		$res = $this->db->query($sql);
 		return $res->row['total'];
 	}	
-	
+
 	public function getComments($data = array(), $sort = array()) {
 		$sql = "SELECT  *
 				FROM " . DB_PREFIX . "ms_comments mc
@@ -31,7 +31,27 @@ class MsComments extends Model {
 		}
 
 		return $res->rows;
-	}	
+	}
+
+	public function getSellerProductComments($data = array(), $sort = array()) {
+		$sql = "SELECT  *
+				FROM `" . DB_PREFIX . "ms_comments` mc
+				WHERE 1 = 1 "
+				. (isset($data['displayed']) ? " AND mc.display = 1" : '') . "
+				AND mc.product_id IN (
+					SELECT product_id FROM `" . DB_PREFIX . "ms_product` WHERE seller_id = " . (int)$data['seller_id'] . " AND product_status = " . MsProduct::STATUS_ACTIVE . "
+				)"
+				. (isset($sort['order_by']) ? " ORDER BY {$sort['order_by']} {$sort['order_way']}" : '')
+				. (isset($sort['limit']) ? " LIMIT ".(int)$sort['offset'].', '.(int)($sort['limit']) : '');
+
+		$res = $this->db->query($sql);
+
+		foreach ($res->rows as &$row)  {
+			$row['comment'] = htmlspecialchars_decode($row['comment']);
+		}
+
+		return $res->rows;
+	}
 	
 	public function addComment($comment) {
 		$sql = "INSERT INTO `" . DB_PREFIX . "ms_comments`

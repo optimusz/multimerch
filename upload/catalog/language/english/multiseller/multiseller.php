@@ -24,6 +24,7 @@ $_['ms_delete'] = 'Delete';
 $_['ms_update'] = 'Update';
 
 $_['ms_date_created'] = 'Date created';
+$_['ms_date'] = 'Date';
 
 $_['ms_button_submit'] = 'Submit';
 $_['ms_button_add_special'] = 'Define a new special price';
@@ -244,7 +245,7 @@ $_['ms_error_contact_allfields'] = 'Please fill in all fields';
 
 // Account - General
 
-$_['ms_account_create'] = 'Create seller account';
+$_['ms_account_dashboard'] = 'Seller dashboard';
 $_['ms_account_seller_account'] = 'Seller Account';
 $_['ms_account_sellerinfo'] = 'Seller profile';
 $_['ms_account_newproduct'] = 'New product';
@@ -393,7 +394,6 @@ $_['ms_account_status_please_fill_in'] = 'Please complete the following form to 
 
 
 // Account - Products
-
 $_['ms_account_products_heading'] = 'Your Products';
 $_['ms_account_products_breadcrumbs'] = 'Your Products';
 
@@ -410,7 +410,6 @@ $_['ms_account_products_noproducts'] = 'You don\'t have any products yet!';
 $_['ms_account_products_confirmdelete'] = 'Are you sure you want to delete your product?';
 
 // Account - Transactions
-
 $_['ms_account_transactions_heading'] = 'Your Transactions';
 $_['ms_account_transactions_breadcrumbs'] = 'Your Transactions';
 
@@ -423,7 +422,6 @@ $_['ms_account_transactions_notransactions'] = 'You don\'t have any transactions
 
 
 // Account - Orders
-
 $_['ms_account_orders_heading'] = 'Your Orders';
 $_['ms_account_orders_breadcrumbs'] = 'Your Orders';
 $_['ms_account_orders_id'] = 'Order #';
@@ -432,9 +430,35 @@ $_['ms_account_orders_products'] = 'Products';
 $_['ms_account_orders_total'] = 'Total amount';
 $_['ms_account_orders_noorders'] = 'You don\'t have any orders yet!';
 
+// Account - Dashboard
+$_['ms_account_dashboard_heading'] = 'Seller Dashboard';
+$_['ms_account_dashboard_breadcrumbs'] = 'Seller Dashboard';
+$_['ms_account_dashboard_orders'] = 'Last orders';
+$_['ms_account_dashboard_comments'] = 'Last comments';
+$_['ms_account_dashboard_overview'] = 'Overview';
+$_['ms_account_dashboard_seller_group'] = 'Seller group';
+$_['ms_account_dashboard_listing'] = 'Listing fee';
+$_['ms_account_dashboard_sale'] = 'Sale fee';
+$_['ms_account_dashboard_stats'] = 'Stats';
+$_['ms_account_dashboard_total_sales'] = 'Total sales';
+$_['ms_account_dashboard_total_earnings'] = 'Total earnings';
+$_['ms_account_dashboard_sales_month'] = 'Sales this month';
+$_['ms_account_dashboard_earnings_month'] = 'Earnings this month';
+$_['ms_account_dashboard_nav'] = 'Quick navigation';
+$_['ms_account_dashboard_nav_profile'] = 'Modify your seller profile';
+$_['ms_account_dashboard_nav_product'] = 'Create a new product';
+$_['ms_account_dashboard_nav_products'] = 'Manage your products';
+$_['ms_account_dashboard_nav_orders'] = 'View your orders';
+$_['ms_account_dashboard_nav_balance'] = 'View your balance records';
+$_['ms_account_dashboard_nav_payout'] = 'Request your payout';
+
+// Account - Comments
+$_['ms_account_comments_name'] = 'Name';
+$_['ms_account_comments_product'] = 'Product';
+$_['ms_account_comments_comment'] = 'Comment';
+$_['ms_account_comments_nocomments'] = 'You have no comments yet';
 
 // Account - Request withdrawal
-
 $_['ms_account_withdraw_heading'] = 'Request Earnings';
 $_['ms_account_withdraw_breadcrumbs'] = 'Request Earnings';
 
@@ -555,7 +579,7 @@ $_['ms_sellercontact_captcha'] = 'Captcha';
 $_['ms_sellercontact_sendmessage'] = 'Send a message to %s';
 $_['ms_sellercontact_success'] = 'Your message has been successfully sent';
 
-// Catalog - Seller contact dialog
+// Account - PDF generator dialog
 $_['ms_pdfgen_title'] = 'Generate images from PDF';
 $_['ms_pdfgen_pages'] = 'Pages';
 $_['ms_pdfgen_note'] = 'Select pages to generate images from. New images will be appended to the list of images on the product page.';

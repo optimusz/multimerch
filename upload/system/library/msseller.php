@@ -377,12 +377,18 @@ final class MsSeller extends Model {
 		);
 	}
 	
-	public function getTotalEarnings($seller_id) {
+	public function getTotalEarnings($seller_id, $data = array()) {
 		$sql = "SELECT COALESCE(SUM(amount),0)
-					   - (SELECT COALESCE(SUM(amount),0) FROM `" . DB_PREFIX . "ms_balance` WHERE seller_id = " . (int)$seller_id . " AND balance_type = ". MsBalance::MS_BALANCE_TYPE_REFUND . ") as total
+					   - (SELECT COALESCE(SUM(amount),0)
+						  FROM `" . DB_PREFIX . "ms_balance`
+					 	  WHERE seller_id = " . (int)$seller_id . "
+						  AND balance_type = ". MsBalance::MS_BALANCE_TYPE_REFUND
+						  . (isset($data['period_start']) ? " AND DATEDIFF(date_created, '{$data['period_start']}') >= 0" : "")
+				. ") as total
 				FROM `" . DB_PREFIX . "ms_balance`
 				WHERE seller_id = " . (int)$seller_id . "
-				AND balance_type = ". MsBalance::MS_BALANCE_TYPE_SALE;
+				AND balance_type = ". MsBalance::MS_BALANCE_TYPE_SALE
+				. (isset($data['period_start']) ? " AND DATEDIFF(date_created, '{$data['period_start']}') >= 0" : "");
 
 		$res = $this->db->query($sql);
 		return $res->row['total'];

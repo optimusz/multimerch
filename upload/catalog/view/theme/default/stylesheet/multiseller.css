@@ -652,17 +652,20 @@ div.ms-jquery-dialog.ui-widget-content,
 }
 
 
-.ms-account-order .products p {
+.ms-account-order .products p,
+.ms-account-dashboard .products p {
 	display: inline-block;
 	width: 100%;
 	margin: 0;
 }
 
-.ms-account-order .products .name {
+.ms-account-order .products .name,
+.ms-account-dashboard .products .name {
 	float: left;
 }
 
-.ms-account-order .products .total {
+.ms-account-order .products .total,
+.ms-account-dashboard .products .total {
 	float: right;
 }
 
@@ -685,4 +688,71 @@ ul.ms-sellermenu.graphical li img {
 ul.ms-sellermenu.graphical li a {
 	text-decoration: none;
 	font-weight: bold;
+}
+
+/* seller dashboard */
+
+.ms-account-dashboard h2 {
+	text-align: center;
+	clear: both;
+	margin: 10px;
+}
+
+.ms-account-dashboard .overview,
+.ms-account-dashboard .stats,
+.ms-account-dashboard .nav {
+  position: relative;
+  float: left;
+  width: 33%;	
+}
+
+.ms-account-dashboard .overview .nickname {
+	font-weight: bold;
+	margin-bottom: 10px;
+	display: inline-block;
+}
+
+.ms-account-dashboard .overview p,
+.ms-account-dashboard .stats p {
+	margin-bottom: 5px;
+}
+
+.ms-account-dashboard .nav a {
+	display: block;
+	width: 100%;
+	text-decoration: none;
+	margin-bottom: 5px;
+	height: 32px;
+}
+
+.ms-account-dashboard .nav a span {
+	font-weight: bold;
+	vertical-align: middle;
+}
+
+.ms-account-dashboard .nav a img {
+	width: 32px;
+	height: 32px;
+	vertical-align: middle;
+	margin-right: 5px;
+}
+
+.ms-account-dashboard table.list.comments {
+	text-align: center;
+}
+
+.ms-account-dashboard table.list.comments tr {
+	height: 25px;
+}
+
+.ms-account-dashboard table.list.comments .name {
+	width: 200px;
+}
+
+.ms-account-dashboard table.list.comments .product {
+	width: 150px;
+}
+
+.ms-account-dashboard table.list.comments .date {
+	width: 75px;
 }
