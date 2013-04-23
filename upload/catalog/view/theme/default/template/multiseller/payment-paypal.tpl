@@ -1,5 +1,5 @@
 <?php if ($payment_data['sandbox']) { ?>
-<div class="warning"><?php echo 'sandbox'; ?></div>
+<div class="warning"><?php echo $ms_account_product_sandbox; ?></div>
 <?php } ?>
 <form action="<?php echo $payment_data['action']; ?>" method="post">
 	<input type="hidden" name="cmd" value="_xclick" />

@@ -272,6 +272,7 @@ $_['ms_account_product_message_note'] = 'Your message to the reviewer';
 $_['ms_account_product_priority'] = 'Priority';
 $_['ms_account_product_date_start'] = 'Start date';
 $_['ms_account_product_date_end'] = 'End date';
+$_['ms_account_product_sandbox'] = 'Warning: The payment gateway is in \'Sandbox Mode\'. Your account will not be charged.';
 
 // Account - Edit product
 $_['ms_account_editproduct_heading'] = 'Edit Product';
