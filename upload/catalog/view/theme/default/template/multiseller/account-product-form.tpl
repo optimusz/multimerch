@@ -31,11 +31,13 @@
      	
      	<!-- general tab -->
      	<div id="tab-general">
+     		<?php if (count($languages) > 1) { ?>
 			<div class="htabs" id="language-tabs">
 				<?php foreach ($languages as $language) { ?>
 				<a class="lang" href="#language<?php echo $language['language_id']; ?>"><img src="image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?></a>
 				<?php } ?>
 			</div>
+			<?php } ?>
 			
 			<?php
 			reset($languages); $first = key($languages);

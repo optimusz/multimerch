@@ -6,8 +6,7 @@ class ControllerSellerAccountDashboard extends ControllerSellerAccount {
 		$seller_id = $this->customer->getId();
 		
 		$seller = $this->MsLoader->MsSeller->getSeller($seller_id);
-		$seller_group_names = $this->MsLoader->MsSellerGroup->getSellerGroupDescriptions($seller_id);
-
+		$seller_group_names = $this->MsLoader->MsSellerGroup->getSellerGroupDescriptions($seller['ms.seller_group']);
 		$my_first_day = date('Y-m-d H:i:s', mktime(0, 0, 0, date("n"), 1));
 		
 		$this->data['seller'] = array_merge(

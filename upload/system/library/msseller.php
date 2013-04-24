@@ -400,7 +400,19 @@ final class MsSeller extends Model {
 				WHERE seller_id = " . (int)$seller_id;
 		
 		$res = $this->db->query($sql);
-	}	
+	}
+	
+	public function deleteSeller($seller_id) {
+		$products = $this->MsLoader->MsProduct->getProducts(array('seller_id' => $seller_id));
+
+		foreach ($products as $product) {
+			$this->MsLoader->MsProduct->changeStatus($product['product_id'], MsProduct::STATUS_DELETED);
+		}
+	
+		$this->db->query("DELETE FROM " . DB_PREFIX . "ms_seller WHERE seller_id = '" . (int)$seller_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "ms_balance WHERE seller_id = '" . (int)$seller_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "ms_payment WHERE seller_id = '" . (int)$seller_id . "'");
+	}
 }
 
 ?>

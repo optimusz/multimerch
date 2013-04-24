@@ -45,9 +45,7 @@
 				<td><?php echo $attribute['sort_order']; ?></td>
 				<td><?php echo $attribute['enabled'] ? $ms_enabled : $ms_disabled; ?></td>
 				<td>
-					<?php foreach ($attribute['actions'] as $action) { ?>
-					[ <a href="<?php echo $action['href']; ?>"><?php echo $action['text']; ?></a> ]
-					<?php } ?>
+					<a class="ms-button ms-button-edit" href="<?php echo $this->url->link('multiseller/attribute/update', 'token=' . $this->session->data['token'] . '&attribute_id=' . $attribute['attribute_id'], 'SSL'); ?>" title="<?php echo $text_edit; ?>"></a>
 				</td>
 			</tr>
 			<?php } ?>

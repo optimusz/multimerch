@@ -62,7 +62,7 @@
                 <?php } ?>
 
                 <a class="ms-button ms-button-edit" href="<?php echo $this->url->link('multiseller/seller/update', 'token=' . $this->session->data['token'] . '&seller_id=' . $seller['seller_id'], 'SSL'); ?>" title="<?php echo $text_edit; ?>"></a>
-                <a class="ms-button ms-button-delete" href="<?php echo $this->url->link('multiseller/seller/update', 'token=' . $this->session->data['token'] . '&seller_id=' . $seller['seller_id'], 'SSL'); ?>" title="<?php echo $text_edit; ?>"></a>
+                <a class="ms-button ms-button-delete" href="<?php echo $this->url->link('multiseller/seller/delete', 'token=' . $this->session->data['token'] . '&seller_id=' . $seller['seller_id'], 'SSL'); ?>" title="<?php echo $button_delete; ?>"></a>
               </td>
             </tr>
             <?php } ?>

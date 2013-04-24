@@ -35,7 +35,7 @@ class ControllerMultisellerComment extends ControllerMultisellerBase {
 			$this->data['comments'][] = array(
 				'comment_id' => $result['id'],
 				'name' => "{$result['name']} ({$result['email']})",
-				'customer_link' => isset($result['customer_id']) ? $this->url->link('sale/customer/update', 'token=' . $this->session->data['token'] . 'customer_id=' . $result['customer_id'], 'SSL') : NULL,
+				'customer_link' => isset($result['customer_id']) ? $this->url->link('sale/customer/update', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['customer_id'], 'SSL') : NULL,
 				'product_name' => $product['name'],
 				'comment' => (mb_strlen($result['comment']) > 80 ? mb_substr($result['comment'], 0, 80) . '...' : $result['comment']),
 				'date_created' => date($this->language->get('date_format_short'), $result['create_time']),

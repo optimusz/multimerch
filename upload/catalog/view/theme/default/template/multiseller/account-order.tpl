@@ -42,7 +42,7 @@
 			<?php } ?>
 		<?php } else { ?>
 			<tr>
-				<td class="center" colspan="3"><?php echo $ms_account_orders_noorders; ?></td>
+				<td class="center" colspan="5"><?php echo $ms_account_orders_noorders; ?></td>
 			</tr>
 		<?php } ?>
 		</tbody>

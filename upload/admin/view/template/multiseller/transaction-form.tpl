@@ -13,7 +13,7 @@
 			<h1><img src="view/image/multiseller/ms-book.png" alt="" /> <?php echo $heading; ?></h1>
 			<div class="buttons">
 				<a id="ms-submit-button" class="button"><?php echo $button_save; ?></a>
-				<a onclick="location = '<?php echo $cancel; ?>';" class="button"><?php echo $button_cancel; ?></a>
+				<a onclick="location = '<?php echo $this->url->link('multiseller/transaction', 'token=' . $this->session->data['token']); ?>'" class="button"><?php echo $button_cancel; ?></a>
 			</div>
 		</div>
 		<div class="content">

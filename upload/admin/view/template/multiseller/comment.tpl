@@ -25,7 +25,7 @@
 		<table class="list" style="text-align: center">
 		<thead>
 			<tr>
-			<td class="checkbox"><input type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);" value="<?php echo $comment['comment_id']; ?>" /></td>
+			<td class="checkbox"><input type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);" /></td>
 			<td><?php echo $ms_name; ?></a></td>
 			<td><?php echo $ms_product; ?></a></td>
 			<td class="comment"><?php echo $ms_comments_comment; ?></a></td>

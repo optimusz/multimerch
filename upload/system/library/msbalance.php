@@ -109,9 +109,10 @@ class MsBalance extends Model {
 
 	public function getReservedSellerFunds($seller_id) {
 		$sql = "SELECT SUM(amount) as total
-				FROM " . DB_PREFIX . "ms_withdrawal
-				WHERE seller_id = " . (int)$seller_id . " 
-				AND withdrawal_status = " . (int)MsWithdrawal::STATUS_PENDING;
+				FROM " . DB_PREFIX . "ms_payment
+				WHERE seller_id = " . (int)$seller_id . "
+				AND payment_type IN (" . (int)MsPayment::TYPE_PAYOUT . "," . (int)MsPayment::TYPE_PAYOUT_REQUEST . ")
+				AND payment_status = " . (int)MsPayment::STATUS_UNPAID;
 				
 		$res = $this->db->query($sql);
 

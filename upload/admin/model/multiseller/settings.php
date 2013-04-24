@@ -389,7 +389,6 @@ class ModelMultisellerSettings extends Model {
 				`" . DB_PREFIX . "ms_product`,
 				`" . DB_PREFIX . "ms_seller`,
 				`" . DB_PREFIX . "ms_order_product_data`,
-				`" . DB_PREFIX . "ms_withdrawal`,
 				`" . DB_PREFIX . "ms_comments`,
 				`" . DB_PREFIX . "ms_balance`,
 				`" . DB_PREFIX . "ms_seller_group`,

@@ -87,7 +87,6 @@ class ControllerSellerAccountWithdrawal extends ControllerSellerAccount {
 		$this->data['balance_available_formatted'] = $this->currency->format($available_balance, $this->config->get('config_currency'));
 		
 		$this->data['paypal'] = $this->MsLoader->MsSeller->getPaypal();
-		$this->data['msconf_minimum_withdrawal_amount'] = $this->currency->format($this->config->get('msconf_minimum_withdrawal_amount'),$this->config->get('config_currency'));
 		$this->data['msconf_allow_partial_withdrawal'] = $this->config->get('msconf_allow_partial_withdrawal');
 		$this->data['currency_code'] = $this->config->get('config_currency');
 		

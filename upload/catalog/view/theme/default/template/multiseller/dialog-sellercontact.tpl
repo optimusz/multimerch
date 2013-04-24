@@ -2,7 +2,7 @@
 	<?php if ($seller_thumb) { ?>
 	<div class="ms-sellercontact-image">
 	<a href="<?php echo $seller_href; ?>">
-	<img src="<?php echo $seller_thumb; ?>" title="<?php echo $heading_title; ?>" alt="<?php echo $heading_title; ?>" />
+	<img src="<?php echo $seller_thumb; ?>" />
 	</a>
 	<h3><?php echo $ms_sellercontact_sendmessage; ?></h3>
 	</div>
