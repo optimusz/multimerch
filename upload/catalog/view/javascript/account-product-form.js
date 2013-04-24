@@ -182,8 +182,7 @@ $(function() {
 				try {
 					data = $.parseJSON(info.response);
 				} catch(e) {
-					//console.log(info.response);
-					data.errors.push(msGlobals.uploadError);
+					data = []; data.errors = []; data.errors.push(msGlobals.uploadError);
 				}
 
 				if (!$.isEmptyObject(data.errors)) {
@@ -230,8 +229,7 @@ $(function() {
 				try {
 					data = $.parseJSON(info.response);
 				} catch(e) {
-					//console.log(info.response);
-					data.errors.push(msGlobals.uploadError);
+					data = []; data.errors = []; data.errors.push(msGlobals.uploadError);
 				}
 				
 				if (!$.isEmptyObject(data.errors)) {

@@ -75,6 +75,11 @@ class MsFile extends Model {
 			} else {
 				$errors[] = $this->language->get('ms_error_file_upload_error');
 			}
+		} else {
+			// todo filename size
+			if (mb_strlen($file['name']) > 150) {
+				$errors[] = $this->language->get('ms_error_file_upload_error');
+			}
 		}
 		
 		return $errors;		

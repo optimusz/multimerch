@@ -76,10 +76,7 @@ $(function() {
 				try {
    					data = $.parseJSON(info.response);
 				} catch(e) {
-					console.log('Invalid JSON response: ');
-					console.log(info.response);
-					$('#error_sellerinfo_avatar').append(msGlobals.uploadError).hide().fadeIn(2000);
-					return;
+					data = []; data.errors = []; data.errors.push(msGlobals.uploadError);
 				}
 
 				if (!$.isEmptyObject(data.errors)) {
