@@ -138,7 +138,7 @@ class ControllerPaymentMultiMerchPayPal extends Controller {
 		if ($payment_id <= 0)
 			return $this->log->write("MMERCH PP LISTING PAYMENT #$payment_id: Invalid or no payment id received");
 		
-		$payment = $this->MsLoader->MsPayment->getPayments(array('payment_id' => $payment_id));
+		$payment = $this->MsLoader->MsPayment->getPayments(array('payment_id' => $payment_id, 'single' => 1));
 		
 		if (!$payment)
 			return $this->log->write("MMERCH PP LISTING PAYMENT #$payment_id: Invalid payment id received");
@@ -168,7 +168,7 @@ class ControllerPaymentMultiMerchPayPal extends Controller {
 						return $this->log->write("MMERCH PP LISTING PAYMENT #$payment_id: IPN amount mismatch");
 					
 					// change payment and product status
-					$this->MsLoader->MsPayment->changeStatus($payment_id, MsPayment::STATUS_PAID);
+					$this->MsLoader->MsPayment->updatePayment($payment_id, array('payment_status' => MsPayment::STATUS_PAID));
 					$this->MsLoader->MsProduct->changeStatus($product_id, MsProduct::STATUS_ACTIVE);
 					break;
 				
@@ -188,8 +188,8 @@ class ControllerPaymentMultiMerchPayPal extends Controller {
 		if ($payment_id <= 0)
 			return $this->log->write("MMERCH PP SIGNUP PAYMENT #$payment_id: Invalid or no payment id received");
 		
-		$payment = $this->MsLoader->MsPayment->getPayments(array('payment_id' => $payment_id));
-		
+		$payment = $this->MsLoader->MsPayment->getPayments(array('payment_id' => $payment_id, 'single' => 1));
+		var_dump($payment);
 		if (!$payment)
 			return $this->log->write("MMERCH PP SIGNUP PAYMENT #$payment_id: Invalid payment id received");
 		
@@ -218,7 +218,7 @@ class ControllerPaymentMultiMerchPayPal extends Controller {
 						return $this->log->write("MMERCH PP SIGNUP PAYMENT #$payment_id: IPN amount mismatch");
 					
 					// change payment and product status
-					$this->MsLoader->MsPayment->changeStatus($payment_id, MsPayment::STATUS_PAID);
+					$this->MsLoader->MsPayment->updatePayment($payment_id, array('payment_status' => MsPayment::STATUS_PAID));
 					$this->MsLoader->MsSeller->changeStatus($seller_id, MsSeller::STATUS_ACTIVE);
 					break;
 				

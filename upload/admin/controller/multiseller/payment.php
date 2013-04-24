@@ -101,7 +101,7 @@ class ControllerMultisellerPayment extends ControllerMultisellerBase {
 				'date_paid' => ($data['payment_status'] == MsPayment::STATUS_PAID ? date( 'Y-m-d H:i:s') : NULL)
 			));
 			
-			$payment = $this->MsLoader->MsPayment->getPayments(array('payment_id' => $data['payment_id']));
+			$payment = $this->MsLoader->MsPayment->getPayments(array('payment_id' => $data['payment_id'], 'single' => 1));
 			
 			switch($data['payment_status']) {
 				case MsPayment::STATUS_PAID:
@@ -164,6 +164,7 @@ class ControllerMultisellerPayment extends ControllerMultisellerBase {
 						'payment_id' => $payment_id,
 						'payment_status' => array(MsPayment::STATUS_UNPAID),
 						'payment_type' => array(MsPayment::TYPE_PAYOUT, MsPayment::TYPE_PAYOUT_REQUEST),
+						'single' => 1
 					)
 				);
 				
@@ -217,6 +218,7 @@ class ControllerMultisellerPayment extends ControllerMultisellerBase {
 					'payment_id' => $payment_id,
 					'payment_status' => array(MsPayment::STATUS_UNPAID),
 					'payment_type' => array(MsPayment::TYPE_PAYOUT, MsPayment::TYPE_PAYOUT_REQUEST),
+					'single' => 1
 				)
 			);
 			
@@ -252,6 +254,7 @@ class ControllerMultisellerPayment extends ControllerMultisellerBase {
 						'payment_id' => $payment_id,
 						'payment_status' => array(MsPayment::STATUS_UNPAID),
 						'payment_type' => array(MsPayment::TYPE_PAYOUT, MsPayment::TYPE_PAYOUT_REQUEST),
+						'single' => 1
 					)
 				));
 				

@@ -224,7 +224,8 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 									'seller_id' => $this->customer->getId(),
 									'payment_type' => array(MsPayment::TYPE_SIGNUP),
 									'payment_status' => array(MsPayment::STATUS_UNPAID),
-									'payment_method' => array(MsPayment::METHOD_PAYPAL)
+									'payment_method' => array(MsPayment::METHOD_PAYPAL),
+									'single' => 1
 								));
 								
 								if (!$payment) {

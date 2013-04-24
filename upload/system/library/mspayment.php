@@ -81,7 +81,7 @@ class MsPayment extends Model {
 				. (isset($sort['limit']) ? " LIMIT ".(int)$sort['offset'].', '.(int)($sort['limit']) : '');
 
 		$res = $this->db->query($sql);
-		return ($res->num_rows > 1 ? $res->rows : $res->row);
+		return ($res->num_rows == 1 && isset($data['single']) ? $res->row : $res->rows);
 	}
 	
 	public function getTotalPayments($data){
