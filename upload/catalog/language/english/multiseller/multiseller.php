@@ -217,6 +217,7 @@ $_['ms_error_contact_allfields'] = 'Please fill in all fields';
 $_['ms_account_dashboard'] = 'Dashboard';
 $_['ms_account_seller_account'] = 'Seller Account';
 $_['ms_account_sellerinfo'] = 'Seller profile';
+$_['ms_account_sellerinfo_new'] = 'New seller account';
 $_['ms_account_newproduct'] = 'New product';
 $_['ms_account_products'] = 'Products';
 $_['ms_account_transactions'] = 'Transactions';
@@ -367,7 +368,7 @@ $_['ms_account_dashboard_nav_payout'] = 'Request your payout';
 $_['ms_account_comments_name'] = 'Name';
 $_['ms_account_comments_product'] = 'Product';
 $_['ms_account_comments_comment'] = 'Comment';
-$_['ms_account_comments_nocomments'] = 'You have no comments yet';
+$_['ms_account_comments_nocomments'] = 'You don\'t have any comments yet!';
 
 // Account - Request withdrawal
 $_['ms_account_withdraw_heading'] = 'Request Payout';

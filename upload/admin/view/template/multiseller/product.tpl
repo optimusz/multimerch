@@ -15,7 +15,7 @@
   <?php $msProduct = new ReflectionClass('MsProduct'); ?>
   <div class="box">
     <div class="heading">
-      <h1><img src="view/image/multiseller/ms-cart.png" alt="" /> <?php echo $ms_catalog_products_heading; ?></h1>
+      <h1><img src="view/image/multiseller/ms-bag.png" alt="" /> <?php echo $ms_catalog_products_heading; ?></h1>
       <div class="buttons">
       	<form id="bulk" method="post" enctype="multipart/form-data">
       	<select name="bulk_product_status">

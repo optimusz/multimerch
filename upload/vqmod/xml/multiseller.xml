@@ -127,9 +127,13 @@
 							<li>
 								<a href="<?php echo $this->url->link('seller/account-profile', '', 'SSL'); ?>">
 									<?php if($this->config->get('msconf_graphical_sellermenu')) { ?>
+										<?php if ($ms_seller_created) { ?>
 										<img src="catalog/view/theme/<?php echo $this->config->get('config_template'); ?>/image/ms-profile-96.png" />
-									<?php } ?>								
-									<?php echo $ms_account_sellerinfo; ?>
+										<?php } else { ?>
+										<img src="catalog/view/theme/<?php echo $this->config->get('config_template'); ?>/image/ms-profile-plus-96.png" />
+										<?php } ?>
+									<?php } ?>
+									<?php echo $ms_seller_created ? $ms_account_sellerinfo : $ms_account_sellerinfo_new; ?>
 								</a>
 							</li>
 							
@@ -137,7 +141,7 @@
 								<li>
 									<a href="<?php echo $this->url->link('seller/account-product/create', '', 'SSL'); ?>">
 										<?php if($this->config->get('msconf_graphical_sellermenu')) { ?>
-											<img src="catalog/view/theme/<?php echo $this->config->get('config_template'); ?>/image/ms-bag-plus.png" />
+											<img src="catalog/view/theme/<?php echo $this->config->get('config_template'); ?>/image/ms-bag-plus-96.png" />
 										<?php } ?>
 										<?php echo $ms_account_newproduct; ?>
 									</a>
@@ -208,7 +212,7 @@
 					<li><a href="<?php echo $this->url->link('seller/account-dashboard', '', 'SSL'); ?>"><?php echo $ms_account_dashboard; ?></a></li>
 				<?php } ?>
 				
-				<li><a href="<?php echo $this->url->link('seller/account-profile', '', 'SSL'); ?>"><?php echo $ms_account_sellerinfo; ?></a></li>
+				<li><a href="<?php echo $this->url->link('seller/account-profile', '', 'SSL'); ?>"><?php echo $ms_seller_created ? $ms_account_sellerinfo : $ms_account_sellerinfo; ?></a></li>
 				
 				<?php if ($ms_seller_created && $this->MsLoader->MsSeller->getStatus($this->customer->getId()) == MsSeller::STATUS_ACTIVE) { ?>
 					<li><a href="<?php echo $this->url->link('seller/account-product/create', '', 'SSL'); ?>"><?php echo $ms_account_newproduct; ?></a></li>

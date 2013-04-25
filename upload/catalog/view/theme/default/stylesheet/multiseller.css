@@ -706,6 +706,11 @@ ul.ms-sellermenu.graphical li a {
   width: 33%;	
 }
 
+.ms-account-dashboard .stats p, .ms-account-dashboard .stats h3,
+.ms-account-dashboard .nav a, .ms-account-dashboard .nav h3 {
+	padding-left: 40px;
+}
+
 .ms-account-dashboard .overview .nickname {
 	font-weight: bold;
 	margin-bottom: 10px;
