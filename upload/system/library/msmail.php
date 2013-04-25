@@ -170,7 +170,7 @@ class MsMail extends Model {
 				break;
 			case self::SMT_SELLER_ACCOUNT_MODIFIED:
 				$mail_subject .= $this->language->get('ms_mail_subject_seller_account_modified');
-				$mail_text .= sprintf($this->language->get('ms_mail_seller_account_modified'), $this->config->get('config_name'), $this->MsLoader->MsSeller->getStatusText($seller['ms.seller_status']));
+				$mail_text .= sprintf($this->language->get('ms_mail_seller_account_modified'), $this->config->get('config_name'), $this->language->get('ms_seller_status_' . $seller['ms.seller_status']));
 				break;
 				
 				
@@ -181,7 +181,7 @@ class MsMail extends Model {
 				
 			case self::SMT_PRODUCT_MODIFIED:
 				$mail_subject .= $this->language->get('ms_mail_subject_product_modified');
-				$mail_text .= sprintf($this->language->get('ms_mail_product_modified'), $product['name'], $this->config->get('config_name'), $this->MsLoader->MsProduct->getStatusText($product['mp.product_status']));
+				$mail_text .= sprintf($this->language->get('ms_mail_product_modified'), $product['name'], $this->config->get('config_name'), $this->language->get('ms_product_status_' . $product['mp.product_status']));
 				break;
 			
 			case self::SMT_PRODUCT_PURCHASED:

@@ -168,12 +168,15 @@
 			</td>
 		</tr>
 		
+		<?php $msSeller = new ReflectionClass('MsSeller'); ?>
 		<tr>
 			<td><?php echo $ms_status; ?></td>
 			<td>
 				<select name="seller[status]">
-				<?php foreach ($seller_statuses as $id => $name) { ?>				
-				<option value="<?php echo $id; ?>" <?php if ($id == $seller['ms.seller_status']) { ?>selected="selected"<?php } ?>><?php echo $name; ?></option>
+				<?php foreach ($msPayment->getConstants() as $cname => $cval) { ?>
+					<?php if (strpos($cname, 'STATUS_') !== FALSE) { ?>
+						<option value="<?php echo $cval; ?>" <?php if ($seller['ms.seller_status'] == $cval) { ?>selected="selected"<?php } ?>><?php echo $this->language->get('ms_seller_status_' . $cval); ?></option>
+					<?php } ?>
 				<?php } ?>
 			</select>
 			</td>

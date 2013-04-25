@@ -167,9 +167,33 @@ class ControllerPaymentMultiMerchPayPal extends Controller {
 					if ((float)$this->request->post['mc_gross'] != $this->currency->format($payment['amount'], $payment['currency_code'], 1, false))
 						return $this->log->write("MMERCH PP LISTING PAYMENT #$payment_id: IPN amount mismatch");
 					
-					// change payment and product status
+					// change payment status
 					$this->MsLoader->MsPayment->updatePayment($payment_id, array('payment_status' => MsPayment::STATUS_PAID));
-					$this->MsLoader->MsProduct->changeStatus($product_id, MsProduct::STATUS_ACTIVE);
+					
+					// change product status
+					$seller = $this->MsLoader->MsSeller->getSeller($this->MsLoader->MsProduct->getSellerId($product_id));
+					$product = $this->MsLoader->MsProduct->getProduct($product_id);
+
+					$mails = array();
+					switch ($seller['ms.product_validation']) {
+						case MsProduct::MS_PRODUCT_VALIDATION_APPROVAL:
+							if ($product['product_approved']) {
+								this->MsLoader->MsProduct->changeStatus($product_id, MsProduct::STATUS_ACTIVE);
+							} else {
+								$mails[] = array(
+									'type' => MsMail::SMT_PRODUCT_AWAITING_MODERATION
+								);
+								
+								$this->MsLoader->MsMail->sendMails($mails);
+							}
+							break;
+							
+						case MsProduct::MS_PRODUCT_VALIDATION_NONE:
+						default:
+							$this->MsLoader->MsProduct->changeStatus($product_id, MsProduct::STATUS_ACTIVE);
+							$this->MsLoader->MsProduct->approve($product_id);
+							break;
+					}
 					break;
 				
 				default:
@@ -189,7 +213,7 @@ class ControllerPaymentMultiMerchPayPal extends Controller {
 			return $this->log->write("MMERCH PP SIGNUP PAYMENT #$payment_id: Invalid or no payment id received");
 		
 		$payment = $this->MsLoader->MsPayment->getPayments(array('payment_id' => $payment_id, 'single' => 1));
-		var_dump($payment);
+
 		if (!$payment)
 			return $this->log->write("MMERCH PP SIGNUP PAYMENT #$payment_id: Invalid payment id received");
 		
@@ -217,9 +241,32 @@ class ControllerPaymentMultiMerchPayPal extends Controller {
 					if ((float)$this->request->post['mc_gross'] != $this->currency->format($payment['amount'], $payment['currency_code'], 1, false))
 						return $this->log->write("MMERCH PP SIGNUP PAYMENT #$payment_id: IPN amount mismatch");
 					
-					// change payment and product status
+					// change payment status
 					$this->MsLoader->MsPayment->updatePayment($payment_id, array('payment_status' => MsPayment::STATUS_PAID));
-					$this->MsLoader->MsSeller->changeStatus($seller_id, MsSeller::STATUS_ACTIVE);
+					
+					// send customer mails and change seller status
+					$mails = array();
+					switch ($this->config->get('msconf_seller_validation')) {
+						case MsSeller::MS_SELLER_VALIDATION_APPROVAL:
+							$mails[] = array(
+								'type' => MsMail::SMT_SELLER_ACCOUNT_AWAITING_MODERATION
+							);
+							
+							$this->MsLoader->MsSeller->changeStatus($seller_id, MsSeller::STATUS_INACTIVE);
+							$this->MsLoader->MsSeller->changeApproval($seller_id, 0);
+							break;
+						
+						case MsSeller::MS_SELLER_VALIDATION_NONE:
+						default:
+							$mails[] = array(
+								'type' => MsMail::SMT_SELLER_ACCOUNT_CREATED
+							);
+							$this->MsLoader->MsSeller->changeStatus($seller_id, MsSeller::STATUS_ACTIVE);
+							$this->MsLoader->MsSeller->changeApproval($seller_id, 1);
+							break;
+					}
+					
+					$this->MsLoader->MsMail->sendMails($mails);
 					break;
 				
 				default:

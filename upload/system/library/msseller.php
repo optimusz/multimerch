@@ -344,39 +344,6 @@ final class MsSeller extends Model {
 		return $res->rows;
 	}	
 	
-	public function getStatusText($seller_status) {
-		$status_text = '';
-		switch ($seller_status) {
-			case MsSeller::STATUS_ACTIVE:
-				$status_text = $this->language->get('ms_status_active');
-				break;
-			case MsSeller::STATUS_INACTIVE:
-				$status_text = $this->language->get('ms_status_inactive');
-				break;
-			case MsSeller::STATUS_DISABLED:
-				$status_text = $this->language->get('ms_status_disabled');
-				break;
-			case MsSeller::STATUS_DELETED:
-				$status_text = $this->language->get('ms_status_deleted');
-				break;
-			case MsSeller::STATUS_UNPAID:
-				$status_text = $this->language->get('ms_status_signup_unpaid');
-				break;				
-		}
-		
-		return $status_text;
-	}
-	
-	public function getStatuses() {
-		return array(
-			MsSeller::STATUS_ACTIVE =>  $this->language->get('ms_status_active'),
-			MsSeller::STATUS_INACTIVE => $this->language->get('ms_status_inactive'),
-			MsSeller::STATUS_DISABLED => $this->language->get('ms_status_disabled'),
-			MsSeller::STATUS_DELETED => $this->language->get('ms_status_deleted'),
-			MsSeller::STATUS_UNPAID => $this->language->get('ms_status_signup_unpaid')
-		);
-	}
-	
 	public function getTotalEarnings($seller_id, $data = array()) {
 		$sql = "SELECT COALESCE(SUM(amount),0)
 					   - (SELECT COALESCE(SUM(amount),0)
@@ -397,6 +364,14 @@ final class MsSeller extends Model {
 	public function changeStatus($seller_id, $seller_status) {
 		$sql = "UPDATE " . DB_PREFIX . "ms_seller
 				SET	seller_status =  " .  (int)$seller_status . "
+				WHERE seller_id = " . (int)$seller_id;
+		
+		$res = $this->db->query($sql);
+	}
+	
+	public function changeApproval($seller_id, $approved) {
+		$sql = "UPDATE " . DB_PREFIX . "ms_seller
+				SET	approved =  " .  (int)$approved . "
 				WHERE seller_id = " . (int)$seller_id;
 		
 		$res = $this->db->query($sql);

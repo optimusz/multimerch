@@ -11,24 +11,20 @@
   <?php if ($success) { ?>
   <div class="success"><?php echo $success; ?></div>
   <?php } ?>
+  
+  <?php $msProduct = new ReflectionClass('MsProduct'); ?>
   <div class="box">
     <div class="heading">
       <h1><img src="view/image/multiseller/ms-cart.png" alt="" /> <?php echo $ms_catalog_products_heading; ?></h1>
       <div class="buttons">
       	<form id="bulk" method="post" enctype="multipart/form-data">
-      	<!--
-      	<select name="bulk_product_seller">
-      		<option>--Bulk seller change--</option>
-      		<?php for ($i = 1; $i<5; $i++) { ?>
-      		<option value="<?php echo $i; ?>"><?php echo $this->MsLoader->MsProduct->getStatusText($i); ?></option>
-      		<?php } ?>
-      	</select>
-      	-->      
       	<select name="bulk_product_status">
       		<option>--Bulk status change--</option>
-      		<?php for ($i = 1; $i<5; $i++) { ?>
-      		<option value="<?php echo $i; ?>"><?php echo $this->MsLoader->MsProduct->getStatusText($i); ?></option>
-      		<?php } ?>
+			<?php foreach ($msProduct->getConstants() as $cname => $cval) { ?>
+				<?php if (strpos($cname, 'STATUS_') !== FALSE) { ?>
+					<option value="<?php echo $cval; ?>"><?php echo $this->language->get('ms_product_status_' . $cval); ?></option>
+				<?php } ?>
+			<?php } ?>
       	</select>
       	<input type="checkbox" name="bulk_mail" id="bulk_mail"><?php echo $ms_catalog_products_notify_sellers; ?></input>
       	<a class="ms-action button" id="ms-bulk-apply"><?php echo $ms_apply; ?></a>
@@ -75,7 +71,7 @@
               	<span class="ms-assign-seller" style="background-image: url('view/image/success.png'); width: 16px; height: 16px; display: inline-block; cursor: pointer; vertical-align: middle" title="Save" />
               </td>
               <td>
-              	<?php echo $this->MsLoader->MsProduct->getStatusText($product['mp.product_status']); ?>
+              	<?php echo $this->language->get('ms_product_status_' . $product['mp.product_status']); ?>
               </td>
               <td><?php echo $product['p.date_created']; ?></td>
               <td><?php echo $product['p.date_modified']; ?></td>

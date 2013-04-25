@@ -244,7 +244,7 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 			$result['current_balance'] = $this->currency->format($this->MsLoader->MsBalance->getSellerBalance($result['seller_id']), $this->config->get('config_currency'));
 			$result['earnings'] = $this->currency->format($this->MsLoader->MsSeller->getTotalEarnings($result['seller_id']), $this->config->get('config_currency'));
 			$result['total_sales'] = $this->MsLoader->MsSeller->getSalesForSeller($result['seller_id']);
-			$result['status'] = $this->MsLoader->MsSeller->getStatusText($result['ms.seller_status']);
+			$result['status'] = $this->language->get('ms_seller_status_' . $result['ms.seller_status']);
 			$result['customer_link'] = $this->url->link('sale/customer/update', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['seller_id'], 'SSL');
 		}
 			
@@ -302,7 +302,6 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 		$this->load->model('localisation/country');
     	$this->data['countries'] = $this->model_localisation_country->getCountries();
 		$this->data['customers'] = $this->MsLoader->MsSeller->getCustomers(array('seller_id' => 'NULL'));
-		$this->data['seller_statuses'] =$this->MsLoader->MsSeller->getStatuses();
 		$this->data['seller_groups'] =$this->MsLoader->MsSellerGroup->getSellerGroups();  
 		$this->data['seller'] = FALSE;
 
@@ -338,7 +337,6 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 
 		$seller = $this->MsLoader->MsSeller->getSeller($this->request->get['seller_id']);
 
-		$this->data['seller_statuses'] =$this->MsLoader->MsSeller->getStatuses();
 		$this->data['seller_groups'] =$this->MsLoader->MsSellerGroup->getSellerGroups();  
 
 		if (!empty($seller)) {

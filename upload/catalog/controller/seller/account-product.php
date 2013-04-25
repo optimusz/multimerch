@@ -542,6 +542,11 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 								// change status to unpaid
 								$this->MsLoader->MsProduct->changeStatus($product_id, MsProduct::STATUS_UNPAID);
 								
+								// unset seller email
+								foreach ($mails as $key => $value) {
+									if ($value['type'] == SMT_PRODUCT_AWAITING_MODERATION) unset($mails[$key]);
+								}
+								
 								// check if payment exists
 								$payment = $this->MsLoader->MsPayment->getPayments(array(
 									'seller_id' => $this->customer->getId(),
@@ -766,7 +771,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 				'mp.number_sold' => $product['mp.number_sold'],
 				'mp.total_earnings' => $this->currency->format($sale_data['seller_total'], $this->config->get('config_currency')),
 				'mp.product_status' => $product['mp.product_status'],
-				'status_text' => $this->MsLoader->MsProduct->getStatusText($product['mp.product_status']),
+				'status_text' => $this->language->get('ms_product_status_' . $product['mp.product_status']),
 				'p.date_created' => date($this->language->get('date_format_short'), strtotime($product['p.date_created'])),
 				'view_link' => isset($links['view']) ? $links['view'] : NULL,
 				'publish_link' => isset($links['publish']) ? $links['publish'] : NULL,

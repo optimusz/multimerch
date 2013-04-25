@@ -5,14 +5,6 @@ $_['ms_enabled']      = 'Enabled';
 $_['ms_disabled']      = 'Disabled';
 $_['ms_apply']      = 'Apply';
 
-$_['ms_status_active'] = 'Active';
-$_['ms_status_inactive'] = 'Inactive';
-$_['ms_status_published'] = 'Published';
-$_['ms_status_notpublished'] = 'Not published';
-$_['ms_status_disabled'] = 'Disabled';
-$_['ms_status_deleted'] = 'Deleted';
-$_['ms_status_unpaid'] = 'Unpaid listing fee';
-
 $_['ms_type'] = 'Type';
 $_['ms_type_checkbox'] = 'Checkbox';
 $_['ms_type_date'] = 'Date';
@@ -110,7 +102,11 @@ $_['ms_catalog_sellers_status'] = 'Status';
 $_['ms_catalog_sellers_date_created'] = 'Date created';
 $_['ms_catalog_sellers_balance_paypal'] = 'Balance payout via PayPal';
 
-
+$_['ms_seller_status_' . MsSeller::STATUS_ACTIVE] = 'Active';
+$_['ms_seller_status_' . MsSeller::STATUS_INACTIVE] = 'Inactive';
+$_['ms_seller_status_' . MsSeller::STATUS_DISABLED] = 'Disabled';
+$_['ms_seller_status_' . MsSeller::STATUS_DELETED] = 'Deleted';
+$_['ms_seller_status_' . MsSeller::STATUS_UNPAID] = 'Unpaid signup fee';
 
 // Settings
 
@@ -307,12 +303,16 @@ $_['ms_catalog_sellerinfo_notify'] = 'Notify seller via email';
 $_['ms_catalog_sellerinfo_product_validation'] = 'Product validation';
 $_['ms_catalog_sellerinfo_product_validation_note'] = 'Product validation for this seller';
 
-
 // Catalog - Products
 $_['ms_catalog_products_heading'] = 'Products';
 $_['ms_catalog_products_breadcrumbs'] = 'Products';
 $_['ms_catalog_products_notify_sellers'] = 'Notify Sellers';
 
+$_['ms_product_status_' . MsProduct::STATUS_ACTIVE] = 'Active';
+$_['ms_product_status_' . MsProduct::STATUS_INACTIVE] = 'Inactive';
+$_['ms_product_status_' . MsProduct::STATUS_DISABLED] = 'Disabled';
+$_['ms_product_status_' . MsProduct::STATUS_DELETED] = 'Deleted';
+$_['ms_product_status_' . MsProduct::STATUS_UNPAID] = 'Unpaid listing fee';
 
 // Catalog - Seller Groups
 $_['ms_catalog_seller_groups_heading'] = 'Seller groups';

@@ -3,15 +3,6 @@
 // **********
 // * Global *
 // **********
-$_['ms_status_active'] = 'Active';
-$_['ms_status_inactive'] = 'Inactive';
-$_['ms_status_published'] = 'Published';
-$_['ms_status_notpublished'] = 'Not published';
-$_['ms_status_disabled'] = 'Disabled';
-$_['ms_status_deleted'] = 'Deleted';
-$_['ms_status_unpaid'] = 'Unpaid listing fee';
-$_['ms_status_signup_unpaid'] = 'Unpaid signup fee';
-
 $_['ms_viewinstore'] = 'View in store';
 $_['ms_publish'] = 'Publish';
 $_['ms_unpublish'] = 'Unpublish';
@@ -278,7 +269,7 @@ $_['ms_account_product_sandbox'] = 'Warning: The payment gateway is in \'Sandbox
 $_['ms_account_editproduct_heading'] = 'Edit Product';
 $_['ms_account_editproduct_breadcrumbs'] = 'Edit Product';
 
-// Account - Seller info
+// Account - Seller
 $_['ms_account_sellerinfo_heading'] = 'Seller profile';
 $_['ms_account_sellerinfo_breadcrumbs'] = 'Seller profile';
 $_['ms_account_sellerinfo_nickname'] = 'Nickname';
@@ -304,10 +295,15 @@ $_['ms_account_sellerinfo_fee_paypal'] = 'You will be redirected to the PayPal p
 $_['ms_account_sellerinfo_signup_itemname'] = 'Seller account registration at %s';
 $_['ms_account_sellerinfo_saved'] = 'Seller account data saved.';
 
-// Account - Seller account status
 $_['ms_account_status'] = 'Your seller account status is: ';
 $_['ms_account_status_tobeapproved'] = '<br />You will be able to use your account as soon as it is approved by the store owner.';
 $_['ms_account_status_please_fill_in'] = 'Please complete the following form to create a seller account.';
+
+$_['ms_seller_status_' . MsSeller::STATUS_ACTIVE] = 'Active';
+$_['ms_seller_status_' . MsSeller::STATUS_INACTIVE] = 'Inactive';
+$_['ms_seller_status_' . MsSeller::STATUS_DISABLED] = 'Disabled';
+$_['ms_seller_status_' . MsSeller::STATUS_DELETED] = 'Deleted';
+$_['ms_seller_status_' . MsSeller::STATUS_UNPAID] = 'Unpaid signup fee';
 
 // Account - Products
 $_['ms_account_products_heading'] = 'Your Products';
@@ -320,6 +316,12 @@ $_['ms_account_products_date'] = 'Date added';
 $_['ms_account_products_action'] = 'Action';
 $_['ms_account_products_noproducts'] = 'You don\'t have any products yet!';
 $_['ms_account_products_confirmdelete'] = 'Are you sure you want to delete your product?';
+
+$_['ms_product_status_' . MsProduct::STATUS_ACTIVE] = 'Active';
+$_['ms_product_status_' . MsProduct::STATUS_INACTIVE] = 'Inactive';
+$_['ms_product_status_' . MsProduct::STATUS_DISABLED] = 'Disabled';
+$_['ms_product_status_' . MsProduct::STATUS_DELETED] = 'Deleted';
+$_['ms_product_status_' . MsProduct::STATUS_UNPAID] = 'Unpaid listing fee';
 
 // Account - Transactions
 $_['ms_account_transactions_heading'] = 'Your Transactions';

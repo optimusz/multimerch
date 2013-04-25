@@ -692,7 +692,8 @@ class MsProduct extends Model {
 						p.image as thumbnail,
 						p.shipping as shipping,
 						p.quantity as quantity,
-						mp.product_status
+						mp.product_status,
+						mp.product_approved
 				FROM `" . DB_PREFIX . "product` p
 				LEFT JOIN `" . DB_PREFIX . "ms_product` mp
 					ON p.product_id = mp.product_id
@@ -781,31 +782,6 @@ class MsProduct extends Model {
 		return $res->row['status'];
 	}
 
-	public function getStatusText($product_status) {
-		switch($product_status) {
-			case MsProduct::STATUS_ACTIVE:
-				$status_text = $this->language->get('ms_status_published');
-				break;
-			case MsProduct::STATUS_INACTIVE:
-				$status_text = $this->language->get('ms_status_notpublished');
-				break;
-			case MsProduct::STATUS_DISABLED:
-				$status_text = $this->language->get('ms_status_disabled');
-				break;
-			case MsProduct::STATUS_DELETED:
-				$status_text = $this->language->get('ms_status_deleted');
-				break;
-			case MsProduct::STATUS_UNPAID:
-				$status_text = $this->language->get('ms_status_unpaid');
-				break;				
-			default:
-				$status_text = '';
-				break;				
-		}
-		
-		return $status_text;
-	}
-	
 	public function changeStatus($product_id, $product_status) {
 		$sql = "UPDATE " . DB_PREFIX . "ms_product
 				SET	product_status =  " .  (int)$product_status . "

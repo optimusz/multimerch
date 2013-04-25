@@ -133,7 +133,7 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 						);
 						$mails[] = array(
 							'type' => MsMail::AMT_SELLER_ACCOUNT_CREATED
-						);					
+						);
 						$data['seller']['status'] = MsSeller::STATUS_ACTIVE;
 						$data['seller']['approved'] = 1;
 						break;
@@ -166,6 +166,9 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 							// initiate paypal payment
 							// set product status to unpaid
 							$this->MsLoader->MsSeller->changeStatus($this->customer->getId(), MsSeller::STATUS_UNPAID);
+							
+							// unset seller profile creation emails
+							unset($mails[0]);
 							
 							// add payment details
 							$payment_id = $this->MsLoader->MsPayment->createPayment(array(
@@ -318,7 +321,7 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 				$this->session->data['multiseller']['files'][] = $seller['ms.avatar'];
 			}
 
-			$this->data['statustext'] = $this->language->get('ms_account_status') . $this->MsLoader->MsSeller->getStatusText($seller['ms.seller_status']);
+			$this->data['statustext'] = $this->language->get('ms_account_status') . $this->language->get('ms_seller_status_' . $seller['ms.seller_status']);
 			
 			if ($seller['ms.seller_status'] == MsSeller::STATUS_INACTIVE && !$seller['ms.seller_approved']) {
 				$this->data['statustext'] .= $this->language->get('ms_account_status_tobeapproved');

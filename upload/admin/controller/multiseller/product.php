@@ -53,7 +53,7 @@ class ControllerMultisellerProduct extends ControllerMultisellerBase {
 				'p.date_created' => date($this->language->get('date_format_short'), strtotime($result['p.date_created'])),
 				'p.date_modified' => date($this->language->get('date_format_short'), strtotime($result['p.date_modified'])),
 				'mp.product_status' => $result['mp.product_status'],
-				'status_text' => $this->MsLoader->MsProduct->getStatusText($result['mp.product_status']),
+				'status_text' => $this->language->get('ms_product_status_' . $result['mp.product_status']),
 				'action' => $action,
 				'product_id' => $result['product_id'],
 				'seller_id' => $result['seller_id']
@@ -170,25 +170,29 @@ class ControllerMultisellerProduct extends ControllerMultisellerBase {
 		$seller = $this->MsLoader->MsSeller->getSeller($this->request->get['seller_id']);
 		$this->MsLoader->MsProduct->createRecord($product_id, array('seller_id' => $this->request->get['seller_id']));
 		$this->MsLoader->MsProduct->changeSeller($product_id, $this->request->get['seller_id']);
+		$json['product_status'] = $this->language->get('ms_product_status_' . $seller['ms.seller_status']);
 		switch($seller['ms.seller_status']) {
 			case MsSeller::STATUS_INACTIVE:
-				$json['product_status'] = $this->MsLoader->MsProduct->getStatusText(MsProduct::STATUS_INACTIVE);
+			case MsSeller::STATUS_UNPAID:
 				$this->MsLoader->MsProduct->changeStatus($product_id, MsProduct::STATUS_INACTIVE);
-				$this->MsLoader->MsProduct->disapprove($product_id);			
+				$this->MsLoader->MsProduct->disapprove($product_id);
+				$json['product_status'] = $this->language->get('ms_product_status_' . MsProduct::STATUS_INACTIVE);			
 				break;
 			case MsSeller::STATUS_DISABLED:
-				$json['product_status'] = $this->MsLoader->MsProduct->getStatusText(MsProduct::STATUS_DISABLED);
 				$this->MsLoader->MsProduct->changeStatus($product_id, MsProduct::STATUS_DISABLED);
 				$this->MsLoader->MsProduct->disapprove($product_id);			
 				break;
 			case MsSeller::STATUS_DELETED:
-				$json['product_status'] = $this->MsLoader->MsProduct->getStatusText(MsProduct::STATUS_DELETED);
 				$this->MsLoader->MsProduct->changeStatus($product_id, MsProduct::STATUS_DELETED);
 				$this->MsLoader->MsProduct->disapprove($product_id);			
 				break;
+			case MsSeller::STATUS_UNPAID:
+				$this->MsLoader->MsProduct->changeStatus($product_id, MsProduct::STATUS_DELETED);
+				$this->MsLoader->MsProduct->disapprove($product_id);			
+				break;				
 			default:
 				$product = $this->MsLoader->MsProduct->getProduct($product_id);
-				$json['product_status'] = $this->MsLoader->MsProduct->getStatusText($product['mp.product_status']);
+				$json['product_status'] = $this->language->get('ms_product_status_' . $product['mp.product_status']);
 				break;
 		}
 		$this->response->setOutput(json_encode($json));
