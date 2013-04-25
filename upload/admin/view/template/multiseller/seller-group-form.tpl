@@ -50,7 +50,7 @@
 				<input type="hidden" name="seller_group[commission_id]" value="<?php echo $seller_group['commission_id']; ?>" />
 				<table class="form">
 					<tr>
-						<td><?php if($seller_group['seller_group_id'] == $this->config->get('msconf_default_seller_group_id')) { ?><span class="required">*</span><?php } ?> <?php echo $ms_commission_sale; ?></td>
+						<td><?php if($seller_group['seller_group_id'] == $this->config->get('msconf_default_seller_group_id')) { ?><span class="required">*</span><?php } ?> <?php echo $this->language->get('ms_commission_' . MsCommission::RATE_SALE); ?></td>
 						<td>
 							<input type="hidden" name="seller_group[commission_rates][<?php echo MsCommission::RATE_SALE; ?>][rate_id]" value="<?php echo $seller_group['commission_rates'][MsCommission::RATE_SALE]['rate_id']; ?>" />
 							<input type="hidden" name="seller_group[commission_rates][<?php echo MsCommission::RATE_SALE; ?>][rate_type]" value="<?php echo MsCommission::RATE_SALE; ?>" /> 
@@ -63,7 +63,7 @@
 					</tr>
 					
 					<tr>
-						<td><?php if($seller_group['seller_group_id'] == $this->config->get('msconf_default_seller_group_id')) { ?><span class="required">*</span><?php } ?> <?php echo $ms_commission_listing; ?></td>
+						<td><?php if($seller_group['seller_group_id'] == $this->config->get('msconf_default_seller_group_id')) { ?><span class="required">*</span><?php } ?> <?php echo $this->language->get('ms_commission_' . MsCommission::RATE_LISTING); ?></td>
 						<td>
 							<input type="hidden" name="seller_group[commission_rates][<?php echo MsCommission::RATE_LISTING; ?>][rate_id]" value="<?php echo $seller_group['commission_rates'][MsCommission::RATE_LISTING]['rate_id']; ?>" />
 							<input type="hidden" name="seller_group[commission_rates][<?php echo MsCommission::RATE_LISTING; ?>][rate_type]" value="<?php echo MsCommission::RATE_LISTING; ?>" /> 
@@ -86,7 +86,7 @@
 					
 					
 					<tr>
-						<td><?php if($seller_group['seller_group_id'] == $this->config->get('msconf_default_seller_group_id')) { ?><span class="required">*</span><?php } ?> <?php echo $ms_commission_signup; ?></td>
+						<td><?php if($seller_group['seller_group_id'] == $this->config->get('msconf_default_seller_group_id')) { ?><span class="required">*</span><?php } ?> <?php echo $this->language->get('ms_commission_' . MsCommission::RATE_SIGNUP); ?></td>
 						<td>
 							<input type="hidden" name="seller_group[commission_rates][<?php echo MsCommission::RATE_SIGNUP; ?>][rate_id]" value="<?php echo $seller_group['commission_rates'][MsCommission::RATE_SIGNUP]['rate_id']; ?>" />
 							<input type="hidden" name="seller_group[commission_rates][<?php echo MsCommission::RATE_SIGNUP; ?>][rate_type]" value="<?php echo MsCommission::RATE_SIGNUP; ?>" /> 
@@ -136,7 +136,6 @@ $("#ms-submit-button").click(function() {
 				    } else {
 				    	$('#error_'+id).text(jsonData.errors[error]);
 				   	}
-				    console.log(error + " -> " + jsonData.errors[error]);
 				}
 				window.scrollTo(0,0);
 				$("#ms-submit-button").show();

@@ -21,13 +21,15 @@
 		</div>
 		<div class="content">
 		<form action="<?php echo $delete; ?>" method="post" enctype="multipart/form-data" id="form">
-			<table class="list">
+			<table class="list" style="text-align: center">
 			<thead>
 				<tr>
-					<td width="1" style="text-align: center;"><input type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);" /></td>
-					<td class="left"><?php echo $ms_seller_groups_column_id; ?></td>
-					<td class="left"><?php echo $ms_seller_groups_column_name; ?></td>
-					<td class="right"><?php echo $ms_seller_groups_column_action; ?></td>
+					<td width="1"><input type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);" /></td>
+					<td><?php echo $ms_seller_groups_column_id; ?></td>
+					<td style="width: 100px"><?php echo $ms_seller_groups_column_name; ?></td>
+					<td><?php echo $ms_description; ?></td>
+					<td style="width: 450px"><?php echo $ms_commission_actual; ?></td>
+					<td><?php echo $ms_seller_groups_column_action; ?></td>
 				</tr>
 			</thead>
 			<tbody>
@@ -39,11 +41,14 @@
 						<?php } else { ?>
 						<input type="checkbox" name="selected[]" value="<?php echo $seller_group['seller_group_id']; ?>" />
 						<?php } ?></td>
-					<td class="left"><?php echo $seller_group['seller_group_id']; ?></td>
-					<td class="left"><?php echo $seller_group['name']; ?></td>
-					<td class="right"><?php foreach ($seller_group['action'] as $action) { ?>
-						[ <a href="<?php echo $action['href']; ?>"><?php echo $action['text']; ?></a> ]
-						<?php } ?></td>
+					<td><?php echo $seller_group['seller_group_id']; ?></td>
+					<td><?php echo $seller_group['name']; ?></td>
+					<td><?php echo $seller_group['description']; ?></td>
+					<td><?php echo $seller_group['actual_fees']; ?></td>
+					<td>
+						<a class="ms-button ms-button-edit" href="<?php echo $this->url->link('multiseller/seller-group/update', 'token=' . $this->session->data['token'] . '&seller_group_id=' . $seller_group['seller_group_id'], 'SSL'); ?>" title="<?php echo $text_edit; ?>"></a>
+						<a class="ms-button ms-button-delete" href="<?php echo $this->url->link('multiseller/seller-group/delete', 'token=' . $this->session->data['token'] . '&seller_group_id=' . $seller_group['seller_group_id'], 'SSL'); ?>" title="<?php echo $button_delete; ?>"></a>
+					</td>
 				</tr>
 				<?php } ?>
 				<?php } else { ?>

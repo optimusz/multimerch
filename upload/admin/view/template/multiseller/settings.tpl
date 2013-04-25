@@ -315,14 +315,14 @@
 					</tr>
 
 					<tr>
-						  <td>
-						  		<span><?php echo $ms_config_downloads_limits; ?></span>
+						<td>
+								<span><?php echo $ms_config_downloads_limits; ?></span>
 								<span class="help"><?php echo $ms_config_downloads_limits_note; ?></span>
-						  </td>
-						  <td>
-						  	Min. <input type="text" name="msconf_downloads_limits[]" value="<?php echo $msconf_downloads_limits[0]; ?>" size="3" /> 
-						  	Max. <input type="text" name="msconf_downloads_limits[]" value="<?php echo $msconf_downloads_limits[1]; ?>" size="3" />
-						  </td>
+						</td>
+						<td>
+							Min. <input type="text" name="msconf_downloads_limits[]" value="<?php echo $msconf_downloads_limits[0]; ?>" size="3" /> 
+							Max. <input type="text" name="msconf_downloads_limits[]" value="<?php echo $msconf_downloads_limits[1]; ?>" size="3" />
+						</td>
 					</tr>
 
 					<tr>
@@ -337,7 +337,7 @@
 							<?php echo $text_no; ?>
 							<input type="radio" name="msconf_enable_shipping" value="2" <?php if($msconf_enable_shipping == 2) { ?> checked="checked" <?php } ?>  />
 							<?php echo $text_seller_select; ?>							
-					  	</td>
+						</td>
 					</tr>
 					
 					<tr>
@@ -440,7 +440,7 @@
 					<tr>
 						<td>
 							<span><?php echo $ms_config_allow_withdrawal_requests; ?></span>
-							<span class="help"><?php echo $ms_config_allow_withdrawal_requests; ?></span>
+							<span class="help"><?php echo $ms_config_allow_withdrawal_requests_note; ?></span>
 						</td>
 						<td>
 							<input type="radio" name="msconf_allow_withdrawal_requests" value="1" <?php if($msconf_allow_withdrawal_requests == 1) { ?> checked="checked" <?php } ?>  />
@@ -452,12 +452,12 @@
 
 					<tr>
 						  <td>
-						  		<span><?php echo $ms_config_withdrawal_waiting_period; ?></span>
+								<span><?php echo $ms_config_withdrawal_waiting_period; ?></span>
 								<span class="help"><?php echo $ms_config_withdrawal_waiting_period_note; ?></span>
-						  </td>
-						  <td>
-						  	<input type="text" size="3" name="msconf_withdrawal_waiting_period" value="<?php echo $msconf_withdrawal_waiting_period; ?>" /><?php echo $ms_days; ?>
-						  </td>
+						</td>
+						<td>
+							<input type="text" size="3" name="msconf_withdrawal_waiting_period" value="<?php echo $msconf_withdrawal_waiting_period; ?>" /><?php echo $ms_days; ?>
+						</td>
 					</tr>
 
 					<tr>

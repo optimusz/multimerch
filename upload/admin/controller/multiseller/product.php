@@ -197,5 +197,11 @@ class ControllerMultisellerProduct extends ControllerMultisellerBase {
 		}
 		$this->response->setOutput(json_encode($json));
 	}
+	
+	public function delete() {
+		$product_id = isset($this->request->get['product_id']) ? $this->request->get['product_id'] : 0;
+		$this->MsLoader->MsProduct->deleteProduct($product_id);
+		$this->redirect($this->url->link('multiseller/product', 'token=' . $this->session->data['token'], 'SSL'));
+	}	
 }
 ?>

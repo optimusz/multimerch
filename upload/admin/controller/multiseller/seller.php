@@ -11,13 +11,35 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 		if (empty($data['seller']['seller_id'])) {
 			// creating new seller
 			if (empty($data['seller']['nickname'])) {
-				$json['errors']['seller[nickname]'] = 'Username cannot be empty'; 
-			} else if (!ctype_alnum($data['seller']['nickname'])) {
-				$json['errors']['seller[nickname]'] = 'Username can only contain alphanumeric characters';
-			} else if (strlen($data['seller']['nickname']) < 4 || strlen($data['seller']['nickname']) > 50 ) {
-				$json['errors']['seller[nickname]'] = 'Username should be between 4 and 50 characters';			
+				$json['errors']['seller[nickname]'] = $this->language->get('ms_error_sellerinfo_nickname_empty'); 
+			} else if (mb_strlen($data['seller']['nickname']) < 4 || mb_strlen($data['seller']['nickname']) > 128 ) {
+				$json['errors']['seller[nickname]'] = $this->language->get('ms_error_sellerinfo_nickname_length');			
 			} else if ($this->MsLoader->MsSeller->nicknameTaken($data['seller']['nickname'])) {
-				$json['errors']['seller[nickname]'] = 'This username is already taken';
+				$json['errors']['seller[nickname]'] = $this->language->get('ms_error_sellerinfo_nickname_taken');
+			} else {
+				switch($this->config->get('msconf_nickname_rules')) {
+					case 1:
+						// extended latin
+						if(!preg_match("/^[a-zA-Z0-9_\-\s\x{00C0}-\x{017F}]+$/u", $data['seller']['nickname'])) {
+							$json['errors']['seller[nickname]'] = $this->language->get('ms_error_sellerinfo_nickname_latin');
+						}
+						break;
+						
+					case 2:
+						// utf8
+						if(!preg_match("/((?:[\x01-\x7F]|[\xC0-\xDF][\x80-\xBF]|[\xE0-\xEF][\x80-\xBF]{2}|[\xF0-\xF7][\x80-\xBF]{3}){1,100})./x", $data['seller']['nickname'])) {
+							$json['errors']['seller[nickname]'] = $this->language->get('ms_error_sellerinfo_nickname_utf8');
+						}
+						break;
+						
+					case 0:
+					default:
+						// alnum
+						if(!preg_match("/^[a-zA-Z0-9_\-\s]+$/", $data['seller']['nickname'])) {
+							$json['errors']['seller[nickname]'] = $this->language->get('ms_error_sellerinfo_nickname_alphanumeric');
+						}
+						break;
+				}
 			}
 			
 			if (empty($data['customer']['customer_id'])) {
@@ -340,7 +362,16 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 		$this->data['seller_groups'] =$this->MsLoader->MsSellerGroup->getSellerGroups();  
 
 		if (!empty($seller)) {
+			$rates = $this->MsLoader->MsCommission->calculateCommission(array('seller_id' => $this->request->get['seller_id']));
+			$actual_fees = '';
+			foreach ($rates as $rate) {
+				if ($rate['rate_type'] == MsCommission::RATE_SIGNUP) continue;
+				$actual_fees .= '<span class="fee-rate-' . $rate['rate_type'] . '"><b>' . $this->language->get('ms_commission_short_' . $rate['rate_type']) . ':</b>' . $rate['percent'] . '%+' . $this->currency->getSymbolLeft() .  $this->currency->format($rate['flat'], $this->config->get('config_currency'), '', FALSE) . $this->currency->getSymbolRight() . '&nbsp;&nbsp;';
+			}
+			
 			$this->data['seller'] = $seller;
+			$this->data['seller']['actual_fees'] = $actual_fees;
+			
 			if (!empty($seller['ms.avatar'])) {
 				$this->data['seller']['avatar']['name'] = $seller['ms.avatar'];
 				$this->data['seller']['avatar']['thumb'] = $this->MsLoader->MsFile->resizeImage($seller['ms.avatar'], $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'));

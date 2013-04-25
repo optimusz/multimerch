@@ -7,7 +7,7 @@
 	</div>
 	<div class="box">
 	<div class="heading">
-		<h1><img src="view/image/customer.png" alt="" /> <?php echo $ms_catalog_sellerinfo_heading; ?></h1>
+		<h1><img src="view/image/multiseller/ms-profile.png" alt="" /> <?php echo isset($seller['seller_id']) ? $ms_catalog_sellerinfo_heading : $ms_catalog_sellers_newseller; ?></h1>
 		<div class="buttons"><a id="ms-submit-button" class="button"><?php echo $button_save; ?></a></div>
 	</div>
 	<div class="content">
@@ -173,7 +173,7 @@
 			<td><?php echo $ms_status; ?></td>
 			<td>
 				<select name="seller[status]">
-				<?php foreach ($msPayment->getConstants() as $cname => $cval) { ?>
+				<?php foreach ($msSeller->getConstants() as $cname => $cval) { ?>
 					<?php if (strpos($cname, 'STATUS_') !== FALSE) { ?>
 						<option value="<?php echo $cval; ?>" <?php if ($seller['ms.seller_status'] == $cval) { ?>selected="selected"<?php } ?>><?php echo $this->language->get('ms_seller_status_' . $cval); ?></option>
 					<?php } ?>
@@ -210,8 +210,14 @@
 		<div id="tab-commission">
 		<table class="form">
 		<input type="hidden" name="seller[commission_id]" value="<?php echo $seller['commission_id']; ?>" />
+		<?php if (isset($seller['actual_fees'])) { ?>
 		<tr>
-			<td><?php echo $ms_commission_sale; ?></td>
+			<td><?php echo $ms_commission_actual; ?></td>
+			<td><?php echo $seller['actual_fees']; ?></td>
+		</tr>
+		<?php } ?>
+		<tr>
+			<td><?php echo $this->language->get('ms_commission_' . MsCommission::RATE_SIGNUP); ?></td>
 			<td>
 				<input type="hidden" name="seller[commission][<?php echo MsCommission::RATE_SALE; ?>][rate_id]" value="<?php echo $seller['commission_rates'][MsCommission::RATE_SALE]['rate_id']; ?>" />
 				<input type="hidden" name="seller[commission][<?php echo MsCommission::RATE_SALE; ?>][rate_type]" value="<?php echo MsCommission::RATE_SALE; ?>" />
@@ -223,7 +229,7 @@
 		</tr>
 
 		<tr>
-			<td><?php echo $ms_commission_listing; ?></td>
+			<td><?php echo $this->language->get('ms_commission_' . MsCommission::RATE_LISTING); ?></td>
 			<td>
 				<input type="hidden" name="seller[commission][<?php echo MsCommission::RATE_LISTING; ?>][rate_id]" value="<?php echo $seller['commission_rates'][MsCommission::RATE_LISTING]['rate_id']; ?>" />
 				<input type="hidden" name="seller[commission][<?php echo MsCommission::RATE_LISTING; ?>][rate_type]" value="<?php echo MsCommission::RATE_LISTING; ?>" /> 
@@ -246,63 +252,63 @@
 	</form>
 	</div>
 	</div>
-<script>
-$(function() {
-	$('#tabs a').tabs();
-
-	$('input[name^="customer"]').parents('tr').hide();
-	$('[name="seller[notify]"], [name="seller[message]"]').parents('tr').show();
-	$('select[name="customer[customer_id]"]').bind('change', function() {
-		if (this.value == '0') {
-			$('input[name^="customer"]').parents('tr').show();
-			$('[name="seller[notify]"], [name="seller[message]"]').parents('tr').hide();
-		} else {
-			$('input[name^="customer"]').parents('tr').hide();
-			$('[name="seller[notify]"], [name="seller[message]"]').parents('tr').show();
-		}
-	}).change();
-
-	$('input[name="seller[notify]"]').change(function() {
-		if ($(this).val() == 0) {
-			$('textarea[name="seller[message]"]').val('').attr('disabled','disabled');
-		} else {
-			$('textarea[name="seller[message]"]').removeAttr('disabled');
-		}
-	});
-
-	$("#ms-submit-button").click(function() {
-		var button = $(this);
-		var id = $(this).attr('id');
-		$.ajax({
-			type: "POST",
-			dataType: "json",
-			url: 'index.php?route=multiseller/seller/jxsavesellerinfo&token=<?php echo $token; ?>',
-			data: $('#ms-sellerinfo').serialize(),
-			beforeSend: function() {
-				button.hide().before('<span class="wait">&nbsp;<img src="view/image/loading.gif" alt="" /></span>');
-				$('p.error').remove();
-				$('.warning').text('').hide();
-			},
-			complete: function(jqXHR, textStatus) {
-				button.show().prev('span.wait').remove();
-				console.log(textStatus);
-			},
-			error: function(jqXHR, textStatus, errorThrown) {
-				$('.warning').text(textStatus).show();
-			},
-			success: function(jsonData) {
-				if (!jQuery.isEmptyObject(jsonData.errors)) {
-					$('#error_'+id).text('');
-					for (error in jsonData.errors) {
-						$('[name="'+error+'"]').after('<p class="error">' + jsonData.errors[error] + '</p>');
+	
+	<script type="text/javascript">
+	$(function() {
+		$('#tabs a').tabs();
+	
+		$('input[name^="customer"]').parents('tr').hide();
+		$('[name="seller[notify]"], [name="seller[message]"]').parents('tr').show();
+		$('select[name="customer[customer_id]"]').bind('change', function() {
+			if (this.value == '0') {
+				$('input[name^="customer"]').parents('tr').show();
+				$('[name="seller[notify]"], [name="seller[message]"]').parents('tr').hide();
+			} else {
+				$('input[name^="customer"]').parents('tr').hide();
+				$('[name="seller[notify]"], [name="seller[message]"]').parents('tr').show();
+			}
+		}).change();
+	
+		$('input[name="seller[notify]"]').change(function() {
+			if ($(this).val() == 0) {
+				$('textarea[name="seller[message]"]').val('').attr('disabled','disabled');
+			} else {
+				$('textarea[name="seller[message]"]').removeAttr('disabled');
+			}
+		});
+	
+		$("#ms-submit-button").click(function() {
+			var button = $(this);
+			var id = $(this).attr('id');
+			$.ajax({
+				type: "POST",
+				dataType: "json",
+				url: 'index.php?route=multiseller/seller/jxsavesellerinfo&token=<?php echo $token; ?>',
+				data: $('#ms-sellerinfo').serialize(),
+				beforeSend: function() {
+					button.hide().before('<span class="wait">&nbsp;<img src="view/image/loading.gif" alt="" /></span>');
+					$('p.error').remove();
+					$('.warning').text('').hide();
+				},
+				complete: function(jqXHR, textStatus) {
+					button.show().prev('span.wait').remove();
+				},
+				error: function(jqXHR, textStatus, errorThrown) {
+					$('.warning').text(textStatus).show();
+				},
+				success: function(jsonData) {
+					if (!jQuery.isEmptyObject(jsonData.errors)) {
+						$('#error_'+id).text('');
+						for (error in jsonData.errors) {
+							$('[name="'+error+'"]').after('<p class="error">' + jsonData.errors[error] + '</p>');
+						}
+						window.scrollTo(0,0);
+					} else {
+						window.location = 'index.php?route=multiseller/seller&token=<?php echo $token; ?>';
 					}
-					window.scrollTo(0,0);
-				} else {
-					window.location = 'index.php?route=multiseller/seller&token=<?php echo $token; ?>';
-				}
-			 	}
+				 	}
+			});
 		});
 	});
-});
-</script>	
+	</script>
 <?php echo $footer; ?>

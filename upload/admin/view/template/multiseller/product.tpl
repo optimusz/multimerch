@@ -71,15 +71,14 @@
               	<span class="ms-assign-seller" style="background-image: url('view/image/success.png'); width: 16px; height: 16px; display: inline-block; cursor: pointer; vertical-align: middle" title="Save" />
               </td>
               <td>
-              	<?php echo $this->language->get('ms_product_status_' . $product['mp.product_status']); ?>
+              	<?php echo $product['mp.product_status'] ? $this->language->get('ms_product_status_' . $product['mp.product_status']) : '' ?> 
               </td>
               <td><?php echo $product['p.date_created']; ?></td>
               <td><?php echo $product['p.date_modified']; ?></td>
               <td>
-              	<?php foreach ($product['action'] as $action) { ?>
-                [ <a href="<?php echo $action['href']; ?>"><?php echo $action['text']; ?></a> ]
-                <?php } ?>
-              </td>              
+                <a class="ms-button ms-button-edit" href="<?php echo $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $product['product_id'], 'SSL'); ?>" title="<?php echo $text_edit; ?>"></a>
+                <a class="ms-button ms-button-delete" href="<?php echo $this->url->link('multiseller/product/delete', 'token=' . $this->session->data['token'] . '&product_id=' . $product['product_id'], 'SSL'); ?>" title="<?php echo $button_delete; ?>"></a>
+              </td>
             </tr>
             <?php } ?>
             <?php } else { ?>

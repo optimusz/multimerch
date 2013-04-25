@@ -63,6 +63,18 @@ table.list td.comment {
 	height: 50px;
 }
 
+.fee-rate-1 {
+	color: #4E8B00;
+}
+
+.fee-rate-2 {
+	color: #1C237A;
+}
+
+.fee-rate-3 {
+	color: #C84848;
+}
+
 h1 img {
 	width: 22px;
 }

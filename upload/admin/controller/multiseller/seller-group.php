@@ -43,24 +43,30 @@ class ControllerMultisellerSellerGroup extends ControllerMultisellerBase {
 		
 		$total_seller_groups = $this->MsLoader->MsSellerGroup->getTotalSellerGroups();
 		$results = $this->MsLoader->MsSellerGroup->getSellerGroups($sort_data);
+
+		
 		
 		foreach ($results as $result) {
-			$actions = array();
+			/*
+			$rates = $this->MsLoader->MsCommission->getCommissionRates($result['commission_id']);
+			$own_fees = '';
+			foreach ($rates as $rate) {
+				$own_fees .= '<span class="fee-rate-' . $rate['rate_type'] . '"><b>' . $this->language->get('ms_commission_short_' . $rate['rate_type']) . ':</b>' . ($rate['percent'] ? $rate['percent'] . '%' : '') . ($rate['percent'] && $rate['flat'] ? '+' : '') .  ($rate['flat'] ? $this->currency->getSymbolLeft() .  $this->currency->format($rate['flat'], $this->config->get('config_currency'), '', FALSE) . $this->currency->getSymbolRight() : '') . '&nbsp;&nbsp;</span>';
+			}
+			*/
+			$rates = $this->MsLoader->MsCommission->calculateCommission(array('seller_group_id' => $result['seller_group_id']));
+			$actual_fees = '';
+			foreach ($rates as $rate) {
+				$actual_fees .= '<span class="fee-rate-' . $rate['rate_type'] . '"><b>' . $this->language->get('ms_commission_short_' . $rate['rate_type']) . ':</b>' . $rate['percent'] . '%+' . $this->currency->getSymbolLeft() .  $this->currency->format($rate['flat'], $this->config->get('config_currency'), '', FALSE) . $this->currency->getSymbolRight() . '&nbsp;&nbsp;';
+			}
 			
-			$actions[] = array(
-				'text' => $this->language->get('ms_edit'),
-				'href' => $this->url->link('multiseller/seller-group/update', 'token=' . $this->session->data['token'] . '&seller_group_id=' . $result['seller_group_id'] . $url, 'SSL')
-			);
-			
-			/*$actions[] = array(
-				'text' => $this->language->get('ms_delete'),
-				'href' => $this->url->link('multiseller/seller-group/delete', 'token=' . $this->session->data['token'] . '&seller_group_id=' . $result['seller_group_id'] . $url, 'SSL')
-			);*/
 			$this->data['seller_groups'][] = array(
 				'seller_group_id' => $result['seller_group_id'],
 				'name'              => $result['name'],
+				'description' => (mb_strlen($result['description']) > 80 ? mb_substr($result['description'], 0, 80) . '...' : $result['description']),
 				'selected'          => isset($this->request->post['selected']) && in_array($result['seller_group_id'], $this->request->post['selected']),
-				'action'            => $actions
+				//'own_fees' => $own_fees,
+				'actual_fees' => $actual_fees
 			);
 		}
 		
@@ -188,7 +194,7 @@ class ControllerMultisellerSellerGroup extends ControllerMultisellerBase {
 	
 	// Bulk delete of seller groups
 	public function delete() { 
-		$this->document->setTitle($this->language->get('heading_title'));
+		if (isset($this->request->get['seller_group_id'])) $this->request->post['selected'] = array($this->request->get['seller_group_id']);
 		
 		if (isset($this->request->post['selected']) && $this->validateDelete()) {
 			foreach ($this->request->post['selected'] as $seller_group_id) {
@@ -196,17 +202,9 @@ class ControllerMultisellerSellerGroup extends ControllerMultisellerBase {
 			}
 			
 			$this->session->data['success'] = $this->language->get('ms_success');
-			
-			$url = '';
-			
-			$url .= isset($this->request->get['sort']) ? '&sort=' . $this->request->get['sort'] : '';
-			$url .= isset($this->request->get['order']) ? '&order=' . $this->request->get['order'] : '';
-			$url .= isset($this->request->get['page']) ? '&page=' . $this->request->get['page'] : '';
-			
-			$this->redirect($this->url->link('multiseller/seller-group', 'token=' . $this->session->data['token'] . $url, 'SSL'));
 		}
 		
-		$this->index();
+		$this->redirect($this->url->link('multiseller/seller-group', 'token=' . $this->session->data['token'], 'SSL'));
 	}
 	
 	// Get form for adding/editing seller groups

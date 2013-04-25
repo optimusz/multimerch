@@ -58,11 +58,18 @@ $_['ms_date_modified'] = 'Date modified';
 $_['ms_date_paid'] = 'Date paid';
 $_['ms_date'] = 'Date';
 $_['ms_description'] = 'Description';
+
 $_['ms_commission'] = 'Commission';
 $_['ms_commissions_fees'] = 'Commissions & fees';
-$_['ms_commission_sale'] = 'Per sale';
-$_['ms_commission_listing'] = 'Per product listing';
-$_['ms_commission_signup'] = 'Sign up fee';
+$_['ms_commission_' . MsCommission::RATE_SALE] = 'Sale fee';
+$_['ms_commission_' . MsCommission::RATE_LISTING] = 'Listing fee / method';
+$_['ms_commission_' . MsCommission::RATE_SIGNUP] = 'Signup fee / method';
+
+$_['ms_commission_short_' . MsCommission::RATE_SALE] = 'S';
+$_['ms_commission_short_' . MsCommission::RATE_LISTING] = 'L';
+$_['ms_commission_short_' . MsCommission::RATE_SIGNUP] = 'SU';
+$_['ms_commission_actual'] = 'Actual fee rates';
+
 $_['ms_sort_order'] = 'Sort order';
 $_['ms_name'] = 'Name';
 $_['ms_description'] = 'Description';
@@ -85,34 +92,10 @@ $_['ms_menu_payment'] = 'Payments';
 $_['ms_menu_settings'] = 'Settings';
 $_['ms_menu_comments'] = 'Comments';
 
-
-// Seller - List
-$_['ms_catalog_sellers_heading'] = 'Sellers';
-$_['ms_catalog_sellers_breadcrumbs'] = 'Sellers';
-$_['ms_catalog_sellers_newseller'] = 'New seller';
-$_['ms_catalog_sellers_create'] = 'Create new seller';
-
-$_['ms_catalog_sellers_total_balance'] = 'Total amount on all balances: <b>%s</b> (active sellers: <b>%s</b>)';
-$_['ms_catalog_sellers_email'] = 'Email';
-$_['ms_catalog_sellers_total_products'] = 'Products';
-$_['ms_catalog_sellers_total_sales'] = 'Sales';
-$_['ms_catalog_sellers_total_earnings'] = 'Earnings';
-$_['ms_catalog_sellers_current_balance'] = 'Balance';
-$_['ms_catalog_sellers_status'] = 'Status';
-$_['ms_catalog_sellers_date_created'] = 'Date created';
-$_['ms_catalog_sellers_balance_paypal'] = 'Balance payout via PayPal';
-
-$_['ms_seller_status_' . MsSeller::STATUS_ACTIVE] = 'Active';
-$_['ms_seller_status_' . MsSeller::STATUS_INACTIVE] = 'Inactive';
-$_['ms_seller_status_' . MsSeller::STATUS_DISABLED] = 'Disabled';
-$_['ms_seller_status_' . MsSeller::STATUS_DELETED] = 'Deleted';
-$_['ms_seller_status_' . MsSeller::STATUS_UNPAID] = 'Unpaid signup fee';
-
 // Settings
 
 $_['ms_settings_heading']      = 'Settings';
 $_['ms_settings_breadcrumbs']       = 'Settings';
-
 $_['ms_config_seller_validation'] = 'Seller validation';
 $_['ms_config_seller_validation_note'] = 'Seller validation';
 $_['ms_config_seller_validation_none'] = 'No validation';
@@ -123,20 +106,24 @@ $_['ms_config_product_validation'] = 'Product validation';
 $_['ms_config_product_validation_note'] = 'Product validation';
 $_['ms_config_product_validation_none'] = 'No validation';
 $_['ms_config_product_validation_approval'] = 'Manual approval';
+
 $_['ms_config_nickname_rules'] = 'Seller nickname rules';
 $_['ms_config_nickname_rules_note'] = 'Character sets allowed in seller nicknames';
 $_['ms_config_nickname_rules_alnum'] = 'Alphanumeric';
 $_['ms_config_nickname_rules_ext'] = 'Extended latin';
 $_['ms_config_nickname_rules_utf'] = 'Full UTF-8';
+
 $_['ms_config_enable_seo_urls_seller'] = 'Generate SEO URLs for new sellers';
 $_['ms_config_enable_seo_urls_seller_note'] = 'This option will generate SEO-friendly URLs for new sellers. SEO URLs need to be enabled in OpenCart to use this.';
+
 $_['ms_config_enable_seo_urls_product'] = 'Generate SEO URLs for new products (experimental)';
 $_['ms_config_enable_seo_urls_product_note'] = 'This option will generate SEO-friendly URLs for new product. SEO URLs need to be enabled in OpenCart to use this. Experimental, especially for non-English stores.';
+
 $_['ms_config_enable_update_seo_urls'] = 'Enable SEO URLs generation for updated products';
 $_['ms_config_enable_update_seo_urls_note'] = 'This setting enables new SEO URLs generation, when existing products are updated.';
+
 $_['ms_config_enable_non_alphanumeric_seo'] = 'Allow UTF8 in SEO URLs (experimental)';
 $_['ms_config_enable_non_alphanumeric_seo_note'] = 'This will not strip UTF8 symbols from SEO URLs. Use at your own risk.';
-
 
 $_['ms_config_minimum_product_price'] = 'Minimum product price';
 $_['ms_config_minimum_product_price_note'] = 'Minimum product price';
@@ -173,6 +160,7 @@ $_['ms_config_allow_partial_withdrawal'] = 'Allow partial payouts';
 $_['ms_config_allow_partial_withdrawal_note'] = 'Allow sellers to request partial payouts';
 
 $_['ms_config_allow_withdrawal_requests'] = 'Allow payout requests';
+$_['ms_config_allow_withdrawal_requests_note'] = 'Allow sellers to request earnings';
 
 $_['ms_config_paypal_sandbox'] = 'PayPal Sandbox mode';
 $_['ms_config_paypal_sandbox_note'] = 'Use PayPal in Sandbox mode for testing and debugging';
@@ -214,7 +202,6 @@ $_['ms_config_enable_shipping_note'] = 'New products will be created to require 
 
 $_['ms_config_enable_quantities'] = 'Enable quantities';
 $_['ms_config_enable_quantities_note'] = 'Allow sellers to specify quantities for products';
-
 
 $_['ms_config_seller_terms_page'] = 'Seller account terms';
 $_['ms_config_seller_terms_page_note'] = 'Sellers have to agree to the terms when creating a seller account.';
@@ -271,7 +258,27 @@ $_['ms_config_layout']        = 'Layout:';
 $_['ms_config_position']      = 'Position:';
 $_['ms_config_sort_order']    = 'Sort Order:';
 
+// Seller - List
+$_['ms_catalog_sellers_heading'] = 'Sellers';
+$_['ms_catalog_sellers_breadcrumbs'] = 'Sellers';
+$_['ms_catalog_sellers_newseller'] = 'New seller';
+$_['ms_catalog_sellers_create'] = 'Create new seller';
 
+$_['ms_catalog_sellers_total_balance'] = 'Total amount on all balances: <b>%s</b> (active sellers: <b>%s</b>)';
+$_['ms_catalog_sellers_email'] = 'Email';
+$_['ms_catalog_sellers_total_products'] = 'Products';
+$_['ms_catalog_sellers_total_sales'] = 'Sales';
+$_['ms_catalog_sellers_total_earnings'] = 'Earnings';
+$_['ms_catalog_sellers_current_balance'] = 'Balance';
+$_['ms_catalog_sellers_status'] = 'Status';
+$_['ms_catalog_sellers_date_created'] = 'Date created';
+$_['ms_catalog_sellers_balance_paypal'] = 'Balance payout via PayPal';
+
+$_['ms_seller_status_' . MsSeller::STATUS_ACTIVE] = 'Active';
+$_['ms_seller_status_' . MsSeller::STATUS_INACTIVE] = 'Inactive';
+$_['ms_seller_status_' . MsSeller::STATUS_DISABLED] = 'Disabled';
+$_['ms_seller_status_' . MsSeller::STATUS_DELETED] = 'Deleted';
+$_['ms_seller_status_' . MsSeller::STATUS_UNPAID] = 'Unpaid signup fee';
 
 // Customer-seller form
 $_['ms_catalog_sellerinfo_heading'] = 'Seller';
@@ -302,6 +309,13 @@ $_['ms_catalog_sellerinfo_message_note'] = 'Will be appended to the default emai
 $_['ms_catalog_sellerinfo_notify'] = 'Notify seller via email';
 $_['ms_catalog_sellerinfo_product_validation'] = 'Product validation';
 $_['ms_catalog_sellerinfo_product_validation_note'] = 'Product validation for this seller';
+
+$_['ms_error_sellerinfo_nickname_empty'] = 'Username cannot be empty';
+$_['ms_error_sellerinfo_nickname_alphanumeric'] = 'Seller name can only contain alphanumeric symbols';
+$_['ms_error_sellerinfo_nickname_utf8'] = 'Seller name can only contain printable UTF-8 symbols';
+$_['ms_error_sellerinfo_nickname_latin'] = 'Seller name can only contain alphanumeric symbols and diacritics';
+$_['ms_error_sellerinfo_nickname_length'] = 'Username should be between 4 and 50 characters';
+$_['ms_error_sellerinfo_nickname_taken'] = 'This username is already taken';
 
 // Catalog - Products
 $_['ms_catalog_products_heading'] = 'Products';

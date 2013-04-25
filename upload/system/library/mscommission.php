@@ -75,7 +75,9 @@ class MsCommission extends Model {
 						mcr.percent as 'mcr.percent',
 						mcr.payment_method as 'mcr.payment_method'
 				FROM `" . DB_PREFIX . "ms_commission_rate` mcr
-				WHERE mcr.commission_id = " . (int)$commission_id;
+				WHERE mcr.commission_id = " . (int)$commission_id . "
+				ORDER BY mcr.rate_type";
+				
 		$res = $this->db->query($sql);
 		$rates = array();
 
