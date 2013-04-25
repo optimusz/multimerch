@@ -117,7 +117,7 @@
 								<li>
 									<a href="<?php echo $this->url->link('seller/account-dashboard', '', 'SSL'); ?>">
 										<?php if($this->config->get('msconf_graphical_sellermenu')) { ?>
-											<img src="catalog/view/theme/<?php echo $this->config->get('config_template'); ?>/image/ms-graph.png" />
+											<img src="catalog/view/theme/<?php echo $this->config->get('config_template'); ?>/image/ms-graph-96.png" />
 										<?php } ?>
 										<?php echo $ms_account_dashboard; ?>
 									</a>
@@ -127,7 +127,7 @@
 							<li>
 								<a href="<?php echo $this->url->link('seller/account-profile', '', 'SSL'); ?>">
 									<?php if($this->config->get('msconf_graphical_sellermenu')) { ?>
-										<img src="catalog/view/theme/<?php echo $this->config->get('config_template'); ?>/image/ms-profile.png" />
+										<img src="catalog/view/theme/<?php echo $this->config->get('config_template'); ?>/image/ms-profile-96.png" />
 									<?php } ?>								
 									<?php echo $ms_account_sellerinfo; ?>
 								</a>
@@ -145,7 +145,7 @@
 								<li>
 									<a href="<?php echo $this->url->link('seller/account-product', '', 'SSL'); ?>">
 										<?php if($this->config->get('msconf_graphical_sellermenu')) { ?>
-											<img src="catalog/view/theme/<?php echo $this->config->get('config_template'); ?>/image/ms-bag.png" />
+											<img src="catalog/view/theme/<?php echo $this->config->get('config_template'); ?>/image/ms-bag-96.png" />
 										<?php } ?>
 										<?php echo $ms_account_products; ?>
 									</a>
@@ -170,7 +170,7 @@
 									<li>
 										<a href="<?php echo $this->url->link('seller/account-withdrawal', '', 'SSL'); ?>">
 											<?php if($this->config->get('msconf_graphical_sellermenu')) { ?>
-												<img src="catalog/view/theme/<?php echo $this->config->get('config_template'); ?>/image/ms-dollar.png" />
+												<img src="catalog/view/theme/<?php echo $this->config->get('config_template'); ?>/image/ms-dollar-96.png" />
 											<?php } ?>											
 											<?php echo $ms_account_withdraw; ?>
 										</a>
