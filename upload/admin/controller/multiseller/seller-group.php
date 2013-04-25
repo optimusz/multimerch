@@ -57,7 +57,7 @@ class ControllerMultisellerSellerGroup extends ControllerMultisellerBase {
 			$rates = $this->MsLoader->MsCommission->calculateCommission(array('seller_group_id' => $result['seller_group_id']));
 			$actual_fees = '';
 			foreach ($rates as $rate) {
-				$actual_fees .= '<span class="fee-rate-' . $rate['rate_type'] . '"><b>' . $this->language->get('ms_commission_short_' . $rate['rate_type']) . ':</b>' . $rate['percent'] . '%+' . $this->currency->getSymbolLeft() .  $this->currency->format($rate['flat'], $this->config->get('config_currency'), '', FALSE) . $this->currency->getSymbolRight() . '&nbsp;&nbsp;';
+				$actual_fees .= '<span class="fee-rate-' . $rate['rate_type'] . '"><b>' . $this->language->get('ms_commission_short_' . $rate['rate_type']) . ':</b>' . ($rate['rate_type'] != MsCommission::RATE_SIGNUP ? $rate['percent'] . '%+' : '') . $this->currency->getSymbolLeft() .  $this->currency->format($rate['flat'], $this->config->get('config_currency'), '', FALSE) . $this->currency->getSymbolRight() . '&nbsp;&nbsp;';
 			}
 			
 			$this->data['seller_groups'][] = array(
