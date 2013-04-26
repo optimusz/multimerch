@@ -204,30 +204,13 @@ class MsProduct extends Model {
 		}
 
 		foreach ($data['languages'] as $language_id => $language) {
-			if (strcmp(VERSION,'1.5.4') >= 0) {
-				$sql = "INSERT INTO " . DB_PREFIX . "product_description
-						SET product_id = " . (int)$product_id . ",
-							name = '". $this->db->escape($language['product_name']) ."',
-							description = '". $this->db->escape(htmlspecialchars(nl2br($language['product_description']), ENT_COMPAT)) ."',
-							tag = '" . $this->db->escape($language['product_tags']) . "',
-							language_id = " . (int)$language_id;
-				$this->db->query($sql);
-			} else {
-				$sql = "INSERT INTO " . DB_PREFIX . "product_description
-						SET product_id = " . (int)$product_id . ",
-							name = '". $this->db->escape($language['product_name']) ."',
-							description = '". $this->db->escape(htmlspecialchars(nl2br($language['product_description']), ENT_COMPAT)) ."',
-							language_id = " . (int)$language_id;
-				$this->db->query($sql);
-				
-				if ($language['product_tags']) {
-					$tags = explode(',', $language['product_tags']);
-						
-					foreach ($tags as $tag) {
-						$this->db->query("INSERT INTO " . DB_PREFIX . "product_tag SET product_id = '" . (int)$product_id . "', language_id = '" . (int)$language_id . "', tag = '" . $this->db->escape(trim($tag)) . "'");
-					}
-				}
-			}
+			$sql = "INSERT INTO " . DB_PREFIX . "product_description
+					SET product_id = " . (int)$product_id . ",
+						name = '". $this->db->escape($language['product_name']) ."',
+						description = '". $this->db->escape(htmlspecialchars(nl2br($language['product_description']), ENT_COMPAT)) ."',
+						tag = '" . $this->db->escape($language['product_tags']) . "',
+						language_id = " . (int)$language_id;
+			$this->db->query($sql);
 			
 			// multilang attributes
 			if (isset($language['product_attributes'])) {
@@ -381,35 +364,14 @@ class MsProduct extends Model {
 		
 		// languages
 		foreach ($data['languages'] as $language_id => $language) {
-			if (strcmp(VERSION,'1.5.4') >= 0) {
-				$sql = "UPDATE " . DB_PREFIX . "product_description
-						SET name = '". $this->db->escape($language['product_name']) ."',
-							description = '". $this->db->escape(htmlspecialchars(nl2br($language['product_description']), ENT_COMPAT)) ."',
-							tag = '". $this->db->escape($language['product_tags']) ."'
-						WHERE product_id = " . (int)$product_id . "
-						AND language_id = " . (int)$language_id;
-						
-				$this->db->query($sql);
-			} else {
-				$sql = "UPDATE " . DB_PREFIX . "product_description
-						SET name = '". $this->db->escape($language['product_name']) ."',
-							description = '". $this->db->escape(htmlspecialchars(nl2br($language['product_description']), ENT_COMPAT)) ."'
-						WHERE product_id = " . (int)$product_id . "
-						AND language_id = " . (int)$language_id;
-						
-				$this->db->query($sql);
-				
-				$sql = "DELETE FROM " . DB_PREFIX . "product_tag
-						WHERE product_id = " . (int)$product_id;
-				$this->db->query($sql);
-				
-				if ($language['product_tags']) {
-					$tags = explode(',', $language['product_tags']);
-					foreach ($tags as $tag) {
-						$this->db->query("INSERT INTO " . DB_PREFIX . "product_tag SET product_id = '" . (int)$product_id . "', language_id = '" . (int)$language_id . "', tag = '" . $this->db->escape(trim($tag)) . "'");
-					}
-				}
-			}
+			$sql = "UPDATE " . DB_PREFIX . "product_description
+					SET name = '". $this->db->escape($language['product_name']) ."',
+						description = '". $this->db->escape(htmlspecialchars(nl2br($language['product_description']), ENT_COMPAT)) ."',
+						tag = '". $this->db->escape($language['product_tags']) ."'
+					WHERE product_id = " . (int)$product_id . "
+					AND language_id = " . (int)$language_id;
+					
+			$this->db->query($sql);
 			
 			// multilang attributes
 			if (isset($language['product_attributes'])) {
@@ -647,11 +609,6 @@ class MsProduct extends Model {
 		$this->db->query("DELETE FROM " . DB_PREFIX . "product_related WHERE related_id = '" . (int)$product_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "product_reward WHERE product_id = '" . (int)$product_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "product_special WHERE product_id = '" . (int)$product_id . "'");
-		
-		if (strcmp(VERSION,'1.5.5') >= 0) {
-			$this->db->query("DELETE FROM " . DB_PREFIX . "product_tag WHERE product_id='" . (int)$product_id. "'");
-		}
-		
 		$this->db->query("DELETE FROM " . DB_PREFIX . "product_to_category WHERE product_id = '" . (int)$product_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "product_to_download WHERE product_id = '" . (int)$product_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "product_to_layout WHERE product_id = '" . (int)$product_id . "'");
@@ -701,24 +658,11 @@ class MsProduct extends Model {
 
 		if (!$res->num_rows) return FALSE;
 
-		if (strcmp(VERSION,'1.5.4') >= 0) {
-			$sql = "SELECT pd.*,
-						   pd.description as 'pd.description'
-					FROM " . DB_PREFIX . "product_description pd
-					WHERE pd.product_id = " . (int)$product_id . "
-					GROUP BY language_id";
-
-		} else {
-			$sql = "SELECT pd.*,
-						   pd.description as 'pd.description'
-						   group_concat(pt.tag separator ', ') as tag
-					FROM " . DB_PREFIX . "product_description pd
-					LEFT JOIN `" . DB_PREFIX . "product_tag` pt
-						ON pd.product_id = pt.product_id
-						AND pd.language_id = pt.language_id
-					WHERE pd.product_id = " . (int)$product_id . "
-					GROUP BY language_id";
-		}
+		$sql = "SELECT pd.*,
+					   pd.description as 'pd.description'
+				FROM " . DB_PREFIX . "product_description pd
+				WHERE pd.product_id = " . (int)$product_id . "
+				GROUP BY language_id";
 
 		$descriptions = $this->db->query($sql);
 		$product_description_data = array();
@@ -829,18 +773,15 @@ class MsProduct extends Model {
 	}
 	
 	public function getSaleData($product_id) {
-		$sql = "SELECT SUM(op.quantity) AS quantity,
-					   SUM(op.total + op.total * op.tax / 100) AS total,
-					   SUM(seller_net_amt) AS seller_total
+		$sql = "SELECT SUM(seller_net_amt) AS seller_total
 				FROM " . DB_PREFIX . "order_product op
-				LEFT JOIN `" . DB_PREFIX . "order` o
-					ON (op.order_id = o.order_id)
-				LEFT JOIN `" . DB_PREFIX . "ms_order_product_data` mopd
-					ON (op.order_id = mopd.order_id)
-				WHERE op.product_id = " . (int)$product_id;
-		
+				INNER JOIN `" . DB_PREFIX . "ms_order_product_data` mopd
+					ON (op.product_id = mopd.product_id)
+				WHERE op.product_id = " . (int)$product_id . "
+				GROUP BY order_product_id";
+
 		$res = $this->db->query($sql);
-		return $res->row;
+		return $res->num_rows ? $res->row : FALSE;
 	}
 	
 	public function changeSeller($product_id, $seller_id) {

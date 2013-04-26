@@ -1,7 +1,7 @@
 $(function() {
 	$('#language-tabs a.lang').tabs();
 	$('#general-tabs a').tabs();
-	$( "#product_image_files" ).sortable();
+	$( ".product_image_files" ).sortable();
 
 	$("body").delegate(".ms-price-dynamic", "propertychange input paste focusout", function(){
 		$(".attention.ms-commission span").load("index.php?route=seller/account-product/jxGetFee&price=" + $(".ms-price-dynamic").val());
@@ -55,11 +55,11 @@ $(function() {
 		}
 	});
 
-	$("#product_image_files, #product_thumbnail_files").delegate(".ms-remove", "click", function() {
+	$(".product_image_files").delegate(".ms-remove", "click", function() {
 		$(this).parent().remove();
 	});
 
-	$("#product_download_files").delegate(".ms-button-delete", "click", function() {
+	$(".product_download_files").delegate(".ms-button-delete", "click", function() {
 		$(this).parents('.ms-download').remove();
 		return false;
 	});
@@ -105,7 +105,6 @@ $(function() {
 					$(".warning.main").text(msGlobals.formNotice).show();
 					window.scrollTo(0,0);
 				} else if (!jQuery.isEmptyObject(jsonData.data) && jsonData.data.amount) {
-					console.log(jsonData.data);
 					$(".ms-payment-form form input[name='custom']").val(jsonData.data.custom);
 					$(".ms-payment-form form input[name='amount']").val(jsonData.data.amount);
 					$(".ms-payment-form form").submit();

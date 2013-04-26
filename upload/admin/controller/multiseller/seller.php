@@ -100,12 +100,13 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 								'customer_group_id' => $this->config->get('config_customer_group_id'),
 								'newsletter' => 1,
 								'status' => 1,
-								'approved' => 1
 							)
 						)
 					);
 					
 					$customer_info = $this->model_sale_customer->getCustomerByEmail($data['customer']['email']);
+					$this->db->query("UPDATE " . DB_PREFIX . "customer SET approved = '1' WHERE customer_id = '" . (int)$customer_info['customer_id'] . "'");
+					
 					$data['seller']['seller_id'] = $customer_info['customer_id'];
 				} else {
 					$data['seller']['seller_id'] = $data['customer']['customer_id'];

@@ -581,7 +581,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 									));
 								}
 								// assign payment variables
-								$json['data']['amount'] = $fee;
+								$json['data']['amount'] = $this->currency->format($fee, $this->config->get('config_currency'), '', FALSE);
 								$json['data']['custom'] = $payment_id;
 			
 								return $this->response->setOutput(json_encode($json));
@@ -638,7 +638,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 							));
 							
 							// assign payment variables
-							$json['data']['amount'] = $fee;
+							$json['data']['amount'] = $this->currency->format($fee, $this->config->get('config_currency'), '', FALSE);
 							$json['data']['custom'] = $payment_id;
 		
 							return $this->response->setOutput(json_encode($json));
@@ -666,12 +666,13 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 			$json['redirect'] = $this->url->link('seller/account-product', '', 'SSL');
 		}
 		
+		/*
 		$output = ob_get_clean();
 		if ($output) {
 			$this->log->write('MMERCH PRODUCT FORM: ' . $output);
 			if (!$this->session->data['success']) $json['fail'] = 1;
 		}
-		
+		*/
 		$this->response->setOutput(json_encode($json));
 	}
 
@@ -763,7 +764,6 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 			}
 			
 			$sale_data = $this->MsLoader->MsProduct->getSaleData($product['product_id']);
-			
 			$this->data['products'][] = array(
 				'pd.name' => $product['pd.name'],
 				'special' => $special,
@@ -884,8 +884,6 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 
 		if (!empty($attributes)) {
 			foreach ($attributes as $attr) {
-				var_dump($attr);
-				
 				$attr['values'] = $this->MsLoader->MsAttribute->getAttributeValues($attr['attribute_id']);
 				
 				if (empty($attr['values']) && in_array($attr['attribute_type'], array(MsAttribute::TYPE_CHECKBOX, MsAttribute::TYPE_SELECT, MsAttribute::TYPE_RADIO)))

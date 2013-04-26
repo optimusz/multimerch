@@ -172,12 +172,12 @@ $_['ms_success_product_updated'] = 'Product updated';
 $_['ms_success_product_deleted'] = 'Product deleted';
 
 // Errors
-$_['ms_error_sellerinfo_nickname_empty'] = 'Username cannot be empty';
-$_['ms_error_sellerinfo_nickname_alphanumeric'] = 'Seller name can only contain alphanumeric symbols';
-$_['ms_error_sellerinfo_nickname_utf8'] = 'Seller name can only contain printable UTF-8 symbols';
-$_['ms_error_sellerinfo_nickname_latin'] = 'Seller name can only contain alphanumeric symbols and diacritics';
-$_['ms_error_sellerinfo_nickname_length'] = 'Username should be between 4 and 50 characters';
-$_['ms_error_sellerinfo_nickname_taken'] = 'This username is already taken';
+$_['ms_error_sellerinfo_nickname_empty'] = 'Nickname cannot be empty';
+$_['ms_error_sellerinfo_nickname_alphanumeric'] = 'Nickname can only contain alphanumeric symbols';
+$_['ms_error_sellerinfo_nickname_utf8'] = 'Nickname can only contain printable UTF-8 symbols';
+$_['ms_error_sellerinfo_nickname_latin'] = 'Nickname can only contain alphanumeric symbols and diacritics';
+$_['ms_error_sellerinfo_nickname_length'] = 'Nickname should be between 4 and 50 characters';
+$_['ms_error_sellerinfo_nickname_taken'] = 'This nickname is already taken';
 $_['ms_error_sellerinfo_company_length'] = 'Company name cannot be longer than 50 characters';
 $_['ms_error_sellerinfo_description_length'] = 'Description cannot be longer than 1000 characters';
 $_['ms_error_sellerinfo_paypal'] = 'Invalid PayPal address';

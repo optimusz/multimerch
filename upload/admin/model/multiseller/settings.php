@@ -2,12 +2,16 @@
 class ModelMultisellerSettings extends Model {
 	public function checkDbVersion($version) {
 		switch ($version) {
-			case "2.2":
-				$res = $this->db->query("SHOW COLUMNS FROM `" . DB_PREFIX . "ms_comments` LIKE 'parent_id'");
+			case "3.0":
+				$res = $this->db->query("SHOW COLUMNS FROM `" . DB_PREFIX . "ms_commission_rate` LIKE 'payment_method'");
 				break;
-				
+
 			case "2.3":
 				$res = $this->db->query("SHOW COLUMNS FROM `" . DB_PREFIX . "ms_product_attribute` LIKE 'attribute_id'");
+				break;
+
+			case "2.2":
+				$res = $this->db->query("SHOW COLUMNS FROM `" . DB_PREFIX . "ms_comments` LIKE 'parent_id'");
 				break;
 		}
 		
@@ -69,7 +73,6 @@ class ModelMultisellerSettings extends Model {
 									  FROM `" . DB_PREFIX . "ms_withdrawal`");
 									  
 					$this->db->query("UPDATE `" . DB_PREFIX . "ms_payment` SET payment_status = 2 WHERE payment_status = 3");
-					
 					break;
 					
 				case "2.3":
@@ -111,6 +114,7 @@ class ModelMultisellerSettings extends Model {
 						$this->model_user_user_group->addPermission($this->user->getId(), 'access', 'multiseller/attribute');
 						$this->model_user_user_group->addPermission($this->user->getId(), 'modify', 'multiseller/attribute');
 					}
+					break;
 
 				case "2.2":
 					$this->db->query("ALTER TABLE " . DB_PREFIX . "ms_comments ADD `parent_id` int(11) DEFAULT NULL AFTER `id`");
@@ -120,6 +124,7 @@ class ModelMultisellerSettings extends Model {
 					$this->db->query("ALTER TABLE " . DB_PREFIX . "ms_comments CHANGE `name` `name` varchar(128) NOT NULL DEFAULT ''");
 					$this->db->query("ALTER TABLE " . DB_PREFIX . "ms_comments CHANGE `create_time` `create_time` int(11) NOT NULL");
 					$this->db->query("ALTER TABLE " . DB_PREFIX . "ms_comments CHANGE `display` `display` tinyint(1) NOT NULL");
+					break;
 					
 				default:
 					break;

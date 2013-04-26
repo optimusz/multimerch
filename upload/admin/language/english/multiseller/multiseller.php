@@ -29,7 +29,7 @@ $_['ms_error_product_publish'] = 'Failed to publish some products: seller accoun
 $_['ms_success_installed']      = 'Extension successfully installed';
 $_['ms_success_product_status']      = 'Successfully changed product status.';
 
-$_['heading_title']    = '[ffct.cc] OpenCart Digital Marketplace';
+$_['heading_title']    = '[ffct.cc] MultiMerch Digital Marketplace';
 $_['text_seller_select']         = 'Seller select';
 $_['text_shipping_dependent']         = 'Shipping dependent';
 $_['text_no_results'] = 'No results';
@@ -310,12 +310,12 @@ $_['ms_catalog_sellerinfo_notify'] = 'Notify seller via email';
 $_['ms_catalog_sellerinfo_product_validation'] = 'Product validation';
 $_['ms_catalog_sellerinfo_product_validation_note'] = 'Product validation for this seller';
 
-$_['ms_error_sellerinfo_nickname_empty'] = 'Username cannot be empty';
-$_['ms_error_sellerinfo_nickname_alphanumeric'] = 'Seller name can only contain alphanumeric symbols';
-$_['ms_error_sellerinfo_nickname_utf8'] = 'Seller name can only contain printable UTF-8 symbols';
-$_['ms_error_sellerinfo_nickname_latin'] = 'Seller name can only contain alphanumeric symbols and diacritics';
-$_['ms_error_sellerinfo_nickname_length'] = 'Username should be between 4 and 50 characters';
-$_['ms_error_sellerinfo_nickname_taken'] = 'This username is already taken';
+$_['ms_error_sellerinfo_nickname_empty'] = 'Nickname cannot be empty';
+$_['ms_error_sellerinfo_nickname_alphanumeric'] = 'Nickname can only contain alphanumeric symbols';
+$_['ms_error_sellerinfo_nickname_utf8'] = 'Nickname can only contain printable UTF-8 symbols';
+$_['ms_error_sellerinfo_nickname_latin'] = 'Nickname can only contain alphanumeric symbols and diacritics';
+$_['ms_error_sellerinfo_nickname_length'] = 'Nickname should be between 4 and 50 characters';
+$_['ms_error_sellerinfo_nickname_taken'] = 'This nickname is already taken';
 
 // Catalog - Products
 $_['ms_catalog_products_heading'] = 'Products';

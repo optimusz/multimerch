@@ -33,6 +33,7 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 		$data = $this->request->post;
 		$seller = $this->MsLoader->MsSeller->getSeller($this->customer->getId());
 		$json = array();
+		$json['redirect'] = $this->url->link('seller/account-dashboard');
 		
 		if (!empty($seller) && (in_array($seller['ms.seller_status'], array(MsSeller::STATUS_DISABLED, MsSeller::STATUS_DELETED)))) {
 			return $this->response->setOutput(json_encode($json));
@@ -137,7 +138,6 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 						);
 						$data['seller']['status'] = MsSeller::STATUS_ACTIVE;
 						$data['seller']['approved'] = 1;
-						$json['redirect'] = $this->url->link('seller/account-dashboard');
 						break;
 				}
 				
@@ -160,13 +160,11 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 				$commissions = $this->MsLoader->MsCommission->calculateCommission(array('seller_group_id' => $this->config->get('msconf_default_seller_group_id')));
 				$fee = (float)$commissions[MsCommission::RATE_SIGNUP]['flat'];
 				
-				$this->MsLoader->MsMail->sendMails($mails);
-				
 				if ($fee > 0) {
 					switch($commissions[MsCommission::RATE_SIGNUP]['payment_method']) {
 						case MsPayment::METHOD_PAYPAL:
 							// initiate paypal payment
-							// set product status to unpaid
+							// set seller status to unpaid
 							$this->MsLoader->MsSeller->changeStatus($this->customer->getId(), MsSeller::STATUS_UNPAID);
 							
 							// unset seller profile creation emails
@@ -185,9 +183,10 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 							));
 							
 							// assign payment variables
-							$json['data']['amount'] = $fee;
+							$json['data']['amount'] = $this->currency->format($fee, $this->config->get('config_currency'), '', FALSE);
 							$json['data']['custom'] = $payment_id;
 		
+							$this->MsLoader->MsMail->sendMails($mails);
 							return $this->response->setOutput(json_encode($json));
 							break;
 
@@ -202,8 +201,11 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 								)
 							);
 							
+							$this->MsLoader->MsMail->sendMails($mails);
 							break;
 					}
+				} else {
+					$this->MsLoader->MsMail->sendMails($mails);
 				}
 				
 				$this->session->data['success'] = $this->language->get('ms_account_sellerinfo_created');
@@ -256,7 +258,7 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 									));									
 								}
 								// assign payment variables
-								$json['data']['amount'] = $fee;
+								$json['data']['amount'] = $this->currency->format($fee, $this->config->get('config_currency'), '', FALSE);
 								$json['data']['custom'] = $payment_id;
 			
 								return $this->response->setOutput(json_encode($json));
