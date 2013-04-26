@@ -37,7 +37,7 @@ $(function() {
 					$(".ms-payment-form form input[name='amount']").val(jsonData.data.amount);
 					$(".ms-payment-form form").submit();
 				} else {
-					window.location.reload();
+					window.location = jsonData.redirect;
 				}
 	       	}
 		});

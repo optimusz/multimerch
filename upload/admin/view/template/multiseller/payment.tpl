@@ -8,7 +8,7 @@
   <?php if ($error_warning) { ?>
   <div class="warning"><?php echo $error_warning; ?></div>
   <?php } ?>
-  <?php if ($success) { ?>
+  <?php if (isset($success) && $success) { ?>
   <div class="success"><?php echo $success; ?></div>
   <?php } ?>
   <div class="box">
@@ -140,12 +140,35 @@ $(document).ready(function() {
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
 				$('.warning').text(textStatus).show();
-			},				
+			},
 			success: function(jsonData) {
 				window.location.reload();
 			}
 		});
 	});	
+	
+	$(".ms-button-paypal").click(function() {
+		var button = $(this);
+		var payment_id = button.parents('tr').children('td:first').find('input:checkbox').val();
+		$(this).hide().before('<a class="ms-button ms-loading" />');
+	    $.ajax({
+			type: "POST",
+			dataType: "json",
+			url: 'index.php?route=multiseller/payment/jxPay&payment_id='+ payment_id +'&token=<?php echo $token; ?>',
+			complete: function(jqXHR, textStatus) {
+				if (textStatus != 'success') {
+					button.show().prev('.ms-loading').remove();
+				}
+			},
+			success: function(jsonData) {
+				if (jsonData.success) {
+					$("<div style='display:none'>" + jsonData.form + "</div>").appendTo('body').children("form").submit();
+				} else {
+					button.show().prev('.ms-loading').remove();
+				}
+			}
+		});
+	});
 	
 	$("#ms-pay").click(function() {
 		if ($('#form tbody input:checkbox:checked').length == 0)

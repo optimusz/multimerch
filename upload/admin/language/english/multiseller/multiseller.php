@@ -431,9 +431,15 @@ Your product %s at %s has been modified by the administrator.
 Product status: %s
 EOT;
 
-$_['ms_mail_subject_product_purchased']      = 'Product purchased';
+$_['ms_mail_subject_product_purchased']      = 'New order';
 $_['ms_mail_product_purchased'] = <<<EOT
-Your product %s has been purchased from %s.
+Your product(s) have been purchased from %s.
+
+Customer: %s (%s)
+
+Products:
+%s
+Total: %s
 EOT;
 
 $_['ms_mail_product_purchased_info'] = <<<EOT
@@ -460,4 +466,7 @@ $_['ms_payment_method_paypal'] = 'PayPal';
 $_['ms_payment_method_inherit'] = 'Inherit';
 
 $_['ms_payment_royalty_payout'] = 'Royalty payout to %s at %s';
+$_['ms_payment_generic'] = 'Payment #%s at %s';
+$_['ms_payment_completed'] = 'Payment completed';
+
 ?>

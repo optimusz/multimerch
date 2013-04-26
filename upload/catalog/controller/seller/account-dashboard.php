@@ -2,6 +2,11 @@
 
 class ControllerSellerAccountDashboard extends ControllerSellerAccount {
 	public function index() {
+		// paypal listing payment confirmation
+		if (isset($this->request->post['payment_status']) && strtolower($this->request->post['payment_status']) == 'completed') {
+			$this->data['success'] = $this->language->get('ms_account_sellerinfo_saved');
+		}
+		
 		$this->load->model('catalog/product');
 		$seller_id = $this->customer->getId();
 		
@@ -11,6 +16,7 @@ class ControllerSellerAccountDashboard extends ControllerSellerAccount {
 		
 		$this->data['seller'] = array_merge(
 			$seller,
+			array('balance' => $this->currency->format($this->MsLoader->MsBalance->getSellerBalance($seller_id), $this->config->get('config_currency'))),
 			array('commission_rates' => $this->MsLoader->MsCommission->calculateCommission(array('seller_id' => $seller_id))),
 			array('total_earnings' => $this->currency->format($this->MsLoader->MsSeller->getTotalEarnings($seller_id), $this->config->get('config_currency'))),
 			array('earnings_month' => $this->currency->format($this->MsLoader->MsSeller->getTotalEarnings($seller_id, array('period_start' => $my_first_day)), $this->config->get('config_currency'))),

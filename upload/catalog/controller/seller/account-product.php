@@ -145,10 +145,10 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		$data = $this->request->get;
 		if (isset($data['price']) && (float)$data['price'] == 0) {
 			if (!is_numeric($data['price'])) {
-				echo "--"; return;
+				echo $this->currency->format(0, $this->config->get('config_currency')); return;
 			}
 		} else if (!isset($data['price'])) {
-			echo "--"; return;
+			echo $this->currency->format(0, $this->config->get('config_currency')); return;
 		}
 		
 		$rates = $this->MsLoader->MsCommission->calculateCommission(array('seller_id' => $this->customer->getId()));
@@ -884,6 +884,8 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 
 		if (!empty($attributes)) {
 			foreach ($attributes as $attr) {
+				var_dump($attr);
+				
 				$attr['values'] = $this->MsLoader->MsAttribute->getAttributeValues($attr['attribute_id']);
 				
 				if (empty($attr['values']) && in_array($attr['attribute_type'], array(MsAttribute::TYPE_CHECKBOX, MsAttribute::TYPE_SELECT, MsAttribute::TYPE_RADIO)))

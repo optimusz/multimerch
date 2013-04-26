@@ -11,6 +11,10 @@
 	
 	<h1><?php echo $ms_account_dashboard_heading; ?></h1>
 	
+	<?php if (isset($success) && ($success)) { ?>
+		<div class="success"><?php echo $success; ?></div>
+	<?php } ?>
+	
 	<div class="overview">
 		<h3><?php echo $ms_account_dashboard_overview; ?></h3>
 		<img src="<?php echo $seller['avatar']; ?>" /><br />
@@ -38,6 +42,7 @@
 	
 	<div class="stats">
 		<h3><?php echo $ms_account_dashboard_stats; ?></h3>
+		<p><span><?php echo $ms_account_dashboard_balance; ?>:</span> <span><?php echo $seller['balance']; ?></span></p>
 		<p><span><?php echo $ms_account_dashboard_total_sales; ?>:</span> <span><?php echo $seller['total_sales']; ?></span></p>
 		<p><span><?php echo $ms_account_dashboard_total_earnings; ?>:</span> <span><?php echo $seller['total_earnings']; ?></span></p>
 		<p><span><?php echo $ms_account_dashboard_sales_month; ?>:</span> <span><?php echo $seller['sales_month']; ?></span></p>

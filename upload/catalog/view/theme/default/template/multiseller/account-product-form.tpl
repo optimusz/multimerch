@@ -345,7 +345,7 @@
 					<td><input type="text" name="product_specials[0][price]" value="" /></td>
 					<td><input type="text" name="product_specials[0][date_start]" value="" class="date" /></td>
 					<td><input type="text" name="product_specials[0][date_end]" value="" class="date" /></td>
-					<td><a class="ms-button ms-button-delete" title="<?php echo $ms_delete; ?>"></a></td>
+					<td><a class="ms-button-delete" title="<?php echo $ms_delete; ?>"></a></td>
 				</tr>
 				
 				<?php if (isset($product['specials'])) { ?>
@@ -356,7 +356,7 @@
 					<td><input type="text" name="product_specials[<?php echo $special_row; ?>][price]" value="<?php echo $product_special['price']; ?>" /></td>
 					<td><input type="text" name="product_specials[<?php echo $special_row; ?>][date_start]" value="<?php echo $product_special['date_start']; ?>" class="date" /></td>
 					<td><input type="text" name="product_specials[<?php echo $special_row; ?>][date_end]" value="<?php echo $product_special['date_end']; ?>" class="date" /></td>
-					<td><a class="ms-button ms-button-delete" title="<?php echo $ms_delete; ?>"></a></td>
+					<td><a class="ms-button-delete" title="<?php echo $ms_delete; ?>"></a></td>
 				</tr>
 				<?php $special_row++; ?>
 				<?php } ?>
@@ -396,7 +396,7 @@
 					<td><input type="text" name="product_discounts[0][price]" value="" /></td>
 					<td><input type="text" name="product_discounts[0][date_start]" value="" class="date" /></td>
 					<td><input type="text" name="product_discounts[0][date_end]" value="" class="date" /></td>
-					<td><a class="ms-button ms-button-delete" title="<?php echo $ms_delete; ?>"></a></td>
+					<td><a class="ms-button-delete" title="<?php echo $ms_delete; ?>"></a></td>
 				</tr>
 				
 				<?php if (isset($product['discounts'])) { ?>
@@ -408,7 +408,7 @@
 					<td><input type="text" name="product_discounts[<?php echo $discount_row; ?>][price]" value="<?php echo $product_discount['price']; ?>" /></td>
 					<td><input type="text" name="product_discounts[<?php echo $discount_row; ?>][date_start]" value="<?php echo $product_discount['date_start']; ?>" class="date" /></td>
 					<td><input type="text" name="product_discounts[<?php echo $discount_row; ?>][date_end]" value="<?php echo $product_discount['date_end']; ?>" class="date" /></td>
-					<td><a class="ms-button ms-button-delete" title="<?php echo $ms_delete; ?>"></a></td>
+					<td><a class="ms-button-delete" title="<?php echo $ms_delete; ?>"></a></td>
 				</tr>
 				<?php $discount_row++; ?>
 				<?php } ?>

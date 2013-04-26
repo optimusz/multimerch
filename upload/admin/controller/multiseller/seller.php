@@ -99,7 +99,8 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 								'fax' => '',
 								'customer_group_id' => $this->config->get('config_customer_group_id'),
 								'newsletter' => 1,
-								'status' => 1
+								'status' => 1,
+								'approved' => 1
 							)
 						)
 					);
@@ -202,7 +203,7 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 			'currency_code' => $this->config->get('config_currency'),
 			'return' => $this->url->link('multiseller/seller', 'token=' . $this->session->data['token']),
 			'cancel_return' => $this->url->link('multiseller/seller', 'token=' . $this->session->data['token']),
-			'notify_url' => HTTP_CATALOG . 'index.php?route=payment/multimerch-paypal/paymentIPN',
+			'notify_url' => HTTP_CATALOG . 'index.php?route=payment/multimerch-paypal/payoutIPN',
 			'custom' => $payment_id
 		);
 		
@@ -221,27 +222,15 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 	
 	public function index() {
 		$this->validate(__FUNCTION__);
-		
-		/*
-		$columns = array(
-			'name',
-			'nickname',
-			'email',
-			'total_products',
-			'total_sales',
-			'total_earnings',	
-			'current_balance',
-			'seller_status',
-			'date_created',
-		);
-		*/
+
+		// paypal listing payment confirmation
+		if (isset($this->request->post['payment_status']) && strtolower($this->request->post['payment_status']) == 'completed') {
+			$this->data['success'] = $this->language->get('ms_payment_completed');
+		}		
 		
 		$this->data['total_balance'] = sprintf($this->language->get('ms_catalog_sellers_total_balance'), $this->currency->format($this->MsLoader->MsBalance->getTotalBalanceAmount(), $this->config->get('config_currency')), $this->currency->format($this->MsLoader->MsBalance->getTotalBalanceAmount(array('seller_status' => array(MsSeller::STATUS_ACTIVE))), $this->config->get('config_currency')));
-		
 		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
-		
 		$orderby = isset($this->request->get['orderby']) && in_array($this->request->get['orderby'], $columns) ? $this->request->get['orderby'] : 'date_created';
-		
 		$orderway = isset($this->request->get['orderway']) ? $this->request->get['orderway'] : 'DESC';
 		
 		$results = $this->MsLoader->MsSeller->getSellers(
@@ -268,6 +257,9 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 			$result['total_sales'] = $this->MsLoader->MsSeller->getSalesForSeller($result['seller_id']);
 			$result['status'] = $this->language->get('ms_seller_status_' . $result['ms.seller_status']);
 			$result['customer_link'] = $this->url->link('sale/customer/update', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['seller_id'], 'SSL');
+			$available = $this->MsLoader->MsBalance->getSellerBalance($result['seller_id']) - $this->MsLoader->MsBalance->getReservedSellerFunds($result['seller_id']);
+			$result['available_balance'] = $this->currency->format($available > 0 ? $available : 0, $this->config->get('config_currency'));
+			 
 		}
 			
 		$this->data['sellers'] = $results;
@@ -290,15 +282,8 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 		if (isset($this->session->data['success'])) {
 			$this->data['success'] = $this->session->data['success'];
 			unset($this->session->data['success']);
-		} else {
-			$this->data['success'] = '';
-		}		
-
-		/*
-		foreach($columns as $column) {
-			$this->data["link_sort_$column"] = $this->url->link("multiseller/sellers", 'token=' . $this->session->data['token'] . "&orderby=$column" . $url, 'SSL');
 		}
-		*/
+
 		$this->data['token'] = $this->session->data['token'];		
 		$this->data['heading'] = $this->language->get('ms_catalog_sellers_heading');
 		$this->data['link_create_seller'] = $this->url->link('multiseller/seller/create', 'token=' . $this->session->data['token'], 'SSL');

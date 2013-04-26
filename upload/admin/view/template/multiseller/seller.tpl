@@ -8,7 +8,7 @@
   <?php if ($error_warning) { ?>
   <div class="warning"><?php echo $error_warning; ?></div>
   <?php } ?>
-  <?php if ($success) { ?>
+  <?php if (isset($success) && $success) { ?>
   <div class="success"><?php echo $success; ?></div>
   <?php } ?>
   <div class="box">
@@ -53,7 +53,7 @@
               <td><?php echo $seller['total_products']; ?></td>
               <td><?php echo $seller['total_sales']; ?></td>
               <td><?php echo $seller['earnings']; ?></td>
-              <td><?php echo $seller['current_balance']; ?></td>
+              <td><?php echo $seller['current_balance']; ?> / <?php echo $seller['available_balance']; ?></td>
               <td><?php echo $seller['status']; ?></td>
               <td><?php echo $seller['date_created']; ?></td>
               <td class="right">
@@ -78,27 +78,30 @@
     </div>
   </div>
 </div>
-<script type="text/javascript"><!--
+<script type="text/javascript">
 $(document).ready(function() {
-	$('#date').datepicker({dateFormat: 'yy-mm-dd'});
-	
 	$(".ms-button-paypal").click(function() {
 		var button = $(this);
 		var seller_id = button.parents('tr').children('td:first').find('input:hidden').val();
-		$(this).hide().before('<img src="view/image/loading.gif" alt="" />');
-	    $.ajax({
+		$(this).hide().before('<a class="ms-button ms-loading" />');
+		$.ajax({
 			type: "POST",
 			dataType: "json",
 			url: 'index.php?route=multiseller/seller/jxPayBalance&seller_id='+ seller_id +'&token=<?php echo $token; ?>',
+			complete: function(jqXHR, textStatus) {
+				if (textStatus != 'success') {
+					button.show().prev('.ms-loading').remove();
+				}
+			},
 			success: function(jsonData) {
 				if (jsonData.success) {
 					$("<div style='display:none'>" + jsonData.form + "</div>").appendTo('body').children("form").submit();
 				} else {
-					button.show().prev().remove();
+					button.show().prev('.ms-loading').remove();
 				}
 			}
 		});
 	});	
 });
-//--></script>
+</script>
 <?php echo $footer; ?> 

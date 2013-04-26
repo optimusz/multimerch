@@ -134,6 +134,7 @@ table.list td, table.list thead td  {
 	position:relative;
 	display: inline-block;
 	border: 1px solid #EEEEEE;
+	margin: 0 5px;
 }
 
 .ms-product .ms-download {
@@ -148,6 +149,13 @@ table.list td, table.list thead td  {
 	display: inline-block;
 	padding-left: 40px;
 	line-height:30px;
+}
+
+.ms-account-product-form #tab-specials .ms-button-delete,
+.ms-account-product-form #tab-discounts .ms-button-delete {
+	width: 32px;
+	height: 32px;
+	display: inline-block;
 }
 
 .ms-product .ms-download .ms-buttons {

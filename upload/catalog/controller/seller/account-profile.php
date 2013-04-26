@@ -124,6 +124,7 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 							)
 						);
 						$data['seller']['status'] = MsSeller::STATUS_INACTIVE;
+						$json['redirect'] = $this->url->link('seller/account-profile');
 						break;
 					
 					case MsSeller::MS_SELLER_VALIDATION_NONE:
@@ -136,6 +137,7 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 						);
 						$data['seller']['status'] = MsSeller::STATUS_ACTIVE;
 						$data['seller']['approved'] = 1;
+						$json['redirect'] = $this->url->link('seller/account-dashboard');
 						break;
 				}
 				
@@ -204,7 +206,7 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 					}
 				}
 				
-				$this->session->data['success'] = $this->language->get('ms_account_sellerinfo_saved');
+				$this->session->data['success'] = $this->language->get('ms_account_sellerinfo_created');
 			} else {
 				// edit seller
 				$data['seller']['seller_id'] = $seller['seller_id'];
@@ -284,17 +286,12 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 	}
 
 	public function index() {
-		// paypal listing payment confirmation
-		if (isset($this->request->post['payment_status']) && strtolower($this->request->post['payment_status']) == 'completed') {
-			$this->data['success'] = $this->language->get('ms_account_sellerinfo_saved');
-		}		
-		
 		$this->document->addScript('catalog/view/javascript/account-seller-profile.js');
 		$this->document->addScript('catalog/view/javascript/plupload/plupload.full.js');
 		$this->document->addScript('catalog/view/javascript/plupload/jquery.plupload.queue/jquery.plupload.queue.js');
 		
 		$this->load->model('localisation/country');
-    	$this->data['countries'] = $this->model_localisation_country->getCountries();		
+		$this->data['countries'] = $this->model_localisation_country->getCountries();		
 
 		$seller = $this->MsLoader->MsSeller->getSeller($this->customer->getId());
 		
@@ -360,7 +357,7 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 						'item_number' => isset($this->request->get['seller_id']) ? (int)$this->request->get['seller_id'] : '',
 						'amount' => '',
 						'currency_code' => $this->config->get('config_currency'),
-						'return' => $this->url->link('seller/account-profile'),
+						'return' => $this->url->link('seller/account-dashboard'),
 						'cancel_return' => $this->url->link('account/account'),
 						'notify_url' => $this->url->link('payment/multimerch-paypal/signupIPN'),
 						'custom' => 'custom'

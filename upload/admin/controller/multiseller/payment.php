@@ -3,6 +3,12 @@
 class ControllerMultisellerPayment extends ControllerMultisellerBase {
 	public function index() {
 		$this->validate(__FUNCTION__);
+		
+		// paypal listing payment confirmation
+		if (isset($this->request->post['payment_status']) && strtolower($this->request->post['payment_status']) == 'completed') {
+			$this->data['success'] = $this->language->get('ms_payment_completed');
+		}
+				
 		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
 		
 		$this->data['payout_requests']['amount_pending'] = $this->currency->format($this->MsLoader->MsPayment->getTotalAmount(array(
@@ -64,9 +70,7 @@ class ControllerMultisellerPayment extends ControllerMultisellerBase {
 		if (isset($this->session->data['success'])) {
 			$this->data['success'] = $this->session->data['success'];
 			unset($this->session->data['success']);
-		} else {
-			$this->data['success'] = '';
-		}		
+		}
 		
 		$this->data['token'] = $this->session->data['token'];		
 		$this->data['heading'] = $this->language->get('ms_payment_heading');
@@ -91,6 +95,35 @@ class ControllerMultisellerPayment extends ControllerMultisellerBase {
 		list($this->template, $this->children) = $this->MsLoader->MsHelper->admLoadTemplate('payment');
 		$this->response->setOutput($this->render());
 	}
+	
+	// todo
+	public function jxPay() {
+		$json = array();
+		$payment_id = isset($this->request->get['payment_id']) ? $this->request->get['payment_id'] : 0;
+		$payment = $this->MsLoader->MsPayment->getPayments(array('payment_id' => $payment_id, 'single' => 1));
+		
+		if (!$payment || !$payment['amount'] || $payment['amount'] <= 0 || $payment['payment_status'] == MsPayment::STATUS_PAID) return;
+
+		// render paypal form
+		$this->data['payment_data'] = array(
+			'sandbox' => $this->config->get('msconf_paypal_sandbox'),
+			'action' => $this->config->get('msconf_paypal_sandbox') ? "https://www.sandbox.paypal.com/cgi-bin/webscr" : "https://www.paypal.com/cgi-bin/webscr",
+			'business' => $this->config->get('msconf_paypal_address'),
+			'item_name' => $payment['mpay.description'] ? $payment['mpay.description'] : sprintf($this->language->get('ms_payment_generic'), $payment['payment_id'], $this->config->get('config_name')),
+			'amount' => $this->currency->format($payment['amount'], $this->config->get('config_currency'), '', FALSE),
+			'currency_code' => $this->config->get('config_currency'),
+			'return' => $this->url->link('multiseller/payment', 'token=' . $this->session->data['token']),
+			'cancel_return' => $this->url->link('multiseller/payment', 'token=' . $this->session->data['token']),
+			'notify_url' => HTTP_CATALOG . 'index.php?route=payment/multimerch-paypal/payoutIPN',
+			'custom' => $payment_id
+		);
+		
+		list($this->template) = $this->MsLoader->MsHelper->admLoadTemplate('payment/multimerch-paypal');
+		
+		$json['form'] = $this->render();
+		$json['success'] = 1;
+		$this->response->setOutput(json_encode($json));
+	}	
 	
 	public function jxUpdateStatus() {
 		$data = $this->request->get;

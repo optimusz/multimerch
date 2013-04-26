@@ -5,7 +5,8 @@ $(function() {
 
 	$("body").delegate(".ms-price-dynamic", "propertychange input paste focusout", function(){
 		$(".attention.ms-commission span").load("index.php?route=seller/account-product/jxGetFee&price=" + $(".ms-price-dynamic").val());
-	});	
+	});
+	$(".attention.ms-commission span").load("index.php?route=seller/account-product/jxGetFee&price=" + $(".ms-price-dynamic").val());
 	
 	$("body").delegate(".date", "focusin", function(){
 		$(this).datepicker({dateFormat: 'yy-mm-dd'});

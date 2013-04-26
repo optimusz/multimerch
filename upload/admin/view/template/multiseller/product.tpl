@@ -93,7 +93,7 @@
     </div>
   </div>
 </div>
-<script type="text/javascript"><!--
+<script type="text/javascript">
 $(document).ready(function() {
 	$('#date').datepicker({dateFormat: 'yy-mm-dd'});
 	
@@ -174,5 +174,5 @@ $(document).ready(function() {
 		}
 	});	
 });
-//--></script>
+</script>
 <?php echo $footer; ?> 

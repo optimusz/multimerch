@@ -46,17 +46,32 @@ class MsCommission extends Model {
 	
 	public function editCommission($commission_id, $rates) {
 		foreach ($rates as $type => $rate) {
-			if ( (!isset($rate['flat']) || $rate['flat'] === '') && (!isset($rate['percent']) || $rate['percent'] === '') ) {
-				$sql = "DELETE FROM " . DB_PREFIX . "ms_commission_rate WHERE rate_id = " . (int)$rate['rate_id'];
-				$this->db->query($sql);
-				unset($rates[$type]);
+			if (!isset($rate['rate_id']) || $rate['rate_id'] === '') {
+				//create new rate
+				if ((isset($rate['flat']) && $rate['flat'] !== '') || (isset($rate['percent']) && $rate['percent'] !== '') ) {
+					$sql = "INSERT INTO " . DB_PREFIX . "ms_commission_rate
+							SET commission_id = " . (int)$commission_id . ",
+								rate_type = " . (int)$type . ",
+								flat = " . (isset($rate['flat']) && $rate['flat'] !== '' ? (float)$rate['flat'] : 'NULL') . ",
+								percent = " . (isset($rate['percent']) && $rate['percent'] !== '' ? (float)$rate['percent'] : 'NULL') . ",
+								payment_method = " . (isset($rate['payment_method']) && (int)$rate['payment_method'] > 0 ? (int)$rate['payment_method'] : 'NULL');
+							
+					$this->db->query($sql);
+				}
 			} else {
-				$sql = "UPDATE " . DB_PREFIX . "ms_commission_rate
-						SET flat = " . (isset($rate['flat']) && $rate['flat'] !== '' ? (float)$rate['flat'] : 'NULL') . ",
-							percent = " . (isset($rate['percent']) && $rate['percent'] !== '' ? (float)$rate['percent'] : 'NULL') . ",
-							payment_method = " . (isset($rate['payment_method']) && (int)$rate['payment_method'] > 0 ? (int)$rate['payment_method'] : 'NULL') . "
-						WHERE rate_id = " . (int)$rate['rate_id'];
-				$this->db->query($sql);
+				// update rate
+				if ( (!isset($rate['flat']) || $rate['flat'] === '') && (!isset($rate['percent']) || $rate['percent'] === '') ) {
+					$sql = "DELETE FROM " . DB_PREFIX . "ms_commission_rate WHERE rate_id = " . (int)$rate['rate_id'];
+					$this->db->query($sql);
+					unset($rates[$type]);
+				} else {
+					$sql = "UPDATE " . DB_PREFIX . "ms_commission_rate
+							SET flat = " . (isset($rate['flat']) && $rate['flat'] !== '' ? (float)$rate['flat'] : 'NULL') . ",
+								percent = " . (isset($rate['percent']) && $rate['percent'] !== '' ? (float)$rate['percent'] : 'NULL') . ",
+								payment_method = " . (isset($rate['payment_method']) && (int)$rate['payment_method'] > 0 ? (int)$rate['payment_method'] : 'NULL') . "
+							WHERE rate_id = " . (int)$rate['rate_id'];
+					$this->db->query($sql);
+				}
 			}
 		}
 		
