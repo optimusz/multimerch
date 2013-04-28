@@ -43,7 +43,7 @@ class ModelMultisellerSettings extends Model {
 					// new fee types for default seller group
 					foreach (array(MsCommission::RATE_SIGNUP, MsCommission::RATE_LISTING) as $type) {
 						$q = $this->db->query("SELECT commission_id FROM `" . DB_PREFIX . "ms_seller_group` WHERE seller_group_id = " .$this->config->get('msconf_default_seller_group_id'));
-						$commission_id = $q['commission_id'];
+						$commission_id = $q->row['commission_id'];
 						$this->db->query("INSERT INTO `" . DB_PREFIX . "ms_commission_rate` (rate_type, commission_id, flat, percent, payment_method) VALUES(" . $type . ", $commission_id, 0,0," . MsPayment::METHOD_BALANCE . ")");
 					}
 					
@@ -67,9 +67,8 @@ class ModelMultisellerSettings extends Model {
 					$this->db->query($sql);
 					
 					// merge withdrawals into payments
-					// delete withdrawals table manually
 					$this->db->query("INSERT INTO `" . DB_PREFIX . "ms_payment` (payment_id, seller_id, product_id, payment_type, payment_status, payment_method, payment_data, amount, currency_id, currency_code, description, date_created, date_paid)
-									  SELECT withdrawal_id, seller_id, product_id, 4, withdrawal_status, 2, '', amount, currency_id, currency_code, description, date_created, date_processed
+									  SELECT withdrawal_id, seller_id, 0, 4, withdrawal_status, 2, '', amount, currency_id, currency_code, description, date_created, date_processed
 									  FROM `" . DB_PREFIX . "ms_withdrawal`");
 									  
 					$this->db->query("UPDATE `" . DB_PREFIX . "ms_payment` SET payment_status = 2 WHERE payment_status = 3");

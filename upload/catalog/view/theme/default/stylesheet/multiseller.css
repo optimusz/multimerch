@@ -4,6 +4,11 @@
 	float: none;
 }
 
+.ms-account-dashboard table.list tbody td,
+.ms-account-orders table.list tbody td {
+	vertical-align: middle;
+}
+
 table.list td, table.list thead td  {
 	text-align: center;
 	padding: 7px;
