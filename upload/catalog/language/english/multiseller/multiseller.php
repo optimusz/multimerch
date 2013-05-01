@@ -271,8 +271,8 @@ $_['ms_account_editproduct_heading'] = 'Edit Product';
 $_['ms_account_editproduct_breadcrumbs'] = 'Edit Product';
 
 // Account - Seller
-$_['ms_account_sellerinfo_heading'] = 'Seller profile';
-$_['ms_account_sellerinfo_breadcrumbs'] = 'Seller profile';
+$_['ms_account_sellerinfo_heading'] = 'Seller Profile';
+$_['ms_account_sellerinfo_breadcrumbs'] = 'Seller Profile';
 $_['ms_account_sellerinfo_nickname'] = 'Nickname';
 $_['ms_account_sellerinfo_nickname_note'] = 'Specify your seller nickname.';
 $_['ms_account_sellerinfo_description'] = 'Description';
