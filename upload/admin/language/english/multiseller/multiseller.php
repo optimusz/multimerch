@@ -1,10 +1,9 @@
 <?php
 
 // General
-$_['ms_enabled']      = 'Enabled';
-$_['ms_disabled']      = 'Disabled';
-$_['ms_apply']      = 'Apply';
-
+$_['ms_enabled'] = 'Enabled';
+$_['ms_disabled'] = 'Disabled';
+$_['ms_apply'] = 'Apply';
 $_['ms_type'] = 'Type';
 $_['ms_type_checkbox'] = 'Checkbox';
 $_['ms_type_date'] = 'Date';
@@ -12,28 +11,27 @@ $_['ms_type_datetime'] = 'Date &amp; Time';
 $_['ms_type_file'] = 'File';
 $_['ms_type_image'] = 'Image';
 $_['ms_type_radio'] = 'Radio';
-$_['ms_type_select']         = 'Select';
-$_['ms_type_text']           = 'Text';
-$_['ms_type_textarea']       = 'Textarea';
-$_['ms_type_time']           = 'Time';
-
-$_['text_image_manager']  = 'Image Manager';
-$_['text_browse']         = 'Browse';
-$_['text_clear']          = 'Clear';
+$_['ms_type_select'] = 'Select';
+$_['ms_type_text'] = 'Text';
+$_['ms_type_textarea'] = 'Textarea';
+$_['ms_type_time'] = 'Time';
+$_['text_image_manager'] = 'Image Manager';
+$_['text_browse'] = 'Browse';
+$_['text_clear'] = 'Clear';
 
 $_['ms_error_directory'] = "Warning: Could not create directory: %s. Please create it manually and make it server-writable before proceeding. <br />";
 $_['ms_error_directory_notwritable'] = "Warning: Directory already exists and is not writable: %s. Please make sure it's empty and make it server-writable before proceeding. <br />";
 $_['ms_error_directory_exists'] = "Warning: Directory already exists: %s. Please make sure it's empty before proceeding. <br />";
 $_['ms_error_product_publish'] = 'Failed to publish some products: seller account not active.';
+$_['ms_success_installed'] = 'Extension successfully installed';
+$_['ms_success_product_status'] = 'Successfully changed product status.';
 
-$_['ms_success_installed']      = 'Extension successfully installed';
-$_['ms_success_product_status']      = 'Successfully changed product status.';
-
-$_['heading_title']    = '[ffct.cc] MultiMerch Digital Marketplace';
-$_['text_seller_select']         = 'Seller select';
-$_['text_shipping_dependent']         = 'Shipping dependent';
+$_['heading_title'] = '[ffct.cc] MultiMerch Digital Marketplace';
+$_['text_seller_select'] = 'Seller select';
+$_['text_shipping_dependent'] = 'Shipping dependent';
 $_['text_no_results'] = 'No results';
 $_['error_permission'] = 'Warning: You do not have permission to modify module!';
+
 $_['ms_error_withdraw_norequests'] = 'Error: no payouts to process';
 $_['ms_error_withdraw_response'] = 'Error: no response';
 $_['ms_error_withdraw_status'] = 'Error: unsuccessful transaction';
@@ -93,9 +91,8 @@ $_['ms_menu_settings'] = 'Settings';
 $_['ms_menu_comments'] = 'Comments';
 
 // Settings
-
-$_['ms_settings_heading']      = 'Settings';
-$_['ms_settings_breadcrumbs']       = 'Settings';
+$_['ms_settings_heading'] = 'Settings';
+$_['ms_settings_breadcrumbs'] = 'Settings';
 $_['ms_config_seller_validation'] = 'Seller validation';
 $_['ms_config_seller_validation_note'] = 'Seller validation';
 $_['ms_config_seller_validation_none'] = 'No validation';
@@ -139,7 +136,6 @@ $_['ms_config_downloads_limits_note'] = 'Minimum and maximum number of downloads
 
 $_['ms_config_enable_pdf_generator'] = 'Enable PDF to image generator';
 $_['ms_config_enable_pdf_generator_note'] = 'Allow sellers to automatically generate product images from submitted PDF downloads (requires Imagick extension for PHP and Ghostscript installed)';
-
 
 $_['ms_config_allowed_download_types'] = 'Allowed download extensions';
 $_['ms_config_allowed_download_types_note'] = 'Allowed download extensions';
@@ -236,27 +232,27 @@ $_['ms_config_comments_maxlen_note'] = 'Maximum comment length when posting comm
 $_['ms_config_graphical_sellermenu'] = 'Graphical seller menu';
 $_['ms_config_graphical_sellermenu_note'] = 'Graphical seller menu';
 
-$_['ms_config_carousel']       = 'Seller carousel';
-$_['ms_config_topsellers']       = 'Top sellers';
-$_['ms_config_modules']       = 'Modules';
-$_['ms_config_productform']       = 'Product form';
-$_['ms_config_finances']       = 'Finances';
-$_['ms_config_newsellers']       = 'New sellers';
-$_['ms_config_sellerdropdown']       = 'Seller dropdown';
-$_['ms_config_comments']       = 'Comments';
+$_['ms_config_carousel'] = 'Seller carousel';
+$_['ms_config_topsellers'] = 'Top sellers';
+$_['ms_config_modules'] = 'Modules';
+$_['ms_config_productform'] = 'Product form';
+$_['ms_config_finances'] = 'Finances';
+$_['ms_config_newsellers'] = 'New sellers';
+$_['ms_config_sellerdropdown'] = 'Seller dropdown';
+$_['ms_config_comments'] = 'Comments';
 
-$_['ms_config_module']         = 'Modules';
-$_['ms_config_status']         = 'Status';
-$_['ms_config_top']    = 'Content Top';
+$_['ms_config_module'] = 'Modules';
+$_['ms_config_status'] = 'Status';
+$_['ms_config_top'] = 'Content Top';
 $_['ms_config_bottom'] = 'Content Bottom';
-$_['ms_config_column_left']    = 'Column Left';
-$_['ms_config_column_right']   = 'Column Right';
-$_['ms_config_limit']         = 'Limit:';
-$_['ms_config_scroll']        = 'Scroll:';
-$_['ms_config_image']         = 'Image (W x H):';
-$_['ms_config_layout']        = 'Layout:';
-$_['ms_config_position']      = 'Position:';
-$_['ms_config_sort_order']    = 'Sort Order:';
+$_['ms_config_column_left'] = 'Column Left';
+$_['ms_config_column_right'] = 'Column Right';
+$_['ms_config_limit'] = 'Limit:';
+$_['ms_config_scroll'] = 'Scroll:';
+$_['ms_config_image'] = 'Image (W x H):';
+$_['ms_config_layout'] = 'Layout:';
+$_['ms_config_position'] = 'Position:';
+$_['ms_config_sort_order'] = 'Sort Order:';
 
 // Seller - List
 $_['ms_catalog_sellers_heading'] = 'Sellers';
@@ -295,15 +291,15 @@ $_['ms_catalog_sellerinfo_customer_email'] = 'Email';
 $_['ms_catalog_sellerinfo_customer_password'] = 'Password';
 $_['ms_catalog_sellerinfo_customer_password_confirm'] = 'Confirm password';
 
-$_['ms_catalog_sellerinfo_nickname']    = 'Nickname';
-$_['ms_catalog_sellerinfo_description']    = 'Description';
-$_['ms_catalog_sellerinfo_company']     = 'Company';
-$_['ms_catalog_sellerinfo_country']    = 'Country';
-$_['ms_catalog_sellerinfo_sellergroup']    = 'Seller group';
+$_['ms_catalog_sellerinfo_nickname'] = 'Nickname';
+$_['ms_catalog_sellerinfo_description'] = 'Description';
+$_['ms_catalog_sellerinfo_company'] = 'Company';
+$_['ms_catalog_sellerinfo_country'] = 'Country';
+$_['ms_catalog_sellerinfo_sellergroup'] = 'Seller group';
 
-$_['ms_catalog_sellerinfo_country_dont_display']    = 'Do not display country';
-$_['ms_catalog_sellerinfo_avatar']    = 'Avatar';
-$_['ms_catalog_sellerinfo_paypal']    = 'Paypal';
+$_['ms_catalog_sellerinfo_country_dont_display'] = 'Do not display country';
+$_['ms_catalog_sellerinfo_avatar'] = 'Avatar';
+$_['ms_catalog_sellerinfo_paypal'] = 'Paypal';
 $_['ms_catalog_sellerinfo_message'] = 'Message';
 $_['ms_catalog_sellerinfo_message_note'] = 'Will be appended to the default email text';
 $_['ms_catalog_sellerinfo_notify'] = 'Notify seller via email';
@@ -339,7 +335,6 @@ $_['ms_seller_groups_column_action'] = 'Actions';
 $_['ms_catalog_insert_seller_group_heading'] = 'New Seller Group';
 $_['ms_catalog_edit_seller_group_heading'] = 'Edit Seller Group';
 
-
 $_['ms_error_seller_group_name'] = 'Error: Name must be between 3 and 32 symbols long';
 $_['ms_error_seller_group_default'] = 'Error: Default seller group can not be deleted!';
 $_['ms_success_seller_group_created'] = 'Seller group created';
@@ -363,7 +358,7 @@ $_['ms_payment_mark'] = 'Mark as paid';
 $_['ms_payment_delete'] = 'Delete payment record';
 
 $_['ms_payment_type_' . MsPayment::TYPE_SIGNUP] = 'Signup fee';
-$_['ms_payment_type_' . MsPayment::TYPE_LISTING] = 'Lising fee';
+$_['ms_payment_type_' . MsPayment::TYPE_LISTING] = 'Listing fee';
 $_['ms_payment_type_' . MsPayment::TYPE_PAYOUT] = 'Manual payout';
 $_['ms_payment_type_' . MsPayment::TYPE_PAYOUT_REQUEST] = 'Payout request';
 $_['ms_payment_type_' . MsPayment::TYPE_RECURRING] = 'Recurring payment';
@@ -385,22 +380,18 @@ $_['button_cancel'] = 'Cancel';
 $_['button_save'] = 'Save';
 $_['ms_action'] = 'Action';
 
-
 // Attributes
 $_['ms_attribute_heading'] = 'Attributes';
 $_['ms_attribute_breadcrumbs'] = 'Attributes';
 $_['ms_attribute_create'] = 'New attribute';
 $_['ms_attribute_edit'] = 'Edit attribute';
 $_['ms_attribute_value'] = 'Attribute value';
-
 $_['ms_attribute_text_type'] = 'Text input type';
 $_['ms_attribute_normal'] = 'Generic text';
 $_['ms_attribute_multilang'] = 'Language-specific text';
 $_['ms_attribute_number'] = 'Number';
 $_['ms_attribute_required'] = 'Required';
-
 $_['ms_add_attribute_value'] = 'New attribute value';
-
 $_['ms_error_attribute_name'] = 'Attribute name must be between 1 and 128 characters';
 $_['ms_error_attribute_type'] = 'This attribute type requires attribute values';
 $_['ms_error_attribute_value_name'] = 'Attribute value name must be between 1 and 128 characters';
@@ -412,26 +403,25 @@ $_['button_save'] = 'Save';
 $_['ms_action'] = 'Action';
 
 // Mails
-$_['ms_mail_greeting']      = "Hello %s,\n\n";
-$_['ms_mail_ending']      = "\n\nRegards,\n%s";
-$_['ms_mail_message']      = "\n\nMessage:\n%s";
+$_['ms_mail_greeting'] = "Hello %s,\n\n";
+$_['ms_mail_ending'] = "\n\nRegards,\n%s";
+$_['ms_mail_message'] = "\n\nMessage:\n%s";
 
-
-$_['ms_mail_subject_seller_account_modified']      = 'Seller account modified';
+$_['ms_mail_subject_seller_account_modified'] = 'Seller account modified';
 $_['ms_mail_seller_account_modified'] = <<<EOT
 Your seller account at %s has been modified by the administrator.
 
 Account status: %s
 EOT;
 
-$_['ms_mail_subject_product_modified']      = 'Product modified';
+$_['ms_mail_subject_product_modified'] = 'Product modified';
 $_['ms_mail_product_modified'] = <<<EOT
 Your product %s at %s has been modified by the administrator.
 
 Product status: %s
 EOT;
 
-$_['ms_mail_subject_product_purchased']      = 'New order';
+$_['ms_mail_subject_product_purchased'] = 'New order';
 $_['ms_mail_product_purchased'] = <<<EOT
 Your product(s) have been purchased from %s.
 
@@ -456,17 +446,13 @@ Delivery address:
 EOT;
 
 // Sales - Mail
-
-$_['ms_transaction_sale']      = 'Sale: %s (-%s commission)';
-$_['ms_transaction_refund']      = 'Refund: %s';
-
+$_['ms_transaction_sale'] = 'Sale: %s (-%s commission)';
+$_['ms_transaction_refund'] = 'Refund: %s';
 $_['ms_payment_method'] = 'Payment method';
 $_['ms_payment_method_balance'] = 'Seller balance';
 $_['ms_payment_method_paypal'] = 'PayPal';
 $_['ms_payment_method_inherit'] = 'Inherit';
-
 $_['ms_payment_royalty_payout'] = 'Royalty payout to %s at %s';
 $_['ms_payment_generic'] = 'Payment #%s at %s';
 $_['ms_payment_completed'] = 'Payment completed';
-
 ?>

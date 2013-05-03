@@ -174,9 +174,9 @@ $_['ms_success_product_deleted'] = 'Продукт удален';
 
 // Errors
 $_['ms_error_sellerinfo_nickname_empty'] = 'Имя пользователя не может оставаться пустым';
-$_['ms_error_sellerinfo_nickname_alphanumeric'] = 'Имя пользователя может содержать только буквы алфавита и числа';
+$_['ms_error_sellerinfo_nickname_alphanumeric'] = 'Имя пользователя может содержать только буквы латинского алфавита и числа';
 $_['ms_error_sellerinfo_nickname_utf8'] = 'Имя пользователя может содержать только печатные символы кодировки UTF-8';
-$_['ms_error_sellerinfo_nickname_latin'] = 'Имя пользователя может содержать только буквы алфавита, числа и буквы с диакритическими знаками';
+$_['ms_error_sellerinfo_nickname_latin'] = 'Имя пользователя может содержать только буквы латинского алфавита, числа и буквы с диакритическими знаками';
 $_['ms_error_sellerinfo_nickname_length'] = 'Имя пользователя должно содержать от 4 до 50 символов';
 $_['ms_error_sellerinfo_nickname_taken'] = 'Данное имя пользователя уже занято';
 $_['ms_error_sellerinfo_company_length'] = 'Название компании не может быть длиннее 50 символов';
