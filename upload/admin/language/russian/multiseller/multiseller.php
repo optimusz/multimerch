@@ -1,440 +1,440 @@
 <?php
 
 // General
-$_['ms_enabled'] = 'Включено';
-$_['ms_disabled'] = 'Отключено';
-$_['ms_apply'] = 'Применить';
-$_['ms_type'] = 'Тип';
-$_['ms_type_checkbox'] = 'Флажок';
-$_['ms_type_date'] = 'Дата';
-$_['ms_type_datetime'] = 'Дата и Время';
-$_['ms_type_file'] = 'Файл';
-$_['ms_type_image'] = 'Изображение';
-$_['ms_type_radio'] = 'Переключатель';
-$_['ms_type_select'] = 'Список';
-$_['ms_type_text'] = 'Текст';
-$_['ms_type_textarea'] = 'Текстовое Поле';
-$_['ms_type_time'] = 'Время';
-$_['text_image_manager'] = 'Управление Изображениями';
-$_['text_browse'] = 'Просмотр Файлов';
-$_['text_clear'] = 'Очистить';
+$_['ms_enabled'] = 'Р’РєР»СЋС‡РµРЅРѕ';
+$_['ms_disabled'] = 'РћС‚РєР»СЋС‡РµРЅРѕ';
+$_['ms_apply'] = 'РџСЂРёРјРµРЅРёС‚СЊ';
+$_['ms_type'] = 'РўРёРї';
+$_['ms_type_checkbox'] = 'Р¤Р»Р°Р¶РѕРє';
+$_['ms_type_date'] = 'Р”Р°С‚Р°';
+$_['ms_type_datetime'] = 'Р”Р°С‚Р° Рё Р’СЂРµРјСЏ';
+$_['ms_type_file'] = 'Р¤Р°Р№Р»';
+$_['ms_type_image'] = 'РР·РѕР±СЂР°Р¶РµРЅРёРµ';
+$_['ms_type_radio'] = 'РџРµСЂРµРєР»СЋС‡Р°С‚РµР»СЊ';
+$_['ms_type_select'] = 'РЎРїРёСЃРѕРє';
+$_['ms_type_text'] = 'РўРµРєСЃС‚';
+$_['ms_type_textarea'] = 'РўРµРєСЃС‚РѕРІРѕРµ РџРѕР»Рµ';
+$_['ms_type_time'] = 'Р’СЂРµРјСЏ';
+$_['text_image_manager'] = 'РЈРїСЂР°РІР»РµРЅРёРµ РР·РѕР±СЂР°Р¶РµРЅРёСЏРјРё';
+$_['text_browse'] = 'РџСЂРѕСЃРјРѕС‚СЂ Р¤Р°Р№Р»РѕРІ';
+$_['text_clear'] = 'РћС‡РёСЃС‚РёС‚СЊ';
 
-$_['ms_error_directory'] = "Внимание: Не удалось создать директорию: %s. Пожалуйста, создайте ее вручную и откройте доступ на запись для сервера, прежде чем продолжать. <br />";
-$_['ms_error_directory_notwritable'] = "Внимание: Директория уже существует и не доступна для записи: %s. Пожалуйста, убедитесь, что она пуста и откройте доступ на запись для сервера прежде чем продолжать. <br />";
-$_['ms_error_directory_exists'] = "Внимание: Директория уже существует: %s. Пожалуйста, убедитесь, что она пуста, прежде чем продолжать. <br />";
-$_['ms_error_product_publish'] = 'Не удалось опубликовать некоторые из продуктов: учетная запись продавца неактивна.';
-$_['ms_success_installed'] = 'Модуль успешно установлен';
-$_['ms_success_product_status'] = 'Статус продукта успешно поменян.';
+$_['ms_error_directory'] = "Р’РЅРёРјР°РЅРёРµ: РќРµ СѓРґР°Р»РѕСЃСЊ СЃРѕР·РґР°С‚СЊ РґРёСЂРµРєС‚РѕСЂРёСЋ: %s. РџРѕР¶Р°Р»СѓР№СЃС‚Р°, СЃРѕР·РґР°Р№С‚Рµ РµРµ РІСЂСѓС‡РЅСѓСЋ Рё РѕС‚РєСЂРѕР№С‚Рµ РґРѕСЃС‚СѓРї РЅР° Р·Р°РїРёСЃСЊ РґР»СЏ СЃРµСЂРІРµСЂР°, РїСЂРµР¶РґРµ С‡РµРј РїСЂРѕРґРѕР»Р¶Р°С‚СЊ. <br />";
+$_['ms_error_directory_notwritable'] = "Р’РЅРёРјР°РЅРёРµ: Р”РёСЂРµРєС‚РѕСЂРёСЏ СѓР¶Рµ СЃСѓС‰РµСЃС‚РІСѓРµС‚ Рё РЅРµ РґРѕСЃС‚СѓРїРЅР° РґР»СЏ Р·Р°РїРёСЃРё: %s. РџРѕР¶Р°Р»СѓР№СЃС‚Р°, СѓР±РµРґРёС‚РµСЃСЊ, С‡С‚Рѕ РѕРЅР° РїСѓСЃС‚Р° Рё РѕС‚РєСЂРѕР№С‚Рµ РґРѕСЃС‚СѓРї РЅР° Р·Р°РїРёСЃСЊ РґР»СЏ СЃРµСЂРІРµСЂР° РїСЂРµР¶РґРµ С‡РµРј РїСЂРѕРґРѕР»Р¶Р°С‚СЊ. <br />";
+$_['ms_error_directory_exists'] = "Р’РЅРёРјР°РЅРёРµ: Р”РёСЂРµРєС‚РѕСЂРёСЏ СѓР¶Рµ СЃСѓС‰РµСЃС‚РІСѓРµС‚: %s. РџРѕР¶Р°Р»СѓР№СЃС‚Р°, СѓР±РµРґРёС‚РµСЃСЊ, С‡С‚Рѕ РѕРЅР° РїСѓСЃС‚Р°, РїСЂРµР¶РґРµ С‡РµРј РїСЂРѕРґРѕР»Р¶Р°С‚СЊ. <br />";
+$_['ms_error_product_publish'] = 'РќРµ СѓРґР°Р»РѕСЃСЊ РѕРїСѓР±Р»РёРєРѕРІР°С‚СЊ РЅРµРєРѕС‚РѕСЂС‹Рµ РёР· РїСЂРѕРґСѓРєС‚РѕРІ: СѓС‡РµС‚РЅР°СЏ Р·Р°РїРёСЃСЊ РїСЂРѕРґР°РІС†Р° РЅРµР°РєС‚РёРІРЅР°.';
+$_['ms_success_installed'] = 'РњРѕРґСѓР»СЊ СѓСЃРїРµС€РЅРѕ СѓСЃС‚Р°РЅРѕРІР»РµРЅ';
+$_['ms_success_product_status'] = 'РЎС‚Р°С‚СѓСЃ РїСЂРѕРґСѓРєС‚Р° СѓСЃРїРµС€РЅРѕ РїРѕРјРµРЅСЏРЅ.';
 
 $_['heading_title'] = '[ffct.cc] MultiMerch Digital Marketplace';
-$_['text_seller_select'] = 'Выбор продавца';
-$_['text_shipping_dependent'] = 'Зависит от настроек доставки';
-$_['text_no_results'] = 'Нет результатов';
-$_['error_permission'] = 'Внимание: У вас нет доступа для модификации модуля!';
+$_['text_seller_select'] = 'Р’С‹Р±РѕСЂ РїСЂРѕРґР°РІС†Р°';
+$_['text_shipping_dependent'] = 'Р—Р°РІРёСЃРёС‚ РѕС‚ РЅР°СЃС‚СЂРѕРµРє РґРѕСЃС‚Р°РІРєРё';
+$_['text_no_results'] = 'РќРµС‚ СЂРµР·СѓР»СЊС‚Р°С‚РѕРІ';
+$_['error_permission'] = 'Р’РЅРёРјР°РЅРёРµ: РЈ РІР°СЃ РЅРµС‚ РґРѕСЃС‚СѓРїР° РґР»СЏ РјРѕРґРёС„РёРєР°С†РёРё РјРѕРґСѓР»СЏ!';
 
-$_['ms_error_withdraw_norequests'] = 'Ошибка: нет выплат для обработки';
-$_['ms_error_withdraw_response'] = 'Ошибка: нет ответа';
-$_['ms_error_withdraw_status'] = 'Ошибка: неудачная транзакция';
-$_['ms_success'] = 'Успешно';
-$_['ms_success_transactions'] = 'Транзакция успешно завершена';
-$_['ms_success_payment_deleted'] = 'Выплата удалена';
+$_['ms_error_withdraw_norequests'] = 'РћС€РёР±РєР°: РЅРµС‚ РІС‹РїР»Р°С‚ РґР»СЏ РѕР±СЂР°Р±РѕС‚РєРё';
+$_['ms_error_withdraw_response'] = 'РћС€РёР±РєР°: РЅРµС‚ РѕС‚РІРµС‚Р°';
+$_['ms_error_withdraw_status'] = 'РћС€РёР±РєР°: РЅРµСѓРґР°С‡РЅР°СЏ С‚СЂР°РЅР·Р°РєС†РёСЏ';
+$_['ms_success'] = 'РЈСЃРїРµС€РЅРѕ';
+$_['ms_success_transactions'] = 'РўСЂР°РЅР·Р°РєС†РёСЏ СѓСЃРїРµС€РЅРѕ Р·Р°РІРµСЂС€РµРЅР°';
+$_['ms_success_payment_deleted'] = 'Р’С‹РїР»Р°С‚Р° СѓРґР°Р»РµРЅР°';
 
-$_['ms_none'] = 'Нет';
-$_['ms_seller'] = 'Продавец';
-$_['ms_all_sellers'] = 'Все продавцы';
-$_['ms_amount'] = 'Сумма';
-$_['ms_product'] = 'Продукт';
-$_['ms_net_amount'] = 'Чистая сумма';
-$_['ms_days'] = 'дней';
-$_['ms_from'] = 'От';
-$_['ms_to'] = 'К';
+$_['ms_none'] = 'РќРµС‚';
+$_['ms_seller'] = 'РџСЂРѕРґР°РІРµС†';
+$_['ms_all_sellers'] = 'Р’СЃРµ РїСЂРѕРґР°РІС†С‹';
+$_['ms_amount'] = 'РЎСѓРјРјР°';
+$_['ms_product'] = 'РџСЂРѕРґСѓРєС‚';
+$_['ms_net_amount'] = 'Р§РёСЃС‚Р°СЏ СЃСѓРјРјР°';
+$_['ms_days'] = 'РґРЅРµР№';
+$_['ms_from'] = 'РћС‚';
+$_['ms_to'] = 'Рљ';
 $_['ms_paypal'] = 'PayPal';
-$_['ms_date_created'] = 'Дата создания';
-$_['ms_status'] = 'Статус';
-$_['ms_image'] = 'Изображение';
-$_['ms_date_modified'] = 'Дата изменения';
-$_['ms_date_paid'] = 'Дата оплаты';
-$_['ms_date'] = 'Дата';
-$_['ms_description'] = 'Описание';
+$_['ms_date_created'] = 'Р”Р°С‚Р° СЃРѕР·РґР°РЅРёСЏ';
+$_['ms_status'] = 'РЎС‚Р°С‚СѓСЃ';
+$_['ms_image'] = 'РР·РѕР±СЂР°Р¶РµРЅРёРµ';
+$_['ms_date_modified'] = 'Р”Р°С‚Р° РёР·РјРµРЅРµРЅРёСЏ';
+$_['ms_date_paid'] = 'Р”Р°С‚Р° РѕРїР»Р°С‚С‹';
+$_['ms_date'] = 'Р”Р°С‚Р°';
+$_['ms_description'] = 'РћРїРёСЃР°РЅРёРµ';
 
-$_['ms_commission'] = 'Комиссия';
-$_['ms_commissions_fees'] = 'Комиссия и плата';
-$_['ms_commission_' . MsCommission::RATE_SALE] = 'Плата по продажам';
-$_['ms_commission_' . MsCommission::RATE_LISTING] = 'Плата за публикацию / метод';
-$_['ms_commission_' . MsCommission::RATE_SIGNUP] = 'Плата за регистрацию / метод';
+$_['ms_commission'] = 'РљРѕРјРёСЃСЃРёСЏ';
+$_['ms_commissions_fees'] = 'РљРѕРјРёСЃСЃРёСЏ Рё РїР»Р°С‚Р°';
+$_['ms_commission_' . MsCommission::RATE_SALE] = 'РџР»Р°С‚Р° РїРѕ РїСЂРѕРґР°Р¶Р°Рј';
+$_['ms_commission_' . MsCommission::RATE_LISTING] = 'РџР»Р°С‚Р° Р·Р° РїСѓР±Р»РёРєР°С†РёСЋ / РјРµС‚РѕРґ';
+$_['ms_commission_' . MsCommission::RATE_SIGNUP] = 'РџР»Р°С‚Р° Р·Р° СЂРµРіРёСЃС‚СЂР°С†РёСЋ / РјРµС‚РѕРґ';
 
-$_['ms_commission_short_' . MsCommission::RATE_SALE] = 'П';
-$_['ms_commission_short_' . MsCommission::RATE_LISTING] = 'Пуб';
-$_['ms_commission_short_' . MsCommission::RATE_SIGNUP] = 'Рег';
-$_['ms_commission_actual'] = 'Фактические суммы оплаты';
+$_['ms_commission_short_' . MsCommission::RATE_SALE] = 'Рџ';
+$_['ms_commission_short_' . MsCommission::RATE_LISTING] = 'РџСѓР±';
+$_['ms_commission_short_' . MsCommission::RATE_SIGNUP] = 'Р РµРі';
+$_['ms_commission_actual'] = 'Р¤Р°РєС‚РёС‡РµСЃРєРёРµ СЃСѓРјРјС‹ РѕРїР»Р°С‚С‹';
 
-$_['ms_sort_order'] = 'Порядок сортировки';
-$_['ms_name'] = 'Имя';
-$_['ms_description'] = 'Описание';
+$_['ms_sort_order'] = 'РџРѕСЂСЏРґРѕРє СЃРѕСЂС‚РёСЂРѕРІРєРё';
+$_['ms_name'] = 'РРјСЏ';
+$_['ms_description'] = 'РћРїРёСЃР°РЅРёРµ';
 
-$_['ms_enable'] = 'Включить';
-$_['ms_disable'] = 'Отключить';
-$_['ms_edit'] = 'Редактировать';
-$_['ms_delete'] = 'Удалить';
+$_['ms_enable'] = 'Р’РєР»СЋС‡РёС‚СЊ';
+$_['ms_disable'] = 'РћС‚РєР»СЋС‡РёС‚СЊ';
+$_['ms_edit'] = 'Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ';
+$_['ms_delete'] = 'РЈРґР°Р»РёС‚СЊ';
 
-$_['ms_button_pay_masspay'] = 'Заплатить с помощью MassPay (Массовых платежей)';
+$_['ms_button_pay_masspay'] = 'Р—Р°РїР»Р°С‚РёС‚СЊ СЃ РїРѕРјРѕС‰СЊСЋ MassPay (РњР°СЃСЃРѕРІС‹С… РїР»Р°С‚РµР¶РµР№)';
 
 // Menu
 $_['ms_menu_multiseller'] = 'MultiMerch';
-$_['ms_menu_sellers'] = 'Продавцы';
-$_['ms_menu_seller_groups'] = 'Группы продавцов';
-$_['ms_menu_attributes'] = 'Аттрибуты';
-$_['ms_menu_products'] = 'Продукты';
-$_['ms_menu_transactions'] = 'Транзакции';
-$_['ms_menu_payment'] = 'Платежи';
-$_['ms_menu_settings'] = 'Настройки';
-$_['ms_menu_comments'] = 'Комментарии';
+$_['ms_menu_sellers'] = 'РџСЂРѕРґР°РІС†С‹';
+$_['ms_menu_seller_groups'] = 'Р“СЂСѓРїРїС‹ РїСЂРѕРґР°РІС†РѕРІ';
+$_['ms_menu_attributes'] = 'РђС‚С‚СЂРёР±СѓС‚С‹';
+$_['ms_menu_products'] = 'РџСЂРѕРґСѓРєС‚С‹';
+$_['ms_menu_transactions'] = 'РўСЂР°РЅР·Р°РєС†РёРё';
+$_['ms_menu_payment'] = 'РџР»Р°С‚РµР¶Рё';
+$_['ms_menu_settings'] = 'РќР°СЃС‚СЂРѕР№РєРё';
+$_['ms_menu_comments'] = 'РљРѕРјРјРµРЅС‚Р°СЂРёРё';
 
 // Settings
-$_['ms_settings_heading'] = 'Настройки';
-$_['ms_settings_breadcrumbs'] = 'Настройки';
-$_['ms_config_seller_validation'] = 'Утрверждение продавца';
-$_['ms_config_seller_validation_note'] = 'Утрверждение (валидация) продавца';
-$_['ms_config_seller_validation_none'] = 'Нет утверждения';
-$_['ms_config_seller_validation_activation'] = 'Утверждение через электронную почту';
-$_['ms_config_seller_validation_approval'] = 'Ручное утверждение';
+$_['ms_settings_heading'] = 'РќР°СЃС‚СЂРѕР№РєРё';
+$_['ms_settings_breadcrumbs'] = 'РќР°СЃС‚СЂРѕР№РєРё';
+$_['ms_config_seller_validation'] = 'РЈС‚СЂРІРµСЂР¶РґРµРЅРёРµ РїСЂРѕРґР°РІС†Р°';
+$_['ms_config_seller_validation_note'] = 'РЈС‚СЂРІРµСЂР¶РґРµРЅРёРµ (РІР°Р»РёРґР°С†РёСЏ) РїСЂРѕРґР°РІС†Р°';
+$_['ms_config_seller_validation_none'] = 'РќРµС‚ СѓС‚РІРµСЂР¶РґРµРЅРёСЏ';
+$_['ms_config_seller_validation_activation'] = 'РЈС‚РІРµСЂР¶РґРµРЅРёРµ С‡РµСЂРµР· СЌР»РµРєС‚СЂРѕРЅРЅСѓСЋ РїРѕС‡С‚Сѓ';
+$_['ms_config_seller_validation_approval'] = 'Р СѓС‡РЅРѕРµ СѓС‚РІРµСЂР¶РґРµРЅРёРµ';
 
-$_['ms_config_product_validation'] = 'Утверждение продуктов';
-$_['ms_config_product_validation_note'] = 'Утверждение (валидация) продуктов';
-$_['ms_config_product_validation_none'] = 'Нет утверждения';
-$_['ms_config_product_validation_approval'] = 'Ручное утверждение';
+$_['ms_config_product_validation'] = 'РЈС‚РІРµСЂР¶РґРµРЅРёРµ РїСЂРѕРґСѓРєС‚РѕРІ';
+$_['ms_config_product_validation_note'] = 'РЈС‚РІРµСЂР¶РґРµРЅРёРµ (РІР°Р»РёРґР°С†РёСЏ) РїСЂРѕРґСѓРєС‚РѕРІ';
+$_['ms_config_product_validation_none'] = 'РќРµС‚ СѓС‚РІРµСЂР¶РґРµРЅРёСЏ';
+$_['ms_config_product_validation_approval'] = 'Р СѓС‡РЅРѕРµ СѓС‚РІРµСЂР¶РґРµРЅРёРµ';
 
-$_['ms_config_nickname_rules'] = 'Правила имени пользователя для продавцов';
-$_['ms_config_nickname_rules_note'] = 'Наборы символов разрешенные в имени пользователя для продавцов';
-$_['ms_config_nickname_rules_alnum'] = 'Буквы латинского алфавита и числа';
-$_['ms_config_nickname_rules_ext'] = 'Расширенный латинский';
-$_['ms_config_nickname_rules_utf'] = 'Полная UTF-8 кодировка';
+$_['ms_config_nickname_rules'] = 'РџСЂР°РІРёР»Р° РёРјРµРЅРё РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РґР»СЏ РїСЂРѕРґР°РІС†РѕРІ';
+$_['ms_config_nickname_rules_note'] = 'РќР°Р±РѕСЂС‹ СЃРёРјРІРѕР»РѕРІ СЂР°Р·СЂРµС€РµРЅРЅС‹Рµ РІ РёРјРµРЅРё РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РґР»СЏ РїСЂРѕРґР°РІС†РѕРІ';
+$_['ms_config_nickname_rules_alnum'] = 'Р‘СѓРєРІС‹ Р»Р°С‚РёРЅСЃРєРѕРіРѕ Р°Р»С„Р°РІРёС‚Р° Рё С‡РёСЃР»Р°';
+$_['ms_config_nickname_rules_ext'] = 'Р Р°СЃС€РёСЂРµРЅРЅС‹Р№ Р»Р°С‚РёРЅСЃРєРёР№';
+$_['ms_config_nickname_rules_utf'] = 'РџРѕР»РЅР°СЏ UTF-8 РєРѕРґРёСЂРѕРІРєР°';
 
-$_['ms_config_enable_seo_urls_seller'] = 'Генерировать SEO ссылки для новых продавцов';
-$_['ms_config_enable_seo_urls_seller_note'] = 'Эта опция позволяет генерировать ссылки оптимизированные для поисковых систем для всех новых продавцов. SEO ссылки должны быть разрешены в OpenCart для того, чтобы использовать данную настройку.';
+$_['ms_config_enable_seo_urls_seller'] = 'Р“РµРЅРµСЂРёСЂРѕРІР°С‚СЊ SEO СЃСЃС‹Р»РєРё РґР»СЏ РЅРѕРІС‹С… РїСЂРѕРґР°РІС†РѕРІ';
+$_['ms_config_enable_seo_urls_seller_note'] = 'Р­С‚Р° РѕРїС†РёСЏ РїРѕР·РІРѕР»СЏРµС‚ РіРµРЅРµСЂРёСЂРѕРІР°С‚СЊ СЃСЃС‹Р»РєРё РѕРїС‚РёРјРёР·РёСЂРѕРІР°РЅРЅС‹Рµ РґР»СЏ РїРѕРёСЃРєРѕРІС‹С… СЃРёСЃС‚РµРј РґР»СЏ РІСЃРµС… РЅРѕРІС‹С… РїСЂРѕРґР°РІС†РѕРІ. SEO СЃСЃС‹Р»РєРё РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ СЂР°Р·СЂРµС€РµРЅС‹ РІ OpenCart РґР»СЏ С‚РѕРіРѕ, С‡С‚РѕР±С‹ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РґР°РЅРЅСѓСЋ РЅР°СЃС‚СЂРѕР№РєСѓ.';
 
-$_['ms_config_enable_seo_urls_product'] = 'Генерировать SEO ссылки для новых продуктов';
-$_['ms_config_enable_seo_urls_product_note'] = 'Эта опция позволяет генерировать ссылки оптимизированные для поисковых систем для всех новых продуктов. SEO ссылки должны быть разрешены в OpenCart для того, чтобы использовать данную настройку. Это экспериментальная настройка и не тестировалась на магазинах с неанглийским языком, используйте на свой риск.';
+$_['ms_config_enable_seo_urls_product'] = 'Р“РµРЅРµСЂРёСЂРѕРІР°С‚СЊ SEO СЃСЃС‹Р»РєРё РґР»СЏ РЅРѕРІС‹С… РїСЂРѕРґСѓРєС‚РѕРІ';
+$_['ms_config_enable_seo_urls_product_note'] = 'Р­С‚Р° РѕРїС†РёСЏ РїРѕР·РІРѕР»СЏРµС‚ РіРµРЅРµСЂРёСЂРѕРІР°С‚СЊ СЃСЃС‹Р»РєРё РѕРїС‚РёРјРёР·РёСЂРѕРІР°РЅРЅС‹Рµ РґР»СЏ РїРѕРёСЃРєРѕРІС‹С… СЃРёСЃС‚РµРј РґР»СЏ РІСЃРµС… РЅРѕРІС‹С… РїСЂРѕРґСѓРєС‚РѕРІ. SEO СЃСЃС‹Р»РєРё РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ СЂР°Р·СЂРµС€РµРЅС‹ РІ OpenCart РґР»СЏ С‚РѕРіРѕ, С‡С‚РѕР±С‹ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РґР°РЅРЅСѓСЋ РЅР°СЃС‚СЂРѕР№РєСѓ. Р­С‚Рѕ СЌРєСЃРїРµСЂРёРјРµРЅС‚Р°Р»СЊРЅР°СЏ РЅР°СЃС‚СЂРѕР№РєР° Рё РЅРµ С‚РµСЃС‚РёСЂРѕРІР°Р»Р°СЃСЊ РЅР° РјР°РіР°Р·РёРЅР°С… СЃ РЅРµР°РЅРіР»РёР№СЃРєРёРј СЏР·С‹РєРѕРј, РёСЃРїРѕР»СЊР·СѓР№С‚Рµ РЅР° СЃРІРѕР№ СЂРёСЃРє.';
 
-$_['ms_config_enable_update_seo_urls'] = 'Генерировать SEO ссылки для отредактированных продуктов';
-$_['ms_config_enable_update_seo_urls_note'] = 'Эта опция позволяет генерировать новые SEO ссылки после того, как существующий продукт отредактирован.';
+$_['ms_config_enable_update_seo_urls'] = 'Р“РµРЅРµСЂРёСЂРѕРІР°С‚СЊ SEO СЃСЃС‹Р»РєРё РґР»СЏ РѕС‚СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРЅС‹С… РїСЂРѕРґСѓРєС‚РѕРІ';
+$_['ms_config_enable_update_seo_urls_note'] = 'Р­С‚Р° РѕРїС†РёСЏ РїРѕР·РІРѕР»СЏРµС‚ РіРµРЅРµСЂРёСЂРѕРІР°С‚СЊ РЅРѕРІС‹Рµ SEO СЃСЃС‹Р»РєРё РїРѕСЃР»Рµ С‚РѕРіРѕ, РєР°Рє СЃСѓС‰РµСЃС‚РІСѓСЋС‰РёР№ РїСЂРѕРґСѓРєС‚ РѕС‚СЂРµРґР°РєС‚РёСЂРѕРІР°РЅ.';
 
-$_['ms_config_enable_non_alphanumeric_seo'] = 'Разрешить UTF8 кодировку в SEO ссылках';
-$_['ms_config_enable_non_alphanumeric_seo_note'] = 'Эта опция позволяет не удалять символы кодировки UTF8 из SEO ссылок. Данная настройка экспериментальна, используйте на свой риск.';
+$_['ms_config_enable_non_alphanumeric_seo'] = 'Р Р°Р·СЂРµС€РёС‚СЊ UTF8 РєРѕРґРёСЂРѕРІРєСѓ РІ SEO СЃСЃС‹Р»РєР°С…';
+$_['ms_config_enable_non_alphanumeric_seo_note'] = 'Р­С‚Р° РѕРїС†РёСЏ РїРѕР·РІРѕР»СЏРµС‚ РЅРµ СѓРґР°Р»СЏС‚СЊ СЃРёРјРІРѕР»С‹ РєРѕРґРёСЂРѕРІРєРё UTF8 РёР· SEO СЃСЃС‹Р»РѕРє. Р”Р°РЅРЅР°СЏ РЅР°СЃС‚СЂРѕР№РєР° СЌРєСЃРїРµСЂРёРјРµРЅС‚Р°Р»СЊРЅР°, РёСЃРїРѕР»СЊР·СѓР№С‚Рµ РЅР° СЃРІРѕР№ СЂРёСЃРє.';
 
-$_['ms_config_minimum_product_price'] = 'Минимальная цена продукта';
-$_['ms_config_minimum_product_price_note'] = 'Эта настройка задает минимальную цену продукта';
+$_['ms_config_minimum_product_price'] = 'РњРёРЅРёРјР°Р»СЊРЅР°СЏ С†РµРЅР° РїСЂРѕРґСѓРєС‚Р°';
+$_['ms_config_minimum_product_price_note'] = 'Р­С‚Р° РЅР°СЃС‚СЂРѕР№РєР° Р·Р°РґР°РµС‚ РјРёРЅРёРјР°Р»СЊРЅСѓСЋ С†РµРЅСѓ РїСЂРѕРґСѓРєС‚Р°';
 
-$_['ms_config_allowed_image_types'] = 'Дозволенные расширения изображений';
-$_['ms_config_allowed_image_types_note'] = 'Эта настройка задает дозволенные расширения изображений';
+$_['ms_config_allowed_image_types'] = 'Р”РѕР·РІРѕР»РµРЅРЅС‹Рµ СЂР°СЃС€РёСЂРµРЅРёСЏ РёР·РѕР±СЂР°Р¶РµРЅРёР№';
+$_['ms_config_allowed_image_types_note'] = 'Р­С‚Р° РЅР°СЃС‚СЂРѕР№РєР° Р·Р°РґР°РµС‚ РґРѕР·РІРѕР»РµРЅРЅС‹Рµ СЂР°СЃС€РёСЂРµРЅРёСЏ РёР·РѕР±СЂР°Р¶РµРЅРёР№';
 
-$_['ms_config_images_limits'] = 'Лимит изображений для продукта';
-$_['ms_config_images_limits_note'] = 'Минимальное и максимальное количество необходимых/разрешенных изображений (включая главное изображение предпросмотра) (0 = без ограничения)';
+$_['ms_config_images_limits'] = 'Р›РёРјРёС‚ РёР·РѕР±СЂР°Р¶РµРЅРёР№ РґР»СЏ РїСЂРѕРґСѓРєС‚Р°';
+$_['ms_config_images_limits_note'] = 'РњРёРЅРёРјР°Р»СЊРЅРѕРµ Рё РјР°РєСЃРёРјР°Р»СЊРЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ РЅРµРѕР±С…РѕРґРёРјС‹С…/СЂР°Р·СЂРµС€РµРЅРЅС‹С… РёР·РѕР±СЂР°Р¶РµРЅРёР№ (РІРєР»СЋС‡Р°СЏ РіР»Р°РІРЅРѕРµ РёР·РѕР±СЂР°Р¶РµРЅРёРµ РїСЂРµРґРїСЂРѕСЃРјРѕС‚СЂР°) (0 = Р±РµР· РѕРіСЂР°РЅРёС‡РµРЅРёСЏ)';
 
-$_['ms_config_downloads_limits'] = 'Лимит файлов для скачки у продукта';
-$_['ms_config_downloads_limits_note'] = 'Минимальное и максимальное количество необходимых/разрешенных файлов для скачки (0 = без ограничения)';
+$_['ms_config_downloads_limits'] = 'Р›РёРјРёС‚ С„Р°Р№Р»РѕРІ РґР»СЏ СЃРєР°С‡РєРё Сѓ РїСЂРѕРґСѓРєС‚Р°';
+$_['ms_config_downloads_limits_note'] = 'РњРёРЅРёРјР°Р»СЊРЅРѕРµ Рё РјР°РєСЃРёРјР°Р»СЊРЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ РЅРµРѕР±С…РѕРґРёРјС‹С…/СЂР°Р·СЂРµС€РµРЅРЅС‹С… С„Р°Р№Р»РѕРІ РґР»СЏ СЃРєР°С‡РєРё (0 = Р±РµР· РѕРіСЂР°РЅРёС‡РµРЅРёСЏ)';
 
-$_['ms_config_enable_pdf_generator'] = 'Включить генерацию изображений из файлов PDF';
-$_['ms_config_enable_pdf_generator_note'] = 'Разрешить продавцам автоматически генерировать изображения для продуктов из загруженных файлов скачки с расширением PDF (требуется Imagick модуль для PHP, а также установленный Ghostscript)';
+$_['ms_config_enable_pdf_generator'] = 'Р’РєР»СЋС‡РёС‚СЊ РіРµРЅРµСЂР°С†РёСЋ РёР·РѕР±СЂР°Р¶РµРЅРёР№ РёР· С„Р°Р№Р»РѕРІ PDF';
+$_['ms_config_enable_pdf_generator_note'] = 'Р Р°Р·СЂРµС€РёС‚СЊ РїСЂРѕРґР°РІС†Р°Рј Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё РіРµРЅРµСЂРёСЂРѕРІР°С‚СЊ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ РґР»СЏ РїСЂРѕРґСѓРєС‚РѕРІ РёР· Р·Р°РіСЂСѓР¶РµРЅРЅС‹С… С„Р°Р№Р»РѕРІ СЃРєР°С‡РєРё СЃ СЂР°СЃС€РёСЂРµРЅРёРµРј PDF (С‚СЂРµР±СѓРµС‚СЃСЏ Imagick РјРѕРґСѓР»СЊ РґР»СЏ PHP, Р° С‚Р°РєР¶Рµ СѓСЃС‚Р°РЅРѕРІР»РµРЅРЅС‹Р№ Ghostscript)';
 
-$_['ms_config_allowed_download_types'] = 'Дозволенные расширения для файлов скачки';
-$_['ms_config_allowed_download_types_note'] = 'Эта настройка задает дозволенные расширения для файлов скачки';
+$_['ms_config_allowed_download_types'] = 'Р”РѕР·РІРѕР»РµРЅРЅС‹Рµ СЂР°СЃС€РёСЂРµРЅРёСЏ РґР»СЏ С„Р°Р№Р»РѕРІ СЃРєР°С‡РєРё';
+$_['ms_config_allowed_download_types_note'] = 'Р­С‚Р° РЅР°СЃС‚СЂРѕР№РєР° Р·Р°РґР°РµС‚ РґРѕР·РІРѕР»РµРЅРЅС‹Рµ СЂР°СЃС€РёСЂРµРЅРёСЏ РґР»СЏ С„Р°Р№Р»РѕРІ СЃРєР°С‡РєРё';
 
-$_['ms_config_image_preview_size'] = 'Размер изображения предпросмотра';
-$_['ms_config_image_preview_size_note'] = 'Размер изображения предпросмотра в зоне продавцов';
+$_['ms_config_image_preview_size'] = 'Р Р°Р·РјРµСЂ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ РїСЂРµРґРїСЂРѕСЃРјРѕС‚СЂР°';
+$_['ms_config_image_preview_size_note'] = 'Р Р°Р·РјРµСЂ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ РїСЂРµРґРїСЂРѕСЃРјРѕС‚СЂР° РІ Р·РѕРЅРµ РїСЂРѕРґР°РІС†РѕРІ';
 
-$_['ms_config_credit_order_statuses'] = 'Статусы зачисления денег';
-$_['ms_config_credit_order_statuses_note'] = 'Баланс продавца будет пополняться за заказы со статусами зачисления денег';
+$_['ms_config_credit_order_statuses'] = 'РЎС‚Р°С‚СѓСЃС‹ Р·Р°С‡РёСЃР»РµРЅРёСЏ РґРµРЅРµРі';
+$_['ms_config_credit_order_statuses_note'] = 'Р‘Р°Р»Р°РЅСЃ РїСЂРѕРґР°РІС†Р° Р±СѓРґРµС‚ РїРѕРїРѕР»РЅСЏС‚СЊСЃСЏ Р·Р° Р·Р°РєР°Р·С‹ СЃРѕ СЃС‚Р°С‚СѓСЃР°РјРё Р·Р°С‡РёСЃР»РµРЅРёСЏ РґРµРЅРµРі';
 
-$_['ms_config_debit_order_statuses'] = 'Статусы снятия денег';
-$_['ms_config_debit_order_statuses_note'] = 'С баланса продавца будут сниматься средства за заказы со статусами снятия денег';
+$_['ms_config_debit_order_statuses'] = 'РЎС‚Р°С‚СѓСЃС‹ СЃРЅСЏС‚РёСЏ РґРµРЅРµРі';
+$_['ms_config_debit_order_statuses_note'] = 'РЎ Р±Р°Р»Р°РЅСЃР° РїСЂРѕРґР°РІС†Р° Р±СѓРґСѓС‚ СЃРЅРёРјР°С‚СЊСЃСЏ СЃСЂРµРґСЃС‚РІР° Р·Р° Р·Р°РєР°Р·С‹ СЃРѕ СЃС‚Р°С‚СѓСЃР°РјРё СЃРЅСЏС‚РёСЏ РґРµРЅРµРі';
 
-$_['ms_config_minimum_withdrawal'] = 'Минимальная суммы выплаты';
-$_['ms_config_minimum_withdrawal_note'] = 'Минимальная сумма баланса, требуемая для запроса о выплате средств';
+$_['ms_config_minimum_withdrawal'] = 'РњРёРЅРёРјР°Р»СЊРЅР°СЏ СЃСѓРјРјС‹ РІС‹РїР»Р°С‚С‹';
+$_['ms_config_minimum_withdrawal_note'] = 'РњРёРЅРёРјР°Р»СЊРЅР°СЏ СЃСѓРјРјР° Р±Р°Р»Р°РЅСЃР°, С‚СЂРµР±СѓРµРјР°СЏ РґР»СЏ Р·Р°РїСЂРѕСЃР° Рѕ РІС‹РїР»Р°С‚Рµ СЃСЂРµРґСЃС‚РІ';
 
-$_['ms_config_allow_partial_withdrawal'] = 'Разрешить частичные выплаты';
-$_['ms_config_allow_partial_withdrawal_note'] = 'Разрешить продавцам запрашивать частичные выплаты средств с баланса';
+$_['ms_config_allow_partial_withdrawal'] = 'Р Р°Р·СЂРµС€РёС‚СЊ С‡Р°СЃС‚РёС‡РЅС‹Рµ РІС‹РїР»Р°С‚С‹';
+$_['ms_config_allow_partial_withdrawal_note'] = 'Р Р°Р·СЂРµС€РёС‚СЊ РїСЂРѕРґР°РІС†Р°Рј Р·Р°РїСЂР°С€РёРІР°С‚СЊ С‡Р°СЃС‚РёС‡РЅС‹Рµ РІС‹РїР»Р°С‚С‹ СЃСЂРµРґСЃС‚РІ СЃ Р±Р°Р»Р°РЅСЃР°';
 
-$_['ms_config_allow_withdrawal_requests'] = 'Разрешить запросы на выплату';
-$_['ms_config_allow_withdrawal_requests_note'] = 'Разрешить продавцам запрашивать выплату средств с баланса';
+$_['ms_config_allow_withdrawal_requests'] = 'Р Р°Р·СЂРµС€РёС‚СЊ Р·Р°РїСЂРѕСЃС‹ РЅР° РІС‹РїР»Р°С‚Сѓ';
+$_['ms_config_allow_withdrawal_requests_note'] = 'Р Р°Р·СЂРµС€РёС‚СЊ РїСЂРѕРґР°РІС†Р°Рј Р·Р°РїСЂР°С€РёРІР°С‚СЊ РІС‹РїР»Р°С‚Сѓ СЃСЂРµРґСЃС‚РІ СЃ Р±Р°Р»Р°РЅСЃР°';
 
-$_['ms_config_paypal_sandbox'] = 'Sandbox режим PayPal';
-$_['ms_config_paypal_sandbox_note'] = 'Использовать PayPal в Sandbox режиме для тестирования и отлаживания';
+$_['ms_config_paypal_sandbox'] = 'Sandbox СЂРµР¶РёРј PayPal';
+$_['ms_config_paypal_sandbox_note'] = 'РСЃРїРѕР»СЊР·РѕРІР°С‚СЊ PayPal РІ Sandbox СЂРµР¶РёРјРµ РґР»СЏ С‚РµСЃС‚РёСЂРѕРІР°РЅРёСЏ Рё РѕС‚Р»Р°Р¶РёРІР°РЅРёСЏ';
 
-$_['ms_config_paypal_address'] = 'Адрес PayPal';
-$_['ms_config_paypal_address_note'] = 'Ваш адрес PayPal для зачисления на него платы за публикацию продуктов и регистрацию продавцов';
+$_['ms_config_paypal_address'] = 'РђРґСЂРµСЃ PayPal';
+$_['ms_config_paypal_address_note'] = 'Р’Р°С€ Р°РґСЂРµСЃ PayPal РґР»СЏ Р·Р°С‡РёСЃР»РµРЅРёСЏ РЅР° РЅРµРіРѕ РїР»Р°С‚С‹ Р·Р° РїСѓР±Р»РёРєР°С†РёСЋ РїСЂРѕРґСѓРєС‚РѕРІ Рё СЂРµРіРёСЃС‚СЂР°С†РёСЋ РїСЂРѕРґР°РІС†РѕРІ';
 
-$_['ms_config_paypal_api_username'] = 'Имя пользователя для PayPal API';
-$_['ms_config_paypal_api_username_note'] = 'Ваше имя пользователя для PayPal API - необходимо для MassPay выплат (массовых выплат)';
+$_['ms_config_paypal_api_username'] = 'РРјСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РґР»СЏ PayPal API';
+$_['ms_config_paypal_api_username_note'] = 'Р’Р°С€Рµ РёРјСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РґР»СЏ PayPal API - РЅРµРѕР±С…РѕРґРёРјРѕ РґР»СЏ MassPay РІС‹РїР»Р°С‚ (РјР°СЃСЃРѕРІС‹С… РІС‹РїР»Р°С‚)';
 
-$_['ms_config_paypal_api_password'] = 'Пароль для PayPal API';
-$_['ms_config_paypal_api_password_note'] = 'Ваш пароль для PayPal API - необходим для MassPay выплат (массовых выплат)';
+$_['ms_config_paypal_api_password'] = 'РџР°СЂРѕР»СЊ РґР»СЏ PayPal API';
+$_['ms_config_paypal_api_password_note'] = 'Р’Р°С€ РїР°СЂРѕР»СЊ РґР»СЏ PayPal API - РЅРµРѕР±С…РѕРґРёРј РґР»СЏ MassPay РІС‹РїР»Р°С‚ (РјР°СЃСЃРѕРІС‹С… РІС‹РїР»Р°С‚)';
 
-$_['ms_config_paypal_api_signature'] = 'Подпись для PayPal API';
-$_['ms_config_paypal_api_signature_note'] = 'Ваша подпись для PayPal API - необходима для MassPay выплат (массовых выплат)';
+$_['ms_config_paypal_api_signature'] = 'РџРѕРґРїРёСЃСЊ РґР»СЏ PayPal API';
+$_['ms_config_paypal_api_signature_note'] = 'Р’Р°С€Р° РїРѕРґРїРёСЃСЊ РґР»СЏ PayPal API - РЅРµРѕР±С…РѕРґРёРјР° РґР»СЏ MassPay РІС‹РїР»Р°С‚ (РјР°СЃСЃРѕРІС‹С… РІС‹РїР»Р°С‚)';
 
-$_['ms_config_notification_email'] = 'Адрес электронной почты администрации для уведомлений';
-$_['ms_config_notification_email_note'] = 'Адрес электронной почты администрации, куда будут посылаться различные уведомления в виде электронных писем';
+$_['ms_config_notification_email'] = 'РђРґСЂРµСЃ СЌР»РµРєС‚СЂРѕРЅРЅРѕР№ РїРѕС‡С‚С‹ Р°РґРјРёРЅРёСЃС‚СЂР°С†РёРё РґР»СЏ СѓРІРµРґРѕРјР»РµРЅРёР№';
+$_['ms_config_notification_email_note'] = 'РђРґСЂРµСЃ СЌР»РµРєС‚СЂРѕРЅРЅРѕР№ РїРѕС‡С‚С‹ Р°РґРјРёРЅРёСЃС‚СЂР°С†РёРё, РєСѓРґР° Р±СѓРґСѓС‚ РїРѕСЃС‹Р»Р°С‚СЊСЃСЏ СЂР°Р·Р»РёС‡РЅС‹Рµ СѓРІРµРґРѕРјР»РµРЅРёСЏ РІ РІРёРґРµ СЌР»РµРєС‚СЂРѕРЅРЅС‹С… РїРёСЃРµРј';
 
-$_['ms_config_allow_free_products'] = 'Разрешить бесплатные продукты';
-$_['ms_config_allow_free_products_note'] = 'Данная опция позволяет продавцам добавлять бесплатные продукты';
+$_['ms_config_allow_free_products'] = 'Р Р°Р·СЂРµС€РёС‚СЊ Р±РµСЃРїР»Р°С‚РЅС‹Рµ РїСЂРѕРґСѓРєС‚С‹';
+$_['ms_config_allow_free_products_note'] = 'Р”Р°РЅРЅР°СЏ РѕРїС†РёСЏ РїРѕР·РІРѕР»СЏРµС‚ РїСЂРѕРґР°РІС†Р°Рј РґРѕР±Р°РІР»СЏС‚СЊ Р±РµСЃРїР»Р°С‚РЅС‹Рµ РїСЂРѕРґСѓРєС‚С‹';
 
-$_['ms_config_allow_multiple_categories'] = 'Разрешить несколько категорий для продукта';
-$_['ms_config_allow_multiple_categories_note'] = 'Разрешить продавцам добавлять продукт в несколько категорий';
+$_['ms_config_allow_multiple_categories'] = 'Р Р°Р·СЂРµС€РёС‚СЊ РЅРµСЃРєРѕР»СЊРєРѕ РєР°С‚РµРіРѕСЂРёР№ РґР»СЏ РїСЂРѕРґСѓРєС‚Р°';
+$_['ms_config_allow_multiple_categories_note'] = 'Р Р°Р·СЂРµС€РёС‚СЊ РїСЂРѕРґР°РІС†Р°Рј РґРѕР±Р°РІР»СЏС‚СЊ РїСЂРѕРґСѓРєС‚ РІ РЅРµСЃРєРѕР»СЊРєРѕ РєР°С‚РµРіРѕСЂРёР№';
 
-$_['ms_config_additional_category_restrictions'] = 'Список запрещенных категорий';
-$_['ms_config_additional_category_restrictions_note'] = '<u>Запретить</u> продавцам заносить продукты в специфические категории';
-$_['ms_topmost_categories'] = 'Категории самого верхнего уровня (корневые)';
-$_['ms_parent_categories'] = 'Все родительские категории';
+$_['ms_config_additional_category_restrictions'] = 'РЎРїРёСЃРѕРє Р·Р°РїСЂРµС‰РµРЅРЅС‹С… РєР°С‚РµРіРѕСЂРёР№';
+$_['ms_config_additional_category_restrictions_note'] = '<u>Р—Р°РїСЂРµС‚РёС‚СЊ</u> РїСЂРѕРґР°РІС†Р°Рј Р·Р°РЅРѕСЃРёС‚СЊ РїСЂРѕРґСѓРєС‚С‹ РІ СЃРїРµС†РёС„РёС‡РµСЃРєРёРµ РєР°С‚РµРіРѕСЂРёРё';
+$_['ms_topmost_categories'] = 'РљР°С‚РµРіРѕСЂРёРё СЃР°РјРѕРіРѕ РІРµСЂС…РЅРµРіРѕ СѓСЂРѕРІРЅСЏ (РєРѕСЂРЅРµРІС‹Рµ)';
+$_['ms_parent_categories'] = 'Р’СЃРµ СЂРѕРґРёС‚РµР»СЊСЃРєРёРµ РєР°С‚РµРіРѕСЂРёРё';
 
-$_['ms_config_restrict_categories'] = 'Запрещенные категории';
-$_['ms_config_restrict_categories_note'] = '<u>Запретить</u> продавцам заносить продукты в эти категории';
+$_['ms_config_restrict_categories'] = 'Р—Р°РїСЂРµС‰РµРЅРЅС‹Рµ РєР°С‚РµРіРѕСЂРёРё';
+$_['ms_config_restrict_categories_note'] = '<u>Р—Р°РїСЂРµС‚РёС‚СЊ</u> РїСЂРѕРґР°РІС†Р°Рј Р·Р°РЅРѕСЃРёС‚СЊ РїСЂРѕРґСѓРєС‚С‹ РІ СЌС‚Рё РєР°С‚РµРіРѕСЂРёРё';
 
-$_['ms_config_provide_buyerinfo'] = 'Отсылать информацию о покупателе посредством электронной почты';
-$_['ms_config_provide_buyerinfo_note'] = 'Отсылать адрес покупателя вместе с электронным письмом о покупке продукта';
+$_['ms_config_provide_buyerinfo'] = 'РћС‚СЃС‹Р»Р°С‚СЊ РёРЅС„РѕСЂРјР°С†РёСЋ Рѕ РїРѕРєСѓРїР°С‚РµР»Рµ РїРѕСЃСЂРµРґСЃС‚РІРѕРј СЌР»РµРєС‚СЂРѕРЅРЅРѕР№ РїРѕС‡С‚С‹';
+$_['ms_config_provide_buyerinfo_note'] = 'РћС‚СЃС‹Р»Р°С‚СЊ Р°РґСЂРµСЃ РїРѕРєСѓРїР°С‚РµР»СЏ РІРјРµСЃС‚Рµ СЃ СЌР»РµРєС‚СЂРѕРЅРЅС‹Рј РїРёСЃСЊРјРѕРј Рѕ РїРѕРєСѓРїРєРµ РїСЂРѕРґСѓРєС‚Р°';
 
-$_['ms_config_enable_shipping'] = 'Включить доставку';
-$_['ms_config_enable_shipping_note'] = 'Новые продкуты будут создаваться, требуя доставки';
+$_['ms_config_enable_shipping'] = 'Р’РєР»СЋС‡РёС‚СЊ РґРѕСЃС‚Р°РІРєСѓ';
+$_['ms_config_enable_shipping_note'] = 'РќРѕРІС‹Рµ РїСЂРѕРґРєСѓС‚С‹ Р±СѓРґСѓС‚ СЃРѕР·РґР°РІР°С‚СЊСЃСЏ, С‚СЂРµР±СѓСЏ РґРѕСЃС‚Р°РІРєРё';
 
-$_['ms_config_enable_quantities'] = 'Включить количества';
-$_['ms_config_enable_quantities_note'] = 'Позволить продавцами задавать количество продуктов';
+$_['ms_config_enable_quantities'] = 'Р’РєР»СЋС‡РёС‚СЊ РєРѕР»РёС‡РµСЃС‚РІР°';
+$_['ms_config_enable_quantities_note'] = 'РџРѕР·РІРѕР»РёС‚СЊ РїСЂРѕРґР°РІС†Р°РјРё Р·Р°РґР°РІР°С‚СЊ РєРѕР»РёС‡РµСЃС‚РІРѕ РїСЂРѕРґСѓРєС‚РѕРІ';
 
-$_['ms_config_seller_terms_page'] = 'Условия для регистрации учетной записи продавца';
-$_['ms_config_seller_terms_page_note'] = 'Продавцы должны будут согласиться с этими условиями, создавая новую учетную запись продавца.';
+$_['ms_config_seller_terms_page'] = 'РЈСЃР»РѕРІРёСЏ РґР»СЏ СЂРµРіРёСЃС‚СЂР°С†РёРё СѓС‡РµС‚РЅРѕР№ Р·Р°РїРёСЃРё РїСЂРѕРґР°РІС†Р°';
+$_['ms_config_seller_terms_page_note'] = 'РџСЂРѕРґР°РІС†С‹ РґРѕР»Р¶РЅС‹ Р±СѓРґСѓС‚ СЃРѕРіР»Р°СЃРёС‚СЊСЃСЏ СЃ СЌС‚РёРјРё СѓСЃР»РѕРІРёСЏРјРё, СЃРѕР·РґР°РІР°СЏ РЅРѕРІСѓСЋ СѓС‡РµС‚РЅСѓСЋ Р·Р°РїРёСЃСЊ РїСЂРѕРґР°РІС†Р°.';
 
-$_['ms_config_allow_specials'] = 'Рарзешить специальные цены';
-$_['ms_config_allow_specials_note'] = 'Разрешить продавцам задавать специальные цены';
+$_['ms_config_allow_specials'] = 'Р Р°СЂР·РµС€РёС‚СЊ СЃРїРµС†РёР°Р»СЊРЅС‹Рµ С†РµРЅС‹';
+$_['ms_config_allow_specials_note'] = 'Р Р°Р·СЂРµС€РёС‚СЊ РїСЂРѕРґР°РІС†Р°Рј Р·Р°РґР°РІР°С‚СЊ СЃРїРµС†РёР°Р»СЊРЅС‹Рµ С†РµРЅС‹';
 
-$_['ms_config_allow_discounts'] = 'Разрешить количественные скидки';
-$_['ms_config_allow_discounts_note'] = 'Разрешить продавцам задавать количественные скидки';
+$_['ms_config_allow_discounts'] = 'Р Р°Р·СЂРµС€РёС‚СЊ РєРѕР»РёС‡РµСЃС‚РІРµРЅРЅС‹Рµ СЃРєРёРґРєРё';
+$_['ms_config_allow_discounts_note'] = 'Р Р°Р·СЂРµС€РёС‚СЊ РїСЂРѕРґР°РІС†Р°Рј Р·Р°РґР°РІР°С‚СЊ РєРѕР»РёС‡РµСЃС‚РІРµРЅРЅС‹Рµ СЃРєРёРґРєРё';
 
-$_['ms_config_withdrawal_waiting_period'] = 'Период ожиданя для выплат';
-$_['ms_config_withdrawal_waiting_period_note'] = 'Баланс продавца, новее, чем это значение не будет доступен для запросов на выплату. После получения средств должно продйти данное количество времени чтобы баланс был доступен для выплаты';
+$_['ms_config_withdrawal_waiting_period'] = 'РџРµСЂРёРѕРґ РѕР¶РёРґР°РЅСЏ РґР»СЏ РІС‹РїР»Р°С‚';
+$_['ms_config_withdrawal_waiting_period_note'] = 'Р‘Р°Р»Р°РЅСЃ РїСЂРѕРґР°РІС†Р°, РЅРѕРІРµРµ, С‡РµРј СЌС‚Рѕ Р·РЅР°С‡РµРЅРёРµ РЅРµ Р±СѓРґРµС‚ РґРѕСЃС‚СѓРїРµРЅ РґР»СЏ Р·Р°РїСЂРѕСЃРѕРІ РЅР° РІС‹РїР»Р°С‚Сѓ. РџРѕСЃР»Рµ РїРѕР»СѓС‡РµРЅРёСЏ СЃСЂРµРґСЃС‚РІ РґРѕР»Р¶РЅРѕ РїСЂРѕРґР№С‚Рё РґР°РЅРЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ РІСЂРµРјРµРЅРё С‡С‚РѕР±С‹ Р±Р°Р»Р°РЅСЃ Р±С‹Р» РґРѕСЃС‚СѓРїРµРЅ РґР»СЏ РІС‹РїР»Р°С‚С‹';
 
-$_['ms_config_comments_enable'] = 'Включить комментарии';
-$_['ms_config_comments_enable_note'] = 'Включить или выключить функцию комментариев';
+$_['ms_config_comments_enable'] = 'Р’РєР»СЋС‡РёС‚СЊ РєРѕРјРјРµРЅС‚Р°СЂРёРё';
+$_['ms_config_comments_enable_note'] = 'Р’РєР»СЋС‡РёС‚СЊ РёР»Рё РІС‹РєР»СЋС‡РёС‚СЊ С„СѓРЅРєС†РёСЋ РєРѕРјРјРµРЅС‚Р°СЂРёРµРІ';
 
-$_['ms_config_comments_perpage'] = 'Комментариев на страницу';
-$_['ms_config_comments_perpage_note'] = 'Количество комментариев на страницу в магазине';
+$_['ms_config_comments_perpage'] = 'РљРѕРјРјРµРЅС‚Р°СЂРёРµРІ РЅР° СЃС‚СЂР°РЅРёС†Сѓ';
+$_['ms_config_comments_perpage_note'] = 'РљРѕР»РёС‡РµСЃС‚РІРѕ РєРѕРјРјРµРЅС‚Р°СЂРёРµРІ РЅР° СЃС‚СЂР°РЅРёС†Сѓ РІ РјР°РіР°Р·РёРЅРµ';
 
-$_['ms_config_comments_allow_guests'] = 'Разрешить комментарии от гостей';
-$_['ms_config_comments_allow_guests_note'] = 'Разрешить незарегистрированным посетителям магазина оставлять комментарии';
+$_['ms_config_comments_allow_guests'] = 'Р Р°Р·СЂРµС€РёС‚СЊ РєРѕРјРјРµРЅС‚Р°СЂРёРё РѕС‚ РіРѕСЃС‚РµР№';
+$_['ms_config_comments_allow_guests_note'] = 'Р Р°Р·СЂРµС€РёС‚СЊ РЅРµР·Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°РЅРЅС‹Рј РїРѕСЃРµС‚РёС‚РµР»СЏРј РјР°РіР°Р·РёРЅР° РѕСЃС‚Р°РІР»СЏС‚СЊ РєРѕРјРјРµРЅС‚Р°СЂРёРё';
 
-$_['ms_config_comments_enforce_customer_data'] = 'Обязывать вписывание настоящих данных';
-$_['ms_config_comments_enforce_customer_data_note'] = 'Эта настройка предотвращает использование чужих имен/адресов электронной почты зарегистрированными пользователями при отправлении комментариев';
+$_['ms_config_comments_enforce_customer_data'] = 'РћР±СЏР·С‹РІР°С‚СЊ РІРїРёСЃС‹РІР°РЅРёРµ РЅР°СЃС‚РѕСЏС‰РёС… РґР°РЅРЅС‹С…';
+$_['ms_config_comments_enforce_customer_data_note'] = 'Р­С‚Р° РЅР°СЃС‚СЂРѕР№РєР° РїСЂРµРґРѕС‚РІСЂР°С‰Р°РµС‚ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ С‡СѓР¶РёС… РёРјРµРЅ/Р°РґСЂРµСЃРѕРІ СЌР»РµРєС‚СЂРѕРЅРЅРѕР№ РїРѕС‡С‚С‹ Р·Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°РЅРЅС‹РјРё РїРѕР»СЊР·РѕРІР°С‚РµР»СЏРјРё РїСЂРё РѕС‚РїСЂР°РІР»РµРЅРёРё РєРѕРјРјРµРЅС‚Р°СЂРёРµРІ';
 
-$_['ms_config_comments_enable_customer_captcha'] = 'Включить проверку по изображению CAPTCHA';
-$_['ms_config_comments_enable_customer_captcha_note'] = 'Включить проверку по изображению CAPTCHA для зарегистрированных пользователей во время отправления комментариев';
+$_['ms_config_comments_enable_customer_captcha'] = 'Р’РєР»СЋС‡РёС‚СЊ РїСЂРѕРІРµСЂРєСѓ РїРѕ РёР·РѕР±СЂР°Р¶РµРЅРёСЋ CAPTCHA';
+$_['ms_config_comments_enable_customer_captcha_note'] = 'Р’РєР»СЋС‡РёС‚СЊ РїСЂРѕРІРµСЂРєСѓ РїРѕ РёР·РѕР±СЂР°Р¶РµРЅРёСЋ CAPTCHA РґР»СЏ Р·Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°РЅРЅС‹С… РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№ РІРѕ РІСЂРµРјСЏ РѕС‚РїСЂР°РІР»РµРЅРёСЏ РєРѕРјРјРµРЅС‚Р°СЂРёРµРІ';
 
-$_['ms_config_comments_maxlen'] = 'Максимальная длина комментариев';
-$_['ms_config_comments_maxlen_note'] = 'Максимальная длина для комментариев в магазине';
+$_['ms_config_comments_maxlen'] = 'РњР°РєСЃРёРјР°Р»СЊРЅР°СЏ РґР»РёРЅР° РєРѕРјРјРµРЅС‚Р°СЂРёРµРІ';
+$_['ms_config_comments_maxlen_note'] = 'РњР°РєСЃРёРјР°Р»СЊРЅР°СЏ РґР»РёРЅР° РґР»СЏ РєРѕРјРјРµРЅС‚Р°СЂРёРµРІ РІ РјР°РіР°Р·РёРЅРµ';
 
-$_['ms_config_graphical_sellermenu'] = 'Графическое меню продавца';
-$_['ms_config_graphical_sellermenu_note'] = 'Включить/выключить графическое меню продавца';
+$_['ms_config_graphical_sellermenu'] = 'Р“СЂР°С„РёС‡РµСЃРєРѕРµ РјРµРЅСЋ РїСЂРѕРґР°РІС†Р°';
+$_['ms_config_graphical_sellermenu_note'] = 'Р’РєР»СЋС‡РёС‚СЊ/РІС‹РєР»СЋС‡РёС‚СЊ РіСЂР°С„РёС‡РµСЃРєРѕРµ РјРµРЅСЋ РїСЂРѕРґР°РІС†Р°';
 
-$_['ms_config_carousel'] = 'Лента продавцов';
-$_['ms_config_topsellers'] = 'Топ продавцов';
-$_['ms_config_modules'] = 'Модули';
-$_['ms_config_productform'] = 'Форма продукта';
-$_['ms_config_finances'] = 'Финансы';
-$_['ms_config_newsellers'] = 'Новые продавцы';
-$_['ms_config_sellerdropdown'] = 'Выпадающий список продавцов';
-$_['ms_config_comments'] = 'Комментарии';
+$_['ms_config_carousel'] = 'Р›РµРЅС‚Р° РїСЂРѕРґР°РІС†РѕРІ';
+$_['ms_config_topsellers'] = 'РўРѕРї РїСЂРѕРґР°РІС†РѕРІ';
+$_['ms_config_modules'] = 'РњРѕРґСѓР»Рё';
+$_['ms_config_productform'] = 'Р¤РѕСЂРјР° РїСЂРѕРґСѓРєС‚Р°';
+$_['ms_config_finances'] = 'Р¤РёРЅР°РЅСЃС‹';
+$_['ms_config_newsellers'] = 'РќРѕРІС‹Рµ РїСЂРѕРґР°РІС†С‹';
+$_['ms_config_sellerdropdown'] = 'Р’С‹РїР°РґР°СЋС‰РёР№ СЃРїРёСЃРѕРє РїСЂРѕРґР°РІС†РѕРІ';
+$_['ms_config_comments'] = 'РљРѕРјРјРµРЅС‚Р°СЂРёРё';
 
-$_['ms_config_module'] = 'Модули';
-$_['ms_config_status'] = 'Статус';
-$_['ms_config_top'] = 'Наверху';
-$_['ms_config_bottom'] = 'Внизу';
-$_['ms_config_column_left'] = 'Левая Колонка';
-$_['ms_config_column_right'] = 'Правая Колонка';
-$_['ms_config_limit'] = 'Лимит:';
-$_['ms_config_scroll'] = 'Прокрутка:';
-$_['ms_config_image'] = 'Изображение (Ширина x Высота):';
-$_['ms_config_layout'] = 'Расположение:';
-$_['ms_config_position'] = 'Позиция:';
-$_['ms_config_sort_order'] = 'Порядок сортировки:';
+$_['ms_config_module'] = 'РњРѕРґСѓР»Рё';
+$_['ms_config_status'] = 'РЎС‚Р°С‚СѓСЃ';
+$_['ms_config_top'] = 'РќР°РІРµСЂС…Сѓ';
+$_['ms_config_bottom'] = 'Р’РЅРёР·Сѓ';
+$_['ms_config_column_left'] = 'Р›РµРІР°СЏ РљРѕР»РѕРЅРєР°';
+$_['ms_config_column_right'] = 'РџСЂР°РІР°СЏ РљРѕР»РѕРЅРєР°';
+$_['ms_config_limit'] = 'Р›РёРјРёС‚:';
+$_['ms_config_scroll'] = 'РџСЂРѕРєСЂСѓС‚РєР°:';
+$_['ms_config_image'] = 'РР·РѕР±СЂР°Р¶РµРЅРёРµ (РЁРёСЂРёРЅР° x Р’С‹СЃРѕС‚Р°):';
+$_['ms_config_layout'] = 'Р Р°СЃРїРѕР»РѕР¶РµРЅРёРµ:';
+$_['ms_config_position'] = 'РџРѕР·РёС†РёСЏ:';
+$_['ms_config_sort_order'] = 'РџРѕСЂСЏРґРѕРє СЃРѕСЂС‚РёСЂРѕРІРєРё:';
 
 // Seller - List
-$_['ms_catalog_sellers_heading'] = 'Продавцы';
-$_['ms_catalog_sellers_breadcrumbs'] = 'Продавцы';
-$_['ms_catalog_sellers_newseller'] = 'Новый продавец';
-$_['ms_catalog_sellers_create'] = 'Создать нового продавца';
+$_['ms_catalog_sellers_heading'] = 'РџСЂРѕРґР°РІС†С‹';
+$_['ms_catalog_sellers_breadcrumbs'] = 'РџСЂРѕРґР°РІС†С‹';
+$_['ms_catalog_sellers_newseller'] = 'РќРѕРІС‹Р№ РїСЂРѕРґР°РІРµС†';
+$_['ms_catalog_sellers_create'] = 'РЎРѕР·РґР°С‚СЊ РЅРѕРІРѕРіРѕ РїСЂРѕРґР°РІС†Р°';
 
-$_['ms_catalog_sellers_total_balance'] = 'Суммарный баланс: <b>%s</b> (активные продавцы: <b>%s</b>)';
-$_['ms_catalog_sellers_email'] = 'Адрес электронной почты';
-$_['ms_catalog_sellers_total_products'] = 'Продукты';
-$_['ms_catalog_sellers_total_sales'] = 'Продажи';
-$_['ms_catalog_sellers_total_earnings'] = 'Доходы';
-$_['ms_catalog_sellers_current_balance'] = 'Баланс';
-$_['ms_catalog_sellers_status'] = 'Статус';
-$_['ms_catalog_sellers_date_created'] = 'Дата создания';
-$_['ms_catalog_sellers_balance_paypal'] = 'Выплата баланса через PayPal';
+$_['ms_catalog_sellers_total_balance'] = 'РЎСѓРјРјР°СЂРЅС‹Р№ Р±Р°Р»Р°РЅСЃ: <b>%s</b> (Р°РєС‚РёРІРЅС‹Рµ РїСЂРѕРґР°РІС†С‹: <b>%s</b>)';
+$_['ms_catalog_sellers_email'] = 'РђРґСЂРµСЃ СЌР»РµРєС‚СЂРѕРЅРЅРѕР№ РїРѕС‡С‚С‹';
+$_['ms_catalog_sellers_total_products'] = 'РџСЂРѕРґСѓРєС‚С‹';
+$_['ms_catalog_sellers_total_sales'] = 'РџСЂРѕРґР°Р¶Рё';
+$_['ms_catalog_sellers_total_earnings'] = 'Р”РѕС…РѕРґС‹';
+$_['ms_catalog_sellers_current_balance'] = 'Р‘Р°Р»Р°РЅСЃ';
+$_['ms_catalog_sellers_status'] = 'РЎС‚Р°С‚СѓСЃ';
+$_['ms_catalog_sellers_date_created'] = 'Р”Р°С‚Р° СЃРѕР·РґР°РЅРёСЏ';
+$_['ms_catalog_sellers_balance_paypal'] = 'Р’С‹РїР»Р°С‚Р° Р±Р°Р»Р°РЅСЃР° С‡РµСЂРµР· PayPal';
 
-$_['ms_seller_status_' . MsSeller::STATUS_ACTIVE] = 'Активен';
-$_['ms_seller_status_' . MsSeller::STATUS_INACTIVE] = 'Неактивен';
-$_['ms_seller_status_' . MsSeller::STATUS_DISABLED] = 'Деактивирован';
-$_['ms_seller_status_' . MsSeller::STATUS_DELETED] = 'Удален';
-$_['ms_seller_status_' . MsSeller::STATUS_UNPAID] = 'Регистрационная плата не уплачена';
+$_['ms_seller_status_' . MsSeller::STATUS_ACTIVE] = 'РђРєС‚РёРІРµРЅ';
+$_['ms_seller_status_' . MsSeller::STATUS_INACTIVE] = 'РќРµР°РєС‚РёРІРµРЅ';
+$_['ms_seller_status_' . MsSeller::STATUS_DISABLED] = 'Р”РµР°РєС‚РёРІРёСЂРѕРІР°РЅ';
+$_['ms_seller_status_' . MsSeller::STATUS_DELETED] = 'РЈРґР°Р»РµРЅ';
+$_['ms_seller_status_' . MsSeller::STATUS_UNPAID] = 'Р РµРіРёСЃС‚СЂР°С†РёРѕРЅРЅР°СЏ РїР»Р°С‚Р° РЅРµ СѓРїР»Р°С‡РµРЅР°';
 
 // Customer-seller form
-$_['ms_catalog_sellerinfo_heading'] = 'Продавец';
-$_['ms_catalog_sellerinfo_seller_data'] = 'Данные продавца';
+$_['ms_catalog_sellerinfo_heading'] = 'РџСЂРѕРґР°РІРµС†';
+$_['ms_catalog_sellerinfo_seller_data'] = 'Р”Р°РЅРЅС‹Рµ РїСЂРѕРґР°РІС†Р°';
 
-$_['ms_catalog_sellerinfo_customer'] = 'Пользователь';
-$_['ms_catalog_sellerinfo_customer_data'] = 'Данные пользователя';
-$_['ms_catalog_sellerinfo_customer_new'] = 'Новый пользователь';
-$_['ms_catalog_sellerinfo_customer_existing'] = 'Существующий пользователь';
-$_['ms_catalog_sellerinfo_customer_create_new'] = 'Создать нового пользователя';
-$_['ms_catalog_sellerinfo_customer_firstname'] = 'Имя';
-$_['ms_catalog_sellerinfo_customer_lastname'] = 'Фамилия';
-$_['ms_catalog_sellerinfo_customer_email'] = 'Адрес электронной почты';
-$_['ms_catalog_sellerinfo_customer_password'] = 'Пароль';
-$_['ms_catalog_sellerinfo_customer_password_confirm'] = 'Подтвердите пароль';
+$_['ms_catalog_sellerinfo_customer'] = 'РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ';
+$_['ms_catalog_sellerinfo_customer_data'] = 'Р”Р°РЅРЅС‹Рµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ';
+$_['ms_catalog_sellerinfo_customer_new'] = 'РќРѕРІС‹Р№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ';
+$_['ms_catalog_sellerinfo_customer_existing'] = 'РЎСѓС‰РµСЃС‚РІСѓСЋС‰РёР№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ';
+$_['ms_catalog_sellerinfo_customer_create_new'] = 'РЎРѕР·РґР°С‚СЊ РЅРѕРІРѕРіРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ';
+$_['ms_catalog_sellerinfo_customer_firstname'] = 'РРјСЏ';
+$_['ms_catalog_sellerinfo_customer_lastname'] = 'Р¤Р°РјРёР»РёСЏ';
+$_['ms_catalog_sellerinfo_customer_email'] = 'РђРґСЂРµСЃ СЌР»РµРєС‚СЂРѕРЅРЅРѕР№ РїРѕС‡С‚С‹';
+$_['ms_catalog_sellerinfo_customer_password'] = 'РџР°СЂРѕР»СЊ';
+$_['ms_catalog_sellerinfo_customer_password_confirm'] = 'РџРѕРґС‚РІРµСЂРґРёС‚Рµ РїР°СЂРѕР»СЊ';
 
-$_['ms_catalog_sellerinfo_nickname'] = 'Имя пользователя';
-$_['ms_catalog_sellerinfo_description'] = 'Описание';
-$_['ms_catalog_sellerinfo_company'] = 'Компания';
-$_['ms_catalog_sellerinfo_country'] = 'Страна';
-$_['ms_catalog_sellerinfo_sellergroup'] = 'Группы продавца';
+$_['ms_catalog_sellerinfo_nickname'] = 'РРјСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ';
+$_['ms_catalog_sellerinfo_description'] = 'РћРїРёСЃР°РЅРёРµ';
+$_['ms_catalog_sellerinfo_company'] = 'РљРѕРјРїР°РЅРёСЏ';
+$_['ms_catalog_sellerinfo_country'] = 'РЎС‚СЂР°РЅР°';
+$_['ms_catalog_sellerinfo_sellergroup'] = 'Р“СЂСѓРїРїС‹ РїСЂРѕРґР°РІС†Р°';
 
-$_['ms_catalog_sellerinfo_country_dont_display'] = 'Не показывать страну';
-$_['ms_catalog_sellerinfo_avatar'] = 'Аватар';
+$_['ms_catalog_sellerinfo_country_dont_display'] = 'РќРµ РїРѕРєР°Р·С‹РІР°С‚СЊ СЃС‚СЂР°РЅСѓ';
+$_['ms_catalog_sellerinfo_avatar'] = 'РђРІР°С‚Р°СЂ';
 $_['ms_catalog_sellerinfo_paypal'] = 'PayPal';
-$_['ms_catalog_sellerinfo_message'] = 'Сообщещние';
-$_['ms_catalog_sellerinfo_message_note'] = 'Будет добавлено к тексту электронных писем по умолчанию';
-$_['ms_catalog_sellerinfo_notify'] = 'Оповещать продавца посредством электронной почты';
-$_['ms_catalog_sellerinfo_product_validation'] = 'Утверждение продуктов';
-$_['ms_catalog_sellerinfo_product_validation_note'] = 'Утверждение (валидация) продуктов для данного продавца';
+$_['ms_catalog_sellerinfo_message'] = 'РЎРѕРѕР±С‰РµС‰РЅРёРµ';
+$_['ms_catalog_sellerinfo_message_note'] = 'Р‘СѓРґРµС‚ РґРѕР±Р°РІР»РµРЅРѕ Рє С‚РµРєСЃС‚Сѓ СЌР»РµРєС‚СЂРѕРЅРЅС‹С… РїРёСЃРµРј РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ';
+$_['ms_catalog_sellerinfo_notify'] = 'РћРїРѕРІРµС‰Р°С‚СЊ РїСЂРѕРґР°РІС†Р° РїРѕСЃСЂРµРґСЃС‚РІРѕРј СЌР»РµРєС‚СЂРѕРЅРЅРѕР№ РїРѕС‡С‚С‹';
+$_['ms_catalog_sellerinfo_product_validation'] = 'РЈС‚РІРµСЂР¶РґРµРЅРёРµ РїСЂРѕРґСѓРєС‚РѕРІ';
+$_['ms_catalog_sellerinfo_product_validation_note'] = 'РЈС‚РІРµСЂР¶РґРµРЅРёРµ (РІР°Р»РёРґР°С†РёСЏ) РїСЂРѕРґСѓРєС‚РѕРІ РґР»СЏ РґР°РЅРЅРѕРіРѕ РїСЂРѕРґР°РІС†Р°';
 
-$_['ms_error_sellerinfo_nickname_empty'] = 'Имя пользователя не может оставаться пустым';
-$_['ms_error_sellerinfo_nickname_alphanumeric'] = 'Имя пользователя может содержать только буквы латинского алфавита и цифры';
-$_['ms_error_sellerinfo_nickname_utf8'] = 'Имя пользователя может содержать только печатные символы кодировки UTF-8';
-$_['ms_error_sellerinfo_nickname_latin'] = 'Имя пользователя может содержать только буквы латинского алфавита, числа и буквы с диакритическими знаками';
-$_['ms_error_sellerinfo_nickname_length'] = 'Имя пользователя должно содержать от 4 до 50 символов';
-$_['ms_error_sellerinfo_nickname_taken'] = 'Данное имя пользователя уже занято';
+$_['ms_error_sellerinfo_nickname_empty'] = 'РРјСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅРµ РјРѕР¶РµС‚ РѕСЃС‚Р°РІР°С‚СЊСЃСЏ РїСѓСЃС‚С‹Рј';
+$_['ms_error_sellerinfo_nickname_alphanumeric'] = 'РРјСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РјРѕР¶РµС‚ СЃРѕРґРµСЂР¶Р°С‚СЊ С‚РѕР»СЊРєРѕ Р±СѓРєРІС‹ Р»Р°С‚РёРЅСЃРєРѕРіРѕ Р°Р»С„Р°РІРёС‚Р° Рё С†РёС„СЂС‹';
+$_['ms_error_sellerinfo_nickname_utf8'] = 'РРјСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РјРѕР¶РµС‚ СЃРѕРґРµСЂР¶Р°С‚СЊ С‚РѕР»СЊРєРѕ РїРµС‡Р°С‚РЅС‹Рµ СЃРёРјРІРѕР»С‹ РєРѕРґРёСЂРѕРІРєРё UTF-8';
+$_['ms_error_sellerinfo_nickname_latin'] = 'РРјСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РјРѕР¶РµС‚ СЃРѕРґРµСЂР¶Р°С‚СЊ С‚РѕР»СЊРєРѕ Р±СѓРєРІС‹ Р»Р°С‚РёРЅСЃРєРѕРіРѕ Р°Р»С„Р°РІРёС‚Р°, С‡РёСЃР»Р° Рё Р±СѓРєРІС‹ СЃ РґРёР°РєСЂРёС‚РёС‡РµСЃРєРёРјРё Р·РЅР°РєР°РјРё';
+$_['ms_error_sellerinfo_nickname_length'] = 'РРјСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РґРѕР»Р¶РЅРѕ СЃРѕРґРµСЂР¶Р°С‚СЊ РѕС‚ 4 РґРѕ 50 СЃРёРјРІРѕР»РѕРІ';
+$_['ms_error_sellerinfo_nickname_taken'] = 'Р”Р°РЅРЅРѕРµ РёРјСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ СѓР¶Рµ Р·Р°РЅСЏС‚Рѕ';
 
 // Catalog - Products
-$_['ms_catalog_products_heading'] = 'Продукты';
-$_['ms_catalog_products_breadcrumbs'] = 'Продукты';
-$_['ms_catalog_products_notify_sellers'] = 'Оповестить Продавцов';
+$_['ms_catalog_products_heading'] = 'РџСЂРѕРґСѓРєС‚С‹';
+$_['ms_catalog_products_breadcrumbs'] = 'РџСЂРѕРґСѓРєС‚С‹';
+$_['ms_catalog_products_notify_sellers'] = 'РћРїРѕРІРµСЃС‚РёС‚СЊ РџСЂРѕРґР°РІС†РѕРІ';
 
-$_['ms_product_status_' . MsProduct::STATUS_ACTIVE] = 'Активен';
-$_['ms_product_status_' . MsProduct::STATUS_INACTIVE] = 'Неактивен';
-$_['ms_product_status_' . MsProduct::STATUS_DISABLED] = 'Деактивирован';
-$_['ms_product_status_' . MsProduct::STATUS_DELETED] = 'Удален';
-$_['ms_product_status_' . MsProduct::STATUS_UNPAID] = 'Плата за публикацию продукта не уплачена';
+$_['ms_product_status_' . MsProduct::STATUS_ACTIVE] = 'РђРєС‚РёРІРµРЅ';
+$_['ms_product_status_' . MsProduct::STATUS_INACTIVE] = 'РќРµР°РєС‚РёРІРµРЅ';
+$_['ms_product_status_' . MsProduct::STATUS_DISABLED] = 'Р”РµР°РєС‚РёРІРёСЂРѕРІР°РЅ';
+$_['ms_product_status_' . MsProduct::STATUS_DELETED] = 'РЈРґР°Р»РµРЅ';
+$_['ms_product_status_' . MsProduct::STATUS_UNPAID] = 'РџР»Р°С‚Р° Р·Р° РїСѓР±Р»РёРєР°С†РёСЋ РїСЂРѕРґСѓРєС‚Р° РЅРµ СѓРїР»Р°С‡РµРЅР°';
 
 // Catalog - Seller Groups
-$_['ms_catalog_seller_groups_heading'] = 'Группы Продавцов';
-$_['ms_catalog_seller_groups_breadcrumbs'] = 'Группы Продавцов';
+$_['ms_catalog_seller_groups_heading'] = 'Р“СЂСѓРїРїС‹ РџСЂРѕРґР°РІС†РѕРІ';
+$_['ms_catalog_seller_groups_breadcrumbs'] = 'Р“СЂСѓРїРїС‹ РџСЂРѕРґР°РІС†РѕРІ';
 
 $_['ms_seller_groups_column_id'] = 'ID';
-$_['ms_seller_groups_column_name'] = 'Имя';
-$_['ms_seller_groups_column_action'] = 'Действия';
+$_['ms_seller_groups_column_name'] = 'РРјСЏ';
+$_['ms_seller_groups_column_action'] = 'Р”РµР№СЃС‚РІРёСЏ';
 
-$_['ms_catalog_insert_seller_group_heading'] = 'Новая Группа Продавцов';
-$_['ms_catalog_edit_seller_group_heading'] = 'Редактировать Группу Продавцов';
+$_['ms_catalog_insert_seller_group_heading'] = 'РќРѕРІР°СЏ Р“СЂСѓРїРїР° РџСЂРѕРґР°РІС†РѕРІ';
+$_['ms_catalog_edit_seller_group_heading'] = 'Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ Р“СЂСѓРїРїСѓ РџСЂРѕРґР°РІС†РѕРІ';
 
-$_['ms_error_seller_group_name'] = 'Ошибка: Имя должно содержать от 3 до 32 символов';
-$_['ms_error_seller_group_default'] = 'Ошибка: Группа продавцов по умолчанию не может быть удалена!';
-$_['ms_success_seller_group_created'] = 'Группа продавцов создана';
-$_['ms_success_seller_group_updated'] = 'Группа продавцов отредактирована';
+$_['ms_error_seller_group_name'] = 'РћС€РёР±РєР°: РРјСЏ РґРѕР»Р¶РЅРѕ СЃРѕРґРµСЂР¶Р°С‚СЊ РѕС‚ 3 РґРѕ 32 СЃРёРјРІРѕР»РѕРІ';
+$_['ms_error_seller_group_default'] = 'РћС€РёР±РєР°: Р“СЂСѓРїРїР° РїСЂРѕРґР°РІС†РѕРІ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ СѓРґР°Р»РµРЅР°!';
+$_['ms_success_seller_group_created'] = 'Р“СЂСѓРїРїР° РїСЂРѕРґР°РІС†РѕРІ СЃРѕР·РґР°РЅР°';
+$_['ms_success_seller_group_updated'] = 'Р“СЂСѓРїРїР° РїСЂРѕРґР°РІС†РѕРІ РѕС‚СЂРµРґР°РєС‚РёСЂРѕРІР°РЅР°';
 
 // Comments
-$_['ms_comments_heading'] = 'Комментарии';
-$_['ms_comments_breadcrumbs'] = 'Комментарии';
-$_['ms_comments_comment'] = 'Комментарий';
-$_['ms_success_comments_deleted'] = 'Комментарии удалены';
+$_['ms_comments_heading'] = 'РљРѕРјРјРµРЅС‚Р°СЂРёРё';
+$_['ms_comments_breadcrumbs'] = 'РљРѕРјРјРµРЅС‚Р°СЂРёРё';
+$_['ms_comments_comment'] = 'РљРѕРјРјРµРЅС‚Р°СЂРёР№';
+$_['ms_success_comments_deleted'] = 'РљРѕРјРјРµРЅС‚Р°СЂРёРё СѓРґР°Р»РµРЅС‹';
 
 // Payments
-$_['ms_payment_heading'] = 'Платежи';
-$_['ms_payment_breadcrumbs'] = 'Платежи';
-$_['ms_payment_payout_requests'] = 'Запросы о выплате';
-$_['ms_payment_payouts'] = 'Ручные выплаты';
-$_['ms_payment_pending'] = 'В ожидании';
-$_['ms_payment_paid'] = 'Оплачены';
-$_['ms_payment_payout_paypal'] = 'Выплата через PayPal';
-$_['ms_payment_mark'] = 'Отметить как оплаченный';
-$_['ms_payment_delete'] = 'Удалить запись выплаты';
+$_['ms_payment_heading'] = 'РџР»Р°С‚РµР¶Рё';
+$_['ms_payment_breadcrumbs'] = 'РџР»Р°С‚РµР¶Рё';
+$_['ms_payment_payout_requests'] = 'Р—Р°РїСЂРѕСЃС‹ Рѕ РІС‹РїР»Р°С‚Рµ';
+$_['ms_payment_payouts'] = 'Р СѓС‡РЅС‹Рµ РІС‹РїР»Р°С‚С‹';
+$_['ms_payment_pending'] = 'Р’ РѕР¶РёРґР°РЅРёРё';
+$_['ms_payment_paid'] = 'РћРїР»Р°С‡РµРЅС‹';
+$_['ms_payment_payout_paypal'] = 'Р’С‹РїР»Р°С‚Р° С‡РµСЂРµР· PayPal';
+$_['ms_payment_mark'] = 'РћС‚РјРµС‚РёС‚СЊ РєР°Рє РѕРїР»Р°С‡РµРЅРЅС‹Р№';
+$_['ms_payment_delete'] = 'РЈРґР°Р»РёС‚СЊ Р·Р°РїРёСЃСЊ РІС‹РїР»Р°С‚С‹';
 
-$_['ms_payment_type_' . MsPayment::TYPE_SIGNUP] = 'Регистрационная плата';
-$_['ms_payment_type_' . MsPayment::TYPE_LISTING] = 'Плата за публикацию';
-$_['ms_payment_type_' . MsPayment::TYPE_PAYOUT] = 'Ручная выплата';
-$_['ms_payment_type_' . MsPayment::TYPE_PAYOUT_REQUEST] = 'Запрос о выплате';
-$_['ms_payment_type_' . MsPayment::TYPE_RECURRING] = 'Периодический платеж';
+$_['ms_payment_type_' . MsPayment::TYPE_SIGNUP] = 'Р РµРіРёСЃС‚СЂР°С†РёРѕРЅРЅР°СЏ РїР»Р°С‚Р°';
+$_['ms_payment_type_' . MsPayment::TYPE_LISTING] = 'РџР»Р°С‚Р° Р·Р° РїСѓР±Р»РёРєР°С†РёСЋ';
+$_['ms_payment_type_' . MsPayment::TYPE_PAYOUT] = 'Р СѓС‡РЅР°СЏ РІС‹РїР»Р°С‚Р°';
+$_['ms_payment_type_' . MsPayment::TYPE_PAYOUT_REQUEST] = 'Р—Р°РїСЂРѕСЃ Рѕ РІС‹РїР»Р°С‚Рµ';
+$_['ms_payment_type_' . MsPayment::TYPE_RECURRING] = 'РџРµСЂРёРѕРґРёС‡РµСЃРєРёР№ РїР»Р°С‚РµР¶';
 
-$_['ms_payment_status_' . MsPayment::STATUS_UNPAID] = 'Не оплачено';
-$_['ms_payment_status_' . MsPayment::STATUS_PAID] = 'Оплачено';
+$_['ms_payment_status_' . MsPayment::STATUS_UNPAID] = 'РќРµ РѕРїР»Р°С‡РµРЅРѕ';
+$_['ms_payment_status_' . MsPayment::STATUS_PAID] = 'РћРїР»Р°С‡РµРЅРѕ';
 
 // Finances - Transactions
-$_['ms_transactions_heading'] = 'Транзакции';
-$_['ms_transactions_breadcrumbs'] = 'Транзакции';
-$_['ms_transactions_new'] = 'Новая транзакция';
+$_['ms_transactions_heading'] = 'РўСЂР°РЅР·Р°РєС†РёРё';
+$_['ms_transactions_breadcrumbs'] = 'РўСЂР°РЅР·Р°РєС†РёРё';
+$_['ms_transactions_new'] = 'РќРѕРІР°СЏ С‚СЂР°РЅР·Р°РєС†РёСЏ';
 
-$_['ms_error_transaction_fromto'] = 'Пожалуйста, задайте как минимум источник или назначение транзакции';
-$_['ms_error_transaction_fromto_same'] = 'Источник и назначение транзакции не могут совпадать';
-$_['ms_error_transaction_amount'] = 'Пожалуйста, задайте действительную положительную сумму';
-$_['ms_success_transaction_created'] = 'Транзакция успешно создана';
+$_['ms_error_transaction_fromto'] = 'РџРѕР¶Р°Р»СѓР№СЃС‚Р°, Р·Р°РґР°Р№С‚Рµ РєР°Рє РјРёРЅРёРјСѓРј РёСЃС‚РѕС‡РЅРёРє РёР»Рё РЅР°Р·РЅР°С‡РµРЅРёРµ С‚СЂР°РЅР·Р°РєС†РёРё';
+$_['ms_error_transaction_fromto_same'] = 'РСЃС‚РѕС‡РЅРёРє Рё РЅР°Р·РЅР°С‡РµРЅРёРµ С‚СЂР°РЅР·Р°РєС†РёРё РЅРµ РјРѕРіСѓС‚ СЃРѕРІРїР°РґР°С‚СЊ';
+$_['ms_error_transaction_amount'] = 'РџРѕР¶Р°Р»СѓР№СЃС‚Р°, Р·Р°РґР°Р№С‚Рµ РґРµР№СЃС‚РІРёС‚РµР»СЊРЅСѓСЋ РїРѕР»РѕР¶РёС‚РµР»СЊРЅСѓСЋ СЃСѓРјРјСѓ';
+$_['ms_success_transaction_created'] = 'РўСЂР°РЅР·Р°РєС†РёСЏ СѓСЃРїРµС€РЅРѕ СЃРѕР·РґР°РЅР°';
 
-$_['button_cancel'] = 'Отменить';
-$_['button_save'] = 'Сохранить';
-$_['ms_action'] = 'Действие';
+$_['button_cancel'] = 'РћС‚РјРµРЅРёС‚СЊ';
+$_['button_save'] = 'РЎРѕС…СЂР°РЅРёС‚СЊ';
+$_['ms_action'] = 'Р”РµР№СЃС‚РІРёРµ';
 
 // Attributes
-$_['ms_attribute_heading'] = 'Аттрибуты';
-$_['ms_attribute_breadcrumbs'] = 'Аттрибуты';
-$_['ms_attribute_create'] = 'Новый аттрибут';
-$_['ms_attribute_edit'] = 'Редактировать аттрибут';
-$_['ms_attribute_value'] = 'Значение аттрибута';
-$_['ms_attribute_text_type'] = 'Текстовое поле';
-$_['ms_attribute_normal'] = 'Обычный текст';
-$_['ms_attribute_multilang'] = 'Зависимый от языка текст';
-$_['ms_attribute_number'] = 'Число';
-$_['ms_attribute_required'] = 'Обязательно к заполнению';
-$_['ms_add_attribute_value'] = 'Новое значение аттрибута';
-$_['ms_error_attribute_name'] = 'Аттрибут должен содержать от 1 до 128 символов';
-$_['ms_error_attribute_type'] = 'Данному типу аттрибута требуются значения аттрибута';
-$_['ms_error_attribute_value_name'] = 'Значение имени аттрибута должно содержать от 1 до 128 символов';
-$_['ms_success_attribute_created'] = 'Аттрибут успешно создан';
-$_['ms_success_attribute_updated'] = 'Аттрибут успешно отредактирован';
+$_['ms_attribute_heading'] = 'РђС‚С‚СЂРёР±СѓС‚С‹';
+$_['ms_attribute_breadcrumbs'] = 'РђС‚С‚СЂРёР±СѓС‚С‹';
+$_['ms_attribute_create'] = 'РќРѕРІС‹Р№ Р°С‚С‚СЂРёР±СѓС‚';
+$_['ms_attribute_edit'] = 'Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ Р°С‚С‚СЂРёР±СѓС‚';
+$_['ms_attribute_value'] = 'Р—РЅР°С‡РµРЅРёРµ Р°С‚С‚СЂРёР±СѓС‚Р°';
+$_['ms_attribute_text_type'] = 'РўРµРєСЃС‚РѕРІРѕРµ РїРѕР»Рµ';
+$_['ms_attribute_normal'] = 'РћР±С‹С‡РЅС‹Р№ С‚РµРєСЃС‚';
+$_['ms_attribute_multilang'] = 'Р—Р°РІРёСЃРёРјС‹Р№ РѕС‚ СЏР·С‹РєР° С‚РµРєСЃС‚';
+$_['ms_attribute_number'] = 'Р§РёСЃР»Рѕ';
+$_['ms_attribute_required'] = 'РћР±СЏР·Р°С‚РµР»СЊРЅРѕ Рє Р·Р°РїРѕР»РЅРµРЅРёСЋ';
+$_['ms_add_attribute_value'] = 'РќРѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ Р°С‚С‚СЂРёР±СѓС‚Р°';
+$_['ms_error_attribute_name'] = 'РђС‚С‚СЂРёР±СѓС‚ РґРѕР»Р¶РµРЅ СЃРѕРґРµСЂР¶Р°С‚СЊ РѕС‚ 1 РґРѕ 128 СЃРёРјРІРѕР»РѕРІ';
+$_['ms_error_attribute_type'] = 'Р”Р°РЅРЅРѕРјСѓ С‚РёРїСѓ Р°С‚С‚СЂРёР±СѓС‚Р° С‚СЂРµР±СѓСЋС‚СЃСЏ Р·РЅР°С‡РµРЅРёСЏ Р°С‚С‚СЂРёР±СѓС‚Р°';
+$_['ms_error_attribute_value_name'] = 'Р—РЅР°С‡РµРЅРёРµ РёРјРµРЅРё Р°С‚С‚СЂРёР±СѓС‚Р° РґРѕР»Р¶РЅРѕ СЃРѕРґРµСЂР¶Р°С‚СЊ РѕС‚ 1 РґРѕ 128 СЃРёРјРІРѕР»РѕРІ';
+$_['ms_success_attribute_created'] = 'РђС‚С‚СЂРёР±СѓС‚ СѓСЃРїРµС€РЅРѕ СЃРѕР·РґР°РЅ';
+$_['ms_success_attribute_updated'] = 'РђС‚С‚СЂРёР±СѓС‚ СѓСЃРїРµС€РЅРѕ РѕС‚СЂРµРґР°РєС‚РёСЂРѕРІР°РЅ';
 
-$_['button_cancel'] = 'Отменить';
-$_['button_save'] = 'Сохранить';
-$_['ms_action'] = 'Действие';
+$_['button_cancel'] = 'РћС‚РјРµРЅРёС‚СЊ';
+$_['button_save'] = 'РЎРѕС…СЂР°РЅРёС‚СЊ';
+$_['ms_action'] = 'Р”РµР№СЃС‚РІРёРµ';
 
 // Mails
-$_['ms_mail_greeting'] = "Здравствуйте %s,\n\n";
-$_['ms_mail_ending'] = "\n\nС уважением,\n%s";
-$_['ms_mail_message'] = "\n\nСообщение:\n%s";
+$_['ms_mail_greeting'] = "Р—РґСЂР°РІСЃС‚РІСѓР№С‚Рµ %s,\n\n";
+$_['ms_mail_ending'] = "\n\nРЎ СѓРІР°Р¶РµРЅРёРµРј,\n%s";
+$_['ms_mail_message'] = "\n\nРЎРѕРѕР±С‰РµРЅРёРµ:\n%s";
 
-$_['ms_mail_subject_seller_account_modified'] = 'Учетная запись продавца отредактирована';
+$_['ms_mail_subject_seller_account_modified'] = 'РЈС‡РµС‚РЅР°СЏ Р·Р°РїРёСЃСЊ РїСЂРѕРґР°РІС†Р° РѕС‚СЂРµРґР°РєС‚РёСЂРѕРІР°РЅР°';
 $_['ms_mail_seller_account_modified'] = <<<EOT
-Ваша учетная запись продавца в магазине %s была отредактирована администрацией.
+Р’Р°С€Р° СѓС‡РµС‚РЅР°СЏ Р·Р°РїРёСЃСЊ РїСЂРѕРґР°РІС†Р° РІ РјР°РіР°Р·РёРЅРµ %s Р±С‹Р»Р° РѕС‚СЂРµРґР°РєС‚РёСЂРѕРІР°РЅР° Р°РґРјРёРЅРёСЃС‚СЂР°С†РёРµР№.
 
-Статус учетной записи: %s
+РЎС‚Р°С‚СѓСЃ СѓС‡РµС‚РЅРѕР№ Р·Р°РїРёСЃРё: %s
 EOT;
 
-$_['ms_mail_subject_product_modified'] = 'Продукт отредактирован';
+$_['ms_mail_subject_product_modified'] = 'РџСЂРѕРґСѓРєС‚ РѕС‚СЂРµРґР°РєС‚РёСЂРѕРІР°РЅ';
 $_['ms_mail_product_modified'] = <<<EOT
-Ваш продукт %s в магазине %s был отредактирован администрацией.
+Р’Р°С€ РїСЂРѕРґСѓРєС‚ %s РІ РјР°РіР°Р·РёРЅРµ %s Р±С‹Р» РѕС‚СЂРµРґР°РєС‚РёСЂРѕРІР°РЅ Р°РґРјРёРЅРёСЃС‚СЂР°С†РёРµР№.
 
-Статус продукта: %s
+РЎС‚Р°С‚СѓСЃ РїСЂРѕРґСѓРєС‚Р°: %s
 EOT;
 
-$_['ms_mail_subject_product_purchased'] = 'Новый заказ';
+$_['ms_mail_subject_product_purchased'] = 'РќРѕРІС‹Р№ Р·Р°РєР°Р·';
 $_['ms_mail_product_purchased'] = <<<EOT
-Ваши продукты были куплены в магазине %s.
+Р’Р°С€Рё РїСЂРѕРґСѓРєС‚С‹ Р±С‹Р»Рё РєСѓРїР»РµРЅС‹ РІ РјР°РіР°Р·РёРЅРµ %s.
 
-Покупатель: %s (%s)
+РџРѕРєСѓРїР°С‚РµР»СЊ: %s (%s)
 
-Продукты:
+РџСЂРѕРґСѓРєС‚С‹:
 %s
-Сумма: %s
+РЎСѓРјРјР°: %s
 EOT;
 
 $_['ms_mail_product_purchased_info'] = <<<EOT
 \n
-Адрес доставки:
+РђРґСЂРµСЃ РґРѕСЃС‚Р°РІРєРё:
 
 %s %s
 %s
@@ -446,13 +446,13 @@ $_['ms_mail_product_purchased_info'] = <<<EOT
 EOT;
 
 // Sales - Mail
-$_['ms_transaction_sale'] = 'Продажа: %s (-%s комиссия)';
-$_['ms_transaction_refund'] = 'Возмещение: %s';
-$_['ms_payment_method'] = 'Метод оплаты';
-$_['ms_payment_method_balance'] = 'Баланс продавца';
+$_['ms_transaction_sale'] = 'РџСЂРѕРґР°Р¶Р°: %s (-%s РєРѕРјРёСЃСЃРёСЏ)';
+$_['ms_transaction_refund'] = 'Р’РѕР·РјРµС‰РµРЅРёРµ: %s';
+$_['ms_payment_method'] = 'РњРµС‚РѕРґ РѕРїР»Р°С‚С‹';
+$_['ms_payment_method_balance'] = 'Р‘Р°Р»Р°РЅСЃ РїСЂРѕРґР°РІС†Р°';
 $_['ms_payment_method_paypal'] = 'PayPal';
-$_['ms_payment_method_inherit'] = 'Наследовать';
-$_['ms_payment_royalty_payout'] = 'Выплата гонорара %s в %s';
-$_['ms_payment_generic'] = 'Платеж #%s в %s';
-$_['ms_payment_completed'] = 'Платеж завершен';
+$_['ms_payment_method_inherit'] = 'РќР°СЃР»РµРґРѕРІР°С‚СЊ';
+$_['ms_payment_royalty_payout'] = 'Р’С‹РїР»Р°С‚Р° РіРѕРЅРѕСЂР°СЂР° %s РІ %s';
+$_['ms_payment_generic'] = 'РџР»Р°С‚РµР¶ #%s РІ %s';
+$_['ms_payment_completed'] = 'РџР»Р°С‚РµР¶ Р·Р°РІРµСЂС€РµРЅ';
 ?>
