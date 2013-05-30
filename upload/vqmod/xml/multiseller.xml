@@ -395,7 +395,7 @@
 		<!-- seller information on product page -->
 		<operation>
 			<search position="before"><![CDATA[
-			<div class="descriptiona">
+			<div class="description">
 			]]></search>
 			<add><![CDATA[
 			<?php if (isset($seller) && !empty($seller)) { ?>
