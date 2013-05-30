@@ -198,7 +198,7 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 		$this->data['payment_data'] = array(
 			'sandbox' => $this->config->get('msconf_paypal_sandbox'),
 			'action' => $this->config->get('msconf_paypal_sandbox') ? "https://www.sandbox.paypal.com/cgi-bin/webscr" : "https://www.paypal.com/cgi-bin/webscr",
-			'business' => $this->config->get('msconf_paypal_address'),
+			'business' => $seller['ms.paypal'],
 			'item_name' => sprintf($this->language->get('ms_payment_royalty_payout'), $seller['name'], $this->config->get('config_name')),
 			'amount' => $amount,
 			'currency_code' => $this->config->get('config_currency'),
@@ -262,7 +262,7 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 			$result['available_balance'] = $this->currency->format($available > 0 ? $available : 0, $this->config->get('config_currency'));
 			 
 		}
-			
+
 		$this->data['sellers'] = $results;
 			
 		$pagination = new Pagination();

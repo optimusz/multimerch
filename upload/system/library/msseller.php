@@ -307,6 +307,7 @@ final class MsSeller extends Model {
 						ms.avatar as 'ms.avatar',
 						ms.country_id as 'ms.country_id',
 						ms.description as 'ms.description',
+						ms.paypal as 'ms.paypal',
 						IFNULL(SUM(mp.number_sold), 0) as 'total_sales'
 				FROM `" . DB_PREFIX . "customer` c
 				INNER JOIN `" . DB_PREFIX . "ms_seller` ms
@@ -346,7 +347,7 @@ final class MsSeller extends Model {
 	
 	public function getTotalEarnings($seller_id, $data = array()) {
 		$sql = "SELECT COALESCE(SUM(amount),0)
-					   - (SELECT COALESCE(SUM(amount),0)
+					   - (SELECT COALESCE(ABS(SUM(amount)),0)
 						  FROM `" . DB_PREFIX . "ms_balance`
 					 	  WHERE seller_id = " . (int)$seller_id . "
 						  AND balance_type = ". MsBalance::MS_BALANCE_TYPE_REFUND
@@ -356,7 +357,7 @@ final class MsSeller extends Model {
 				WHERE seller_id = " . (int)$seller_id . "
 				AND balance_type = ". MsBalance::MS_BALANCE_TYPE_SALE
 				. (isset($data['period_start']) ? " AND DATEDIFF(date_created, '{$data['period_start']}') >= 0" : "");
-
+		
 		$res = $this->db->query($sql);
 		return $res->row['total'];
 	}

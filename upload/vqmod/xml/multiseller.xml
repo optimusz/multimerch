@@ -395,7 +395,7 @@
 		<!-- seller information on product page -->
 		<operation>
 			<search position="before"><![CDATA[
-			<div class="description">
+			<div class="descriptiona">
 			]]></search>
 			<add><![CDATA[
 			<?php if (isset($seller) && !empty($seller)) { ?>
@@ -474,7 +474,7 @@
 			<add><![CDATA[
   				<span><?php echo $text_stock; ?></span> <?php echo $stock; ?><br />
   				<?php foreach ($ms_product_attributes as $attribute) { ?>
-	  				<span><?php echo $attribute['name']; ?></span> <?php echo implode(',',$attribute['values']); ?> <br />
+	  				<span><?php echo $attribute['name']; ?>:</span> <?php if (isset($attribute['values']) && !empty($attribute['values'])) { echo implode(',',$attribute['values']); } ?> <br />
   				<?php } ?>
   				</div>
 			]]></add>
@@ -835,11 +835,12 @@
 		</operation>
 
 		<operation>
-			<search position="before" offset="1"><![CDATA[
+			<search position="before"><![CDATA[
 			<ul class="right"
 			]]></search>
 			<add><![CDATA[
-				<li id="multiseller"><a class="top"><?php echo $ms_menu_multiseller; ?></a>
+				<ul class="left">
+				<li id="multiseller" style="background: url('view/image/split.png') center left no-repeat"><a class="top"><?php echo $ms_menu_multiseller; ?></a>
 					<ul>
 						<li><a href="<?php echo $ms_link_sellers; ?>"><?php echo $ms_menu_sellers; ?></a></li>
 						<li><a href="<?php echo $ms_link_seller_groups; ?>"><?php echo $ms_menu_seller_groups; ?></a></li>
@@ -851,6 +852,7 @@
 						<li><a href="<?php echo $ms_link_settings; ?>"><?php echo $ms_menu_settings; ?></a></li>
 					</ul>
 				</li>
+				</ul>
 			]]></add>
 		</operation>
 	</file>

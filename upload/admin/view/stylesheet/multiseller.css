@@ -44,6 +44,11 @@ table.list td.comment {
 	background-image: url(../image/multiseller/ms-paypal.png);
 }
 
+.ms-button-paypal-bw {
+	background-image: url(../image/multiseller/ms-paypal-bw.png);
+	cursor: default;
+}
+
 .ms-button-mark {
 	background-image: url(../image/multiseller/ms-tick.png);
 }

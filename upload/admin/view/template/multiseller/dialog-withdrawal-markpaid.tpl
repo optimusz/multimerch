@@ -1,4 +1,4 @@
-<p style="text-align: center"><b>Following withdrawal requests will be marked as paid</b></p>
+<p style="text-align: center"><b><?php echo $ms_payment_dialog_markpaid; ?></b></p>
 <table class="list">
   <thead>
     <tr>

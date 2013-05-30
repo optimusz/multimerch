@@ -101,14 +101,16 @@ class ControllerMultisellerPayment extends ControllerMultisellerBase {
 		$json = array();
 		$payment_id = isset($this->request->get['payment_id']) ? $this->request->get['payment_id'] : 0;
 		$payment = $this->MsLoader->MsPayment->getPayments(array('payment_id' => $payment_id, 'single' => 1));
-		
 		if (!$payment || !$payment['amount'] || $payment['amount'] <= 0 || $payment['payment_status'] == MsPayment::STATUS_PAID) return;
 
+		$seller = $this->MsLoader->MsSeller->getSeller($payment['seller_id']);
+		if (!$seller) return;
+		
 		// render paypal form
 		$this->data['payment_data'] = array(
 			'sandbox' => $this->config->get('msconf_paypal_sandbox'),
 			'action' => $this->config->get('msconf_paypal_sandbox') ? "https://www.sandbox.paypal.com/cgi-bin/webscr" : "https://www.paypal.com/cgi-bin/webscr",
-			'business' => $this->config->get('msconf_paypal_address'),
+			'business' => $seller['ms.paypal'],
 			'item_name' => $payment['mpay.description'] ? $payment['mpay.description'] : sprintf($this->language->get('ms_payment_generic'), $payment['payment_id'], $this->config->get('config_name')),
 			'amount' => $this->currency->format($payment['amount'], $this->config->get('config_currency'), '', FALSE),
 			'currency_code' => $this->config->get('config_currency'),

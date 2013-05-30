@@ -143,14 +143,10 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 	
 	public function jxGetFee() {
 		$data = $this->request->get;
-		if (isset($data['price']) && (float)$data['price'] == 0) {
-			if (!is_numeric($data['price'])) {
-				echo $this->currency->format(0, $this->config->get('config_currency')); return;
-			}
-		} else if (!isset($data['price'])) {
-			echo $this->currency->format(0, $this->config->get('config_currency')); return;
-		}
 		
+		if (!isset($data['price']) && !is_numeric($data['price'])) 
+			$data['price'] = 0;
+
 		$rates = $this->MsLoader->MsCommission->calculateCommission(array('seller_id' => $this->customer->getId()));
 		echo $this->currency->format((float)$rates[MsCommission::RATE_LISTING]['flat'] + ((float)$rates[MsCommission::RATE_LISTING]['percent'] * $data['price'] / 100), $this->config->get('config_currency'));
 	}
@@ -787,7 +783,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 			'seller_id' => $seller_id,
 			'product_status' => array(MsProduct::STATUS_ACTIVE, MsProduct::STATUS_INACTIVE, MsProduct::STATUS_DISABLED)
 		));
-		$pagination->page = ($page - 1) * 10;
+		$pagination->page = $page;
 		$pagination->limit = 10;
 		$pagination->text = $this->language->get('text_pagination');
 		$pagination->url = $this->url->link('seller/account-product', 'page={page}', 'SSL');
@@ -884,6 +880,8 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 
 		if (!empty($attributes)) {
 			foreach ($attributes as $attr) {
+				if ($attr['attribute_type'] == MsAttribute::TYPE_RADIO) $attr['required'] = 1;
+				
 				$attr['values'] = $this->MsLoader->MsAttribute->getAttributeValues($attr['attribute_id']);
 				
 				if (empty($attr['values']) && in_array($attr['attribute_type'], array(MsAttribute::TYPE_CHECKBOX, MsAttribute::TYPE_SELECT, MsAttribute::TYPE_RADIO)))
@@ -1008,7 +1006,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
   		$decimal_place = $currencies[$this->config->get('config_currency')]['decimal_place'];
   		$decimal_point = $this->language->get('decimal_point');
   		$thousand_point = $this->language->get('thousand_point');
-		$product['price'] = number_format(round($product['price'], (int)$decimal_place), (int)$decimal_place, $decimal_point, $thousand_point);
+		$product['price'] = number_format(round($product['price'], (int)$decimal_place), (int)$decimal_place, $decimal_point, '');
 		$this->data['product'] = $product;
 		$this->data['product']['category_id'] = $this->MsLoader->MsProduct->getProductCategories($product_id);
 

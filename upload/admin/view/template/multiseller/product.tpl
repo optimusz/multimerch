@@ -19,7 +19,7 @@
       <div class="buttons">
       	<form id="bulk" method="post" enctype="multipart/form-data">
       	<select name="bulk_product_status">
-      		<option>--Bulk status change--</option>
+      		<option><?php echo $ms_catalog_products_bulk; ?></option>
 			<?php foreach ($msProduct->getConstants() as $cname => $cval) { ?>
 				<?php if (strpos($cname, 'STATUS_') !== FALSE) { ?>
 					<option value="<?php echo $cval; ?>"><?php echo $this->language->get('ms_product_status_' . $cval); ?></option>
@@ -63,7 +63,7 @@
               <td><?php echo $product['pd.name']; ?></td>
               <td>
               	<select>
-              		<option value="0">--No seller--</option>
+              		<option value="0"><?php echo $ms_catalog_products_noseller; ?></option>
               		<?php foreach($sellers as $s) { ?>
               		<option value="<?php echo $s['seller_id']; ?>" <?php if ($s['seller_id'] == $product['seller_id']) { ?>selected="selected"<?php } ?>><?php echo $s['ms.nickname']; ?></option>
               		<?php } ?>

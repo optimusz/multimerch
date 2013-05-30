@@ -1,4 +1,4 @@
-<p style="text-align: center"><b>Confirm the following payments</b></p>
+<p style="text-align: center"><b><?php echo $ms_payment_dialog_confirm; ?></b></p>
 <table class="list">
   <thead>
     <tr>
@@ -17,7 +17,7 @@
     <?php } ?>
     <tr>
 		<td class="center" colspan="2">Total</td>
-		<td class="center"><?php echo $total_amount; ?> + PP fee</td>
+		<td class="center"><?php echo $total_amount; ?> <?php echo $ms_payment_dialog_ppfee; ?></td>
     </tr>    
   </tbody>
 </table>

@@ -317,6 +317,8 @@ $_['ms_error_sellerinfo_nickname_taken'] = 'This nickname is already taken';
 $_['ms_catalog_products_heading'] = 'Products';
 $_['ms_catalog_products_breadcrumbs'] = 'Products';
 $_['ms_catalog_products_notify_sellers'] = 'Notify Sellers';
+$_['ms_catalog_products_bulk'] = '--Bulk status change--';
+$_['ms_catalog_products_noseller'] = '--No seller--';
 
 $_['ms_product_status_' . MsProduct::STATUS_ACTIVE] = 'Active';
 $_['ms_product_status_' . MsProduct::STATUS_INACTIVE] = 'Inactive';
@@ -354,8 +356,14 @@ $_['ms_payment_payouts'] = 'Manual payouts';
 $_['ms_payment_pending'] = 'Pending';
 $_['ms_payment_paid'] = 'Paid';
 $_['ms_payment_payout_paypal'] = 'Pay out via PayPal';
+$_['ms_payment_payout_paypal_invalid'] = 'PayPal address not specified or invalid';
 $_['ms_payment_mark'] = 'Mark as paid';
 $_['ms_payment_delete'] = 'Delete payment record';
+$_['ms_payment_confirmation'] = 'Payment Confirmation';
+$_['ms_payment_pay'] = 'Pay!';
+$_['ms_payment_dialog_markpaid'] = 'Following withdrawal requests will be marked as paid';
+$_['ms_payment_dialog_confirm'] = 'Confirm the following payments';
+$_['ms_payment_dialog_ppfee'] = '+ PP fee';
 
 $_['ms_payment_type_' . MsPayment::TYPE_SIGNUP] = 'Signup fee';
 $_['ms_payment_type_' . MsPayment::TYPE_LISTING] = 'Listing fee';

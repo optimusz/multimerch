@@ -117,20 +117,22 @@ class MsOrderData extends Model {
 	}
 	
 	public function getTotalSales($data = array()) {
-		$sql = "SELECT SUM(DISTINCT quantity) as 'total'
-				FROM `" . DB_PREFIX . "ms_order_product_data` mopd
-				INNER JOIN `" . DB_PREFIX . "order_product` op
-					USING(order_id)
-				INNER JOIN `" . DB_PREFIX . "order` o
-					USING(order_id)
-				WHERE 1 = 1"
-				. (isset($data['order_id']) ? " AND mopd.order_id =  " .  (int)$data['order_id'] : '')
-				. (isset($data['seller_id']) ? " AND seller_id =  " .  (int)$data['seller_id'] : '')
-				. (isset($data['product_id']) ? " AND mopd.product_id =  " .  (int)$data['product_id'] : '')
-				. (isset($data['period_start']) ? " AND DATEDIFF(o.date_added, '{$data['period_start']}') >= 0" : "");
+		$sql = "SELECT SUM(quantity) as 'total' FROM (
+					SELECT quantity FROM `" . DB_PREFIX . "ms_order_product_data` mopd
+					LEFT JOIN (SELECT order_id, order_product_id, sum(quantity) as quantity FROM `" . DB_PREFIX . "order_product` op GROUP BY order_product_id) as op
+						USING(order_id)
+					INNER JOIN `" . DB_PREFIX . "order` o
+						USING(order_id)
+					WHERE 1 = 1"
+					. (isset($data['order_id']) ? " AND mopd.order_id =  " .  (int)$data['order_id'] : '')
+					. (isset($data['seller_id']) ? " AND seller_id =  " .  (int)$data['seller_id'] : '')
+					. (isset($data['product_id']) ? " AND mopd.product_id =  " .  (int)$data['product_id'] : '')
+					. (isset($data['period_start']) ? " AND DATEDIFF(o.date_added, '{$data['period_start']}') >= 0" : "")
+					. " AND o.order_status_id IN  (" .  $this->db->escape(implode(',', $this->config->get('msconf_credit_order_statuses'))) . ")"
+					. " GROUP BY order_product_id
+				) t";
 
 		$res = $this->db->query($sql);
-
 		return (int)$res->row['total'];
 	}	
 }

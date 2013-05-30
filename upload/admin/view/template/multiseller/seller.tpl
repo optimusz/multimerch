@@ -58,7 +58,11 @@
               <td><?php echo $seller['date_created']; ?></td>
               <td class="right">
                 <?php if ($this->MsLoader->MsBalance->getSellerBalance($seller['seller_id']) - $this->MsLoader->MsBalance->getReservedSellerFunds($seller['seller_id']) > 0) { ?>
-                <a class="ms-button ms-button-paypal" title="<?php echo $ms_catalog_sellers_balance_paypal; ?>"></a>
+	                <?php if (!empty($seller['ms.paypal']) && filter_var($seller['ms.paypal'], FILTER_VALIDATE_EMAIL)) { ?>
+	                	<a class="ms-button ms-button-paypal" title="<?php echo $ms_catalog_sellers_balance_paypal; ?>"></a>
+	                <?php } else { ?>
+	                	<a class="ms-button ms-button-paypal-bw" title="<?php echo $ms_payment_payout_paypal_invalid; ?>"></a>
+	                <?php } ?>                
                 <?php } ?>
 
                 <a class="ms-button ms-button-edit" href="<?php echo $this->url->link('multiseller/seller/update', 'token=' . $this->session->data['token'] . '&seller_id=' . $seller['seller_id'], 'SSL'); ?>" title="<?php echo $text_edit; ?>"></a>

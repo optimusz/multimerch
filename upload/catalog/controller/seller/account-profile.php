@@ -208,7 +208,7 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 					$this->MsLoader->MsMail->sendMails($mails);
 				}
 				
-				$this->session->data['success'] = $this->language->get('ms_account_sellerinfo_created');
+				$this->session->data['success'] = $this->language->get('ms_account_sellerinfo_saved');
 			} else {
 				// edit seller
 				$data['seller']['seller_id'] = $seller['seller_id'];

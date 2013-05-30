@@ -68,7 +68,11 @@
               <td><?php echo $payment['date_paid']; ?></td>
               <td class="right">
                 <?php if ($payment['amount'] > 0 && $payment['payment_status'] == MsPayment::STATUS_UNPAID && in_array($payment['payment_type'], array(MsPayment::TYPE_PAYOUT, MsPayment::TYPE_PAYOUT_REQUEST))) { ?>
-                <a class="ms-button ms-button-paypal" title="<?php echo $ms_payment_payout_paypal; ?>"></a>
+	                <?php if (!empty($payment['ms.paypal']) && filter_var($payment['ms.paypal'], FILTER_VALIDATE_EMAIL)) { ?>
+	                	<a class="ms-button ms-button-paypal" title="<?php echo $ms_payment_payout_paypal; ?>"></a>
+	                <?php } else { ?>
+	                	<a class="ms-button ms-button-paypal-bw" title="<?php echo $ms_payment_payout_paypal_invalid; ?>"></a>
+	                <?php } ?>
                 <?php } ?>
                 <?php if ($payment['amount'] > 0 && $payment['payment_status'] == MsPayment::STATUS_UNPAID) { ?>
                 <a class="ms-button ms-button-mark" title="<?php echo $ms_payment_mark; ?>"></a>
@@ -188,12 +192,12 @@ $(document).ready(function() {
 						dialogClass: "msBlack",
 						resizable: false,
 						width: 600,
-						title: 'Payment Confirmation',
+						title: '<?php echo $ms_payment_confirmation; ?>',
 						modal: true,
 						buttons: [
 							{
 	            				id: "button-pay",
-	            				text: "Pay!",
+	            				text: "<?php echo $ms_payment_pay; ?>",
 								click: function() {
 									var dialog = $(this);
 									$('#button-pay').remove();
@@ -227,7 +231,7 @@ $(document).ready(function() {
 							},
 							{
 	            				id: "button-cancel",
-	            				text: "Cancel",
+	            				text: "<?php echo $button_cancel; ?>",
 								click: function() {
 									$(this).dialog("close");
 								}

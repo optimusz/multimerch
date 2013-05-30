@@ -76,10 +76,12 @@
 			<span><?php echo $ms_account_dashboard_nav_balance; ?></span>
 		</a>
 		
+		<?php if ($this->config->get('msconf_allow_withdrawal_requests')) { ?>
 		<a href="<?php echo $this->url->link('seller/account-withdrawal', '', 'SSL'); ?>">
 			<img src="catalog/view/theme/<?php echo $this->config->get('config_template'); ?>/image/ms-dollar.png" />
 			<span><?php echo $ms_account_dashboard_nav_payout; ?></span>
 		</a>
+		<?php } ?>
 	</div>
 	
 	<h2><?php echo $ms_account_dashboard_orders; ?></h2>
