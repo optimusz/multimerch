@@ -570,7 +570,7 @@
 	
 	<file name="catalog/controller/common/seo_url.php">
 
-		<operation>
+		<operation error="log">
 			<search position="before"><![CDATA[
 				if ($url[0] == 'information_id') {
 			]]></search>
@@ -581,7 +581,7 @@
 			]]></add>
 		</operation>
 	
-		<operation>
+		<operation error="log">
 			<search position="before"><![CDATA[
 				} elseif (isset($this->request->get['information_id'])) {
 			]]></search>
@@ -593,10 +593,12 @@
 					else {
 						$this->request->get['route'] = 'seller/catalog-seller/profile';
 					}
+				} elseif (strpos($this->request->get['_route_'], "sellers") === 0) {
+					$this->request->get['route'] = 'seller/catalog-seller';
 			]]></add>
 		</operation>
 	
-		<operation>
+		<operation error="log">
 			<search position="replace"><![CDATA[
 				if (($data['route'] == 'product/product' && $key == 'product_id') || (($data['route'] == 'product/manufacturer/info' || $data['route'] == 'product/product') && $key == 'manufacturer_id') || ($data['route'] == 'information/information' && $key == 'information_id')) {
 			]]></search>
@@ -605,8 +607,8 @@
 			]]></add>
 		</operation>
 		
-		<operation>
-			<search position="replace"><![CDATA[
+		<operation error="log">
+			<search position="replace" index="1"><![CDATA[
 				$url .= '/' . $query->row['keyword'];
 			]]></search>
 			<add><![CDATA[

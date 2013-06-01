@@ -146,10 +146,10 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 					$latin_check = '/[^\x{0030}-\x{007f}]/u';
 					$non_latin_chars = preg_match($latin_check, $data['seller']['nickname']);
 					if ($this->config->get('msconf_enable_non_alphanumeric_seo') && $non_latin_chars) {
-						$data['keyword'] = implode("-", str_replace("-", "", explode(" ", strtolower($data['seller']['nickname']))));
+						$data['seller']['keyword'] = implode("-", str_replace("-", "", explode(" ", strtolower($data['seller']['nickname']))));
 					}
 					else {
-						$data['keyword'] = implode("-", str_replace("-", "", explode(" ", preg_replace("/[^A-Za-z0-9 ]/", '', strtolower($data['seller']['nickname'])))));
+						$data['seller']['keyword'] = implode("-", str_replace("-", "", explode(" ", preg_replace("/[^A-Za-z0-9 ]/", '', strtolower($data['seller']['nickname'])))));
 					}
 				}
 				
