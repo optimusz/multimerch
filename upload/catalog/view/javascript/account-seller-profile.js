@@ -3,7 +3,14 @@ $(function() {
 		$('.success').remove();
 		var button = $(this);
 		var id = $(this).attr('id');
-	    $.ajax({
+		
+		if (msGlobals.config_enable_rte) {
+			for (instance in CKEDITOR.instances) {
+				CKEDITOR.instances[instance].updateElement();
+			}
+		}
+		
+		$.ajax({
 			type: "POST",
 			dataType: "json",
 			url: 'index.php?route=seller/account-profile/jxsavesellerinfo',
@@ -111,5 +118,10 @@ $(function() {
 	$('.colorbox').colorbox({
 		width: 640,
 		height: 480
-	});	
+	});
+	
+	if (msGlobals.config_enable_rte) {
+		CKEDITOR.config.enterMode = CKEDITOR.ENTER_BR;
+		CKEDITOR.replaceClass = 'ckeditor';
+	}
 });

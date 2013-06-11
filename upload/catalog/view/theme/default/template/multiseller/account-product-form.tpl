@@ -61,7 +61,8 @@
 					<tr>
 						<td><span class="required"><?php if ($k == $first) { echo '*'; } ?></span> <?php echo $ms_account_product_description; ?></td>
 						<td>
-							<textarea name="languages[<?php echo $langId; ?>][product_description]"><?php echo strip_tags(htmlspecialchars_decode($product['languages'][$langId]['description'])); ?></textarea>
+							<!-- todo strip tags if rte disabled -->
+							<textarea name="languages[<?php echo $langId; ?>][product_description]" class="<?php echo $this->config->get('msconf_enable_rte') ? "ckeditor" : ''; ?>"><?php echo htmlspecialchars_decode($product['languages'][$langId]['description']); ?></textarea>
 							<p class="ms-note"><?php echo $ms_account_product_description_note; ?></p>
 							<p class="error" id="error_product_description_<?php echo $langId; ?>"></p>
 						</td>
@@ -469,7 +470,8 @@
 		product_id: '<?php echo $product['product_id']; ?>',
 		uploadError: '<?php echo $ms_error_file_upload_error; ?>',
 		formError: '<?php echo $ms_error_form_submit_error; ?>',
-		formNotice: '<?php echo $ms_error_form_notice; ?>'
+		formNotice: '<?php echo $ms_error_form_notice; ?>',
+		config_enable_rte: '<?php echo $this->config->get('msconf_enable_rte'); ?>'
 	};
 </script>
 <?php echo $footer; ?>

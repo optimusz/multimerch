@@ -254,6 +254,12 @@ $_['ms_config_layout'] = 'Layout:';
 $_['ms_config_position'] = 'Position:';
 $_['ms_config_sort_order'] = 'Sort Order:';
 
+$_['ms_config_enable_rte'] = 'Enable Rich Text Editor for descriptions';
+$_['ms_config_enable_rte_note'] = 'Enable Rich Text Editor for product and seller description fields';
+
+$_['ms_config_rte_whitelist'] = 'Tag whitelist';
+$_['ms_config_rte_whitelist_note'] = 'Permitted tags in RTE (empty = all tags permitted)';
+
 // Seller - List
 $_['ms_catalog_sellers_heading'] = 'Sellers';
 $_['ms_catalog_sellers_breadcrumbs'] = 'Sellers';

@@ -232,6 +232,12 @@ $_['ms_config_comments_maxlen_note'] = 'Максимальная длина дл
 $_['ms_config_graphical_sellermenu'] = 'Графическое меню продавца';
 $_['ms_config_graphical_sellermenu_note'] = 'Включить/выключить графическое меню продавца';
 
+$_['ms_config_enable_rte'] = 'Включить расширенный текстовый редактор в описаниях';
+$_['ms_config_enable_rte_note'] = 'Использовать расширенный тексовый редактор для полей описания товара и продавца';
+
+$_['ms_config_rte_whitelist'] = 'Белый список тэгов';
+$_['ms_config_rte_whitelist_note'] = 'Разрешенные тэги в описаниях (пусто = разрешены все)';
+
 $_['ms_config_carousel'] = 'Лента продавцов';
 $_['ms_config_topsellers'] = 'Топ продавцов';
 $_['ms_config_modules'] = 'Модули';
@@ -253,6 +259,7 @@ $_['ms_config_image'] = 'Изображение (Ширина x Высота):';
 $_['ms_config_layout'] = 'Расположение:';
 $_['ms_config_position'] = 'Позиция:';
 $_['ms_config_sort_order'] = 'Порядок сортировки:';
+
 
 // Seller - List
 $_['ms_catalog_sellers_heading'] = 'Продавцы';

@@ -100,7 +100,24 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 				$json['errors']['seller[avatar]'] = $this->language->get('ms_error_file_upload_error');
 			}
 		}
+
+		// strip disallowed tags in description
+		if ($this->config->get('msconf_rte_whitelist') != '') {		
+			$allowed_tags = explode(",", $this->config->get('msconf_rte_whitelist'));
+			$allowed_tags_ready = "";
+			foreach($allowed_tags as $tag) {
+				$allowed_tags_ready .= "<".trim($tag).">";
+			}
+			$data['seller']['description'] = strip_tags(html_entity_decode($data['seller']['description']), $allowed_tags_ready);
+		}
 		
+		// uncomment to enable RTE for message field
+		/*
+		if(isset($data['reviewer_message'])) {
+			$data['seller']['reviewer_message'] = strip_tags(html_entity_decode($data['seller']['reviewer_message']), $allowed_tags_ready);
+		}
+		*/
+
 		if (empty($json['errors'])) {
 			$mails = array();
 			unset($data['seller']['commission']);
@@ -291,6 +308,10 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 		$this->document->addScript('catalog/view/javascript/account-seller-profile.js');
 		$this->document->addScript('catalog/view/javascript/plupload/plupload.full.js');
 		$this->document->addScript('catalog/view/javascript/plupload/jquery.plupload.queue/jquery.plupload.queue.js');
+
+		// todo fix admin folder
+		if($this->config->get('msconf_enable_rte') == '1')
+			$this->document->addScript('admin/view/javascript/ckeditor/ckeditor.js');
 		
 		$this->load->model('localisation/country');
 		$this->data['countries'] = $this->model_localisation_country->getCountries();		
@@ -314,6 +335,7 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 			}
 			
 			$this->data['seller'] = $seller;
+			
 			if (!empty($seller['ms.avatar'])) {
 				$this->data['seller']['avatar']['name'] = $seller['ms.avatar'];
 				$this->data['seller']['avatar']['thumb'] = $this->MsLoader->MsFile->resizeImage($seller['ms.avatar'], $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'));

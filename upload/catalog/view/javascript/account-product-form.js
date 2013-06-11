@@ -68,6 +68,12 @@ $(function() {
 		var button = $(this);
 		var url = 'jxsubmitproduct';
 		
+		if (msGlobals.config_enable_rte) {
+			for (instance in CKEDITOR.instances) {
+				CKEDITOR.instances[instance].updateElement();
+			}
+		}
+		
 		$.ajax({
 			type: "POST",
 			dataType: "json",
@@ -322,4 +328,9 @@ $(function() {
 			}
 		})).init();
 	});
+	
+	if (msGlobals.config_enable_rte) {
+		CKEDITOR.config.enterMode = CKEDITOR.ENTER_BR;
+		CKEDITOR.replaceClass = 'ckeditor';
+	}
 });

@@ -213,6 +213,17 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 				$json['errors']['product_tags_' . $language_id] = $this->language->get('ms_error_product_tags_length');			
 			}
 
+
+			// strip disallowed tags in description
+			if ($this->config->get('msconf_rte_whitelist') != '') {
+				$allowed_tags = explode(",", $this->config->get('msconf_rte_whitelist'));
+				$allowed_tags_ready = "";
+				foreach($allowed_tags as $tag) {
+					$allowed_tags_ready .= "<".trim($tag).">";
+				}
+				$data['languages'][$language_id]['product_description'] = strip_tags(html_entity_decode($language['product_description']), $allowed_tags_ready);
+			}
+
 			// multilang attributes
 			if (isset($language['product_attributes'])) {
 				$product_attributes = $language['product_attributes'];
@@ -237,6 +248,9 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 							$json['errors']["languages[$language_id][product_attributes][$attribute_id]"] = sprintf($this->language->get('ms_error_product_attribute_long'), 2000);
 							continue;
 						}
+
+						// enable to allow RTE for attributes
+						// $product_attributes[$attribute_id]['value'] = strip_tags(html_entity_decode($product_attributes[$attribute_id]['value']), $allowed_tags_ready);
 					}
 
 					// set attributes
@@ -315,6 +329,14 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		if (!empty($data['product_message']) && mb_strlen($data['product_message']) > 1000) {
 			$json['errors']['product_message'] = $this->language->get('ms_error_product_message_length');			
 		}		
+		
+		
+		// uncomment to enable RTE for message field 
+		/*
+		if(isset($data['product_message'])) {
+			$data['product_message'] = strip_tags(html_entity_decode($data['product_message']), $allowed_tags_ready);
+		}
+		*/
 		
 		if (isset($data['product_category']) && !empty($data['product_category'])) {
 			$categories = $this->MsLoader->MsProduct->getCategories();
@@ -825,6 +847,10 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		$this->document->addScript('catalog/view/javascript/jquery/ui/jquery-ui-timepicker-addon.js');
 		$this->document->addScript('catalog/view/javascript/account-product-form.js');
 		$this->document->addScript('catalog/view/javascript/jquery/tabs.js');
+				
+		// todo fix admin folder
+		if($this->config->get('msconf_enable_rte') == '1')
+			$this->document->addScript('admin/view/javascript/ckeditor/ckeditor.js');
 				
 		if ($this->config->get('msconf_enable_pdf_generator') && extension_loaded('imagick')) {
 			$this->document->addScript('catalog/view/javascript/dialog-pdf.js');

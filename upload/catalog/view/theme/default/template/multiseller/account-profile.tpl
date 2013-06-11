@@ -48,7 +48,8 @@
 				<tr>
 					<td><?php echo $ms_account_sellerinfo_description; ?></td>
 					<td>
-						<textarea name="seller[description]"><?php echo $seller['ms.description']; ?></textarea>
+						<!-- todo strip tags if rte disabled -->
+						<textarea name="seller[description]" id="seller_textarea" class="<?php echo $this->config->get('msconf_enable_rte') ? "ckeditor" : ''; ?>"><?php echo $seller['ms.description']; ?></textarea>
 						<p class="ms-note"><?php echo $ms_account_sellerinfo_description_note; ?></p>
 					</td>
 				</tr>
@@ -118,7 +119,7 @@
 				<tr>
 					<td><?php echo $ms_account_sellerinfo_reviewer_message; ?></td>
 					<td>
-						<textarea name="seller[reviewer_message]"></textarea>
+						<textarea name="seller[reviewer_message]" id="message_textarea"></textarea>
 						<p class="ms-note"><?php echo $ms_account_sellerinfo_reviewer_message_note; ?></p>
 					</td>
 				</tr>
@@ -160,7 +161,8 @@
 		timestamp: '<?php echo $timestamp; ?>',
 		token : '<?php echo md5($salt . $timestamp); ?>',
 		session_id: '<?php echo session_id(); ?>',
-		uploadError: '<?php echo $ms_error_file_upload_error; ?>'
+		uploadError: '<?php echo $ms_error_file_upload_error; ?>',
+		config_enable_rte: '<?php echo $this->config->get('msconf_enable_rte'); ?>'
 	};
 </script>
 <?php echo $footer; ?>

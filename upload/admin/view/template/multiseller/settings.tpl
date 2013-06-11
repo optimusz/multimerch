@@ -178,8 +178,31 @@
 							<?php echo $text_yes; ?>
 							<input type="radio" name="msconf_graphical_sellermenu" value="0" <?php if($msconf_graphical_sellermenu == 0) { ?> checked="checked" <?php } ?>  />
 							<?php echo $text_no; ?>
-					  	</td>
-					</tr>					
+						</td>
+					</tr>
+
+					<tr>
+						<td>
+							<span><?php echo $ms_config_enable_rte; ?></span>
+							<span class="help"><?php echo $ms_config_enable_rte_note; ?></span>
+						</td>
+						<td>
+							<input type="radio" name="msconf_enable_rte" value="1" <?php if($msconf_enable_rte == 1) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_yes; ?>
+							<input type="radio" name="msconf_enable_rte" value="0" <?php if($msconf_enable_rte == 0) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_no; ?>
+						</td>
+					</tr>
+
+					<tr>
+						<td>
+							<span><?php echo $ms_config_rte_whitelist; ?></span>
+							<span class="help"><?php echo $ms_config_rte_whitelist_note; ?></span>
+						</td>
+						<td>
+							<input type="text" name="msconf_rte_whitelist" value="<?php echo $msconf_rte_whitelist; ?>" />
+						</td>
+					</tr>
 				</table>
 				</div>
 				<!-- END GENERAL TAB -->
