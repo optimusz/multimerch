@@ -18,8 +18,6 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		"msconf_seller_validation" => MsSeller::MS_SELLER_VALIDATION_NONE,
 		"msconf_product_validation" => MsProduct::MS_PRODUCT_VALIDATION_NONE,
 		"msconf_nickname_rules" => 0, // 0 - alnum, 1 - latin extended, 2 - utf
-		"msconf_image_preview_width" => 100,
-		"msconf_image_preview_height" => 100,
 		"msconf_credit_order_statuses" => array(5),
 		"msconf_debit_order_statuses" => array(8),
 		"msconf_minimum_withdrawal_amount" => "50",
@@ -70,6 +68,23 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		"msconf_comments_perpage" => 10,
 		"msconf_enable_rte" => 0,
 		"msconf_rte_whitelist" => "",
+		
+		"msconf_seller_avatar_seller_profile_image_width" => 100,
+		"msconf_seller_avatar_seller_profile_image_height" => 100,
+		"msconf_seller_avatar_seller_list_image_width" => 100,
+		"msconf_seller_avatar_seller_list_image_height" => 100,
+		"msconf_seller_avatar_product_page_image_width" => 100,
+		"msconf_seller_avatar_product_page_image_height" => 100,
+		"msconf_seller_avatar_dashboard_image_width" => 100,
+		"msconf_seller_avatar_dashboard_image_height" => 100,
+		"msconf_preview_seller_avatar_image_width" => 100,
+		"msconf_preview_seller_avatar_image_height" => 100,
+		"msconf_preview_product_image_width" => 100,
+		"msconf_preview_product_image_height" => 100,
+		"msconf_product_seller_profile_image_width" => 100,
+		"msconf_product_seller_profile_image_height" => 100,
+		"msconf_product_seller_products_image_width" => 100,
+		"msconf_product_seller_products_image_height" => 100,
 	);
 	
 	public function __construct($registry) {

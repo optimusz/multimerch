@@ -57,9 +57,9 @@ class ControllerSellerCatalogSeller extends ControllerSellerCatalog {
 		
 		foreach ($results as $result) {
 			if ($result['ms.avatar'] && file_exists(DIR_IMAGE . $result['ms.avatar'])) {
-				$image = $this->MsLoader->MsFile->resizeImage($result['ms.avatar'], $this->config->get('config_image_category_width'), $this->config->get('config_image_category_height'));
+				$image = $this->MsLoader->MsFile->resizeImage($result['ms.avatar'], $this->config->get('msconf_seller_avatar_seller_list_image_width'), $this->config->get('msconf_seller_avatar_seller_list_image_height'));
 			} else {
-				$image = $this->MsLoader->MsFile->resizeImage('ms_no_image.jpg', $this->config->get('config_image_category_width'), $this->config->get('config_image_category_height'));
+				$image = $this->MsLoader->MsFile->resizeImage('ms_no_image.jpg', $this->config->get('msconf_seller_avatar_seller_list_image_width'), $this->config->get('msconf_seller_avatar_seller_list_image_height'));
 			}
 
 			$country = $this->model_localisation_country->getCountry($result['ms.country_id']);
@@ -213,9 +213,9 @@ class ControllerSellerCatalogSeller extends ControllerSellerCatalog {
 		}
 			
 		if ($seller['ms.avatar'] && file_exists(DIR_IMAGE . $seller['ms.avatar'])) {
-			$image = $this->MsLoader->MsFile->resizeImage($seller['ms.avatar'], $this->config->get('config_image_category_width'), $this->config->get('config_image_category_height'));
+			$image = $this->MsLoader->MsFile->resizeImage($seller['ms.avatar'], $this->config->get('msconf_seller_avatar_seller_profile_image_width'), $this->config->get('msconf_seller_avatar_seller_profile_image_height'));
 		} else {
-			$image = $this->MsLoader->MsFile->resizeImage('ms_no_image.jpg', $this->config->get('config_image_category_width'), $this->config->get('config_image_category_height'));
+			$image = $this->MsLoader->MsFile->resizeImage('ms_no_image.jpg', $this->config->get('msconf_seller_avatar_seller_profile_image_width'), $this->config->get('msconf_seller_avatar_seller_profile_image_height'));
 		}
 		
 		$this->data['seller']['nickname'] = $seller['ms.nickname'];
@@ -268,9 +268,9 @@ class ControllerSellerCatalogSeller extends ControllerSellerCatalog {
 			foreach ($products as $product) {
 				$product_data = $this->model_catalog_product->getProduct($product['product_id']);
 				if ($product_data['image'] && file_exists(DIR_IMAGE . $product_data['image'])) {
-					$image = $this->MsLoader->MsFile->resizeImage($product_data['image'], $this->config->get('config_image_category_width'), $this->config->get('config_image_category_height'));
+					$image = $this->MsLoader->MsFile->resizeImage($product_data['image'], $this->config->get('msconf_product_seller_profile_image_width'), $this->config->get('msconf_product_seller_profile_image_height'));
 				} else {
-					$image = $this->MsLoader->MsFile->resizeImage('no_image.jpg', $this->config->get('config_image_category_width'), $this->config->get('config_image_category_height'));
+					$image = $this->MsLoader->MsFile->resizeImage('no_image.jpg', $this->config->get('msconf_product_seller_profile_image_width'), $this->config->get('msconf_product_seller_profile_image_height'));
 				}
 
 				if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
@@ -340,9 +340,9 @@ class ControllerSellerCatalogSeller extends ControllerSellerCatalog {
 		
 		/* seller info part */	
 		if ($seller['ms.avatar'] && file_exists(DIR_IMAGE . $seller['ms.avatar'])) {
-			$image = $this->MsLoader->MsFile->resizeImage($seller['ms.avatar'], $this->config->get('config_image_category_width'), $this->config->get('config_image_category_height'));
+			$image = $this->MsLoader->MsFile->resizeImage($seller['ms.avatar'], $this->config->get('msconf_product_seller_products_image_width'), $this->config->get('msconf_product_seller_products_image_height'));
 		} else {
-			$image = $this->MsLoader->MsFile->resizeImage('ms_no_image.jpg', $this->config->get('config_image_category_width'), $this->config->get('config_image_category_height'));
+			$image = $this->MsLoader->MsFile->resizeImage('ms_no_image.jpg', $this->config->get('msconf_product_seller_products_image_width'), $this->config->get('msconf_product_seller_products_image_height'));
 		}
 		
 		$this->data['seller']['nickname'] = $seller['ms.nickname'];

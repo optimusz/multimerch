@@ -28,8 +28,9 @@
 			 		<a href="#tab-finances"><?php echo $ms_config_finances; ?></a>
 			 		<a href="#tab-comments"><?php echo $ms_config_comments; ?></a>
 			 		<a href="#tab-modules"><?php echo $ms_config_modules; ?></a>
+					<a href="#tab-miscellaneous"><?php echo $ms_config_miscellaneous; ?></a>
 			 	</div>
-			 	
+				
 			 	<!-- BEGIN GENERAL TAB -->
 			 	<div id="tab-general">
 				<table class="form">
@@ -135,18 +136,6 @@
 							<input type="radio" name="msconf_enable_non_alphanumeric_seo" value="0" <?php if($msconf_enable_non_alphanumeric_seo == 0) { ?> checked="checked" <?php } ?>  />
 							<?php echo $text_no; ?>
 					  	</td>
-					</tr>
-					
-					<tr>
-						  <td>
-						  		<span><?php echo $ms_config_image_preview_size; ?></span>
-								<span class="help"><?php echo $ms_config_image_preview_size_note; ?></span>
-						  </td>
-						  <td>
-						  	<input type="text" name="msconf_image_preview_width" value="<?php echo $msconf_image_preview_width; ?>" size="3" />
-							x
-							<input type="text" name="msconf_image_preview_height" value="<?php echo $msconf_image_preview_height; ?>" size="3" />
-						  </td>
 					</tr>
 
 					<tr>
@@ -1192,6 +1181,73 @@
 					<!-- END NEW SELLERS -->
 				</div>
 				<!-- END MODULES TAB -->
+				
+				<!-- BEGIN MISCELLANEOUS TAB -->
+			 	<div id="tab-miscellaneous">
+				<table class="form">
+					<tr>
+						  <td>
+						  	<span><?php echo $ms_config_seller_avatar_image_size; ?></span>
+						  </td>
+						  <td>
+							<span><?php echo $ms_config_seller_avatar_image_size_seller_profile; ?></span>
+						  	<input type="text" name="msconf_seller_avatar_seller_profile_image_width" value="<?php echo $msconf_seller_avatar_seller_profile_image_width; ?>" size="3" />
+							x
+							<input type="text" name="msconf_seller_avatar_seller_profile_image_height" value="<?php echo $msconf_seller_avatar_seller_profile_image_height; ?>" size="3" />
+							&nbsp
+							<span><?php echo $ms_config_seller_avatar_image_size_seller_list; ?></span>
+							<input type="text" name="msconf_seller_avatar_seller_list_image_width" value="<?php echo $msconf_seller_avatar_seller_list_image_width; ?>" size="3" />
+							x
+							<input type="text" name="msconf_seller_avatar_seller_list_image_height" value="<?php echo $msconf_seller_avatar_seller_list_image_height; ?>" size="3" />
+							&nbsp
+							<span><?php echo $ms_config_seller_avatar_image_size_product_page; ?></span>
+							<input type="text" name="msconf_seller_avatar_product_page_image_width" value="<?php echo $msconf_seller_avatar_product_page_image_width; ?>" size="3" />
+							x
+							<input type="text" name="msconf_seller_avatar_product_page_image_height" value="<?php echo $msconf_seller_avatar_product_page_image_height; ?>" size="3" />
+							&nbsp
+							<span><?php echo $ms_config_seller_avatar_image_size_seller_dashboard; ?></span>
+							<input type="text" name="msconf_seller_avatar_dashboard_image_width" value="<?php echo $msconf_seller_avatar_dashboard_image_width; ?>" size="3" />
+							x
+							<input type="text" name="msconf_seller_avatar_dashboard_image_height" value="<?php echo $msconf_seller_avatar_dashboard_image_height; ?>" size="3" />
+						  </td>
+					</tr>
+					
+					<tr>
+						  <td>
+						  	<span><?php echo $ms_config_image_preview_size; ?></span>
+						  </td>
+						  <td>
+							<span><?php echo $ms_config_image_preview_size_seller_avatar; ?></span>
+							<input type="text" name="msconf_preview_seller_avatar_image_width" value="<?php echo $msconf_preview_seller_avatar_image_width; ?>" size="3" />
+							x
+							<input type="text" name="msconf_preview_seller_avatar_image_height" value="<?php echo $msconf_preview_seller_avatar_image_height; ?>" size="3" />
+							&nbsp
+							<span><?php echo $ms_config_image_preview_size_product_image; ?></span>
+							<input type="text" name="msconf_preview_product_image_width" value="<?php echo $msconf_preview_product_image_width; ?>" size="3" />
+							x
+							<input type="text" name="msconf_preview_product_image_height" value="<?php echo $msconf_preview_product_image_height; ?>" size="3" />
+						  </td>
+					</tr>
+					
+					<tr>
+						  <td>
+						  	<span><?php echo $ms_config_product_image_size; ?></span>
+						  </td>
+						  <td>
+							<span><?php echo $ms_config_product_image_size_seller_profile; ?></span>
+							<input type="text" name="msconf_product_seller_profile_image_width" value="<?php echo $msconf_product_seller_profile_image_width; ?>" size="3" />
+							x
+							<input type="text" name="msconf_product_seller_profile_image_height" value="<?php echo $msconf_product_seller_profile_image_height; ?>" size="3" />
+							&nbsp
+							<span><?php echo $ms_config_product_image_size_seller_products_list; ?></span>
+							<input type="text" name="msconf_product_seller_products_image_width" value="<?php echo $msconf_product_seller_products_image_width; ?>" size="3" />
+							x
+							<input type="text" name="msconf_product_seller_products_image_height" value="<?php echo $msconf_product_seller_products_image_height; ?>" size="3" />
+						  </td>
+					</tr>
+				</table>
+				</div>
+				<!-- END MISCELLANEOUS TAB -->
 			</form>
 		</div>
 	</div>

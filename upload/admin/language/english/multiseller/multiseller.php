@@ -140,9 +140,6 @@ $_['ms_config_enable_pdf_generator_note'] = 'Allow sellers to automatically gene
 $_['ms_config_allowed_download_types'] = 'Allowed download extensions';
 $_['ms_config_allowed_download_types_note'] = 'Allowed download extensions';
 
-$_['ms_config_image_preview_size'] = 'Image preview size';
-$_['ms_config_image_preview_size_note'] = 'Seller area image preview size';
-
 $_['ms_config_credit_order_statuses'] = 'Fund statuses';
 $_['ms_config_credit_order_statuses_note'] = 'Seller balance will be funded for orders with fund statuses';
 
@@ -240,6 +237,7 @@ $_['ms_config_finances'] = 'Finances';
 $_['ms_config_newsellers'] = 'New sellers';
 $_['ms_config_sellerdropdown'] = 'Seller dropdown';
 $_['ms_config_comments'] = 'Comments';
+$_['ms_config_miscellaneous'] = 'Miscellaneous';
 
 $_['ms_config_module'] = 'Modules';
 $_['ms_config_status'] = 'Status';
@@ -259,6 +257,20 @@ $_['ms_config_enable_rte_note'] = 'Enable Rich Text Editor for product and selle
 
 $_['ms_config_rte_whitelist'] = 'Tag whitelist';
 $_['ms_config_rte_whitelist_note'] = 'Permitted tags in RTE (empty = all tags permitted)';
+
+$_['ms_config_seller_avatar_image_size'] = 'Seller avatar image size: ';
+$_['ms_config_seller_avatar_image_size_seller_profile'] = 'Seller profile: ';
+$_['ms_config_seller_avatar_image_size_seller_list'] = 'Seller list: ';
+$_['ms_config_seller_avatar_image_size_product_page'] = 'Product page: ';
+$_['ms_config_seller_avatar_image_size_seller_dashboard'] = 'Seller dashboard: ';
+
+$_['ms_config_image_preview_size'] = 'Uploaded preview image size: ';
+$_['ms_config_image_preview_size_seller_avatar'] = 'Seller avatar: ';
+$_['ms_config_image_preview_size_product_image'] = 'Product image: ';
+
+$_['ms_config_product_image_size'] = 'Product image size: ';
+$_['ms_config_product_image_size_seller_profile'] = 'Seller profile: ';
+$_['ms_config_product_image_size_seller_products_list'] = 'Seller products list: ';
 
 // Seller - List
 $_['ms_catalog_sellers_heading'] = 'Sellers';

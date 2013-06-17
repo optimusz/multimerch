@@ -246,6 +246,7 @@ $_['ms_config_finances'] = 'Финансы';
 $_['ms_config_newsellers'] = 'Новые продавцы';
 $_['ms_config_sellerdropdown'] = 'Выпадающий список продавцов';
 $_['ms_config_comments'] = 'Комментарии';
+$_['ms_config_miscellaneous'] = 'Разное';
 
 $_['ms_config_module'] = 'Модули';
 $_['ms_config_status'] = 'Статус';

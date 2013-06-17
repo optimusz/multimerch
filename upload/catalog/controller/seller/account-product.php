@@ -47,7 +47,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 				$json['errors'] = array_merge($json['errors'], $errors);
 			} else {
 				$fileName = $this->MsLoader->MsFile->uploadImage($file);
-				$thumbUrl = $this->MsLoader->MsFile->resizeImage($this->config->get('msconf_temp_image_path') . $fileName, $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'));
+				$thumbUrl = $this->MsLoader->MsFile->resizeImage($this->config->get('msconf_temp_image_path') . $fileName, $this->config->get('msconf_preview_product_image_width'), $this->config->get('msconf_preview_product_image_height'));
 				$json['files'][] = array(
 					'name' => $fileName,
 					'thumb' => $thumbUrl
@@ -83,7 +83,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 				} else {
 					$fileName = $this->MsLoader->MsFile->uploadImage($file);
 
-					$thumbUrl = $this->MsLoader->MsFile->resizeImage($this->config->get('msconf_temp_image_path') . $fileName, $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'));
+					$thumbUrl = $this->MsLoader->MsFile->resizeImage($this->config->get('msconf_temp_image_path') . $fileName, $this->config->get('msconf_preview_product_image_width'), $this->config->get('msconf_preview_product_image_height'));
 					$json['files'][] = array(
 						'name' => $fileName,
 						'thumb' => $thumbUrl
@@ -993,7 +993,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		if (!empty($product['thumbnail'])) {
 			$product['images'][] = array(
 				'name' => $product['thumbnail'],
-				'thumb' => $this->MsLoader->MsFile->resizeImage($product['thumbnail'], $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'))
+				'thumb' => $this->MsLoader->MsFile->resizeImage($product['thumbnail'], $this->config->get('msconf_preview_product_image_width'), $this->config->get('msconf_preview_product_image_height'))
 			);
 			
 			if (!in_array($product['thumbnail'], $this->session->data['multiseller']['files']))
@@ -1004,7 +1004,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		foreach ($images as $image) {
 			$product['images'][] = array(
 				'name' => $image['image'],
-				'thumb' => $this->MsLoader->MsFile->resizeImage($image['image'], $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'))
+				'thumb' => $this->MsLoader->MsFile->resizeImage($image['image'], $this->config->get('msconf_preview_product_image_width'), $this->config->get('msconf_preview_product_image_height'))
 			);
 			
 			if (!in_array($image['image'], $this->session->data['multiseller']['files']))
