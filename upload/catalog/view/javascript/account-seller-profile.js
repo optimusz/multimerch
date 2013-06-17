@@ -4,7 +4,7 @@ $(function() {
 		var button = $(this);
 		var id = $(this).attr('id');
 		
-		if (msGlobals.config_enable_rte) {
+		if (msGlobals.config_enable_rte == 1) {
 			for (instance in CKEDITOR.instances) {
 				CKEDITOR.instances[instance].updateElement();
 			}
@@ -120,7 +120,7 @@ $(function() {
 		height: 480
 	});
 	
-	if (msGlobals.config_enable_rte) {
+	if (msGlobals.config_enable_rte == 1) {
 		CKEDITOR.config.enterMode = CKEDITOR.ENTER_BR;
 		CKEDITOR.replaceClass = 'ckeditor';
 	}

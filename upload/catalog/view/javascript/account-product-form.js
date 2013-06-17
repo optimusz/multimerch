@@ -68,7 +68,7 @@ $(function() {
 		var button = $(this);
 		var url = 'jxsubmitproduct';
 		
-		if (msGlobals.config_enable_rte) {
+		if (msGlobals.config_enable_rte == 1) {
 			for (instance in CKEDITOR.instances) {
 				CKEDITOR.instances[instance].updateElement();
 			}
@@ -329,7 +329,7 @@ $(function() {
 		})).init();
 	});
 	
-	if (msGlobals.config_enable_rte) {
+	if (msGlobals.config_enable_rte == 1) {
 		CKEDITOR.config.enterMode = CKEDITOR.ENTER_BR;
 		CKEDITOR.replaceClass = 'ckeditor';
 	}
