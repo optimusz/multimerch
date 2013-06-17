@@ -86,7 +86,7 @@ $(function() {
 				if (textStatus != 'success') {
 					button.show().prev('span.wait').remove();
 					$(".warning.main").text(msGlobals.formError).show();
-					window.scrollTo(0,0);					
+					window.scrollTo(0,0);
 				}
 			},
 			success: function(jsonData) {

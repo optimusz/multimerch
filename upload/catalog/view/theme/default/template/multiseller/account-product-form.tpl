@@ -462,15 +462,15 @@
 <?php $timestamp = time(); ?>
 <script>
 	var msGlobals = {
-		button_generate: '<?php echo $ms_button_generate; ?>',
-		text_delete: '<?php echo $ms_delete; ?>',		
 		timestamp: '<?php echo $timestamp; ?>',
 		token : '<?php echo md5($salt . $timestamp); ?>',
 		session_id: '<?php echo session_id(); ?>',
 		product_id: '<?php echo $product['product_id']; ?>',
-		uploadError: '<?php echo $ms_error_file_upload_error; ?>',
-		formError: '<?php echo $ms_error_form_submit_error; ?>',
-		formNotice: '<?php echo $ms_error_form_notice; ?>',
+		button_generate: '<?php echo htmlspecialchars($ms_button_generate, ENT_QUOTES, "UTF-8"); ?>',
+		text_delete: '<?php echo htmlspecialchars($ms_delete, ENT_QUOTES, "UTF-8"); ?>',
+		uploadError: '<?php echo htmlspecialchars($ms_error_file_upload_error, ENT_QUOTES, "UTF-8"); ?>',
+		formError: '<?php echo htmlspecialchars($ms_error_form_submit_error, ENT_QUOTES, "UTF-8"); ?>',
+		formNotice: '<?php echo htmlspecialchars($ms_error_form_notice, ENT_QUOTES, "UTF-8"); ?>',
 		config_enable_rte: '<?php echo $this->config->get('msconf_enable_rte'); ?>'
 	};
 </script>

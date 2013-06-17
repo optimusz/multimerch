@@ -49,7 +49,8 @@ table.list td, table.list thead td  {
 	margin: 0;
 }
 
-.ms-account-product-form p.warning.main {
+.ms-account-product-form p.warning.main,
+.ms-account-profile p.warning.main {
 	display: none;
 }
 

@@ -20,23 +20,23 @@ $(function() {
 				$('p.error').remove();
 			},
 			complete: function(jqXHR, textStatus) {
-				button.show().prev('span.wait').remove();
-			},
-			error: function(jqXHR, textStatus, errorThrown) {
-				$('#content').firstAll('.error').text(textStatus);
+				if (textStatus != 'success') {
+					button.show().prev('span.wait').remove();
+					$(".warning.main").text(msGlobals.formError).show();
+					window.scrollTo(0,0);
+				}
 			},
 			success: function(jsonData) {
 				if (!jQuery.isEmptyObject(jsonData.errors)) {
-					$('#ms-submit-button').show().prev('span.wait').remove();				
+					$('#ms-submit-button').show().prev('span.wait').remove();
 					$('.error').text('');
 					for (error in jsonData.errors) {
-						
 						if ($('[name="'+error+'"]').length > 0)
 							$('[name="'+error+'"]').parents('td').append('<p class="error">' + jsonData.errors[error] + '</p>');
 						else if ($('#error_'+error).length > 0)
-					    	$('#error_'+error).text(jsonData.errors[error]);
-					    else
-					    	$('#content').firstAll('.error').text(jsonData.errors[error]);
+							$('#error_'+error).text(jsonData.errors[error]);
+						else
+							$(".warning.main").text(jsonData.errors[error]).show();
 					}
 					window.scrollTo(0,0);
 				} else if (!jQuery.isEmptyObject(jsonData.data) && jsonData.data.amount) {

@@ -11,8 +11,6 @@
 	
 	<h1><?php echo $ms_account_sellerinfo_heading; ?></h1>
 	
-	<div class="error"></div>
-	
 	<?php if (isset($success) && ($success)) { ?>
 		<div class="success"><?php echo $success; ?></div>
 	<?php } ?>
@@ -20,6 +18,8 @@
 	<?php if (isset($statustext) && ($statustext)) { ?>
 		<div class="<?php echo $statusclass; ?>"><?php echo $statustext; ?></div>
 	<?php } ?>
+
+	<p class="warning main"></p>
 	
 	<form id="ms-sellerinfo" class="ms-form">
 		<input type="hidden" name="action" id="ms_action" />
@@ -161,7 +161,7 @@
 		timestamp: '<?php echo $timestamp; ?>',
 		token : '<?php echo md5($salt . $timestamp); ?>',
 		session_id: '<?php echo session_id(); ?>',
-		uploadError: '<?php echo $ms_error_file_upload_error; ?>',
+		uploadError: '<?php echo htmlspecialchars($ms_error_file_upload_error, ENT_QUOTES, "UTF-8"); ?>',
 		config_enable_rte: '<?php echo $this->config->get('msconf_enable_rte'); ?>'
 	};
 </script>
