@@ -108,7 +108,7 @@
 					<td><?php echo $ms_account_sellerinfo_terms; ?></td>
 					<td>
 						<p style="margin-bottom: 0">
-							<input type="checkbox" name="accept_terms" value="1" />
+							<input type="checkbox" name="seller[terms]" value="1" />
 							<?php echo $ms_account_sellerinfo_terms_note; ?>
 						</p>
 					</td>

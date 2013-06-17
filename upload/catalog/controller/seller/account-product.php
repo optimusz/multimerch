@@ -847,10 +847,10 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		$this->document->addScript('catalog/view/javascript/jquery/ui/jquery-ui-timepicker-addon.js');
 		$this->document->addScript('catalog/view/javascript/account-product-form.js');
 		$this->document->addScript('catalog/view/javascript/jquery/tabs.js');
-				
-		// todo fix admin folder
-		if($this->config->get('msconf_enable_rte') == '1')
-			$this->document->addScript('admin/view/javascript/ckeditor/ckeditor.js');
+		
+		// ckeditor
+		if($this->config->get('msconf_enable_rte'))
+			$this->document->addScript('catalog/view/javascript/ckeditor/ckeditor.js');
 				
 		if ($this->config->get('msconf_enable_pdf_generator') && extension_loaded('imagick')) {
 			$this->document->addScript('catalog/view/javascript/dialog-pdf.js');

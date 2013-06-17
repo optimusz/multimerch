@@ -77,7 +77,7 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 				$this->load->model('catalog/information');
 				$information_info = $this->model_catalog_information->getInformation($this->config->get('msconf_seller_terms_page'));
 				
-				if ($information_info && !isset($data['accept_terms'])) {
+				if ($information_info && !isset($data['seller[terms]'])) {
 	 				$json['errors']['seller[terms]'] = htmlspecialchars_decode(sprintf($this->language->get('ms_error_sellerinfo_terms'), $information_info['title']));
 				}
 			}
@@ -309,9 +309,9 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 		$this->document->addScript('catalog/view/javascript/plupload/plupload.full.js');
 		$this->document->addScript('catalog/view/javascript/plupload/jquery.plupload.queue/jquery.plupload.queue.js');
 
-		// todo fix admin folder
-		if($this->config->get('msconf_enable_rte') == '1')
-			$this->document->addScript('admin/view/javascript/ckeditor/ckeditor.js');
+		// ckeditor
+		if($this->config->get('msconf_enable_rte'))
+			$this->document->addScript('catalog/view/javascript/ckeditor/ckeditor.js');
 		
 		$this->load->model('localisation/country');
 		$this->data['countries'] = $this->model_localisation_country->getCountries();		
