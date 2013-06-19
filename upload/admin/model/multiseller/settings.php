@@ -2,6 +2,9 @@
 class ModelMultisellerSettings extends Model {
 	public function checkDbVersion($version) {
 		switch ($version) {
+			case "3.1":
+				break;
+							
 			case "3.0":
 				$res = $this->db->query("SHOW COLUMNS FROM `" . DB_PREFIX . "ms_commission_rate` LIKE 'payment_method'");
 				break;
@@ -24,6 +27,9 @@ class ModelMultisellerSettings extends Model {
 	public function update($version) {
 		if (!$this->checkDbVersion($version)) {
 			switch ($version) {
+				case "3.1":
+					break;
+				
 				case "3.0":
 					// nickname length
 					$this->db->query("ALTER TABLE `" . DB_PREFIX . "ms_seller` CHANGE `nickname` `nickname` VARCHAR(255) NOT NULL");

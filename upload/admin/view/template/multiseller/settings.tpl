@@ -192,6 +192,16 @@
 							<input type="text" name="msconf_rte_whitelist" value="<?php echo $msconf_rte_whitelist; ?>" />
 						</td>
 					</tr>
+					
+					<tr>
+						<td>
+							<span><?php echo $ms_config_sellers_slug; ?></span>
+							<span class="help"><?php echo $ms_config_sellers_slug_note; ?></span>
+						</td>
+						<td>
+							<input type="text" name="msconf_sellers_slug" value="<?php echo isset($msconf_sellers_slug) ? $msconf_sellers_slug : 'sellers' ; ?>" />
+						</td>
+					</tr>
 				</table>
 				</div>
 				<!-- END GENERAL TAB -->

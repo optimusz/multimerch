@@ -569,7 +569,6 @@
 	<!--  seller SEO URLs  -->
 	
 	<file name="catalog/controller/common/seo_url.php">
-
 		<operation error="log">
 			<search position="before"><![CDATA[
 				if ($url[0] == 'information_id') {
@@ -593,7 +592,7 @@
 					else {
 						$this->request->get['route'] = 'seller/catalog-seller/profile';
 					}
-				} elseif (strpos($this->request->get['_route_'], "sellers") === 0) {
+				} elseif (strpos($this->request->get['_route_'], $this->config->get('msconf_sellers_slug')) === 0) {
 					$this->request->get['route'] = 'seller/catalog-seller';
 			]]></add>
 		</operation>
@@ -613,10 +612,10 @@
 			]]></search>
 			<add><![CDATA[
 				if ($data['route'] == 'seller/catalog-seller/profile') {
-					$url .= '/sellers/' . $query->row['keyword'];
+					$url .= '/' . $this->config->get('msconf_sellers_slug') . '/' . $query->row['keyword'];
 				}
 				else if ($data['route'] == 'seller/catalog-seller/products') {
-					$url .= '/sellers/' . $query->row['keyword'] . '/products/';
+					$url .= '/' . $this->config->get('msconf_sellers_slug') . '/' . $query->row['keyword'] . '/products/';
 				}
 				else {
 					$url .= '/' . $query->row['keyword'];

@@ -88,10 +88,16 @@
 				<td><span class="required">*</span> <?php echo $ms_catalog_sellerinfo_nickname; ?></td>
 				<td>
 					<input type="text" name="seller[nickname]" value="<?php echo $seller['ms.nickname']; ?>" />
-				</td>					
+				</td>
 				<?php } ?>
 		</tr>
-		
+
+		<tr>
+			<td><?php echo $ms_catalog_sellerinfo_keyword; ?></td>
+			<td>
+				<input type="text" name="seller[keyword]" value="<?php echo $seller['keyword']; ?>" />
+			</td>
+		</tr>
 
 		<tr>
 			<td><?php echo $ms_catalog_sellerinfo_sellergroup; ?></td>
@@ -100,9 +106,8 @@
 				<option value="<?php echo $group['seller_group_id']; ?>" <?php if ($seller['ms.seller_group'] == $group['seller_group_id']) { ?>selected="selected"<?php } ?>><?php echo $group['name']; ?></option>
 				<?php } ?>
 			</select>
-			</td>				
+			</td>
 		</tr>
-		
 		
 		<tr>
 			<td>

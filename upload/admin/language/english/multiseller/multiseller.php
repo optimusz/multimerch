@@ -229,6 +229,9 @@ $_['ms_config_comments_maxlen_note'] = 'Maximum comment length when posting comm
 $_['ms_config_graphical_sellermenu'] = 'Graphical seller menu';
 $_['ms_config_graphical_sellermenu_note'] = 'Graphical seller menu';
 
+$_['ms_config_sellers_slug'] = 'Sellers SEO keyword';
+$_['ms_config_sellers_slug_note'] = 'Sellers SEO keyword note';
+
 $_['ms_config_carousel'] = 'Seller carousel';
 $_['ms_config_topsellers'] = 'Top sellers';
 $_['ms_config_modules'] = 'Modules';
@@ -310,6 +313,7 @@ $_['ms_catalog_sellerinfo_customer_password'] = 'Password';
 $_['ms_catalog_sellerinfo_customer_password_confirm'] = 'Confirm password';
 
 $_['ms_catalog_sellerinfo_nickname'] = 'Nickname';
+$_['ms_catalog_sellerinfo_keyword'] = 'SEO keyword';
 $_['ms_catalog_sellerinfo_description'] = 'Description';
 $_['ms_catalog_sellerinfo_company'] = 'Company';
 $_['ms_catalog_sellerinfo_country'] = 'Country';

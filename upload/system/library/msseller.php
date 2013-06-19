@@ -223,6 +223,18 @@ final class MsSeller extends Model {
 			$commission_id = $this->MsLoader->MsCommission->editCommission($data['commission_id'], $data['commission']);
 		}
 		
+		$this->db->query("DELETE FROM " . DB_PREFIX . "url_alias WHERE query = 'seller_id=" . (int)$seller_id. "'");
+		
+		if (isset($data['keyword'])) {
+			$similarity_query = $this->db->query("SELECT * FROM ". DB_PREFIX . "url_alias WHERE keyword LIKE '" . $this->db->escape($data['keyword']) . "%'");
+			$number = $similarity_query->num_rows;
+			
+			if ($number > 0) {
+				$data['keyword'] = $data['keyword'] . "-" . $number;
+			}
+			$this->db->query("INSERT INTO " . DB_PREFIX . "url_alias SET query = 'seller_id=" . (int)$seller_id . "', keyword = '" . $this->db->escape($data['keyword']) . "'");
+		}
+
 		$sql = "UPDATE " . DB_PREFIX . "ms_seller
 				SET description = '" . $this->db->escape($data['description']) . "',
 					company = '" . $this->db->escape($data['company']) . "',
@@ -237,11 +249,6 @@ final class MsSeller extends Model {
 		
 		$this->db->query($sql);	
 	}
-	
-	
-	
-	
-	
 	
 	/********************************************************/
 	
@@ -275,7 +282,8 @@ final class MsSeller extends Model {
 						ms.description as 'ms.description',
 						ms.commission_id as 'ms.commission_id',
 						ms.seller_group as 'ms.seller_group',
-						IFNULL(SUM(mp.number_sold), 0) as 'total_sales'
+						IFNULL(SUM(mp.number_sold), 0) as 'total_sales',
+						(SELECT keyword FROM " . DB_PREFIX . "url_alias WHERE `query` = 'seller_id=" . (int)$seller_id . "') AS keyword
 				FROM `" . DB_PREFIX . "customer` c
 				INNER JOIN `" . DB_PREFIX . "ms_seller` ms
 					ON (c.customer_id = ms.seller_id)
