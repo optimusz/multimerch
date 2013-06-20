@@ -607,6 +607,17 @@
 		</operation>
 		
 		<operation error="log">
+			<search position="after"><![CDATA[
+				if (isset($data['route'])) {
+			]]></search>
+			<add><![CDATA[
+				if ($data['route'] == 'seller/catalog-seller') {
+					$url .= '/' . $this->config->get('msconf_sellers_slug') . '/';
+				}
+			]]></add>
+		</operation>
+		
+		<operation error="log">
 			<search position="replace" index="1"><![CDATA[
 				$url .= '/' . $query->row['keyword'];
 			]]></search>
