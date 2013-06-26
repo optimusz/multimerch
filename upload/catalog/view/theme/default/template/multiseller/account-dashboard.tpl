@@ -48,14 +48,12 @@
 		<p><span><?php echo $ms_account_dashboard_sales_month; ?>:</span> <span><?php echo $seller['sales_month']; ?></span></p>
 		<p><span><?php echo $ms_account_dashboard_earnings_month; ?>:</span> <span><?php echo $seller['earnings_month']; ?></span></p>	
 		
-		<!-- AIRCode -->
 		<h3><?php echo $ms_account_badges; ?></h3>
 		<p>
 		<?php foreach($seller['badges'] as $badge) { ?>
 			<img src="<?php echo $badge['image']; ?>" title="<?php echo $badge['description']; ?>" />
 		<?php } ?>
 		</p>
-		<!--/AIRCode-->	
 	</div>
 	
 	<div class="nav">

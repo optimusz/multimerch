@@ -117,7 +117,7 @@ class ControllerMultisellerSellerGroup extends ControllerMultisellerBase {
 		// badges
 		$badges = $this->MsLoader->MsBadge->getBadges();
 		foreach($badges as &$badge) {
-			$badge['image'] = $this->model_tool_image->resize($badge['image'], 30, 30);
+			$badge['image'] = $this->model_tool_image->resize($badge['image'], $this->config->get('msconf_badge_width'), $this->config->get('msconf_badge_height'));
 		}
 		$this->data['badges'] = $badges;
 		
@@ -161,7 +161,7 @@ class ControllerMultisellerSellerGroup extends ControllerMultisellerBase {
 		// badges
 		$badges = $this->MsLoader->MsBadge->getBadges();
 		foreach($badges as &$badge) {
-			$badge['image'] = $this->model_tool_image->resize($badge['image'], 30, 30);
+			$badge['image'] = $this->model_tool_image->resize($badge['image'], $this->config->get('msconf_badge_width'), $this->config->get('msconf_badge_height'));
 		}
 		$this->data['badges'] = $badges;
 

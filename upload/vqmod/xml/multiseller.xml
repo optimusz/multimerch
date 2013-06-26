@@ -405,13 +405,10 @@
 		    		<div class="avatar-box">
 		    			<a style="text-decoration: none" href="<?php echo $seller['href']; ?>"><h2><?php echo $seller['nickname']; ?></h2></a>
 		    			<a href="<?php echo $seller['href']; ?>"><img src="<?php echo $seller['thumb']; ?>" /></a>
-		    			
-		    			<!--AIRCode-->
 		    			<br />
-						<?php foreach($seller['badges'] as $badge) { ?>
-							<img style="border: none;" src="<?php echo $all_badges[$badge]['image']; ?>" title="<?php echo $all_badges[$badge]['descr'][$lang_id]['description']; ?>" />
-						<?php } ?>
-		    			<!--/AIRCode-->
+							<?php foreach($seller['badges'] as $badge) { ?>
+								<img src="<?php echo $badge['image']; ?>" title="<?php echo $badge['description']; ?>" />
+							<?php } ?>
 		    		</div>
 		    		<div class="info-box">
 		    			<?php if ($seller['country']) { ?>
@@ -499,6 +496,7 @@
 			$this->document->addStyle('catalog/view/theme/' . $this->config->get('config_template') . '/stylesheet/multiseller.css');
 			$this->data = array_merge($this->data, $this->load->language('multiseller/multiseller'));
 			$this->load->model('localisation/country');
+			$this->load->model('tool/image');
 			
 			$seller_id = $this->MsLoader->MsProduct->getSellerId($this->request->get['product_id']);
 			$seller = $this->MsLoader->MsSeller->getSeller($seller_id);
@@ -543,46 +541,16 @@
 					'product_status' => array(MsProduct::STATUS_ACTIVE)
 				));
 				
-				// AIRCode
-				$this->load->model('tool/image');
+				$badges = array_merge(
+					$this->MsLoader->MsBadge->getSellerGroupBadges(array('seller_id' => $seller['seller_id'], 'language_id' => $this->config->get('config_language_id'))),
+					$this->MsLoader->MsBadge->getSellerGroupBadges(array('seller_group_id' => $seller['ms.seller_group'], 'language_id' => $this->config->get('config_language_id'))),
+					$this->MsLoader->MsBadge->getSellerGroupBadges(array('seller_group_id' => $this->config->get('msconf_default_seller_group_id'), 'language_id' => $this->config->get('config_language_id')))
+				);
 				
-				$this->data['lang_id'] = $this->config->get('config_language_id');
-		
-				$all_badges = $this->MsLoader->MsBadge->getBadges();
-				
-				foreach($all_badges as $abadge)
-				{
-					$this->data['all_badges'][$abadge['badge_id']] = array('badge_id' => $abadge['badge_id'], 'name' => $abadge['name'], 'image' => $this->model_tool_image->resize($abadge['image'], 30, 30), 'descr' => $this->MsLoader->MsBadge->getBadgeDescriptions($abadge['badge_id']));
+				foreach ($badges as &$badge) {
+					$badge['image'] = $this->model_tool_image->resize($badge['image'], $this->config->get('msconf_badge_width'), $this->config->get('msconf_badge_height'));
 				}
-				
-				$badges = $this->MsLoader->MsBadge->getBadgesByGroup($seller['ms.seller_group']);
-				$group_badges = array();
-			
-				if(isset($badges['badge_id']) AND $badges['badge_id'] != "")
-				{
-					$badges = unserialize($badges['badge_id']);
-				
-					foreach($badges as $badge)
-					{
-						$group_badges[$badge] = $badge;
-					}
-				}
-				
-				$badges = $this->MsLoader->MsBadge->getBadgesBySeller($seller['seller_id']);
-				$seller_badges = array();
-			
-				if(isset($badges['badge_id']) AND $badges['badge_id'] != "")
-				{
-					$badges = unserialize($badges['badge_id']);
-				
-					foreach($badges as $badge)
-					{
-						$seller_badges[$badge] = $badge;
-					}
-				}
-				
-				$this->data['seller']['badges'] = array_merge($seller_badges, $group_badges);
-				// /AIRCode
+				$this->data['seller']['badges'] = $badges;
 			}
 
 			$this->data['ms_product_attributes'] = $this->MsLoader->MsAttribute->getProductAttributes($this->request->get['product_id'], array('multilang' => 0, 'attribute_type'=> array(MsAttribute::TYPE_TEXT, MsAttribute::TYPE_TEXTAREA, MsAttribute::TYPE_DATE, MsAttribute::TYPE_DATETIME, MsAttribute::TYPE_TIME), 'mavd.language_id' => 0));

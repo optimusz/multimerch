@@ -262,19 +262,21 @@ $_['ms_config_enable_rte_note'] = 'Enable Rich Text Editor for product and selle
 $_['ms_config_rte_whitelist'] = 'Tag whitelist';
 $_['ms_config_rte_whitelist_note'] = 'Permitted tags in RTE (empty = all tags permitted)';
 
-$_['ms_config_seller_avatar_image_size'] = 'Seller avatar image size: ';
-$_['ms_config_seller_avatar_image_size_seller_profile'] = 'Seller profile: ';
-$_['ms_config_seller_avatar_image_size_seller_list'] = 'Seller list: ';
-$_['ms_config_seller_avatar_image_size_product_page'] = 'Product page: ';
-$_['ms_config_seller_avatar_image_size_seller_dashboard'] = 'Seller dashboard: ';
+$_['ms_config_seller_avatar_image_size'] = 'Seller avatar image size';
+$_['ms_config_seller_avatar_image_size_seller_profile'] = 'Seller profile';
+$_['ms_config_seller_avatar_image_size_seller_list'] = 'Seller list';
+$_['ms_config_seller_avatar_image_size_product_page'] = 'Product page';
+$_['ms_config_seller_avatar_image_size_seller_dashboard'] = 'Seller dashboard';
 
-$_['ms_config_image_preview_size'] = 'Uploaded preview image size: ';
-$_['ms_config_image_preview_size_seller_avatar'] = 'Seller avatar: ';
-$_['ms_config_image_preview_size_product_image'] = 'Product image: ';
+$_['ms_config_image_preview_size'] = 'Uploaded preview image size';
+$_['ms_config_image_preview_size_seller_avatar'] = 'Seller avatar';
+$_['ms_config_image_preview_size_product_image'] = 'Product image';
 
-$_['ms_config_product_image_size'] = 'Product image size: ';
-$_['ms_config_product_image_size_seller_profile'] = 'Seller profile: ';
-$_['ms_config_product_image_size_seller_products_list'] = 'Seller products list: ';
+$_['ms_config_product_image_size'] = 'Product image size';
+$_['ms_config_product_image_size_seller_profile'] = 'Seller profile';
+$_['ms_config_product_image_size_seller_products_list'] = 'Seller products list';
+
+$_['ms_config_badge_size'] = 'Badge size';
 
 // Seller - List
 $_['ms_catalog_sellers_heading'] = 'Sellers';

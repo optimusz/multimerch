@@ -23,7 +23,7 @@ class ControllerSellerAccountDashboard extends ControllerSellerAccount {
 		);
 		
 		foreach ($badges as &$badge) {
-			$badge['image'] = $this->model_tool_image->resize($badge['image'], 30, 30);
+			$badge['image'] = $this->model_tool_image->resize($badge['image'], $this->config->get('msconf_badge_width'), $this->config->get('msconf_badge_height'));
 		}
 		$seller['badges'] = $badges;
 		

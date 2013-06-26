@@ -1255,6 +1255,17 @@
 							<input type="text" name="msconf_product_seller_products_image_height" value="<?php echo $msconf_product_seller_products_image_height; ?>" size="3" />
 						  </td>
 					</tr>
+					
+					<tr>
+						<td>
+							<span><?php echo $ms_config_badge_size; ?></span>
+						</td>
+						<td>
+							<input type="text" name="msconf_badge_width" value="<?php echo $msconf_badge_width; ?>" size="3" />
+							x
+							<input type="text" name="msconf_badge_height" value="<?php echo $msconf_badge_height; ?>" size="3" />
+						</td>
+					</tr>
 				</table>
 				</div>
 				<!-- END MISCELLANEOUS TAB -->
