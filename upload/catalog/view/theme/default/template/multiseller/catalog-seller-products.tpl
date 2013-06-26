@@ -14,6 +14,11 @@
 			<div class="avatar-box">
 				<a style="text-decoration: none" href="<?php echo $seller['href']; ?>"><h2><?php echo $ms_catalog_seller_products; ?></h2></a>
 				<a href="<?php echo $seller['href']; ?>"><img src="<?php echo $seller['thumb']; ?>" /></a>
+				
+				<br />
+				<?php foreach($seller['badges'] as $badge) { ?>
+					<img src="<?php echo $badge['image']; ?>" title="<?php echo $badge['description']; ?>" />
+				<?php } ?>
 			</div>
 			
 			<div class="info-box">

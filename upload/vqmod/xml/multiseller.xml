@@ -405,6 +405,13 @@
 		    		<div class="avatar-box">
 		    			<a style="text-decoration: none" href="<?php echo $seller['href']; ?>"><h2><?php echo $seller['nickname']; ?></h2></a>
 		    			<a href="<?php echo $seller['href']; ?>"><img src="<?php echo $seller['thumb']; ?>" /></a>
+		    			
+		    			<!--AIRCode-->
+		    			<br />
+						<?php foreach($seller['badges'] as $badge) { ?>
+							<img style="border: none;" src="<?php echo $all_badges[$badge]['image']; ?>" title="<?php echo $all_badges[$badge]['descr'][$lang_id]['description']; ?>" />
+						<?php } ?>
+		    			<!--/AIRCode-->
 		    		</div>
 		    		<div class="info-box">
 		    			<?php if ($seller['country']) { ?>
@@ -535,6 +542,47 @@
 					'seller_id' => $seller['seller_id'],
 					'product_status' => array(MsProduct::STATUS_ACTIVE)
 				));
+				
+				// AIRCode
+				$this->load->model('tool/image');
+				
+				$this->data['lang_id'] = $this->config->get('config_language_id');
+		
+				$all_badges = $this->MsLoader->MsBadge->getBadges();
+				
+				foreach($all_badges as $abadge)
+				{
+					$this->data['all_badges'][$abadge['badge_id']] = array('badge_id' => $abadge['badge_id'], 'name' => $abadge['name'], 'image' => $this->model_tool_image->resize($abadge['image'], 30, 30), 'descr' => $this->MsLoader->MsBadge->getBadgeDescriptions($abadge['badge_id']));
+				}
+				
+				$badges = $this->MsLoader->MsBadge->getBadgesByGroup($seller['ms.seller_group']);
+				$group_badges = array();
+			
+				if(isset($badges['badge_id']) AND $badges['badge_id'] != "")
+				{
+					$badges = unserialize($badges['badge_id']);
+				
+					foreach($badges as $badge)
+					{
+						$group_badges[$badge] = $badge;
+					}
+				}
+				
+				$badges = $this->MsLoader->MsBadge->getBadgesBySeller($seller['seller_id']);
+				$seller_badges = array();
+			
+				if(isset($badges['badge_id']) AND $badges['badge_id'] != "")
+				{
+					$badges = unserialize($badges['badge_id']);
+				
+					foreach($badges as $badge)
+					{
+						$seller_badges[$badge] = $badge;
+					}
+				}
+				
+				$this->data['seller']['badges'] = array_merge($seller_badges, $group_badges);
+				// /AIRCode
 			}
 
 			$this->data['ms_product_attributes'] = $this->MsLoader->MsAttribute->getProductAttributes($this->request->get['product_id'], array('multilang' => 0, 'attribute_type'=> array(MsAttribute::TYPE_TEXT, MsAttribute::TYPE_TEXTAREA, MsAttribute::TYPE_DATE, MsAttribute::TYPE_DATETIME, MsAttribute::TYPE_TIME), 'mavd.language_id' => 0));
@@ -860,6 +908,7 @@
 						<li><a href="<?php echo $ms_link_products; ?>"><?php echo $ms_menu_products; ?></a></li>
 						<li><a href="<?php echo $ms_link_transactions; ?>"><?php echo $ms_menu_transactions; ?></a></li>
 						<li><a href="<?php echo $ms_link_payment; ?>"><?php echo $ms_menu_payment; ?></a></li>
+						<li><a href="<?php echo $ms_link_badge; ?>"><?php echo $ms_menu_badge; ?></a></li>
 						<li><a href="<?php echo $ms_link_comments; ?>"><?php echo $ms_menu_comments; ?></a></li>
 						<li><a href="<?php echo $ms_link_settings; ?>"><?php echo $ms_menu_settings; ?></a></li>
 					</ul>
@@ -892,6 +941,7 @@
 			$this->data['ms_link_transactions'] = $this->url->link('multiseller/transaction', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['ms_link_comments'] = $this->url->link('multiseller/comment', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['ms_link_settings'] = $this->url->link('module/multiseller', 'token=' . $this->session->data['token'], 'SSL'); 
+			$this->data['ms_link_badge'] = $this->url->link('multiseller/badge', 'token=' . $this->session->data['token'], 'SSL'); 
 			]]></add>
 		</operation>		
 	</file>

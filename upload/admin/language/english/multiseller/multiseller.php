@@ -89,6 +89,7 @@ $_['ms_menu_transactions'] = 'Transactions';
 $_['ms_menu_payment'] = 'Payments';
 $_['ms_menu_settings'] = 'Settings';
 $_['ms_menu_comments'] = 'Comments';
+$_['ms_menu_badge'] = 'Badges';
 
 // Settings
 $_['ms_settings_heading'] = 'Settings';
@@ -485,4 +486,18 @@ $_['ms_payment_method_inherit'] = 'Inherit';
 $_['ms_payment_royalty_payout'] = 'Royalty payout to %s at %s';
 $_['ms_payment_generic'] = 'Payment #%s at %s';
 $_['ms_payment_completed'] = 'Payment completed';
+
+// Badges
+$_['ms_catalog_badges_breadcrumbs'] = 'Badges';
+$_['ms_catalog_badges_heading'] = 'Badges';
+$_['ms_catalog_badges_image'] = 'Image';
+$_['ms_badges_column_id'] = 'ID';
+$_['ms_badges_column_name'] = 'Name';
+$_['ms_badges_image'] = 'Image';
+$_['ms_badges_column_action'] = 'Action';
+$_['ms_catalog_insert_badge_heading'] = 'Create new Badge';
+$_['ms_catalog_edit_badge_heading'] = 'Editing a adge';
+$_['ms_success_badge_created'] = 'You created a new badge!';
+$_['ms_success_badge_updated'] = 'The badge was updated!';
+$_['ms_error_badge_name'] = 'You did not enter a name for the badge!';
 ?>

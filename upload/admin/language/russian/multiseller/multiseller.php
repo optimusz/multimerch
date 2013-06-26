@@ -89,6 +89,7 @@ $_['ms_menu_transactions'] = 'Транзакции';
 $_['ms_menu_payment'] = 'Платежи';
 $_['ms_menu_settings'] = 'Настройки';
 $_['ms_menu_comments'] = 'Комментарии';
+$_['ms_menu_badge'] = 'Значки';
 
 // Settings
 $_['ms_settings_heading'] = 'Настройки';
@@ -463,4 +464,18 @@ $_['ms_payment_method_inherit'] = 'Наследовать';
 $_['ms_payment_royalty_payout'] = 'Выплата гонорара %s в %s';
 $_['ms_payment_generic'] = 'Платеж #%s в %s';
 $_['ms_payment_completed'] = 'Платеж завершен';
+
+// Badges
+$_['ms_catalog_badges_breadcrumbs'] = 'Значки';
+$_['ms_catalog_badges_heading'] = 'Значки';
+$_['ms_catalog_badges_image'] = 'Изображение';
+$_['ms_badges_column_id'] = 'ID';
+$_['ms_badges_column_name'] = 'Имя';
+$_['ms_badges_image'] = 'Изображение';
+$_['ms_badges_column_action'] = 'Action';
+$_['ms_catalog_insert_badge_heading'] = 'Создать новый значок';
+$_['ms_catalog_edit_badge_heading'] = 'Редактирование значок';
+$_['ms_success_badge_created'] = 'Вы создали новый значок!';
+$_['ms_success_badge_updated'] = 'значок был обновлен!';
+$_['ms_error_badge_name'] = 'Вы не ввели имя для значка';
 ?>

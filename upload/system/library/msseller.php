@@ -101,6 +101,13 @@ final class MsSeller extends Model {
 
 		$this->db->query($sql);
 		$seller_id = $this->db->getLastId();
+
+		// badges
+		if (isset($data['badges'])) {
+			foreach ($data['badges'] as $k => $badge_id) {
+				$this->db->query("INSERT INTO " . DB_PREFIX . "ms_badge_seller_group (badge_id, seller_id) VALUES (" . (int)$badge_id.",".(int)$seller_id . ")");
+			}
+		}
 		
 		if (isset($data['keyword'])) {
 			$similarity_query = $this->db->query("SELECT * FROM ". DB_PREFIX . "url_alias WHERE keyword LIKE '" . $this->db->escape($data['keyword']) . "%'");
@@ -217,6 +224,7 @@ final class MsSeller extends Model {
 	public function adminEditSeller($data) {
 		$seller_id = (int)$data['seller_id'];
 
+		// commissions
 		if (!$data['commission_id']) {
 			$commission_id = $this->MsLoader->MsCommission->createCommission($data['commission']);
 		} else {
@@ -234,6 +242,15 @@ final class MsSeller extends Model {
 			}
 			$this->db->query("INSERT INTO " . DB_PREFIX . "url_alias SET query = 'seller_id=" . (int)$seller_id . "', keyword = '" . $this->db->escape($data['keyword']) . "'");
 		}
+
+		// badges
+		$this->db->query("DELETE FROM " . DB_PREFIX . "ms_badge_seller_group WHERE seller_id = " . (int)$seller_id);
+		if (isset($data['badges'])) {
+			foreach ($data['badges'] as $k => $badge_id) {
+				$this->db->query("INSERT INTO " . DB_PREFIX . "ms_badge_seller_group (badge_id, seller_id) VALUES (" . (int)$badge_id.",".(int)$seller_id . ")");
+			}
+		}
+		
 
 		$sql = "UPDATE " . DB_PREFIX . "ms_seller
 				SET description = '" . $this->db->escape($data['description']) . "',

@@ -8,11 +8,24 @@ class ControllerSellerAccountDashboard extends ControllerSellerAccount {
 		}
 		
 		$this->load->model('catalog/product');
+		$this->load->model('tool/image');
+		
 		$seller_id = $this->customer->getId();
 		
 		$seller = $this->MsLoader->MsSeller->getSeller($seller_id);
 		$seller_group_names = $this->MsLoader->MsSellerGroup->getSellerGroupDescriptions($seller['ms.seller_group']);
 		$my_first_day = date('Y-m-d H:i:s', mktime(0, 0, 0, date("n"), 1));
+		
+		$badges = array_merge(
+			$this->MsLoader->MsBadge->getSellerGroupBadges(array('seller_id' => $seller['seller_id'], 'language_id' => $this->config->get('config_language_id'))),
+			$this->MsLoader->MsBadge->getSellerGroupBadges(array('seller_group_id' => $seller['ms.seller_group'], 'language_id' => $this->config->get('config_language_id'))),
+			$this->MsLoader->MsBadge->getSellerGroupBadges(array('seller_group_id' => $this->config->get('msconf_default_seller_group_id'), 'language_id' => $this->config->get('config_language_id')))
+		);
+		
+		foreach ($badges as &$badge) {
+			$badge['image'] = $this->model_tool_image->resize($badge['image'], 30, 30);
+		}
+		$seller['badges'] = $badges;
 		
 		$this->data['seller'] = array_merge(
 			$seller,

@@ -202,6 +202,7 @@ class ControllerSellerCatalogSeller extends ControllerSellerCatalog {
 	public function profile() {
 		$this->load->model('localisation/country');
 		$this->load->model('catalog/product');
+		$this->load->model('tool/image');
     	
 		$seller = $this->MsLoader->MsSeller->getSeller($this->request->get['seller_id']);
 		
@@ -263,6 +264,18 @@ class ControllerSellerCatalogSeller extends ControllerSellerCatalog {
 				'limit'		=> 5
 			)
 		);
+
+		// badges
+		$badges = array_merge(
+			$this->MsLoader->MsBadge->getSellerGroupBadges(array('seller_id' => $seller['seller_id'], 'language_id' => $this->config->get('config_language_id'))),
+			$this->MsLoader->MsBadge->getSellerGroupBadges(array('seller_group_id' => $seller['ms.seller_group'], 'language_id' => $this->config->get('config_language_id'))),
+			$this->MsLoader->MsBadge->getSellerGroupBadges(array('seller_group_id' => $this->config->get('msconf_default_seller_group_id'), 'language_id' => $this->config->get('config_language_id')))
+		);
+		
+		foreach ($badges as &$badge) {
+			$badge['image'] = $this->model_tool_image->resize($badge['image'], 30, 30);
+		}
+		$this->data['seller']['badges'] = $badges;
 
 		if (!empty($products)) {
 			foreach ($products as $product) {
@@ -328,9 +341,11 @@ class ControllerSellerCatalogSeller extends ControllerSellerCatalog {
 		$this->load->model('catalog/category');
 		$this->load->model('catalog/product');
 		$this->load->model('localisation/country');
-    	$this->language->load('product/category');
-    	$this->document->addScript('catalog/view/javascript/jquery/jquery.total-storage.min.js');
-    	
+		$this->language->load('product/category');
+		$this->load->model('tool/image');
+		
+		$this->document->addScript('catalog/view/javascript/jquery/jquery.total-storage.min.js');
+		
 		$seller = $this->MsLoader->MsSeller->getSeller($this->request->get['seller_id']);
 
 		if (empty($seller) || $seller['ms.seller_status'] != MsSeller::STATUS_ACTIVE) {
@@ -370,11 +385,23 @@ class ControllerSellerCatalogSeller extends ControllerSellerCatalog {
 			$this->data['seller']['website'] = NULL;
 		}
 		
+		// badges
+		$badges = array_merge(
+			$this->MsLoader->MsBadge->getSellerGroupBadges(array('seller_id' => $seller['seller_id'], 'language_id' => $this->config->get('config_language_id'))),
+			$this->MsLoader->MsBadge->getSellerGroupBadges(array('seller_group_id' => $seller['ms.seller_group'], 'language_id' => $this->config->get('config_language_id'))),
+			$this->MsLoader->MsBadge->getSellerGroupBadges(array('seller_group_id' => $this->config->get('msconf_default_seller_group_id'), 'language_id' => $this->config->get('config_language_id')))
+		);
+		
 		$this->data['seller']['total_sales'] = $this->MsLoader->MsSeller->getSalesForSeller($seller['seller_id']);
 		$this->data['seller']['total_products'] = $this->MsLoader->MsProduct->getTotalProducts(array(
 			'seller_id' => $seller['seller_id'],
 			'product_status' => array(MsProduct::STATUS_ACTIVE)
 		));
+
+		foreach ($badges as &$badge) {
+			$badge['image'] = $this->model_tool_image->resize($badge['image'], 30, 30);
+		}
+		$this->data['seller']['badges'] = $badges;
 
 		/* seller products part */
 		$this->data['text_display'] = $this->language->get('text_display');

@@ -104,6 +104,7 @@ class ControllerMultisellerSellerGroup extends ControllerMultisellerBase {
 	
 	// Insert a new seller group
 	public function insert() {
+		$this->load->model('tool/image');
 		$this->data['token'] = $this->session->data['token'];
 		$this->data['heading'] = $this->language->get('ms_catalog_insert_seller_group_heading');
 		$this->document->setTitle($this->language->get('ms_catalog_insert_seller_group_heading'));
@@ -113,16 +114,14 @@ class ControllerMultisellerSellerGroup extends ControllerMultisellerBase {
 		$this->load->model('localisation/language');
 		$this->data['languages'] = $this->model_localisation_language->getLanguages();		
 		
-		$this->data['seller_group'] = NULL;
-		/*
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-			$this->MsLoader->MsSellerGroup->saveSellerGroup($this->request->post);
-			
-			$this->session->data['success'] = $this->language->get('ms_success');
-
-			$this->redirect($this->url->link('multiseller/seller-group', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+		// badges
+		$badges = $this->MsLoader->MsBadge->getBadges();
+		foreach($badges as &$badge) {
+			$badge['image'] = $this->model_tool_image->resize($badge['image'], 30, 30);
 		}
-		*/
+		$this->data['badges'] = $badges;
+		
+		$this->data['seller_group'] = NULL;
 		
 		$this->data['breadcrumbs'] = $this->MsLoader->MsHelper->admSetBreadcrumbs(array(
 			array(
@@ -142,7 +141,7 @@ class ControllerMultisellerSellerGroup extends ControllerMultisellerBase {
 	// Update a seller group
 	public function update() {
 		$this->validate(__FUNCTION__);
-		
+				$this->load->model('tool/image');
 		$this->data['token'] = $this->session->data['token'];
 		$this->data['heading'] = $this->language->get('ms_catalog_edit_seller_group_heading');
 		$this->document->setTitle($this->language->get('ms_catalog_edit_seller_group_heading'));
@@ -159,12 +158,25 @@ class ControllerMultisellerSellerGroup extends ControllerMultisellerBase {
 		else
 			$rates = $this->MsLoader->MsCommission->getCommissionRates($seller_group['msg.commission_id']);
 		
+		// badges
+		$badges = $this->MsLoader->MsBadge->getBadges();
+		foreach($badges as &$badge) {
+			$badge['image'] = $this->model_tool_image->resize($badge['image'], 30, 30);
+		}
+		$this->data['badges'] = $badges;
+
 		$this->data['seller_group'] = array(
 			'seller_group_id' => $seller_group['seller_group_id'],
 			'description' => $this->MsLoader->MsSellerGroup->getSellerGroupDescriptions($this->request->get['seller_group_id']),
 			'commission_id' => $seller_group['commission_id'],
-			'commission_rates' => $rates
+			'commission_rates' => $rates,
 		);
+		
+		$seller_group_badges = $this->MsLoader->MsBadge->getSellerGroupBadges(array('seller_group_id' => $this->request->get['seller_group_id']));
+		$this->data['seller_group']['badges'] = array();
+		foreach($seller_group_badges as $b) {
+			$this->data['seller_group']['badges'][] = $b['badge_id'];
+		}		
 		
 		$this->data['breadcrumbs'] = $this->MsLoader->MsHelper->admSetBreadcrumbs(array(
 			array(
@@ -278,7 +290,7 @@ class ControllerMultisellerSellerGroup extends ControllerMultisellerBase {
 			}
 			unset($rate);
 		}
-
+		
 		if (empty($json['errors'])) {
 			if (empty($data['seller_group_id'])) {
 				$this->MsLoader->MsSellerGroup->createSellerGroup($data);

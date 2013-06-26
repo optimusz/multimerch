@@ -3,6 +3,7 @@ class ModelMultisellerSettings extends Model {
 	public function checkDbVersion($version) {
 		switch ($version) {
 			case "3.1":
+				// todo
 				break;
 							
 			case "3.0":
@@ -28,6 +29,16 @@ class ModelMultisellerSettings extends Model {
 		if (!$this->checkDbVersion($version)) {
 			switch ($version) {
 				case "3.1":
+					// todo add attribute table & copy data
+					$sql = " 
+						CREATE TABLE `" . DB_PREFIX . "ms_attribute_attribute` (
+						 `ms_attribute_id` int(11) DEFAULT NULL,
+						 `ms_attribute_value_id` int(11) DEFAULT NULL,
+						 `oc_attribute_group_id` int(11) DEFAULT NULL,
+						 `oc_attribute_id` int(11) DEFAULT NULL,
+						 PRIMARY KEY (`ms_attribute_id`, `ms_attribute_value_id`, `oc_attribute_group_id`, `oc_attribute_id`)
+						) DEFAULT CHARSET=utf8";
+					$this->db->query($sql);					
 					break;
 				
 				case "3.0":
@@ -345,6 +356,16 @@ class ModelMultisellerSettings extends Model {
 			) DEFAULT CHARSET=utf8";		
 		$this->db->query($sql);
 		
+		$sql = " 
+			CREATE TABLE `" . DB_PREFIX . "ms_attribute_attribute` (
+			 `ms_attribute_id` int(11) DEFAULT NULL,
+			 `ms_attribute_value_id` int(11) DEFAULT NULL,
+			 `oc_attribute_group_id` int(11) DEFAULT NULL,
+			 `oc_attribute_id` int(11) DEFAULT NULL,
+			 PRIMARY KEY (`ms_attribute_id`, `ms_attribute_value_id`, `oc_attribute_group_id`, `oc_attribute_id`)
+			) DEFAULT CHARSET=utf8";
+		$this->db->query($sql);
+		
 		$sql = "
 			CREATE TABLE `" . DB_PREFIX . "ms_product_attribute` (
 			 `product_id` int(11) NOT NULL,
@@ -370,7 +391,31 @@ class ModelMultisellerSettings extends Model {
 			 `date_created` DATETIME NOT NULL,
 			 `date_paid` DATETIME DEFAULT NULL,
 			PRIMARY KEY (`payment_id`)) default CHARSET=utf8";
-		$this->db->query($sql);		
+		$this->db->query($sql);
+		
+		$sql = "
+			CREATE TABLE IF NOT EXISTS `".DB_PREFIX."ms_badge` (
+			  `badge_id` int(11) NOT NULL AUTO_INCREMENT,
+			  `image` varchar(255) DEFAULT NULL,
+			  PRIMARY KEY (`badge_id`)) default CHARSET=utf8";
+		$this->db->query($sql);	
+		
+		$sql = "
+			CREATE TABLE IF NOT EXISTS `".DB_PREFIX."ms_badge_description` (
+			  `badge_id` int(11) NOT NULL,
+			  `name` varchar(32) NOT NULL DEFAULT '',
+			  `description` text NOT NULL,
+			  `language_id` int(11) DEFAULT NULL,
+			  PRIMARY KEY (`badge_id`, `language_id`)) default CHARSET=utf8";
+		$this->db->query($sql);	
+		
+		$sql = "
+			CREATE TABLE IF NOT EXISTS `".DB_PREFIX."ms_badge_seller_group` (
+				`badge_id` INT(11) NOT NULL,
+				`seller_id` int(11) DEFAULT NULL,
+				`seller_group_id` int(11) DEFAULT NULL,
+			PRIMARY KEY (`badge_id`, `seller_id`, `seller_group_id`)) default CHARSET=utf8";
+		$this->db->query($sql);	
 	}
 	
 	public function addData() {
@@ -415,7 +460,10 @@ class ModelMultisellerSettings extends Model {
 				`" . DB_PREFIX . "ms_attribute_value`,
 				`" . DB_PREFIX . "ms_attribute_value_description`,
 				`" . DB_PREFIX . "ms_product_attribute`,
-				`" . DB_PREFIX . "ms_payment`";				
+				`" . DB_PREFIX . "ms_payment`,
+				`" . DB_PREFIX . "ms_badge`,
+				`" . DB_PREFIX . "ms_badge_description`,
+				`" . DB_PREFIX . "ms_badge_seller_group`";
 				
 		$this->db->query($sql);
 	}

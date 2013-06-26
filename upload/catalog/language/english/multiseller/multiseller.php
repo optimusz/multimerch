@@ -224,6 +224,10 @@ $_['ms_account_transactions'] = 'Transactions';
 $_['ms_account_orders'] = 'Orders';
 $_['ms_account_withdraw'] = 'Request payout';
 
+// AIRCode
+$_['ms_account_badges'] = "Badges";
+// /AIRCode
+
 // Account - New product
 $_['ms_account_newproduct_heading'] = 'New Product';
 $_['ms_account_newproduct_breadcrumbs'] = 'New Product';

@@ -308,6 +308,7 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 	public function create() {
 		$this->validate(__FUNCTION__);
 		$this->load->model('localisation/country');
+		$this->load->model('tool/image');
     	$this->data['countries'] = $this->model_localisation_country->getCountries();
 		$this->data['customers'] = $this->MsLoader->MsSeller->getCustomers(array('seller_id' => 'NULL'));
 		$this->data['seller_groups'] =$this->MsLoader->MsSellerGroup->getSellerGroups();  
@@ -317,6 +318,13 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 		$this->data['token'] = $this->session->data['token'];
 		$this->data['heading'] = $this->language->get('ms_catalog_sellerinfo_heading');
 		$this->document->setTitle($this->language->get('ms_catalog_sellerinfo_heading'));
+		
+		// badges
+		$badges = $this->MsLoader->MsBadge->getBadges();
+		foreach($badges as &$badge) {
+			$badge['image'] = $this->model_tool_image->resize($badge['image'], 30, 30);
+		}
+		$this->data['badges'] = $badges;
 		
 		$this->data['breadcrumbs'] = $this->MsLoader->MsHelper->admSetBreadcrumbs(array(
 			array(
@@ -339,9 +347,9 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 	
 	public function update() {
 		$this->validate(__FUNCTION__);
-		
 		$this->load->model('localisation/country');
-    	$this->data['countries'] = $this->model_localisation_country->getCountries();		
+		$this->load->model('tool/image');
+		$this->data['countries'] = $this->model_localisation_country->getCountries();		
 
 		$seller = $this->MsLoader->MsSeller->getSeller($this->request->get['seller_id']);
 
@@ -371,6 +379,20 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 			
 			$this->data['seller']['commission_id'] = $seller['ms.commission_id'];	
 			$this->data['seller']['commission_rates'] = $rates;
+			
+			// badges
+			$badges = $this->MsLoader->MsBadge->getBadges();
+			foreach($badges as &$badge) {
+				$badge['image'] = $this->model_tool_image->resize($badge['image'], 30, 30);
+			}
+			$this->data['badges'] = $badges;
+
+			$seller_badges = $this->MsLoader->MsBadge->getSellerGroupBadges(array('seller_id' => $seller['seller_id']));
+			$this->data['seller']['badges'] = array();
+			foreach($seller_badges as $b) {
+				$this->data['seller']['badges'][] = $b['badge_id'];
+			}			
+			$this->data['seller']['badges'] = $this->data['seller']['badges'];
 		}
 
 		$this->data['currency_code'] = $this->config->get('config_currency');

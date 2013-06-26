@@ -11,7 +11,8 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		"multiseller/seller",
 		"multiseller/transaction",
 		"multiseller/seller-group",
-		"multiseller/comment"
+		"multiseller/comment",
+		"multiseller/badge"
 	);
 		
 	private $settings = array(

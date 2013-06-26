@@ -14,6 +14,11 @@
 			<div class="avatar-box">
 				<h2><?php echo $seller['nickname']; ?></h2>
 				<img src="<?php echo $seller['thumb']; ?>" />
+
+				<br />
+				<?php foreach($seller['badges'] as $badge) { ?>
+					<img src="<?php echo $badge['image']; ?>" title="<?php echo $badge['description']; ?>" />
+				<?php } ?>
 			</div>
 			
 			<div class="info-box">

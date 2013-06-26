@@ -225,6 +225,10 @@ $_['ms_account_transactions'] = 'Транзакции';
 $_['ms_account_orders'] = 'Заказы';
 $_['ms_account_withdraw'] = 'Запросить выплату';
 
+// AIRCode
+$_['ms_account_badges'] = "Значки";
+// /AIRCode
+
 // Account - New product
 $_['ms_account_newproduct_heading'] = 'Новый Продукт';
 $_['ms_account_newproduct_breadcrumbs'] = 'Новый Продукт';
