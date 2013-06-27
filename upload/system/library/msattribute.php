@@ -23,14 +23,14 @@ class MsAttribute extends Model {
 		$this->db->query($sql);
 		$attribute_id = $this->db->getLastId();
 
-		// oc attribute groups
-		$this->db->query("INSERT INTO " . DB_PREFIX . "attribute_group SET sort_order = '" . (int)$data['sort_order'] . "'");
-		$attribute_group_id = $this->db->getLastId();
+		// oc attribute
+		$this->db->query("INSERT INTO " . DB_PREFIX . "attribute SET sort_order = '" . (int)$data['sort_order'] . "'");
+		$oc_attribute_id = $this->db->getLastId();
 
 		// attribute attribute
 		$sql = "INSERT INTO " . DB_PREFIX . "ms_attribute_attribute
 				SET ms_attribute_id = " . (int)$attribute_id . ",
-					oc_attribute_group_id = " . (int)$attribute_group_id;
+					oc_attribute_id = " . (int)$oc_attribute_id;
 		$this->db->query($sql);
 
 		foreach ($data['attribute_description'] as $language_id => $value) {
@@ -41,8 +41,8 @@ class MsAttribute extends Model {
 						description = '" . (isset($value['description']) ? $this->db->escape($value['description']) : '') . "'";
 			$this->db->query($sql);
 			
-			// oc attribure groups
-			$this->db->query("INSERT INTO " . DB_PREFIX . "attribute_group_description SET attribute_group_id = '" . (int)$attribute_group_id . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($value['name']) . "'");
+			// oc attribute description
+			$this->db->query("INSERT INTO " . DB_PREFIX . "attribute_description SET attribute_id = '" . (int)$oc_attribute_id . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($value['name']) . "'");
 		}
 
 		if (isset($data['attribute_value'])) {
@@ -54,17 +54,6 @@ class MsAttribute extends Model {
 				$this->db->query($sql);
 				$attribute_value_id = $this->db->getLastId();
 
-				// oc attributes
-				$this->db->query("INSERT INTO " . DB_PREFIX . "attribute SET attribute_group_id = '" . (int)$attribute_group_id . "', sort_order = '" . (int)$data['sort_order'] . "'");
-				$oc_attribute_id = $this->db->getLastId();
-
-				// attribute attribute
-				$sql = "INSERT INTO " . DB_PREFIX . "ms_attribute_attribute
-						SET ms_attribute_value_id = " . (int)$attribute_value_id . ",
-							ms_attribute_id = " . (int)$attribute_id . ",
-							oc_attribute_id = " . (int)$oc_attribute_id;
-				$this->db->query($sql);
-
 				foreach ($attribute_value['attribute_value_description'] as $language_id => $attribute_value_description) {
 					$sql = "INSERT INTO " . DB_PREFIX . "ms_attribute_value_description
 							SET attribute_id = " . (int)$attribute_id . ",
@@ -72,9 +61,6 @@ class MsAttribute extends Model {
 								language_id = " . $language_id . ",
 								name = '" . $this->db->escape($attribute_value_description['name']) . "'";
 					$this->db->query($sql);
-					
-					// oc attributes
-					$this->db->query("INSERT INTO " . DB_PREFIX . "attribute_description SET attribute_id = '" . (int)$oc_attribute_id . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($attribute_value_description['name']) . "'");
 				}
 			}
 		}
@@ -83,8 +69,8 @@ class MsAttribute extends Model {
 	}
 	
 	public function updateAttribute($attribute_id, $data) {
-		$query = $this->db->query("SELECT oc_attribute_group_id FROM " . DB_PREFIX . "ms_attribute_attribute WHERE ms_attribute_id = '" . (int)$attribute_id . "' AND oc_attribute_group_id IS NOT NULL LIMIT 1");
-		$attribute_group_id = $query->row['oc_attribute_group_id'];
+		$query = $this->db->query("SELECT oc_attribute_id FROM " . DB_PREFIX . "ms_attribute_attribute WHERE ms_attribute_id = '" . (int)$attribute_id . "' AND oc_attribute_id IS NOT NULL LIMIT 1");
+		$oc_attribute_id = $query->row['oc_attribute_id'];
 		
 		$sql = "UPDATE " . DB_PREFIX . "ms_attribute
 				SET attribute_type = " . (int)$data['attribute_type'] . ",
@@ -97,34 +83,24 @@ class MsAttribute extends Model {
 		$this->db->query($sql);
 
 		$this->db->query("DELETE FROM " . DB_PREFIX . "ms_attribute_description WHERE attribute_id = " . (int)$attribute_id);
-		$this->db->query("DELETE FROM " . DB_PREFIX . "attribute_group_description WHERE attribute_group_id = " . (int)$attribute_group_id);
+		$this->db->query("DELETE FROM " . DB_PREFIX . "attribute_description WHERE attribute_id = " . (int)$oc_attribute_id);
 		
 		foreach ($data['attribute_description'] as $language_id => $value) {
 			$sql = "INSERT INTO " . DB_PREFIX . "ms_attribute_description
 					SET attribute_id = " . (int)$attribute_id . ",
 						language_id = " . $language_id . ",
-	             		name = '" . $this->db->escape($value['name']) . "',
+						name = '" . $this->db->escape($value['name']) . "',
 						description = '" . (isset($value['description']) ? $this->db->escape($value['description']) : '') . "'";
 			$this->db->query($sql);
 			
-			// oc attribute groups
-			$this->db->query("INSERT INTO " . DB_PREFIX . "attribute_group_description SET attribute_group_id = '" . (int)$attribute_group_id . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($value['name']) . "'");
+			// oc attributes
+			$this->db->query("INSERT INTO " . DB_PREFIX . "attribute_description SET attribute_id = '" . (int)$oc_attribute_id . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($value['name']) . "'");
 		}
 
 		// keep text attribute values intact
-		if (in_array($data['attribute_type'], array(MsAttribute::TYPE_SELECT, MsAttribute::TYPE_RADIO, MsAttribute::TYPE_IMAGE, MsAttribute::TYPE_CHECKBOX))) {
+		if (in_array($data['attribute_type'], array(MsAttribute::TYPE_SELECT, MsAttribute::TYPE_RADIO, MsAttribute::TYPE_IMAGE, MsAttribute::TYPE_CHECKBOX, MsAttribute::TYPE_DATE, MsAttribute::TYPE_DATETIME))) {
 			$this->db->query("DELETE FROM " . DB_PREFIX . "ms_attribute_value WHERE attribute_id = '" . (int)$attribute_id . "'");
 			$this->db->query("DELETE FROM " . DB_PREFIX . "ms_attribute_value_description WHERE attribute_id = '" . (int)$attribute_id . "'");
-			
-			// oc attributes
-			$this->db->query("DELETE FROM " . DB_PREFIX . "attribute WHERE attribute_group_id = $attribute_group_id");
-			$this->db->query("DELETE FROM " . DB_PREFIX . "attribute_description WHERE attribute_id IN (SELECT oc_attribute_id FROM " . DB_PREFIX . "ms_attribute_attribute WHERE ms_attribute_id = $attribute_id AND oc_attribute_id IS NOT NULL)");
-			$this->db->query("DELETE FROM " . DB_PREFIX . "ms_attribute_attribute WHERE ms_attribute_id = $attribute_id AND oc_attribute_id IS NOT NULL");
-			/*
-			$this->db->query("DELETE FROM " . DB_PREFIX . "attribute WHERE attribute_id = (SELECT oc_attribute_id FROM " . DB_PREFIX . "attribute_attribute WHERE ms_attribute_value_id = $attribute_value_id AND oc_attribute_id IS NOT NULL LIMIT 1)");
-			$this->db->query("DELETE FROM " . DB_PREFIX . "attribute_description WHERE attribute_id = (SELECT oc_attribute_id FROM " . DB_PREFIX . "attribute_attribute WHERE ms_attribute_value_id = $attribute_value_id AND oc_attribute_id IS NOT NULL LIMIT 1)");
-			$this->db->query("DELETE FROM " . DB_PREFIX . "ms_attribute_attribute WHERE ms_attribute_value_id = $attribute_value_id AND oc_attribute_id IS NOT NULL");
-			*/
 			
 			if (isset($data['attribute_value'])) {
 				foreach ($data['attribute_value'] as $attribute_value) {
@@ -134,25 +110,10 @@ class MsAttribute extends Model {
 						$sql = "INSERT INTO " . DB_PREFIX . "ms_attribute_value SET attribute_id = '" . (int)$attribute_id . "', image = '" . $this->db->escape(html_entity_decode($attribute_value['image'], ENT_QUOTES, 'UTF-8')) . "', sort_order = '" . (int)$attribute_value['sort_order'] . "'";
 					}
 					$this->db->query($sql);
-									
 					$attribute_value_id = $this->db->getLastId();
-					
-					// oc attributes
-					$this->db->query("INSERT INTO " . DB_PREFIX . "attribute SET attribute_group_id = '" . (int)$attribute_group_id . "', sort_order = '" . (int)$data['sort_order'] . "'");
-					$oc_attribute_id = $this->db->getLastId();
-	
-					// attribute attribute
-					$sql = "INSERT INTO " . DB_PREFIX . "ms_attribute_attribute
-							SET ms_attribute_value_id = " . (int)$attribute_value_id . ",
-								ms_attribute_id = " . (int)$attribute_id . ",
-								oc_attribute_id = " . (int)$oc_attribute_id;
-					$this->db->query($sql);
 					
 					foreach ($attribute_value['attribute_value_description'] as $language_id => $attribute_value_description) {
 						$this->db->query("INSERT INTO " . DB_PREFIX . "ms_attribute_value_description SET attribute_value_id = '" . (int)$attribute_value_id . "', language_id = '" . (int)$language_id . "', attribute_id = '" . (int)$attribute_id . "', name = '" . $this->db->escape($attribute_value_description['name']) . "'");
-						
-						// oc attributes
-						$this->db->query("INSERT INTO " . DB_PREFIX . "attribute_description SET attribute_id = '" . (int)$oc_attribute_id . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($attribute_value_description['name']) . "'");
 					}
 				}
 			}
@@ -167,24 +128,16 @@ class MsAttribute extends Model {
 	}
 	
 	public function deleteAttribute($attribute_id) {
-		$query = $this->db->query("SELECT oc_attribute_group_id FROM " . DB_PREFIX . "ms_attribute_attribute WHERE ms_attribute_id = '" . (int)$attribute_id . "' AND oc_attribute_group_id IS NOT NULL LIMIT 1");
-		$attribute_group_id = $query->row['oc_attribute_group_id'];
-		var_dump($attribute_group_id);
-		
 		$this->db->query("DELETE FROM " . DB_PREFIX . "ms_attribute WHERE attribute_id = '" . (int)$attribute_id . "'");
-		$this->db->query("DELETE FROM " . DB_PREFIX . "attribute_group WHERE attribute_group_id = '" . (int)$attribute_group_id . "'");
-		
 		$this->db->query("DELETE FROM " . DB_PREFIX . "ms_attribute_description WHERE attribute_id = '" . (int)$attribute_id . "'");
-		$this->db->query("DELETE FROM " . DB_PREFIX . "attribute_group_description WHERE attribute_group_id = '" . (int)$attribute_group_id . "'");
+
+		$this->db->query("DELETE FROM " . DB_PREFIX . "attribute WHERE attribute_group_id = $attribute_id");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "attribute_description WHERE attribute_id IN (SELECT oc_attribute_id FROM " . DB_PREFIX . "ms_attribute_attribute WHERE ms_attribute_id = $attribute_id AND oc_attribute_id IS NOT NULL)");
 		
 		$this->db->query("DELETE FROM " . DB_PREFIX . "ms_attribute_value WHERE attribute_id = '" . (int)$attribute_id . "'");
-		$this->db->query("DELETE FROM " . DB_PREFIX . "attribute WHERE attribute_group_id = $attribute_group_id");
-		
 		$this->db->query("DELETE FROM " . DB_PREFIX . "ms_attribute_value_description WHERE attribute_id = '" . (int)$attribute_id . "'");
-		$this->db->query("DELETE FROM " . DB_PREFIX . "attribute_description WHERE attribute_id IN (SELECT oc_attribute_id FROM " . DB_PREFIX . "ms_attribute_attribute WHERE ms_attribute_id = $attribute_id AND oc_attribute_id IS NOT NULL)");
-
-		$this->db->query("DELETE FROM " . DB_PREFIX . "ms_attribute_attribute WHERE ms_attribute_id = $attribute_id");
 		
+		$this->db->query("DELETE FROM " . DB_PREFIX . "ms_attribute_attribute WHERE ms_attribute_id = $attribute_id");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "ms_product_attribute WHERE attribute_id = '" . (int)$attribute_id . "'");
 	}	
 	

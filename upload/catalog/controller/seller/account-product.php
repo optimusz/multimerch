@@ -370,7 +370,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 			unset($data['product_attributes']);
 		}
 		
-		foreach ($this->MsLoader->MsAttribute->getAttributes(array('multilang' => 0)) as $attribute) {
+		foreach ($this->MsLoader->MsAttribute->getAttributes(array('multilang' => 0, 'enabled' => 1)) as $attribute) {
 			$attributes[$attribute['attribute_id']] = $attribute;
 			$attributes[$attribute['attribute_id']]['values'] = $this->MsLoader->MsAttribute->getAttributeValues($attribute['attribute_id']);
 		}

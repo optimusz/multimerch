@@ -30,15 +30,13 @@ class ModelMultisellerSettings extends Model {
 			switch ($version) {
 				case "3.1":
 					// todo add attribute table & copy data
-					$sql = " 
+					$sql = "
 						CREATE TABLE `" . DB_PREFIX . "ms_attribute_attribute` (
 						 `ms_attribute_id` int(11) DEFAULT NULL,
-						 `ms_attribute_value_id` int(11) DEFAULT NULL,
-						 `oc_attribute_group_id` int(11) DEFAULT NULL,
 						 `oc_attribute_id` int(11) DEFAULT NULL,
-						 PRIMARY KEY (`ms_attribute_id`, `ms_attribute_value_id`, `oc_attribute_group_id`, `oc_attribute_id`)
+						 PRIMARY KEY (`ms_attribute_id`, `oc_attribute_id`)
 						) DEFAULT CHARSET=utf8";
-					$this->db->query($sql);					
+					$this->db->query($sql);
 					break;
 				
 				case "3.0":
@@ -359,10 +357,8 @@ class ModelMultisellerSettings extends Model {
 		$sql = " 
 			CREATE TABLE `" . DB_PREFIX . "ms_attribute_attribute` (
 			 `ms_attribute_id` int(11) DEFAULT NULL,
-			 `ms_attribute_value_id` int(11) DEFAULT NULL,
-			 `oc_attribute_group_id` int(11) DEFAULT NULL,
 			 `oc_attribute_id` int(11) DEFAULT NULL,
-			 PRIMARY KEY (`ms_attribute_id`, `ms_attribute_value_id`, `oc_attribute_group_id`, `oc_attribute_id`)
+			 PRIMARY KEY (`ms_attribute_id`, `oc_attribute_id`)
 			) DEFAULT CHARSET=utf8";
 		$this->db->query($sql);
 		
@@ -459,6 +455,7 @@ class ModelMultisellerSettings extends Model {
 				`" . DB_PREFIX . "ms_attribute_description`,
 				`" . DB_PREFIX . "ms_attribute_value`,
 				`" . DB_PREFIX . "ms_attribute_value_description`,
+				`" . DB_PREFIX . "ms_attribute_attribute`,
 				`" . DB_PREFIX . "ms_product_attribute`,
 				`" . DB_PREFIX . "ms_payment`,
 				`" . DB_PREFIX . "ms_badge`,

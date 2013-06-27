@@ -219,6 +219,9 @@ class MsProduct extends Model {
 						$this->db->query("INSERT INTO " . DB_PREFIX . "ms_attribute_value SET attribute_id = " . (int)$attribute_id);
 						$attribute_value_id = $this->db->getLastId();
 				
+						$query = $this->db->query("SELECT oc_attribute_id FROM " . DB_PREFIX . "ms_attribute_attribute WHERE ms_attribute_id = '" . (int)$attribute_id . "' AND oc_attribute_id IS NOT NULL LIMIT 1");
+						$oc_attribute_id = $query->row['oc_attribute_id'];
+				
 						$sql = "INSERT INTO " . DB_PREFIX . "ms_attribute_value_description
 								SET attribute_id = " . (int)$attribute_id . ",
 									attribute_value_id = " . (int)$attribute_value_id . ",
@@ -227,6 +230,7 @@ class MsProduct extends Model {
 						$this->db->query($sql);
 						
 						$this->db->query("INSERT INTO " . DB_PREFIX . "ms_product_attribute SET product_id = '" . (int)$product_id . "', attribute_id = '" . (int)$attribute_id . "', attribute_value_id = '" . (int)$attribute_value_id . "'");
+						$this->db->query("INSERT INTO " . DB_PREFIX . "product_attribute SET product_id = '" . (int)$product_id . "', attribute_id = '" . (int)$oc_attribute_id . "', language_id = '" . (int)$language_id . "', text = '" . $this->db->escape($attr['value']) . "'");
 					}
 				}
 			}
@@ -277,11 +281,32 @@ class MsProduct extends Model {
 
 		if (isset($data['product_attributes'])) {
 			foreach ($data['product_attributes'] as $attribute_id => $attr) {
+				$query = $this->db->query("SELECT oc_attribute_id FROM " . DB_PREFIX . "ms_attribute_attribute WHERE ms_attribute_id = '" . (int)$attribute_id . "' AND oc_attribute_id IS NOT NULL LIMIT 1");
+				$oc_attribute_id = $query->row['oc_attribute_id'];
 				if (in_array($attr['attribute_type'], array(MsAttribute::TYPE_SELECT, MsAttribute::TYPE_RADIO, MsAttribute::TYPE_IMAGE))) {
+					$val = array();
+					$descriptions = $this->MsLoader->MsAttribute->getAttributeValueDescriptions($attr['value']);
+					foreach ($descriptions as $language_id => $d) {
+						$val[$language_id][] = $d['name'];
+					}
+					
 					$this->db->query("INSERT INTO " . DB_PREFIX . "ms_product_attribute SET product_id = '" . (int)$product_id . "', attribute_id = '" . (int)$attribute_id . "', attribute_value_id = '" . (int)$attr['value'] . "'");
+					
+					foreach ($val as $language_id => $v) {
+						$this->db->query("INSERT INTO " . DB_PREFIX . "product_attribute SET product_id = '" . (int)$product_id . "', attribute_id = '" . (int)$oc_attribute_id . "', language_id = '" . (int)$language_id . "', text = '" . $this->db->escape(implode(',', $v)) . "'");
+					}					
 				} else if ($attr['attribute_type'] == MsAttribute::TYPE_CHECKBOX) {
+					$val = array();
 					foreach ($attr['values'] as $attribute_value_id) {
+						$descriptions = $this->MsLoader->MsAttribute->getAttributeValueDescriptions($attribute_value_id);
+						foreach ($descriptions as $language_id => $d) {
+							$val[$language_id][] = $d['name'];
+						}
 						$this->db->query("INSERT INTO " . DB_PREFIX . "ms_product_attribute SET product_id = '" . (int)$product_id . "', attribute_id = '" . (int)$attribute_id . "', attribute_value_id = '" . (int)$attribute_value_id . "'");
+					}
+					
+					foreach ($val as $language_id => $v) {
+						$this->db->query("INSERT INTO " . DB_PREFIX . "product_attribute SET product_id = '" . (int)$product_id . "', attribute_id = '" . (int)$oc_attribute_id . "', language_id = '" . (int)$language_id . "', text = '" . $this->db->escape(implode(',', $v)) . "'");
 					}
 				} else if (in_array($attr['attribute_type'], array(MsAttribute::TYPE_TEXT, MsAttribute::TYPE_TEXTAREA, MsAttribute::TYPE_DATE, MsAttribute::TYPE_DATETIME, MsAttribute::TYPE_TIME))) {
 					$this->db->query("INSERT INTO " . DB_PREFIX . "ms_attribute_value SET attribute_id = " . (int)$attribute_id);
@@ -295,6 +320,10 @@ class MsProduct extends Model {
 					$this->db->query($sql);
 					
 					$this->db->query("INSERT INTO " . DB_PREFIX . "ms_product_attribute SET product_id = '" . (int)$product_id . "', attribute_id = '" . (int)$attribute_id . "', attribute_value_id = '" . (int)$attribute_value_id . "'");
+					
+					foreach ($data['languages'] as $language_id => $language) {
+						$this->db->query("INSERT INTO " . DB_PREFIX . "product_attribute SET product_id = '" . (int)$product_id . "', attribute_id = '" . (int)$oc_attribute_id . "', language_id = '" . (int)$language_id . "', text = '" . $this->db->escape($attr['value']) . "'");
+					}
 				}
 			}
 		}
@@ -321,6 +350,9 @@ class MsProduct extends Model {
 		reset($data['languages']); $first = key($data['languages']);
 		$product_id = $data['product_id'];
 
+		/*
+		 * thumbnails
+		 */
 		$old_thumbnail = $this->getProductThumbnail($product_id);
 		$old_images = $this->getProductImages($product_id);
 		
@@ -361,8 +393,11 @@ class MsProduct extends Model {
 
 		// this needs to be here
 		$this->db->query("DELETE FROM " . DB_PREFIX . "ms_product_attribute WHERE product_id = " . (int)$product_id);
+		$this->db->query("DELETE FROM " . DB_PREFIX . "product_attribute WHERE product_id = " . (int)$product_id);
 		
-		// languages
+		/*
+		 * languages
+		 */
 		foreach ($data['languages'] as $language_id => $language) {
 			$sql = "UPDATE " . DB_PREFIX . "product_description
 					SET name = '". $this->db->escape($language['product_name']) ."',
@@ -373,13 +408,16 @@ class MsProduct extends Model {
 					
 			$this->db->query($sql);
 			
-			// multilang attributes
+			/*
+			 * multilanguage attributes
+			 */
 			if (isset($language['product_attributes'])) {
 				foreach($language['product_attributes'] as $attribute_id => $attr) {
 					if (in_array($attr['attribute_type'], array(MsAttribute::TYPE_TEXT, MsAttribute::TYPE_TEXTAREA, MsAttribute::TYPE_DATE, MsAttribute::TYPE_DATETIME, MsAttribute::TYPE_TIME))) {
 						if ((int)$attr['value_id'] == 0) {
 							$this->db->query("INSERT INTO " . DB_PREFIX . "ms_attribute_value SET attribute_id = " . (int)$attribute_id);
 							$attr['value_id'] = $this->db->getLastId();
+							
 							$sql = "INSERT INTO " . DB_PREFIX . "ms_attribute_value_description
 									SET attribute_id = " . (int)$attribute_id . ",
 										attribute_value_id = " . (int)$attr['value_id'] . ",
@@ -395,7 +433,11 @@ class MsProduct extends Model {
 							$this->db->query($sql);
 						}
 						
+						$query = $this->db->query("SELECT oc_attribute_id FROM " . DB_PREFIX . "ms_attribute_attribute WHERE ms_attribute_id = '" . (int)$attribute_id . "' AND oc_attribute_id IS NOT NULL LIMIT 1");
+						$oc_attribute_id = $query->row['oc_attribute_id'];						
+						
 						$this->db->query("INSERT INTO " . DB_PREFIX . "ms_product_attribute SET product_id = '" . (int)$product_id . "', attribute_id = '" . (int)$attribute_id . "', attribute_value_id = '" . (int)$attr['value_id'] . "'");
+						$this->db->query("INSERT INTO " . DB_PREFIX . "product_attribute SET product_id = '" . (int)$product_id . "', attribute_id = '" . (int)$oc_attribute_id . "', language_id = '" . (int)$language_id . "', text = '" . $this->db->escape($attr['value']) . "'");
 					}
 				}
 			}			
@@ -420,7 +462,9 @@ class MsProduct extends Model {
 			$this->db->query($sql);	
 		}
 
-		// Images
+		/*
+		 * images
+		 */
 		if (isset($data['product_images'])) {
 			
 			$new_images = $data['product_images'];
@@ -451,7 +495,9 @@ class MsProduct extends Model {
 			$this->db->query("DELETE FROM " . DB_PREFIX . "product_image WHERE product_id = '" . (int)$product_id . "' AND product_image_id = '" . (int)$old_image['product_image_id'] . "'");
 		}
 
-		// downloads
+		/*
+		 * downloads
+		 */
 		$old_downloads = $this->getProductDownloads($product_id);
 		if (isset($data['product_downloads'])) {
 			foreach ($data['product_downloads'] as $key => $dl) {
@@ -510,41 +556,68 @@ class MsProduct extends Model {
 			}
 		}
 
-
-		// attributes
+		/*
+		 * attributes
+		 */
 		if (isset($data['product_attributes'])) {
-			foreach ($data['product_attributes'] as $attribute_id => $attr) {
-				if (in_array($attr['attribute_type'], array(MsAttribute::TYPE_SELECT, MsAttribute::TYPE_RADIO, MsAttribute::TYPE_IMAGE))) {
-					$this->db->query("INSERT INTO " . DB_PREFIX . "ms_product_attribute SET product_id = '" . (int)$product_id . "', attribute_id = '" . (int)$attribute_id . "', attribute_value_id = '" . (int)$attr['value'] . "'");
-				} else if ($attr['attribute_type'] == MsAttribute::TYPE_CHECKBOX) {
-					foreach ($attr['values'] as $attribute_value_id) {
-						$this->db->query("INSERT INTO " . DB_PREFIX . "ms_product_attribute SET product_id = '" . (int)$product_id . "', attribute_id = '" . (int)$attribute_id . "', attribute_value_id = '" . (int)$attribute_value_id . "'");
-					}
-				} else if (in_array($attr['attribute_type'], array(MsAttribute::TYPE_TEXT, MsAttribute::TYPE_TEXTAREA, MsAttribute::TYPE_DATE, MsAttribute::TYPE_DATETIME, MsAttribute::TYPE_TIME))) {
-					if ((int)$attr['value_id'] == 0) {
-						$this->db->query("INSERT INTO " . DB_PREFIX . "ms_attribute_value SET attribute_id = " . (int)$attribute_id);
-						$attr['value_id'] = $this->db->getLastId();
+		foreach ($data['product_attributes'] as $attribute_id => $attr) {
+		$query = $this->db->query("SELECT oc_attribute_id FROM " . DB_PREFIX . "ms_attribute_attribute WHERE ms_attribute_id = '" . (int)$attribute_id . "' AND oc_attribute_id IS NOT NULL LIMIT 1");
+		$oc_attribute_id = $query->row['oc_attribute_id'];
 						
-						$sql = "INSERT INTO " . DB_PREFIX . "ms_attribute_value_description
-								SET attribute_id = " . (int)$attribute_id . ",
-									attribute_value_id = " . (int)$attr['value_id'] . ",
-									language_id = $language_id,
-									name = '" . $this->db->escape($attr['value']) . "'";
-						$this->db->query($sql);
-					} else { 
-						$sql = "UPDATE " . DB_PREFIX . "ms_attribute_value_description
-								SET name = '" . $this->db->escape($attr['value']) . "'
-								WHERE attribute_id = " . (int)$attribute_id . "
-								AND attribute_value_id = " . (int)$attr['value_id'];
-						$this->db->query($sql);
+		if (in_array($attr['attribute_type'], array(MsAttribute::TYPE_SELECT, MsAttribute::TYPE_RADIO, MsAttribute::TYPE_IMAGE))) {
+			$val = array();
+			$descriptions = $this->MsLoader->MsAttribute->getAttributeValueDescriptions($attr['value']);
+			foreach ($descriptions as $language_id => $d) {
+				$val[$language_id][] = $d['name'];
+			}
+			$this->db->query("INSERT INTO " . DB_PREFIX . "ms_product_attribute SET product_id = '" . (int)$product_id . "', attribute_id = '" . (int)$attribute_id . "', attribute_value_id = '" . (int)$attr['value'] . "'");
+			
+			foreach ($val as $language_id => $v) {
+				$this->db->query("INSERT INTO " . DB_PREFIX . "product_attribute SET product_id = '" . (int)$product_id . "', attribute_id = '" . (int)$oc_attribute_id . "', language_id = '" . (int)$language_id . "', text = '" . $this->db->escape(implode(',', $v)) . "'");
+			}
+		} else if ($attr['attribute_type'] == MsAttribute::TYPE_CHECKBOX) {
+			$val = array();
+			foreach ($attr['values'] as $attribute_value_id) {
+				$descriptions = $this->MsLoader->MsAttribute->getAttributeValueDescriptions($attribute_value_id);
+				foreach ($descriptions as $language_id => $d) {
+					$val[$language_id][] = $d['name'];
+				}
+				$this->db->query("INSERT INTO " . DB_PREFIX . "ms_product_attribute SET product_id = '" . (int)$product_id . "', attribute_id = '" . (int)$attribute_id . "', attribute_value_id = '" . (int)$attribute_value_id . "'");
+			}
+			foreach ($val as $language_id => $v) {
+				$this->db->query("INSERT INTO " . DB_PREFIX . "product_attribute SET product_id = '" . (int)$product_id . "', attribute_id = '" . (int)$oc_attribute_id . "', language_id = '" . (int)$language_id . "', text = '" . $this->db->escape(implode(',', $v)) . "'");
+			}
+		} else if (in_array($attr['attribute_type'], array(MsAttribute::TYPE_TEXT, MsAttribute::TYPE_TEXTAREA, MsAttribute::TYPE_DATE, MsAttribute::TYPE_DATETIME, MsAttribute::TYPE_TIME))) {
+			if ((int)$attr['value_id'] == 0) {
+				$this->db->query("INSERT INTO " . DB_PREFIX . "ms_attribute_value SET attribute_id = " . (int)$attribute_id);
+				$attr['value_id'] = $this->db->getLastId();
+				
+				$sql = "INSERT INTO " . DB_PREFIX . "ms_attribute_value_description
+						SET attribute_id = " . (int)$attribute_id . ",
+							attribute_value_id = " . (int)$attr['value_id'] . ",
+							language_id = $language_id,
+							name = '" . $this->db->escape($attr['value']) . "'";
+				$this->db->query($sql);
+			} else { 
+				$sql = "UPDATE " . DB_PREFIX . "ms_attribute_value_description
+						SET name = '" . $this->db->escape($attr['value']) . "'
+						WHERE attribute_id = " . (int)$attribute_id . "
+						AND attribute_value_id = " . (int)$attr['value_id'];
+				$this->db->query($sql);
+			}
+			
+			$this->db->query("INSERT INTO " . DB_PREFIX . "ms_product_attribute SET product_id = '" . (int)$product_id . "', attribute_id = '" . (int)$attribute_id . "', attribute_value_id = '" . (int)$attr['value_id'] . "'");
+			
+			foreach ($data['languages'] as $language_id => $language) {
+				$this->db->query("INSERT INTO " . DB_PREFIX . "product_attribute SET product_id = '" . (int)$product_id . "', attribute_id = '" . (int)$oc_attribute_id . "', language_id = '" . (int)$language_id . "', text = '" . $this->db->escape($attr['value']) . "'");
 					}
-					
-					$this->db->query("INSERT INTO " . DB_PREFIX . "ms_product_attribute SET product_id = '" . (int)$product_id . "', attribute_id = '" . (int)$attribute_id . "', attribute_value_id = '" . (int)$attr['value_id'] . "'");
 				}
 			}
 		}
 		
-		// specials
+		/*
+		 * specials
+		 */
 		$this->db->query("DELETE FROM " . DB_PREFIX . "product_special WHERE product_id = '" . (int)$product_id . "'");
 		if (isset($data['product_specials'])) {
 			foreach ($data['product_specials'] as $product_special) {
@@ -552,7 +625,9 @@ class MsProduct extends Model {
 			}
 		}		
 		
-		// discounts
+		/*
+		 * specials
+		 */
 		$this->db->query("DELETE FROM " . DB_PREFIX . "product_discount WHERE product_id = '" . (int)$product_id . "'");
 		if (isset($data['product_discounts'])) {
 			foreach ($data['product_discounts'] as $product_discount) {
