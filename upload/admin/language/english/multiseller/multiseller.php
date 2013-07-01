@@ -262,6 +262,7 @@ $_['ms_config_enable_rte_note'] = 'Enable Rich Text Editor for product and selle
 $_['ms_config_rte_whitelist'] = 'Tag whitelist';
 $_['ms_config_rte_whitelist_note'] = 'Permitted tags in RTE (empty = all tags permitted)';
 
+$_['ms_config_image_sizes'] = 'Image sizes';
 $_['ms_config_seller_avatar_image_size'] = 'Seller avatar image size';
 $_['ms_config_seller_avatar_image_size_seller_profile'] = 'Seller profile';
 $_['ms_config_seller_avatar_image_size_seller_list'] = 'Seller list';
@@ -277,6 +278,14 @@ $_['ms_config_product_image_size_seller_profile'] = 'Seller profile';
 $_['ms_config_product_image_size_seller_products_list'] = 'Seller products list';
 
 $_['ms_config_badge_size'] = 'Badge size';
+
+$_['ms_config_attributes'] = 'Attributes';
+$_['ms_config_attribute_display'] = 'Attribute display';
+$_['ms_config_attribute_display_note'] = 'Controls the way how attributes are displayed on the product page';
+$_['ms_config_attribute_display_mm'] = 'MultiMerch';
+$_['ms_config_attribute_display_oc'] = 'OpenCart';
+$_['ms_config_attribute_display_both'] = 'Both';
+
 
 // Seller - List
 $_['ms_catalog_sellers_heading'] = 'Sellers';
@@ -418,12 +427,14 @@ $_['ms_attribute_heading'] = 'Attributes';
 $_['ms_attribute_breadcrumbs'] = 'Attributes';
 $_['ms_attribute_create'] = 'New attribute';
 $_['ms_attribute_edit'] = 'Edit attribute';
+$_['ms_attribute_group'] = 'Attribute group';
 $_['ms_attribute_value'] = 'Attribute value';
 $_['ms_attribute_text_type'] = 'Text input type';
 $_['ms_attribute_normal'] = 'Generic text';
 $_['ms_attribute_multilang'] = 'Language-specific text';
 $_['ms_attribute_number'] = 'Number';
 $_['ms_attribute_required'] = 'Required';
+$_['ms_attribute_tab_display'] = 'Display as product tab';
 $_['ms_add_attribute_value'] = 'New attribute value';
 $_['ms_error_attribute_name'] = 'Attribute name must be between 1 and 128 characters';
 $_['ms_error_attribute_type'] = 'This attribute type requires attribute values';

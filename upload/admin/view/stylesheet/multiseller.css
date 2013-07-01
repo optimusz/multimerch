@@ -1,3 +1,13 @@
+.ms-settings .content form table tr h2 {
+	border-bottom: none;
+	text-transform: none;
+	margin: 25px 0 0;
+}
+
+.ms-settings .content form table tr:first-child h2 {
+	margin: 0;
+}
+
 td h3 {
 	color: #FF802B;
 	padding: 0;

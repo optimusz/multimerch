@@ -23,11 +23,13 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		"msconf_debit_order_statuses" => array(8),
 		"msconf_minimum_withdrawal_amount" => "50",
 		"msconf_allow_partial_withdrawal" => 1,
+		
 		"msconf_paypal_sandbox" => 1,			
 		"msconf_paypal_address" => "",
 		"msconf_paypal_api_username" => "",
 		"msconf_paypal_api_password" => "",
 		"msconf_paypal_api_signature" => "",
+		
 		"msconf_allow_withdrawal_requests" => 1,
 		"msconf_allowed_image_types" => 'png,jpg,jpeg',
 		"msconf_allowed_download_types" => 'zip,rar,pdf',
@@ -38,14 +40,18 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		"ms_newsellers_module" => "",	
 		"ms_sellerdropdown_module" => "",	
 		"msconf_allow_free_products" => 0,
+		
 		"msconf_allow_multiple_categories" => 0,
 		"msconf_additional_category_restrictions" => 0, // 0 - none, 1 - topmost, 2 - all parents
-		"msconf_restrict_categories" => array(),		
+		"msconf_restrict_categories" => array(),
+				
 		"msconf_images_limits" => array(0,0),
-		"msconf_downloads_limits" => array(0,0),		
+		"msconf_downloads_limits" => array(0,0),
+				
 		"msconf_enable_shipping" => 0, // 0 - no, 1 - yes, 2 - seller select
 		"msconf_provide_buyerinfo" => 0, // 0 - no, 1 - yes, 2 - shipping dependent
 		"msconf_enable_quantities" => 0, // 0 - no, 1 - yes, 2 - shipping dependent
+		
 		"msconf_enable_pdf_generator" => 0,
 		"msconf_enable_seo_urls_seller" => 0,
 		"msconf_enable_seo_urls_product" => 0,
@@ -67,6 +73,7 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		"msconf_comments_enable_customer_captcha" => 0,
 		"msconf_comments_maxlen" => 500,
 		"msconf_comments_perpage" => 10,
+		
 		"msconf_enable_rte" => 0,
 		"msconf_rte_whitelist" => "",
 		
@@ -88,7 +95,10 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		"msconf_product_seller_products_image_height" => 100,
 		"msconf_badge_width" => 30,		
 		"msconf_badge_height" => 30,
-		"msconf_sellers_slug" => "sellers"
+		
+		"msconf_sellers_slug" => "sellers",
+		
+		"msconf_attribute_display" => 0 // 0 - MM, 1 - OC, 2 - both
 	);
 	
 	public function __construct($registry) {

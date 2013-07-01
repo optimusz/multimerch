@@ -74,9 +74,11 @@ class ControllerMultisellerAttribute extends ControllerMultisellerBase {
 	
 	public function create() {
 		$this->load->model('localisation/language');
+		$this->load->model('catalog/attribute_group');
 		$this->load->model('tool/image');
 		
 		$this->data['attribute'] = FALSE;
+		$this->data['attribute_groups'] = $this->model_catalog_attribute_group->getAttributeGroups();
 		$this->data['languages'] = $this->model_localisation_language->getLanguages();
 		$this->data['no_image'] = $this->model_tool_image->resize('no_image.jpg', 100, 100);
 		
@@ -103,10 +105,13 @@ class ControllerMultisellerAttribute extends ControllerMultisellerBase {
 	public function update() {
 		$this->load->model('localisation/language');
 		$this->load->model('tool/image');
+		$this->load->model('catalog/attribute_group');
+		
 		$attribute_id = $this->request->get['attribute_id'];
 		
 		$this->data['attribute'] = $this->MsLoader->MsAttribute->getAttribute($attribute_id);
 		$this->data['attribute']['attribute_description'] = $this->MsLoader->MsAttribute->getAttributeDescriptions($attribute_id);
+		$this->data['attribute_groups'] = $this->model_catalog_attribute_group->getAttributeGroups();
 
 		if (in_array($this->data['attribute']['attribute_type'], array(MsAttribute::TYPE_SELECT, MsAttribute::TYPE_RADIO, MsAttribute::TYPE_IMAGE, MsAttribute::TYPE_CHECKBOX))) {
 			$this->data['attribute']['attribute_values'] = $this->MsLoader->MsAttribute->getAttributeValues($attribute_id);
@@ -140,16 +145,18 @@ class ControllerMultisellerAttribute extends ControllerMultisellerBase {
 		$this->response->setOutput($this->render());		
 	}
 
-
-	public function jxDeleteAttribute() {
-		$this->validate(__FUNCTION__);
-		$mails = array();
+	public function delete() { 
+		if (isset($this->request->get['attribute_id'])) $this->request->post['selected'] = array($this->request->get['attribute_id']);
 		
 		if (isset($this->request->post['selected'])) {
 			foreach ($this->request->post['selected'] as $attribute_id) {
 				$this->MsLoader->MsAttribute->deleteAttribute($attribute_id);
 			}
+			
+			$this->session->data['success'] = $this->language->get('ms_success');
 		}
+		
+		if (isset($this->request->get['attribute_id'])) $this->redirect($this->url->link('multiseller/attribute', 'token=' . $this->session->data['token'], 'SSL'));
 	}
 
 	public function jxSubmitAttribute() {

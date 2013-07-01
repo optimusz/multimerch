@@ -595,7 +595,7 @@ class MsProduct extends Model {
 				$sql = "INSERT INTO " . DB_PREFIX . "ms_attribute_value_description
 						SET attribute_id = " . (int)$attribute_id . ",
 							attribute_value_id = " . (int)$attr['value_id'] . ",
-							language_id = $language_id,
+							language_id = " . $this->config->get('config_language_id') . ",
 							name = '" . $this->db->escape($attr['value']) . "'";
 				$this->db->query($sql);
 			} else { 

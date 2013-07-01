@@ -1,6 +1,6 @@
 <?php echo $header; ?>
 
-<div id="content">
+<div id="content" class="ms-settings">
 	<div class="breadcrumb">
 	  <?php foreach ($breadcrumbs as $breadcrumb) { ?>
 	  <?php echo $breadcrumb['separator']; ?><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a>
@@ -358,7 +358,7 @@
 							<input type="radio" name="msconf_enable_shipping" value="0" <?php if($msconf_enable_shipping == 0) { ?> checked="checked" <?php } ?>  />
 							<?php echo $text_no; ?>
 							<input type="radio" name="msconf_enable_shipping" value="2" <?php if($msconf_enable_shipping == 2) { ?> checked="checked" <?php } ?>  />
-							<?php echo $text_seller_select; ?>							
+							<?php echo $text_seller_select; ?>
 						</td>
 					</tr>
 					
@@ -373,7 +373,7 @@
 							<input type="radio" name="msconf_enable_quantities" value="0" <?php if($msconf_enable_quantities == 0) { ?> checked="checked" <?php } ?>  />
 							<?php echo $text_no; ?>
 							<input type="radio" name="msconf_enable_quantities" value="2" <?php if($msconf_enable_quantities == 2) { ?> checked="checked" <?php } ?>  />
-							<?php echo $text_shipping_dependent; ?>							
+							<?php echo $text_shipping_dependent; ?>
 					  	</td>
 					</tr>
 					
@@ -388,7 +388,7 @@
 							<input type="radio" name="msconf_provide_buyerinfo" value="0" <?php if($msconf_provide_buyerinfo == 0) { ?> checked="checked" <?php } ?>  />
 							<?php echo $text_no; ?>
 							<input type="radio" name="msconf_provide_buyerinfo" value="2" <?php if($msconf_provide_buyerinfo == 2) { ?> checked="checked" <?php } ?>  />
-							<?php echo $text_shipping_dependent; ?>							
+							<?php echo $text_shipping_dependent; ?>
 					  	</td>
 					</tr>
 					
@@ -403,7 +403,7 @@
 							<input type="radio" name="msconf_enable_pdf_generator" value="0" <?php if($msconf_enable_pdf_generator == 0) { ?> checked="checked" <?php } ?>  />
 							<?php echo $text_no; ?>
 					  	</td>
-					</tr>					
+					</tr>
 				</table>
 				</div>
 				<!-- END PRODUCT FORM TAB -->
@@ -458,7 +458,7 @@
 							</div>
 						  </td>
 					</tr>
-									
+					
 					<tr>
 						<td>
 							<span><?php echo $ms_config_allow_withdrawal_requests; ?></span>
@@ -1195,13 +1195,14 @@
 				<!-- BEGIN MISCELLANEOUS TAB -->
 			 	<div id="tab-miscellaneous">
 				<table class="form">
+					<tr><td colspan="2"><h2><?php echo $ms_config_image_sizes; ?></h2></td></tr>
 					<tr>
-						  <td>
-						  	<span><?php echo $ms_config_seller_avatar_image_size; ?></span>
-						  </td>
-						  <td>
+						<td>
+							<span><?php echo $ms_config_seller_avatar_image_size; ?></span>
+						</td>
+						<td>
 							<span><?php echo $ms_config_seller_avatar_image_size_seller_profile; ?></span>
-						  	<input type="text" name="msconf_seller_avatar_seller_profile_image_width" value="<?php echo $msconf_seller_avatar_seller_profile_image_width; ?>" size="3" />
+							<input type="text" name="msconf_seller_avatar_seller_profile_image_width" value="<?php echo $msconf_seller_avatar_seller_profile_image_width; ?>" size="3" />
 							x
 							<input type="text" name="msconf_seller_avatar_seller_profile_image_height" value="<?php echo $msconf_seller_avatar_seller_profile_image_height; ?>" size="3" />
 							&nbsp
@@ -1219,14 +1220,14 @@
 							<input type="text" name="msconf_seller_avatar_dashboard_image_width" value="<?php echo $msconf_seller_avatar_dashboard_image_width; ?>" size="3" />
 							x
 							<input type="text" name="msconf_seller_avatar_dashboard_image_height" value="<?php echo $msconf_seller_avatar_dashboard_image_height; ?>" size="3" />
-						  </td>
+						</td>
 					</tr>
 					
 					<tr>
-						  <td>
-						  	<span><?php echo $ms_config_image_preview_size; ?></span>
-						  </td>
-						  <td>
+						<td>
+							<span><?php echo $ms_config_image_preview_size; ?></span>
+						</td>
+						<td>
 							<span><?php echo $ms_config_image_preview_size_seller_avatar; ?></span>
 							<input type="text" name="msconf_preview_seller_avatar_image_width" value="<?php echo $msconf_preview_seller_avatar_image_width; ?>" size="3" />
 							x
@@ -1236,14 +1237,14 @@
 							<input type="text" name="msconf_preview_product_image_width" value="<?php echo $msconf_preview_product_image_width; ?>" size="3" />
 							x
 							<input type="text" name="msconf_preview_product_image_height" value="<?php echo $msconf_preview_product_image_height; ?>" size="3" />
-						  </td>
+						</td>
 					</tr>
 					
 					<tr>
-						  <td>
-						  	<span><?php echo $ms_config_product_image_size; ?></span>
-						  </td>
-						  <td>
+						<td>
+							<span><?php echo $ms_config_product_image_size; ?></span>
+						</td>
+						<td>
 							<span><?php echo $ms_config_product_image_size_seller_profile; ?></span>
 							<input type="text" name="msconf_product_seller_profile_image_width" value="<?php echo $msconf_product_seller_profile_image_width; ?>" size="3" />
 							x
@@ -1253,7 +1254,7 @@
 							<input type="text" name="msconf_product_seller_products_image_width" value="<?php echo $msconf_product_seller_products_image_width; ?>" size="3" />
 							x
 							<input type="text" name="msconf_product_seller_products_image_height" value="<?php echo $msconf_product_seller_products_image_height; ?>" size="3" />
-						  </td>
+						</td>
 					</tr>
 					
 					<tr>
@@ -1264,6 +1265,22 @@
 							<input type="text" name="msconf_badge_width" value="<?php echo $msconf_badge_width; ?>" size="3" />
 							x
 							<input type="text" name="msconf_badge_height" value="<?php echo $msconf_badge_height; ?>" size="3" />
+						</td>
+					</tr>
+					
+					<tr><td colspan="2"><h2><?php echo $ms_config_attributes; ?></h2></td></tr>
+					<tr>
+						<td>
+							<span><?php echo $ms_config_attribute_display; ?></span>
+							<span class="help"><?php echo $ms_config_attribute_display_note; ?></span>
+						</td>
+						<td>
+							<input type="radio" name="msconf_attribute_display" value="0" <?php if($msconf_attribute_display == 0) { ?> checked="checked" <?php } ?>  />
+							<?php echo $ms_config_attribute_display_mm; ?>
+							<input type="radio" name="msconf_attribute_display" value="1" <?php if($msconf_attribute_display == 1) { ?> checked="checked" <?php } ?>  />
+							<?php echo $ms_config_attribute_display_oc; ?>
+							<input type="radio" name="msconf_attribute_display" value="2" <?php if($msconf_attribute_display == 2) { ?> checked="checked" <?php } ?>  />
+							<?php echo $ms_config_attribute_display_both; ?>
 						</td>
 					</tr>
 				</table>

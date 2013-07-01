@@ -405,10 +405,11 @@
 		    		<div class="avatar-box">
 		    			<a style="text-decoration: none" href="<?php echo $seller['href']; ?>"><h2><?php echo $seller['nickname']; ?></h2></a>
 		    			<a href="<?php echo $seller['href']; ?>"><img src="<?php echo $seller['thumb']; ?>" /></a>
-		    			<br />
+		    			<div class="ms-badges">
 							<?php foreach($seller['badges'] as $badge) { ?>
 								<img src="<?php echo $badge['image']; ?>" title="<?php echo $badge['description']; ?>" />
 							<?php } ?>
+							</div>
 		    		</div>
 		    		<div class="info-box">
 		    			<?php if ($seller['country']) { ?>
@@ -439,6 +440,11 @@
 				<div id="tab-description" class="tab-content"><?php echo $description; ?></div>
 			]]></search>
 			<add><![CDATA[
+				<?php foreach ($ms_product_attributes as $attribute) { ?>
+					<?php if(isset($attribute['tab_display']) && $attribute['tab_display']) { ?>
+					<a href="#tab-attribute-<?php echo $attribute['attribute_id']; ?>"><?php echo $attribute['name'] ?></a>
+					<?php } ?>
+				<?php } ?>
 				<?php if ($this->config->get('msconf_comments_enable')) { ?>
 					<a href="#tab-comments"><?php echo $tab_comments ?></a>
 				<?php } ?>
@@ -450,6 +456,13 @@
 				<?php if ($tags) { ?>
 			]]></search>
 			<add><![CDATA[
+				<?php foreach ($ms_product_attributes as $attribute) { ?>
+					<?php if(isset($attribute['tab_display']) && $attribute['tab_display']) { ?>
+					<div id="tab-attribute-<?php echo $attribute['attribute_id']; ?>" class="tab-content">
+						<?php echo implode(',',$attribute['values']); ?>
+					</div>
+					<?php } ?>
+				<?php } ?>
 				<?php if ($this->config->get('msconf_comments_enable')) { ?>
   				<div id="tab-comments" class="tab-content">
   					<div class="pcComments"></div>
@@ -471,16 +484,31 @@
 			]]></add>
 		</operation>
 
+		<!-- display MM attributes if required -->
 		<operation>
-			<search position="replace"><![CDATA[
+			<search position="replace" error="skip"><![CDATA[
 				<span><?php echo $text_stock; ?></span> <?php echo $stock; ?></div>
 			]]></search>
 			<add><![CDATA[
-  				<span><?php echo $text_stock; ?></span> <?php echo $stock; ?><br />
-  				<?php foreach ($ms_product_attributes as $attribute) { ?>
-	  				<span><?php echo $attribute['name']; ?>:</span> <?php if (isset($attribute['values']) && !empty($attribute['values'])) { echo implode(',',$attribute['values']); } ?> <br />
-  				<?php } ?>
-  				</div>
+				<span><?php echo $text_stock; ?></span> <?php echo $stock; ?><br />
+				<?php if ($this->config->get('msconf_attribute_display') != 1) { ?>
+				<?php foreach ($ms_product_attributes as $attribute) { ?>
+					<?php if(!isset($attribute['tab_display']) || !$attribute['tab_display']) { ?>
+						<span><?php echo $attribute['name']; ?>:</span> <?php if (isset($attribute['values']) && !empty($attribute['values'])) { echo implode(',',$attribute['values']); } ?> <br />
+					<?php } ?>
+				<?php } ?>
+				<?php } ?>
+				</div>
+			]]></add>
+		</operation>
+
+		<!-- only display OC attributes tab if enabled -->
+		<operation>
+			<search position="replace" error="skip"><![CDATA[
+				<?php if ($attribute_groups) { ?>
+			]]></search>
+			<add><![CDATA[
+				<?php if ($this->config->get('msconf_attribute_display') != 0 && $attribute_groups) { ?>
 			]]></add>
 		</operation>
 	</file>
@@ -541,11 +569,11 @@
 					'product_status' => array(MsProduct::STATUS_ACTIVE)
 				));
 				
-				$badges = array_merge(
+				$badges = array_unique(array_merge(
 					$this->MsLoader->MsBadge->getSellerGroupBadges(array('seller_id' => $seller['seller_id'], 'language_id' => $this->config->get('config_language_id'))),
 					$this->MsLoader->MsBadge->getSellerGroupBadges(array('seller_group_id' => $seller['ms.seller_group'], 'language_id' => $this->config->get('config_language_id'))),
 					$this->MsLoader->MsBadge->getSellerGroupBadges(array('seller_group_id' => $this->config->get('msconf_default_seller_group_id'), 'language_id' => $this->config->get('config_language_id')))
-				);
+				), SORT_REGULAR);
 				
 				foreach ($badges as &$badge) {
 					$badge['image'] = $this->model_tool_image->resize($badge['image'], $this->config->get('msconf_badge_width'), $this->config->get('msconf_badge_height'));

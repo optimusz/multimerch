@@ -18,13 +18,14 @@ class MsAttribute extends Model {
 					sort_order = " . (int)$data['sort_order'] . ",
 					number = " . (isset($data['number']) && $data['text_type'] == 'number' ? 1 : 0) . ",
 					multilang = " . (isset($data['multilang']) && $data['text_type'] == 'multilang' ? 1 : 0) . ",
+					tab_display = " . (isset($data['tab_display']) && $data['tab_display'] == '1' ? 1 : 0) . ",
 					enabled = " . (isset($data['enabled']) ? 1 : 0) . ",
 					required = " . (isset($data['required']) ? 1 : 0);
 		$this->db->query($sql);
 		$attribute_id = $this->db->getLastId();
 
 		// oc attribute
-		$this->db->query("INSERT INTO " . DB_PREFIX . "attribute SET sort_order = '" . (int)$data['sort_order'] . "'");
+		$this->db->query("INSERT INTO " . DB_PREFIX . "attribute SET sort_order = '" . (int)$data['sort_order'] . "', attribute_group_id = " . (int)$data['attribute_group_id']);
 		$oc_attribute_id = $this->db->getLastId();
 
 		// attribute attribute
@@ -77,10 +78,14 @@ class MsAttribute extends Model {
 					sort_order = " . (int)$data['sort_order'] . ",
 					number = " . (isset($data['text_type']) && $data['text_type'] == 'number' ? 1 : 0) . ",
 					multilang = " . (isset($data['text_type']) && $data['text_type'] == 'multilang' ? 1 : 0) . ",
+					tab_display = " . (isset($data['tab_display']) && $data['tab_display'] == '1' ? 1 : 0) . ",
 					enabled = " . (isset($data['enabled']) ? 1 : 0) . ",
 					required = " . (isset($data['required']) ? 1 : 0) . "
 				WHERE attribute_id = " . (int)$attribute_id;
 		$this->db->query($sql);
+
+		// oc attribute
+		$this->db->query("UPDATE " . DB_PREFIX . "attribute SET sort_order = '" . (int)$data['sort_order'] . "', attribute_group_id = " . (int)$data['attribute_group_id'] . " WHERE attribute_id = " . (int)$oc_attribute_id);
 
 		$this->db->query("DELETE FROM " . DB_PREFIX . "ms_attribute_description WHERE attribute_id = " . (int)$attribute_id);
 		$this->db->query("DELETE FROM " . DB_PREFIX . "attribute_description WHERE attribute_id = " . (int)$oc_attribute_id);
@@ -139,12 +144,14 @@ class MsAttribute extends Model {
 		
 		$this->db->query("DELETE FROM " . DB_PREFIX . "ms_attribute_attribute WHERE ms_attribute_id = $attribute_id");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "ms_product_attribute WHERE attribute_id = '" . (int)$attribute_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "product_attribute WHERE attribute_id = '" . (int)$attribute_id . "'");
 	}	
 	
 	public function getAttribute($attribute_id) {
 		$sql = "SELECT *,
 						ma.attribute_type as 'ma.attribute_type',
-						ma.enabled as 'ma.enabled'
+						ma.enabled as 'ma.enabled',
+						(SELECT attribute_group_id FROM " . DB_PREFIX . "attribute WHERE attribute_id = (SELECT oc_attribute_id FROM  " . DB_PREFIX . "ms_attribute_attribute WHERE ms_attribute_id = " . (int)$attribute_id . ")) as attribute_group_id
 				FROM " . DB_PREFIX . "ms_attribute ma
 				LEFT JOIN " . DB_PREFIX . "ms_attribute_description mad
 					ON (ma.attribute_id = mad.attribute_id)
@@ -278,8 +285,10 @@ class MsAttribute extends Model {
 		$attributes = $this->db->query($sql);
 
 		foreach ($attributes->rows as $attribute) {
+			$attribute_data[$attribute['attribute_id']]['attribute_id'] = $attribute['attribute_id'];
 			$attribute_data[$attribute['attribute_id']]['name'] = $attribute['attribute_name'];
 			$attribute_data[$attribute['attribute_id']]['values'][$attribute['attribute_value_id']] = $attribute['attribute_value_name'];
+			$attribute_data[$attribute['attribute_id']]['tab_display'] = $attribute['tab_display'];
 		}
 		
 		return $attribute_data;

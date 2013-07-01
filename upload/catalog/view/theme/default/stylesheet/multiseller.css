@@ -361,6 +361,11 @@ table.list td, table.list thead td  {
 	margin: 40px 0;
 }
 
+.ms-sellerprofile .seller-data div.ms-badges img {
+	border: 0;
+}
+
+
 /* seller list */
 .seller-filter {
 	margin-bottom: 5px;

@@ -224,6 +224,7 @@ $_['ms_account_transactions'] = 'Transactions';
 $_['ms_account_orders'] = 'Orders';
 $_['ms_account_withdraw'] = 'Request payout';
 $_['ms_account_badges'] = 'Badges';
+$_['ms_account_badges_nobadges'] = 'No badges yet';
 
 // Account - New product
 $_['ms_account_newproduct_heading'] = 'New Product';

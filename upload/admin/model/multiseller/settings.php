@@ -37,6 +37,10 @@ class ModelMultisellerSettings extends Model {
 						 PRIMARY KEY (`ms_attribute_id`, `oc_attribute_id`)
 						) DEFAULT CHARSET=utf8";
 					$this->db->query($sql);
+					
+					// todo add tab_display attribute field
+					
+					// todo create a new attribute group and assign all attributes to it
 					break;
 				
 				case "3.0":

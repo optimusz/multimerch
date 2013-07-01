@@ -39,6 +39,17 @@
 			<?php } ?>
 			</td>
 		</tr>
+
+		<tr>
+			<td><?php echo $ms_attribute_group; ?></td>
+			<td>
+				<select name="attribute_group_id">
+				<?php foreach ($attribute_groups as $attribute_group) { ?>
+				<option value="<?php echo $attribute_group['attribute_group_id']; ?>" <?php if ($attribute_group['attribute_group_id'] == $attribute['attribute_group_id']) { ?>selected="selected"<?php } ?>><?php echo $attribute_group['name']; ?></option>
+				<?php } ?>
+				</select>
+			</td>
+		</tr>
 		
 		<tr>
 			<td><?php echo $ms_type; ?></td>
@@ -68,6 +79,14 @@
 				<span class="error"></span><br />
 			</td>
 		</tr>
+		
+		<tr>
+			<td><?php echo $ms_attribute_tab_display; ?></td>
+			<td>
+				<input type="radio" name="tab_display" value="1" <?php if(isset($attribute['tab_display']) && $attribute['tab_display']) { ?>checked="checked"<?php } ?> /><?php echo $text_yes; ?>
+				<input type="radio" name="tab_display" value="0" <?php if(!$attribute['tab_display'] || !isset($attribute['tab_display'])) { ?>checked="checked"<?php } ?> /><?php echo $text_no; ?>
+			</td>
+		</tr>		
 		
 		<tr>
 			<td><?php echo $ms_attribute_required; ?></td>
@@ -221,9 +240,9 @@ $(function() {
 		}
 		
 		if (this.value == '<?php echo MsAttribute::TYPE_TEXT; ?>' || this.value == '<?php echo MsAttribute::TYPE_TEXTAREA; ?>') {
-			$('[name="text_type"]').parents('tr').show();
+			$('[name="text_type"], [name="tab_display"]').parents('tr').show();
 		} else {
-			$('[name="text_type"]').parents('tr').hide();
+			$('[name="text_type"], [name="tab_display"]').parents('tr').hide();
 		}
 	}).change();
 

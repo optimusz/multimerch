@@ -46,6 +46,7 @@
 				<td><?php echo $attribute['enabled'] ? $ms_enabled : $ms_disabled; ?></td>
 				<td>
 					<a class="ms-button ms-button-edit" href="<?php echo $this->url->link('multiseller/attribute/update', 'token=' . $this->session->data['token'] . '&attribute_id=' . $attribute['attribute_id'], 'SSL'); ?>" title="<?php echo $text_edit; ?>"></a>
+					<a class="ms-button ms-button-delete" href="<?php echo $this->url->link('multiseller/attribute/delete', 'token=' . $this->session->data['token'] . '&attribute_id=' . $attribute['attribute_id'], 'SSL'); ?>" title="<?php echo $button_delete; ?>"></a>
 				</td>
 			</tr>
 			<?php } ?>
@@ -72,7 +73,7 @@ $(function() {
 			type: "POST",
 			//async: false,
 			dataType: "json",
-			url: 'index.php?route=multiseller/attribute/jxDeleteAttribute&token=<?php echo $token; ?>',
+			url: 'index.php?route=multiseller/attribute/delete&token=<?php echo $token; ?>',
 			data: data,
 			success: function(jsonData) {
 				window.location.reload();
