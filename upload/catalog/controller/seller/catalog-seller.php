@@ -409,10 +409,13 @@ class ControllerSellerCatalogSeller extends ControllerSellerCatalog {
 		$this->data['text_grid'] = $this->language->get('text_grid');
 		$this->data['text_sort'] = $this->language->get('text_sort');
 		$this->data['text_limit'] = $this->language->get('text_limit');
-				
-				
+		
+		$available_sorts = array('pd.name-ASC', 'pd.name-DESC', 'ms.country_id-ASC', 'ms.country_id-DESC', 'pd.name', 'ms.country_id');
 		if (isset($this->request->get['sort'])) {
 			$order_by = $this->request->get['sort'];
+			if (!in_array($order_by, $available_sorts)) {
+				$order_by = 'pd.name';
+			}
 		} else {
 			$order_by = 'pd.name';
 		}
