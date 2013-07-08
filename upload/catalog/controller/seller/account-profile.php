@@ -77,7 +77,7 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 				$this->load->model('catalog/information');
 				$information_info = $this->model_catalog_information->getInformation($this->config->get('msconf_seller_terms_page'));
 				
-				if ($information_info && !isset($data['seller[terms]'])) {
+				if ($information_info && !isset($data['seller']['terms'])) {
 	 				$json['errors']['seller[terms]'] = htmlspecialchars_decode(sprintf($this->language->get('ms_error_sellerinfo_terms'), $information_info['title']));
 				}
 			}
