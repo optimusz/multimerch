@@ -409,6 +409,7 @@ $_['ms_payment_type_' . MsPayment::TYPE_LISTING] = 'Listing fee';
 $_['ms_payment_type_' . MsPayment::TYPE_PAYOUT] = 'Manual payout';
 $_['ms_payment_type_' . MsPayment::TYPE_PAYOUT_REQUEST] = 'Payout request';
 $_['ms_payment_type_' . MsPayment::TYPE_RECURRING] = 'Recurring payment';
+$_['ms_payment_type_' . MsPayment::TYPE_SALE] = 'Sale';
 
 $_['ms_payment_status_' . MsPayment::STATUS_UNPAID] = 'Unpaid';
 $_['ms_payment_status_' . MsPayment::STATUS_PAID] = 'Paid';

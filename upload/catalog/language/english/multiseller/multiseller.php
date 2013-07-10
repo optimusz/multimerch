@@ -11,6 +11,13 @@ $_['ms_download'] = 'Download';
 $_['ms_create_product'] = 'Create product';
 $_['ms_delete'] = 'Delete';
 $_['ms_update'] = 'Update';
+$_['ms_type'] = 'Type';
+$_['ms_amount'] = 'Amount';
+$_['ms_status'] = 'Status';
+$_['ms_date_paid'] = 'Date paid';
+$_['ms_description'] = 'Description';
+$_['ms_id'] = '#';
+
 
 $_['ms_date_created'] = 'Date created';
 $_['ms_date'] = 'Date';
@@ -27,6 +34,7 @@ $_['ms_button_select_image'] = 'Select image';
 $_['ms_button_select_images'] = 'Select images';
 $_['ms_button_select_files'] = 'Select files';
 
+$_['ms_transaction_order'] = 'Sale: Order Id #%s';
 $_['ms_transaction_sale'] = 'Sale: %s (-%s commission)';
 $_['ms_transaction_refund'] = 'Refund: %s';
 $_['ms_transaction_listing'] = 'Product listing: %s (%s)';
@@ -327,13 +335,27 @@ $_['ms_product_status_' . MsProduct::STATUS_DELETED] = 'Deleted';
 $_['ms_product_status_' . MsProduct::STATUS_UNPAID] = 'Unpaid listing fee';
 
 // Account - Transactions
-$_['ms_account_transactions_heading'] = 'Your Transactions';
-$_['ms_account_transactions_breadcrumbs'] = 'Your Transactions';
+$_['ms_account_transactions_heading'] = 'Your Finances';
+$_['ms_account_transactions_breadcrumbs'] = 'Your Finances';
 $_['ms_account_transactions_balance'] = 'Your current balance:';
 $_['ms_account_transactions_earnings'] = 'Your earnings to date:';
+$_['ms_account_transactions_records'] = 'Balance records';
 $_['ms_account_transactions_description'] = 'Description';
 $_['ms_account_transactions_amount'] = 'Amount';
 $_['ms_account_transactions_notransactions'] = 'You don\'t have any transactions yet!';
+
+// Payments
+$_['ms_payment_payments'] = 'Payments';
+$_['ms_payment_order'] = 'order #%s';
+$_['ms_payment_type_' . MsPayment::TYPE_SIGNUP] = 'Signup fee';
+$_['ms_payment_type_' . MsPayment::TYPE_LISTING] = 'Listing fee';
+$_['ms_payment_type_' . MsPayment::TYPE_PAYOUT] = 'Manual payout';
+$_['ms_payment_type_' . MsPayment::TYPE_PAYOUT_REQUEST] = 'Payout request';
+$_['ms_payment_type_' . MsPayment::TYPE_RECURRING] = 'Recurring payment';
+$_['ms_payment_type_' . MsPayment::TYPE_SALE] = 'Sale';
+
+$_['ms_payment_status_' . MsPayment::STATUS_UNPAID] = 'Unpaid';
+$_['ms_payment_status_' . MsPayment::STATUS_PAID] = 'Paid';
 
 // Account - Orders
 $_['ms_account_orders_heading'] = 'Your Orders';
@@ -364,7 +386,7 @@ $_['ms_account_dashboard_nav_profile'] = 'Modify your seller profile';
 $_['ms_account_dashboard_nav_product'] = 'Create a new product';
 $_['ms_account_dashboard_nav_products'] = 'Manage your products';
 $_['ms_account_dashboard_nav_orders'] = 'View your orders';
-$_['ms_account_dashboard_nav_balance'] = 'View your balance records';
+$_['ms_account_dashboard_nav_balance'] = 'View your financial records';
 $_['ms_account_dashboard_nav_payout'] = 'Request your payout';
 
 // Account - Comments

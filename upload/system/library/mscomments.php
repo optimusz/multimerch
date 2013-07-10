@@ -19,10 +19,10 @@ class MsComments extends Model {
 		$sql = "SELECT  *
 				FROM " . DB_PREFIX . "ms_comments mc
 				WHERE 1 = 1 "
-				. (isset($data['displayed']) ? " AND mc.display = 1" : '')
-				. (isset($data['product_id']) ? " AND mc.product_id = " . (int)$data['product_id'] : '')
-				. (isset($sort['order_by']) ? " ORDER BY {$sort['order_by']} {$sort['order_way']}" : '')
-				. (isset($sort['limit']) ? " LIMIT ".(int)$sort['offset'].', '.(int)($sort['limit']) : '');
+			. (isset($data['displayed']) ? " AND mc.display = 1" : '')
+			. (isset($data['product_id']) ? " AND mc.product_id = " . (int)$data['product_id'] : '')
+			. (isset($sort['order_by']) ? " ORDER BY {$sort['order_by']} {$sort['order_way']}" : '')
+			. (isset($sort['limit']) ? " LIMIT ".(int)$sort['offset'].', '.(int)($sort['limit']) : '');
 
 		$res = $this->db->query($sql);
 

@@ -284,6 +284,20 @@
 						$seller_id = $this->MsLoader->MsProduct->getSellerId($order_product['product_id']);
 						if (!$seller_id) continue;
 						
+						// check adaptive payments
+						$payment = $this->MsLoader->MsPayment->getPayments(array(
+							'order_id' => $order_id,
+							'seller_id' => $seller_id,
+							'payment_type' => array(MsPayment::TYPE_SALE),
+							'payment_status' => array(MsPayment::STATUS_PAID),
+							'single' => 1
+						));
+						
+						if ($payment) {
+							$sendmail = true;
+							continue;
+						}
+						
 						$balance_entry = $this->MsLoader->MsBalance->getBalanceEntry(
 							array(
 								'seller_id' => $seller_id,

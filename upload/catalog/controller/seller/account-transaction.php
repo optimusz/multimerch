@@ -2,6 +2,45 @@
 
 class ControllerSellerAccountTransaction extends ControllerSellerAccount {
 	public function index() {
+		$seller_id = $this->customer->getId();
+		
+		/*
+		 * Payments
+		 */
+		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
+
+		$sort = array(
+			'order_by'  => 'mpay.date_created',
+			'order_way' => 'DESC',
+			'offset' => ($page - 1) * $this->config->get('config_admin_limit'),
+			'limit' => 20
+		);
+
+		$results = array_merge(
+			$this->MsLoader->MsPayment->getPayments(array(
+				'seller_id' => $seller_id
+			), $sort)
+		);
+
+		foreach ($results as $result) {
+			if ($result['payment_status'] == MsPayment::STATUS_UNPAID && $result['payment_type'] == MsPayment::TYPE_SALE) {
+				continue;
+			}
+			
+			$this->data['payments'][] = array_merge(
+				$result,
+				array(
+					'amount_text' => $this->currency->format(abs($result['amount']),$result['currency_code']),
+					'description' => (mb_strlen($result['mpay.description']) > 80 ? mb_substr($result['mpay.description'], 0, 80) . '...' : $result['mpay.description']),
+					'date_created' => date($this->language->get('date_format_short'), strtotime($result['mpay.date_created'])),
+					'date_paid' => $result['mpay.date_paid'] ? date($this->language->get('date_format_short'), strtotime($result['mpay.date_paid'])) : ''
+				)
+			);
+		}
+
+		/*
+		 * Balance transactions
+		 */
 		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
 
 		$sort = array(
@@ -11,17 +50,17 @@ class ControllerSellerAccountTransaction extends ControllerSellerAccount {
 			'limit' => 5
 		);
 
-		$seller_id = $this->customer->getId();
-		
 		$balance_entries = $this->MsLoader->MsBalance->getSellerBalanceEntries($seller_id, $sort);
 		
-    	foreach ($balance_entries as $entry) {
-    		$this->data['transactions'][] = array(
-    			'description' => $entry['description'],
-    			'amount' => $this->currency->format($entry['amount'], $this->config->get('config_currency')),
-   				'date_created' => date($this->language->get('date_format_short'), strtotime($entry['date_created']))
-   			);
-   		}
+		foreach ($balance_entries as $entry) {
+			$this->data['transactions'][] = array_merge(
+				$entry,
+				array(
+					'amount' => $this->currency->format($entry['amount'], $this->config->get('config_currency')),
+					'date_created' => date($this->language->get('date_format_short'), strtotime($entry['date_created']))
+				)
+			);
+		}
 		
 		$seller_balance = $this->MsLoader->MsBalance->getSellerBalance($seller_id);
 		$pending_funds = $this->MsLoader->MsBalance->getReservedSellerFunds($seller_id);
@@ -47,6 +86,13 @@ class ControllerSellerAccountTransaction extends ControllerSellerAccount {
 		$pagination->url = $this->url->link('seller/account-transaction', 'page={page}', 'SSL');
 		
 		$this->data['pagination'] = $pagination->render();
+		
+		
+		
+		
+		
+		
+		
 		$this->data['link_back'] = $this->url->link('account/account', '', 'SSL');
 		
 		$this->document->setTitle($this->language->get('ms_account_transactions_heading'));

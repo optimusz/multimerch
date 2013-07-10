@@ -2,12 +2,14 @@
 class MsPayment extends Model {
 	const METHOD_BALANCE = 1;
 	const METHOD_PAYPAL = 2;
+	const METHOD_PAYPAL_ADAPTIVE = 3;
 	
 	const TYPE_SIGNUP = 1;
 	const TYPE_LISTING = 2;
 	const TYPE_PAYOUT = 3;
 	const TYPE_PAYOUT_REQUEST = 4;
 	const TYPE_RECURRING = 5;
+	const TYPE_SALE = 6;
 		
 	const STATUS_UNPAID = 1;
 	const STATUS_PAID = 2;
@@ -16,6 +18,7 @@ class MsPayment extends Model {
 		$sql = "INSERT INTO `" . DB_PREFIX . "ms_payment`
 				SET seller_id = " . (int)$data['seller_id'] . ",
 					product_id = " . (isset($data['product_id']) ? (int)$data['product_id'] : 'NULL') . ",
+					order_id = " . (isset($data['order_id']) ? (int)$data['order_id'] : 'NULL') . ",
 					payment_type = " . (int)$data['payment_type'] . ",
 					payment_status = " . (int)$data['payment_status'] . ",
 					payment_method = " . (int)$data['payment_method'] . ",
@@ -35,6 +38,7 @@ class MsPayment extends Model {
 				SET payment_id = payment_id"
 					. (isset($data['seller_id']) ? ", seller_id = " . (int)$data['seller_id'] : '')
 					. (isset($data['product_id']) ? ", product_id = " . (int)$data['product_id'] : '')
+					. (isset($data['order_id']) ? ", order_id = " . (int)$data['order_id'] : '')					
 					. (isset($data['payment_type']) ? ", payment_type = " . (int)$data['payment_type'] : '')
 					. (isset($data['payment_status']) ? ", payment_status = " . (int)$data['payment_status'] : '')
 					. (isset($data['payment_method']) ? ", payment_method = " . (int)$data['payment_method'] : '')
@@ -64,14 +68,16 @@ class MsPayment extends Model {
 						ms.seller_id as 'seller_id',
 						ms.nickname,
 						ms.paypal,
-						product_id
+						product_id,
+						order_id
 				FROM `" . DB_PREFIX . "ms_payment` mpay
-				INNER JOIN `" . DB_PREFIX . "ms_seller` ms
+				LEFT JOIN `" . DB_PREFIX . "ms_seller` ms
 					USING (seller_id)
 				WHERE 1 = 1 "
 				. (isset($data['payment_id']) ? " AND payment_id =  " .  (int)$data['payment_id'] : '')
 				. (isset($data['seller_id']) ? " AND seller_id =  " .  (int)$data['seller_id'] : '')
-				. (isset($data['product_id']) ? " AND product_id =  " .  (int)$data['product_id'] : '')				
+				. (isset($data['product_id']) ? " AND product_id =  " .  (int)$data['product_id'] : '')
+				. (isset($data['order_id']) ? " AND order_id =  " .  (int)$data['order_id'] : '')
 				. (isset($data['currency_id']) ? " AND currency_id =  " .  (int)$data['currency_id'] : '')
 				. (isset($data['payment_type']) ? " AND payment_type IN  (" .  $this->db->escape(implode(',', $data['payment_type'])) . ")" : '')
 				. (isset($data['payment_method']) ? " AND payment_method IN  (" .  $this->db->escape(implode(',', $data['payment_method'])) . ")" : '')
@@ -90,7 +96,8 @@ class MsPayment extends Model {
 				WHERE 1 = 1 "
 				. (isset($data['payment_id']) ? " AND payment_id =  " .  (int)$data['payment_id'] : '')
 				. (isset($data['seller_id']) ? " AND seller_id =  " .  (int)$data['seller_id'] : '')
-				. (isset($data['product_id']) ? " AND product_id =  " .  (int)$data['product_id'] : '')				
+				. (isset($data['product_id']) ? " AND product_id =  " .  (int)$data['product_id'] : '')
+				. (isset($data['order_id']) ? " AND order_id =  " .  (int)$data['order_id'] : '')
 				. (isset($data['currency_id']) ? " AND currency_id =  " .  (int)$data['currency_id'] : '')
 				. (isset($data['payment_type']) ? " AND payment_type IN  (" .  $this->db->escape(implode(',', $data['payment_type'])) . ")" : '')
 				. (isset($data['payment_method']) ? " AND payment_method IN  (" .  $this->db->escape(implode(',', $data['payment_method'])) . ")" : '')

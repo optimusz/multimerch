@@ -41,6 +41,10 @@ class ModelMultisellerSettings extends Model {
 					// todo add tab_display attribute field
 					
 					// todo create a new attribute group and assign all attributes to it
+					
+					// todo add order_id column to the payments table
+					
+					// todo alter comments table, product_id 0 -> NULL
 					break;
 				
 				case "3.0":
@@ -72,6 +76,7 @@ class ModelMultisellerSettings extends Model {
 						 `payment_id` int(11) NOT NULL AUTO_INCREMENT,
 						 `seller_id` int(11) NOT NULL,
 						 `product_id` int(11) DEFAULT NULL,
+						 `order_id` int(11) DEFAULT NULL,
 						 `payment_type` int(11) NOT NULL,
 						 `payment_status` int(11) NOT NULL,
 						 `payment_method` int(11) NOT NULL,
@@ -222,7 +227,7 @@ class ModelMultisellerSettings extends Model {
 			CREATE TABLE " . DB_PREFIX . "ms_comments (
 			 `id` int(11) NOT NULL AUTO_INCREMENT,
 			 `parent_id` int(11) DEFAULT NULL,
-			 `product_id` int(11) NOT NULL,
+			 `product_id` int(11) DEFAULT NULL,
 			 `seller_id` int(11) DEFAULT NULL,
 			 `customer_id` int(11) DEFAULT NULL,
 			 `user_id` int(11) DEFAULT NULL,
@@ -380,6 +385,7 @@ class ModelMultisellerSettings extends Model {
 			 `payment_id` int(11) NOT NULL AUTO_INCREMENT,
 			 `seller_id` int(11) NOT NULL,
 			 `product_id` int(11) DEFAULT NULL,
+			 `order_id` int(11) DEFAULT NULL,
 			 `payment_type` int(11) NOT NULL,
 			 `payment_status` int(11) NOT NULL,
 			 `payment_method` int(11) NOT NULL,

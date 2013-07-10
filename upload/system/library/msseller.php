@@ -413,6 +413,7 @@ final class MsSeller extends Model {
 		$this->db->query("DELETE FROM " . DB_PREFIX . "ms_seller WHERE seller_id = '" . (int)$seller_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "ms_balance WHERE seller_id = '" . (int)$seller_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "ms_payment WHERE seller_id = '" . (int)$seller_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "url_alias WHERE `query` = 'seller_id=".(int)$seller_id."'");
 	}
 }
 

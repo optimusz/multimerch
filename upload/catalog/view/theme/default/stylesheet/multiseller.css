@@ -9,7 +9,7 @@
 	vertical-align: middle;
 }
 
-table.list td, table.list thead td  {
+table.list tbody td, table.list thead td  {
 	text-align: center;
 	padding: 7px;
 }
@@ -711,7 +711,8 @@ ul.ms-sellermenu.graphical li a {
 
 /* seller dashboard */
 
-.ms-account-dashboard h2 {
+.ms-account-dashboard h2,
+.ms-account-transaction h2 {
 	text-align: center;
 	clear: both;
 	margin: 10px;
