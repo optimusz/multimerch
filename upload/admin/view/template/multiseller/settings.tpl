@@ -1283,6 +1283,33 @@
 							<?php echo $ms_config_attribute_display_both; ?>
 						</td>
 					</tr>
+					
+					<tr><td colspan="2"><h2><?php echo $ms_config_privacy; ?></h2></td></tr>
+					<tr>
+						<td>
+							<span><?php echo $ms_config_hide_seller_contact; ?></span>
+							<span class="help"><?php echo $ms_config_hide_seller_contact_note; ?></span>
+						</td>
+						<td>
+							<input type="radio" name="msconf_hide_contact_seller" value="1" <?php if($msconf_hide_contact_seller == 1) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_yes; ?>
+							<input type="radio" name="msconf_hide_contact_seller" value="0" <?php if($msconf_hide_contact_seller == 0) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_no; ?>
+						</td>
+					</tr>
+					
+					<tr>
+						<td>
+							<span><?php echo $ms_config_hide_customer_email; ?></span>
+							<span class="help"><?php echo $ms_config_hide_customer_email_note; ?></span>
+						</td>
+						<td>
+							<input type="radio" name="msconf_hide_customer_email" value="1" <?php if($msconf_hide_customer_email == 1) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_yes; ?>
+							<input type="radio" name="msconf_hide_customer_email" value="0" <?php if($msconf_hide_customer_email == 0) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_no; ?>
+						</td>
+					</tr>
 				</table>
 				</div>
 				<!-- END MISCELLANEOUS TAB -->

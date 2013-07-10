@@ -100,7 +100,9 @@
 		<thead>
 			<tr>
 				<td><?php echo $ms_account_orders_id; ?></td>
-				<td><?php echo $ms_account_orders_customer; ?></td>
+				<?php if (!$this->config->get('msconf_hide_customer_email')) { ?>
+					<td><?php echo $ms_account_orders_customer; ?></td>
+				<?php } ?>
 				<td style="width: 40%"><?php echo $ms_account_orders_products; ?></td>
 				<td><?php echo $ms_date_created; ?></td>
 				<td><?php echo $ms_account_orders_total; ?></td>
@@ -112,7 +114,9 @@
 			<?php foreach ($orders as $order) { ?>
 			<tr>
 				<td><?php echo $order['order_id']; ?></td>
-				<td><?php echo $order['customer']; ?></td>
+				<?php if (!$this->config->get('msconf_hide_customer_email')) { ?>
+					<td><?php echo $order['customer']; ?></td>
+				<?php } ?>
 				<td class="left products">
 				<?php foreach ($order['products'] as $p) { ?>
 				<p>

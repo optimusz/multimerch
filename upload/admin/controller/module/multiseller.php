@@ -98,7 +98,10 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		
 		"msconf_sellers_slug" => "sellers",
 		
-		"msconf_attribute_display" => 0 // 0 - MM, 1 - OC, 2 - both
+		"msconf_attribute_display" => 0, // 0 - MM, 1 - OC, 2 - both
+		
+		"msconf_hide_contact_seller" => 0,
+		"msconf_hide_customer_email" => 0
 	);
 	
 	public function __construct($registry) {

@@ -286,6 +286,11 @@ $_['ms_config_attribute_display_mm'] = 'MultiMerch';
 $_['ms_config_attribute_display_oc'] = 'OpenCart';
 $_['ms_config_attribute_display_both'] = 'Both';
 
+$_['ms_config_privacy'] = 'Privacy';
+$_['ms_config_hide_seller_contact'] = 'Hide contact seller link';
+$_['ms_config_hide_seller_contact_note'] = 'Hides contact seller link, which pops up the seller contact form (users will not be able to contact sellers)';
+$_['ms_config_hide_customer_email'] = 'Hide customer email address';
+$_['ms_config_hide_customer_email_note'] = 'Hides customer email address in the seller dashboard and in orders list';
 
 // Seller - List
 $_['ms_catalog_sellers_heading'] = 'Sellers';

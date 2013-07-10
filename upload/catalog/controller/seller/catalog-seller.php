@@ -680,6 +680,10 @@ class ControllerSellerCatalogSeller extends ControllerSellerCatalog {
   	}
   	
   	public function jxRenderContactDialog() {
+		if ($this->config->get('msconf_hide_contact_seller')) {
+			return 0;
+		}
+	
   		if (isset($this->request->get['product_id'])) {
 			$seller_id = $this->MsLoader->MsProduct->getSellerId($this->request->get['product_id']);
 			$this->data['product_id'] = (int)$this->request->get['product_id'];
