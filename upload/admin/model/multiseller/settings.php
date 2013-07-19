@@ -326,6 +326,7 @@ class ModelMultisellerSettings extends Model {
 			`attribute_type` int(11) NOT NULL,
 			`number` TINYINT NOT NULL DEFAULT 0,
 			`multilang` TINYINT NOT NULL DEFAULT 0,
+			`tab_display` TINYINT NOT NULL DEFAULT 0,
 			`required` TINYINT NOT NULL DEFAULT 0,
 			`enabled` TINYINT NOT NULL DEFAULT 1,
 			`sort_order` int(3) NOT NULL,
