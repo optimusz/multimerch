@@ -1,6 +1,119 @@
 <?php
 
 class ControllerSellerAccountProduct extends ControllerSellerAccount {
+	public function getTableData() {
+		$colMap = array(
+			'product_name' => '`pd.name`',
+			'product_status' => '`mp.product_status`',
+			'date_created' => '`p.date_created`',
+			'number_sold' => 'mp.number_sold',
+			'product_price' => 'p.price',
+		);
+		
+		$sorts = array('product_name', 'product_price', 'date_created', 'product_status', 'product_earnings', 'number_sold');
+		
+		//var_dump($this->request->get);
+		
+		list($sortCol, $sortDir) = $this->MsLoader->MsHelper->getSortParams($sorts, $colMap);
+
+		$seller_id = $this->customer->getId();
+		$products = $this->MsLoader->MsProduct->getProducts(
+			array(
+				'seller_id' => $seller_id,
+				'language_id' => $this->config->get('config_language_id'),
+				'product_status' => array(MsProduct::STATUS_ACTIVE, MsProduct::STATUS_INACTIVE, MsProduct::STATUS_DISABLED, MsProduct::STATUS_UNPAID)
+			),
+			array(
+				'order_by'  => $sortCol,
+				'order_way' => $sortDir,
+				'offset' => $this->request->get['iDisplayStart'],
+				'limit' => $this->request->get['iDisplayLength']
+			),
+			array(
+				'product_earnings' => 1
+			)
+		);
+		
+		$total = isset($products[0]) ? $products[0]['total_rows'] : 0;
+
+		$columns = array();
+		foreach ($products as $product) {
+			$sale_data = $this->MsLoader->MsProduct->getSaleData($product['product_id']);
+
+			// special price
+			$specials = $this->MsLoader->MsProduct->getProductSpecials($product['product_id']);
+			$special = false;
+			foreach ($specials as $product_special) {
+				if (($product_special['date_start'] == '0000-00-00' || $product_special['date_start'] < date('Y-m-d')) && ($product_special['date_end'] == '0000-00-00' || $product_special['date_end'] > date('Y-m-d'))) {
+					$special = $this->currency->format($product_special['price'], $this->config->get('config_currency'));
+					break;
+				}
+			}
+
+			// price
+			$product['p.price'] = $this->currency->format($product['p.price'], $this->config->get('config_currency'));
+			if ($special) {
+				$price = "<span style='text-decoration: line-through;'>{$product['p.price']}></span><br/>";
+				$price .= "<span class='special-price' style='color: #b00;'>$special</span>";
+			} else {
+				$price = $product['p.price'];
+			}
+
+			// image
+			if ($product['p.image'] && file_exists(DIR_IMAGE . $product['p.image'])) {
+				$image = $this->MsLoader->MsFile->resizeImage($product['p.image'], 40, 40);
+			} else {
+				$image = $this->MsLoader->MsFile->resizeImage('no_image.jpg', 40, 40);
+			}
+			
+			// actions
+			$actions = "";
+			if ($product['mp.product_status'] != MsProduct::STATUS_DISABLED) {
+				if ($product['mp.product_status'] == MsProduct::STATUS_ACTIVE)
+					$actions .= "<a href='" . $this->url->link('product/product', 'product_id=' . $product['product_id'], 'SSL') ."' class='ms-button ms-button-view' title='" . $this->language->get('ms_viewinstore') . "'></a>";
+	
+				if ($product['mp.product_approved']) {
+					if ($product['mp.product_status'] == MsProduct::STATUS_INACTIVE)
+						$actions .= "<a href='" . $this->url->link('seller/account-product/publish', 'product_id=' . $product['product_id'], 'SSL') ."' class='ms-button ms-button-publish' title='" . $this->language->get('ms_publish') . "'></a>";
+		
+					if ($product['mp.product_status'] == MsProduct::STATUS_ACTIVE)
+						$actions .= "<a href='" . $this->url->link('seller/account-product/unpublish', 'product_id=' . $product['product_id'], 'SSL') ."' class='ms-button ms-button-unpublish' title='" . $this->language->get('ms_unpublish') . "'></a>";
+				}
+				
+				$actions .= "<a href='" . $this->url->link('seller/account-product/update', 'product_id=' . $product['product_id'], 'SSL') ."' class='ms-button ms-button-edit' title='" . $this->language->get('ms_edit') . "'></a>";
+				$actions .= "<a href='" . $this->url->link('seller/account-product/delete', 'product_id=' . $product['product_id'], 'SSL') ."' class='ms-button ms-button-delete' title='" . $this->language->get('ms_delete') . "'></a>";
+			}
+			
+			// product status
+			$status = "";
+			if ($product['mp.product_status'] == MsProduct::STATUS_ACTIVE) { 
+				$status = "<span class='active' style='color: #080;'>" . $this->language->get('ms_product_status_' . $product['mp.product_status']) . "</td></span>";
+			} else {
+				$status = "<span class='inactive' style='color: #b00;'>" . $this->language->get('ms_product_status_' . $product['mp.product_status']) . "</td></span>";
+			}
+			
+			$columns[] = array_merge(
+				$product,
+				array(
+					'image' => "<img src='$image' style='padding: 1px; border: 1px solid #DDDDDD' />",
+					'product_name' => $product['pd.name'],
+					'product_price' => $price,
+					'number_sold' => $product['mp.number_sold'],
+					'product_earnings' => $this->currency->format($sale_data['seller_total'], $this->config->get('config_currency')),
+					'product_status' => $status,
+					'date_created' => date($this->language->get('date_format_short'), strtotime($product['p.date_created'])),
+					'actions' => $actions
+				)
+			);
+		}
+		
+		$this->response->setOutput(json_encode(array(
+			'iTotalRecords' => $total,
+			'iTotalDisplayRecords' => $total,
+			'aaData' => $columns
+		)));
+	}
+	
 	public function jxUpdateFile() {
 		$json = array();
 		$json['errors'] = $this->MsLoader->MsFile->checkPostMax($_POST, $_FILES);
@@ -735,82 +848,6 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 			$this->data['success'] = $this->language->get('ms_success_product_published');
 		}
 		
-		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
-		$seller_id = $this->customer->getId();
-		
-		$products = $this->MsLoader->MsProduct->getProducts(
-			array(
-				'seller_id' => $seller_id,
-				'language_id' => $this->config->get('config_language_id'),
-				'product_status' => array(MsProduct::STATUS_ACTIVE, MsProduct::STATUS_INACTIVE, MsProduct::STATUS_DISABLED, MsProduct::STATUS_UNPAID)
-			),
-			array(
-				'order_by'  => 'date_added',
-				'order_way' => 'DESC',
-				'offset' => ($page - 1) * 10,
-				'limit' => 10
-			)
-		);
-		
-		foreach ($products as $product) {
-			$specials = $this->MsLoader->MsProduct->getProductSpecials($product['product_id']);
-
-			$special = false;
-			foreach ($specials as $product_special) {
-				if (($product_special['date_start'] == '0000-00-00' || $product_special['date_start'] < date('Y-m-d')) && ($product_special['date_end'] == '0000-00-00' || $product_special['date_end'] > date('Y-m-d'))) {
-					$special = $product_special['price'];
-					break;
-				}
-			}
-
-			$links = array();
-			
-			if ($product['mp.product_status'] != MsProduct::STATUS_DISABLED) {
-				if ($product['mp.product_status'] == MsProduct::STATUS_ACTIVE)
-					$links['view'] = $this->url->link('product/product', 'product_id=' . $product['product_id'], 'SSL');
-	
-				if ($product['mp.product_approved']) {
-					if ($product['mp.product_status'] == MsProduct::STATUS_INACTIVE)
-						$links['publish'] = $this->url->link('seller/account-product/publish', 'product_id=' . $product['product_id'], 'SSL');
-		
-					if ($product['mp.product_status'] == MsProduct::STATUS_ACTIVE)
-						$links['unpublish'] = $this->url->link('seller/account-product/unpublish', 'product_id=' . $product['product_id'], 'SSL');
-				}
-				
-				$links['edit'] = $this->url->link('seller/account-product/update', 'product_id=' . $product['product_id'], 'SSL');
-				$links['delete'] = $this->url->link('seller/account-product/delete', 'product_id=' . $product['product_id'], 'SSL');
-			}
-			
-			$sale_data = $this->MsLoader->MsProduct->getSaleData($product['product_id']);
-			$this->data['products'][] = array(
-				'pd.name' => $product['pd.name'],
-				'special' => $special,
-				'p.price' => $this->currency->format($product['p.price'], $this->config->get('config_currency')),
-				'mp.number_sold' => $product['mp.number_sold'],
-				'mp.total_earnings' => $this->currency->format($sale_data['seller_total'], $this->config->get('config_currency')),
-				'mp.product_status' => $product['mp.product_status'],
-				'status_text' => $this->language->get('ms_product_status_' . $product['mp.product_status']),
-				'p.date_created' => date($this->language->get('date_format_short'), strtotime($product['p.date_created'])),
-				'view_link' => isset($links['view']) ? $links['view'] : NULL,
-				'publish_link' => isset($links['publish']) ? $links['publish'] : NULL,
-				'unpublish_link' => isset($links['unpublish']) ? $links['unpublish'] : NULL,
-				'edit_link' => isset($links['edit']) ? $links['edit'] : NULL,
-				'delete_link' => isset($links['delete']) ? $links['delete'] : NULL,
-			);
-		}
-		
-		// Pagination
-		$pagination = new Pagination();
-		$pagination->total = $this->MsLoader->MsProduct->getTotalProducts(array(
-			'seller_id' => $seller_id,
-			'product_status' => array(MsProduct::STATUS_ACTIVE, MsProduct::STATUS_INACTIVE, MsProduct::STATUS_DISABLED)
-		));
-		$pagination->page = $page;
-		$pagination->limit = 10;
-		$pagination->text = $this->language->get('text_pagination');
-		$pagination->url = $this->url->link('seller/account-product', 'page={page}', 'SSL');
-		$this->data['pagination'] = $pagination->render();
-
 		// Links
 		$this->data['link_back'] = $this->url->link('account/account', '', 'SSL');
 		$this->data['link_create_product'] = $this->url->link('seller/account-product/create', '', 'SSL');

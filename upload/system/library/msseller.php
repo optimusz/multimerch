@@ -319,21 +319,67 @@ final class MsSeller extends Model {
 			return $res->row;
 	}	
 	
-	public function getSellers($data = array(), $sort = array()) {
-		$sql = "SELECT  CONCAT(c.firstname, ' ', c.lastname) as 'c.name',
-						c.email as 'c.email',
-						ms.seller_id as 'seller_id',
-						ms.nickname as 'ms.nickname',
-						ms.company as 'ms.company',
-						ms.website as 'ms.website',
-						ms.seller_status as 'ms.seller_status',
-						ms.seller_approved as 'ms.seller_approved',
-						ms.date_created as 'ms.date_created',
-						ms.avatar as 'ms.avatar',
-						ms.country_id as 'ms.country_id',
-						ms.description as 'ms.description',
-						ms.paypal as 'ms.paypal',
-						IFNULL(SUM(mp.number_sold), 0) as 'total_sales'
+	public function getSellers($data = array(), $sort = array(), $cols = array()) {
+		$hFilters = $wFilters = '';
+		if(isset($sort['filters'])) {
+			array_push($cols, "c.name", "total_sales");
+			foreach($sort['filters'] as $k => $v) {
+				if (!isset($cols[$k])) {
+					$wFilters .= " AND {$k} LIKE '%" . $this->db->escape($v) . "%'";
+				} else {
+					$hFilters .= " AND {$k} LIKE '%" . $this->db->escape($v) . "%'";
+				}
+			}
+		}
+		
+		$sql = "SELECT
+					SQL_CALC_FOUND_ROWS"
+					// additional columns
+					. (isset($cols['total_products']) ? "
+						(SELECT COUNT(*) FROM " . DB_PREFIX . "product p
+						LEFT JOIN " . DB_PREFIX . "ms_product mp USING (product_id)
+						LEFT JOIN " . DB_PREFIX . "ms_seller ms USING (seller_id)
+						WHERE seller_id = ms.seller_id) as total_products,
+					" : "")
+
+					. (isset($cols['total_earnings']) ? "
+						(SELECT COALESCE(SUM(amount),0)
+							- (SELECT COALESCE(ABS(SUM(amount)),0)
+								FROM `" . DB_PREFIX . "ms_balance`
+								WHERE seller_id = ms.seller_id
+								AND balance_type = ". MsBalance::MS_BALANCE_TYPE_REFUND
+						. ") as total
+						FROM `" . DB_PREFIX . "ms_balance`
+						WHERE seller_id = ms.seller_id
+						AND balance_type = ". MsBalance::MS_BALANCE_TYPE_SALE . ") as total_earnings,
+					" : "")
+					
+					. (isset($cols['current_balance']) ? "
+						(SELECT COALESCE(
+							(SELECT balance FROM " . DB_PREFIX . "ms_balance
+								WHERE seller_id = ms.seller_id  
+								ORDER BY balance_id DESC
+								LIMIT 1
+							),
+							0
+						)) as current_balance,
+					" : "")	
+					
+					// default columns
+					." CONCAT(c.firstname, ' ', c.lastname) as 'c.name',
+					c.email as 'c.email',
+					ms.seller_id as 'seller_id',
+					ms.nickname as 'ms.nickname',
+					ms.company as 'ms.company',
+					ms.website as 'ms.website',
+					ms.seller_status as 'ms.seller_status',
+					ms.seller_approved as 'ms.seller_approved',
+					ms.date_created as 'ms.date_created',
+					ms.avatar as 'ms.avatar',
+					ms.country_id as 'ms.country_id',
+					ms.description as 'ms.description',
+					ms.paypal as 'ms.paypal',
+					IFNULL(SUM(mp.number_sold), 0) as 'total_sales'
 				FROM `" . DB_PREFIX . "customer` c
 				INNER JOIN `" . DB_PREFIX . "ms_seller` ms
 					ON (c.customer_id = ms.seller_id)
@@ -342,11 +388,19 @@ final class MsSeller extends Model {
 				WHERE 1 = 1 "
 				. (isset($data['seller_id']) ? " AND ms.seller_id =  " .  (int)$data['seller_id'] : '')
 				. (isset($data['seller_status']) ? " AND seller_status IN  (" .  $this->db->escape(implode(',', $data['seller_status'])) . ")" : '')
-				. " GROUP BY ms.seller_id"
+				
+				. $hFilters
+				
+				. " GROUP BY ms.seller_id HAVING 1 = 1 "
+				
+				. $wFilters
+				
 				. (isset($sort['order_by']) ? " ORDER BY {$sort['order_by']} {$sort['order_way']}" : '')
-    			. (isset($sort['limit']) ? " LIMIT ".(int)$sort['offset'].', '.(int)($sort['limit']) : '');
+				. (isset($sort['limit']) ? " LIMIT ".(int)$sort['offset'].', '.(int)($sort['limit']) : '');
 
 		$res = $this->db->query($sql);
+		$total = $this->db->query("SELECT FOUND_ROWS() as total");
+		if ($res->rows) $res->rows[0]['total_rows'] = $total->row['total'];
 		
 		return $res->rows;
 	}
@@ -371,6 +425,7 @@ final class MsSeller extends Model {
 	}	
 	
 	public function getTotalEarnings($seller_id, $data = array()) {
+		// note: update getSellers() if updating this
 		$sql = "SELECT COALESCE(SUM(amount),0)
 					   - (SELECT COALESCE(ABS(SUM(amount)),0)
 						  FROM `" . DB_PREFIX . "ms_balance`
@@ -382,7 +437,7 @@ final class MsSeller extends Model {
 				WHERE seller_id = " . (int)$seller_id . "
 				AND balance_type = ". MsBalance::MS_BALANCE_TYPE_SALE
 				. (isset($data['period_start']) ? " AND DATEDIFF(date_created, '{$data['period_start']}') >= 0" : "");
-		
+
 		$res = $this->db->query($sql);
 		return $res->row['total'];
 	}

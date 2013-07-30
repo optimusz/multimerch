@@ -28,78 +28,55 @@
       <p><?php echo $ms_payment_payout_requests; ?>: <b><?php echo $payout_requests['amount_pending'];?></b> <?php echo strtolower($ms_payment_pending); ?> / <b><?php echo $payout_requests['amount_paid'];?></b> <?php echo strtolower($ms_payment_paid); ?></p>
       <p><?php echo $ms_payment_payouts; ?>: <b><?php echo $payouts['amount_pending'];?></b> <?php echo strtolower($ms_payment_pending); ?> / <b><?php echo $payouts['amount_paid'];?></b> <?php echo strtolower($ms_payment_paid); ?></p>
 	<form action="" method="post" enctype="multipart/form-data" id="form">
-	<table class="list" style="text-align: center">
+	<table class="list" style="text-align: center" id="list-payments">
 	<thead>
 	<tr>
-		<td width="1" style="text-align: center;"><input type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);" /></td>
-		<td style="width: 150px"><?php echo $ms_type; ?></td>
-		<td style="width: 150px"><?php echo $ms_seller; ?></td>
-		<td style="width: 50px"><?php echo $ms_amount; ?></td>
+		<td class="tiny"><input type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);" /></td>
+		<td class="small"><?php echo $ms_type; ?></td>
+		<td class="medium"><?php echo $ms_seller; ?></td>
+		<td class="small"><?php echo $ms_amount; ?></td>
 		<td><?php echo $ms_description; ?></td>
-		<td style="width: 100px"><?php echo $ms_status; ?></td>
-		<td style="width: 120px"><?php echo $ms_date_created; ?></td>
-		<td style="width: 120px"><?php echo $ms_date_paid; ?></td>
-		<td style="width: 120px"><?php echo $ms_action; ?></td>
+		<td class="medium"><?php echo $ms_status; ?></td>
+		<td class="medium"><?php echo $ms_date_created; ?></td>
+		<td class="medium"><?php echo $ms_date_paid; ?></td>
+		<td class="medium"><?php echo $ms_action; ?></td>
+	</tr>
+	<tr class="filter">
+		<td></td>
+		<td></td>
+		<td><input type="text"/></td>
+		<td><input type="text"/></td>
+		<td><input type="text"/></td>
+		<td></td>
+		<td><input type="text"/></td>
+		<td><input type="text"/></td>
+		<td></td>
 	</tr>
 	</thead>
 	
-	<tbody>
-		<?php if (isset($payments) && $payments) { ?>
-		<?php $msPayment = new ReflectionClass('MsPayment'); ?>
-		<?php foreach ($payments as $payment) { ?>
-			<tr>
-			<td style="text-align: center;">
-				<input type="checkbox" name="selected[]" value="<?php echo $payment['payment_id']; ?>" />
-			</td>
-			
-			<td><?php echo $this->language->get('ms_payment_type_' . $payment['payment_type']); ?></td>
-			<td><a href="<?php echo $this->url->link('multiseller/seller/update', 'token=' . $this->session->data['token'] . '&seller_id=' . $payment['seller_id'], 'SSL');?>"><?php echo $payment['nickname']; ?></a></td>
-			<td><?php echo $payment['amount_text']; ?></td>
-			<td><?php echo $payment['description']; ?></td>
-			
-			<td>
-				<select name="ms-payment-status">
-				<?php foreach ($msPayment->getConstants() as $cname => $cval) { ?>
-				<?php if (strpos($cname, 'STATUS_') !== FALSE) { ?>
-				<option value="<?php echo $cval; ?>" <?php if ($payment['payment_status'] == $cval) { ?>selected="selected"<?php } ?>><?php echo $this->language->get('ms_payment_status_' . $cval); ?></option>
-				<?php } ?>
-				<?php } ?>
-				</select>
-				<span class="ms-button-small ms-button-apply ms-button-status" title="Save" />
-			</td>
-			
-			<td><?php echo $payment['date_created']; ?></td>
-			<td><?php echo $payment['date_paid']; ?></td>
-			
-			<td class="right">
-				<?php if ($payment['amount'] > 0 && $payment['payment_status'] == MsPayment::STATUS_UNPAID && in_array($payment['payment_type'], array(MsPayment::TYPE_PAYOUT, MsPayment::TYPE_PAYOUT_REQUEST))) { ?>
-				<?php if (!empty($payment['ms.paypal']) && filter_var($payment['ms.paypal'], FILTER_VALIDATE_EMAIL)) { ?>
-					<a class="ms-button ms-button-paypal" title="<?php echo $ms_payment_payout_paypal; ?>"></a>
-				<?php } else { ?>
-					<a class="ms-button ms-button-paypal-bw" title="<?php echo $ms_payment_payout_paypal_invalid; ?>"></a>
-				<?php } ?>
-				<?php } ?>
-				<?php if ($payment['amount'] > 0 && $payment['payment_status'] == MsPayment::STATUS_UNPAID) { ?>
-					<a class="ms-button ms-button-mark" title="<?php echo $ms_payment_mark; ?>"></a>
-				<?php } ?>
-				<a class="ms-button ms-button-delete" title="<?php echo $ms_payment_delete; ?>"></a>
-			</td>
-			</tr>
-		<?php } ?>
-		<?php } else { ?>
-			<tr>
-			<td class="center" colspan="10"><?php echo $text_no_results; ?></td>
-			</tr>
-		<?php } ?>
-	</tbody>
+	<tbody></tbody>
 	</table>
 	</form>
-	<div class="pagination"><?php echo $pagination; ?></div>
 	</div>
 	</div>
 </div>
 <script type="text/javascript">
 $(document).ready(function() {
+	$('#list-payments').dataTable( {
+		"sAjaxSource": "index.php?route=multiseller/payment/getTableData&token=<?php echo $token; ?>",
+		"aoColumns": [
+			{ "mData": "checkbox", "bSortable": false },
+			{ "mData": "payment_type" },
+			{ "mData": "seller" },
+			{ "mData": "amount" },
+			{ "mData": "description" },
+			{ "mData": "payment_status" },
+			{ "mData": "date_created" },
+			{ "mData": "date_paid" },
+			{ "mData": "actions", "bSortable": false, "sClass": "right" }
+		],
+	});
+
 	$(".ms-button-status, .ms-button-mark").click(function() {
 		var button = $(this);
 		var row = button.parents('tr');

@@ -19,77 +19,20 @@
 		<div class="success"><?php echo $success; ?></div>
 	<?php } ?>
 	
-	<table class="list">
+	<table class="list" id="list-products">
 	<thead>
 	<tr>
-		<td class="left"><?php echo $ms_account_products_product; ?></td>
-		<td class="center"><?php echo $ms_account_product_price; ?></td>
-		<td class="center"><?php echo $ms_account_products_sales; ?></td>
-		<td class="center"><?php echo $ms_account_products_earnings; ?></td>
-		<td class="center"><?php echo $ms_account_products_status; ?></td>
-		<td class="center"><?php echo $ms_account_products_date; ?></td>
-		<td class="center" style="width: 150px"><?php echo $ms_account_products_action; ?></td>
+		<td><?php echo $ms_account_products_product; ?></td>
+		<td><?php echo $ms_account_product_price; ?></td>
+		<td><?php echo $ms_account_products_sales; ?></td>
+		<td><?php echo $ms_account_products_earnings; ?></td>
+		<td><?php echo $ms_account_products_status; ?></td>
+		<td><?php echo $ms_account_products_date; ?></td>
+		<td class="large"><?php echo $ms_account_products_action; ?></td>
 	</tr>
 	</thead>
-	
-	<tbody>
-	<?php if (isset($products)) { ?>
-	<?php foreach ($products  as $product) { ?>
-	<tr>
-		<td class="left"><?php echo $product['pd.name']; ?></td>
-		<td class="center">
-		<?php if ($product['special']) { ?>
-			<span style="text-decoration: line-through;"><?php echo $product['p.price']; ?></span><br/>
-			<span style="color: #b00;"><?php echo $product['special']; ?></span>
-		<?php } else { ?>
-			<?php echo $product['p.price']; ?>
-		<?php } ?>
-		</td>
-		<td class="center"><?php echo $product['mp.number_sold']; ?></td>
-		<td class="center"><?php echo $product['mp.total_earnings']; ?></td>
-		<td>
-			<?php if ($product['mp.product_status'] == MsProduct::STATUS_ACTIVE) { ?> 
-			<span style="color: #080;"><?php echo $product['status_text']; ?></td></span>
-			<?php } else { ?>
-			<span style="color: #b00;"><?php echo $product['status_text']; ?></td></span>
-			<?php } ?>
-		</td>
-		<td class="center"><?php echo $product['p.date_created']; ?></td>
-		<td class="right">
-			<?php if (isset($product['view_link'])) { ?>
-			<a href="<?php echo $product['view_link']; ?>" class="ms-button ms-button-view" title="<?php echo $ms_viewinstore; ?>"></a>
-			<?php } ?>
-			
-			<?php if (isset($product['publish_link'])) { ?>
-			<a href="<?php echo $product['publish_link']; ?>" class="ms-button ms-button-publish" title="<?php echo $ms_publish; ?>"></a>
-			<?php } ?>
-			
-			<?php if (isset($product['unpublish_link'])) { ?>
-			<a href="<?php echo $product['unpublish_link']; ?>" class="ms-button ms-button-unpublish" title="<?php echo $ms_unpublish; ?>"></a>
-			<?php } ?>
-			
-			<?php if (isset($product['edit_link'])) { ?>
-			<a href="<?php echo $product['edit_link']; ?>" class="ms-button ms-button-edit" title="<?php echo $ms_edit; ?>"></a>
-			<?php } ?>
-			
-			<?php if (isset($product['delete_link'])) { ?>
-			<a href="<?php echo $product['delete_link']; ?>" class="ms-button ms-button-delete" title="<?php echo $ms_delete; ?>"></a>
-			<?php } ?>
-		</td>
-	</tr>
-	<?php } ?>
-	<?php } else { ?>
-	<tr>
-		<td class="center" colspan="7"><?php echo $ms_account_products_noproducts; ?></td>
-	</tr>
-	<?php } ?>
-	</tbody>
-
+	<tbody></tbody>
 	</table>
-
-	<br />
-
-	<div class="pagination"><?php echo $pagination; ?></div>
 
 	<div class="buttons">
 		<div class="left">
@@ -109,6 +52,19 @@
 
 <script>
 	$(function() {
+		$('#list-products').dataTable( {
+			"sAjaxSource": "index.php?route=seller/account-product/getTableData&token=<?php echo $token; ?>",
+			"aoColumns": [
+				{ "mData": "product_name" },
+				{ "mData": "product_price" },
+				{ "mData": "number_sold" },
+				{ "mData": "product_earnings" },
+				{ "mData": "product_status" },
+				{ "mData": "date_created" },
+				{ "mData": "actions", "bSortable": false, "sClass": "right" }
+			],
+		});
+	
 		$(".ms-button-delete").click(function() {
 			if (!confirm('<?php echo $ms_account_products_confirmdelete; ?>')) return false;
 		});

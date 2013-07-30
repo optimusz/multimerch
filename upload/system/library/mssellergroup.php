@@ -11,44 +11,30 @@ class MsSellerGroup extends Model {
 		return $res->row;
 	}
 	
-	public function getSellerGroups($data = array()) {
-		$sql = "SELECT * 
+	public function getSellerGroups($data = array(), $sort = array(), $cols = array()) {
+		$filters = '';
+		if(isset($sort['filters'])) {
+			foreach($sort['filters'] as $k => $v) {
+				$filters .= " AND {$k} LIKE '%" . $this->db->escape($v) . "%'";
+			}
+		}
+		
+		$sql = "SELECT 
+					SQL_CALC_FOUND_ROWS
+					*
 					FROM " . DB_PREFIX . "ms_seller_group msg 
 					LEFT JOIN " . DB_PREFIX . "ms_seller_group_description msgd 
 						ON (msg.seller_group_id = msgd.seller_group_id) 
-					WHERE msgd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+					WHERE msgd.language_id = '" . (int)$this->config->get('config_language_id') . "'"
+					. $filters
+					. (isset($sort['order_by']) ? " ORDER BY {$sort['order_by']} {$sort['order_way']}" : '')
+					. (isset($sort['limit']) ? " LIMIT ".(int)$sort['offset'].', '.(int)($sort['limit']) : '');
+		$res = $this->db->query($sql);
 		
-		$sort_data = array(
-			'msgd.name'
-		);
+		$total = $this->db->query("SELECT FOUND_ROWS() as total");
+		if ($res->rows) $res->rows[0]['total_rows'] = $total->row['total'];	
 		
-		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
-			$sql .= " ORDER BY " . $data['sort'];
-		} else {
-			$sql .= " ORDER BY msgd.name";
-		}
-		
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
-			$sql .= " DESC";
-		} else {
-			$sql .= " ASC";
-		}
-		
-		if (isset($data['start']) || isset($data['limit'])) {
-			if ($data['start'] < 0) {
-				$data['start'] = 0;
-			}
-			
-			if ($data['limit'] < 1) {
-				$data['limit'] = 20;
-			}
-			
-			$sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
-		}
-		
-		$query = $this->db->query($sql);
-		
-		return $query->rows;
+		return $res->rows;
 	}
 	
 	public function getSellerGroupDescriptions($seller_group_id) {

@@ -4,6 +4,12 @@
 	float: none;
 }
 
+#content .buttons {
+	width: 100%;
+	margin-top: 10px;
+	display: inline-block;
+}
+
 .ms-account-dashboard table.list tbody td,
 .ms-account-orders table.list tbody td {
 	vertical-align: middle;
@@ -780,4 +786,94 @@ ul.ms-sellermenu.graphical li a {
 
 .ms-account-dashboard table.list.comments .date {
 	width: 75px;
+}
+
+
+/*
+ *
+ * datatables 
+ *
+ */
+
+.dataTables_length, .dataTables_filter {
+	display: inline-block;
+	margin-bottom: 5px;
+}
+
+.dataTables_length {
+	float: left;
+}
+
+.dataTables_filter {
+	float: right;
+}
+
+
+.dataTables_wrapper table.dataTable {
+	margin-bottom: 10px;
+}
+
+.dataTables_wrapper .dataTables_paginate {
+	float: left;
+}
+
+.dataTables_wrapper .dataTables_info {
+	float: right;
+	clear: right;
+}
+
+/* table cell sizes*/
+table .tiny {
+	width: 50px;
+}
+
+table .small {
+	width: 75px;
+}
+
+table .medium {
+	width: 125px;
+}
+
+table .large {
+	width: 200px;
+}
+
+table .filter input[type="text"] {
+	width: 100%;
+	box-sizing: border-box;
+	-webkit-box-sizing:border-box;
+	-moz-box-sizing: border-box;
+}
+
+.dataTables_filter {
+	display: none;
+}
+
+table.list thead td.right {
+	text-align: center;
+}
+
+.dataTables_wrapper .paging_full_numbers a.paginate_button,
+.dataTables_wrapper .paging_full_numbers a.paginate_button:hover,
+.dataTables_wrapper .paging_full_numbers a.paginate_active {
+	border: 1px solid #DDDDDD;
+	padding: 4px 10px;
+	font-size: 12px;
+	text-decoration: none;
+	color: #A3A3A3 !important;
+	background-color: transparent;
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	border-radius: 0;
+	margin: 0 2px;	
+}
+
+.dataTables_wrapper .paging_full_numbers a.paginate_active {
+	border: 1px solid #269BC6;
+	color: #269BC6 !important;
+}
+
+.dataTables_wrapper .paging_full_numbers .paginate_button_disabled {
+	display: none;
 }

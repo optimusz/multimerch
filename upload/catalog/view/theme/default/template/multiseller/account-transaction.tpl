@@ -24,69 +24,53 @@
 
 	<!-- BALANCE RECORDS -->
 	<h2><?php echo $ms_account_transactions_records; ?></h2>
-	<table class="list" style="text-align: center">
+	<table class="list" style="text-align: center" id="list-transactions">
 		<thead>
 			<tr>
-				<td width="1"><?php echo $ms_id; ?></td>
-				<td><?php echo $ms_account_transactions_amount; ?></td>
+				<td class="tiny"><?php echo $ms_id; ?></td>
+				<td class="small"><?php echo $ms_account_transactions_amount; ?></td>
 				<td><?php echo $ms_account_transactions_description; ?></td>
-				<td><?php echo $ms_date_created; ?></td>
+				<td class="medium"><?php echo $ms_date_created; ?></td>
+			</tr>
+			
+			<tr class="filter">
+				<td><input type="text"/></td>
+				<td><input type="text"/></td>
+				<td><input type="text"/></td>
+				<td><input type="text"/></td>
 			</tr>
 		</thead>
 		
 		<tbody>
-		<?php if (isset($transactions) && $transactions) { ?>
-			<?php foreach ($transactions as $transaction) { ?>
-			<tr>
-				<td><?php echo $transaction['balance_id']; ?></td>
-				<td><?php echo $transaction['amount']; ?></td>
-				<td><?php echo $transaction['description']; ?></td>
-				<td><?php echo $transaction['date_created']; ?></td>
-			</tr>
-			<?php } ?>
-		<?php } else { ?>
-			<tr>
-				<td class="center" colspan="3"><?php echo $ms_account_transactions_notransactions; ?></td>
-			</tr>
-		<?php } ?>
 		</tbody>
 	</table>
 	
 	<br />
 	
-	<!--<div class="pagination"><?php echo $pagination; ?></div>-->
-	
 	<!-- PAYMENTS -->
 	<h2><?php echo $ms_payment_payments; ?></h2>
-	<table class="list" style="text-align: center">
+	<table class="list" style="text-align: center" id="list-payments">
 	<thead>
 	<tr>
-		<td width="1" style="text-align: center;"><?php echo $ms_id; ?></td>
-		<td style="width: 150px"><?php echo $ms_type; ?></td>
-		<td style="width: 50px"><?php echo $ms_amount; ?></td>
+		<td class="tiny"><?php echo $ms_id; ?></td>
+		<td class="medium"><?php echo $ms_type; ?></td>
+		<td class="small"><?php echo $ms_amount; ?></td>
 		<td><?php echo $ms_description; ?></td>
-		<td style="width: 100px"><?php echo $ms_status; ?></td>
-		<td style="width: 120px"><?php echo $ms_date_paid; ?></td>
+		<td class="medium"><?php echo $ms_status; ?></td>
+		<td class="medium"><?php echo $ms_date_paid; ?></td>
+	</tr>
+	
+	<tr class="filter">
+		<td><input type="text"/></td>
+		<td></td>
+		<td><input type="text"/></td>
+		<td><input type="text"/></td>
+		<td></td>
+		<td><input type="text"/></td>
 	</tr>
 	</thead>
 	
-	<tbody>
-		<?php if (isset($payments) && $payments) { ?>
-		<?php $msPayment = new ReflectionClass('MsPayment'); ?>
-		<?php foreach ($payments as $payment) { ?>
-			<tr>
-				<td style="text-align: center;"><?php echo $payment['payment_id']; ?></td>
-				<td><?php echo ($payment['payment_type'] == MsPayment::TYPE_SALE ? $this->language->get('ms_payment_type_' . $payment['payment_type']) . ' (' . sprintf($this->language->get('ms_payment_order'), $payment['order_id']) . ')' : $this->language->get('ms_payment_type_' . $payment['payment_type'])); ?></td>
-				<td><?php echo $payment['amount_text']; ?></td>
-				<td><?php echo $payment['description']; ?></td>
-				<td><?php echo $this->language->get('ms_payment_status_' . $payment['payment_status']); ?></td>
-				<td><?php echo $payment['date_paid']; ?></td>
-			</tr>
-		<?php } ?>
-		<?php } else { ?>
-			<tr><td class="center" colspan="10"><?php echo $text_no_results; ?></td></tr>
-		<?php } ?>
-	</tbody>
+	<tbody></tbody>
 	</table>
 	
 	<div class="buttons">
@@ -99,5 +83,31 @@
 	
 	<?php echo $content_bottom; ?>
 </div>
+
+<script>
+$(function() {
+	$('#list-transactions').dataTable( {
+		"sAjaxSource": "index.php?route=seller/account-transaction/getTransactionData&token=<?php echo $token; ?>",
+		"aoColumns": [
+			{ "mData": "transaction_id" },
+			{ "mData": "amount" },
+			{ "mData": "description", "bSortable": false },
+			{ "mData": "date_created" }
+		],
+	});
+
+	$('#list-payments').dataTable( {
+		"sAjaxSource": "index.php?route=seller/account-transaction/getPaymentData&token=<?php echo $token; ?>",
+		"aoColumns": [
+			{ "mData": "payment_id" },
+			{ "mData": "payment_type" },
+			{ "mData": "amount" },
+			{ "mData": "description", "bSortable": false },
+			{ "mData": "payment_status" },
+			{ "mData": "date_created" },
+		],
+	});
+});
+</script>
 
 <?php echo $footer; ?>

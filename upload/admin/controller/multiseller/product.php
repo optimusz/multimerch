@@ -1,75 +1,98 @@
 <?php
 
 class ControllerMultisellerProduct extends ControllerMultisellerBase {
-	public function __construct($registry) {
-		parent::__construct($registry);		
-		$this->registry = $registry;
-	}
+	public function getTableData() {
+		$colMap = array(
+			'id' => 'product_id',
+			'name' => '`pd.name`',
+			'status' => '`mp.product_status`',
+			'seller' => '`ms.nickname`',
+			'date_created' => '`p.date_created`',
+			'date_modified' => '`p.date_modified`'
+		);
 
-	public function index() {
-		$this->validate(__FUNCTION__);
+		$sorts = array('name', 'seller', 'date_created', 'date_modified', 'status');
+		$filters = array_diff($sorts, array('status'));
 		
-		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
+		list($sortCol, $sortDir) = $this->MsLoader->MsHelper->getSortParams($sorts, $colMap);
+		$filterParams = $this->MsLoader->MsHelper->getFilterParams($filters, $colMap);
 
-		$this->data['sellers'] = $this->MsLoader->MsSeller->getSellers(
+		$sellers = $this->MsLoader->MsSeller->getSellers(
 			array(
 				'seller_status' => array(MsSeller::STATUS_ACTIVE, MsSeller::STATUS_INACTIVE)
 			),
 			array(
 				'order_by'  => 'ms.nickname',
-				'order_way' => 'ASC'			
+				'order_way' => 'ASC'
 			)
 		);
 
 		$results = $this->MsLoader->MsProduct->getProducts(
 			array(),
-			array (
-				'order_by'  => 'p.date_modified',
-				'order_way' => 'DESC',
-				'offset' => ($page - 1) * $this->config->get('config_admin_limit'),
-				'limit' => $this->config->get('config_admin_limit')
+			array(
+				'order_by'  => $sortCol,
+				'order_way' => $sortDir,
+				'filters' => $filterParams,
+				'offset' => $this->request->get['iDisplayStart'],
+				'limit' => $this->request->get['iDisplayLength']
 			)
 		);
-		
-		$total_products = $this->MsLoader->MsProduct->getTotalProducts(array());
 
+		$total = isset($results[0]) ? $results[0]['total_rows'] : 0;
+
+		$columns = array();
 		foreach ($results as $result) {
+			// image
 			if ($result['p.image'] && file_exists(DIR_IMAGE . $result['p.image'])) {
 				$image = $this->MsLoader->MsFile->resizeImage($result['p.image'], 40, 40);
 			} else {
 				$image = $this->MsLoader->MsFile->resizeImage('no_image.jpg', 40, 40);
-			}		
+			}
+
+			// actions
+			$actions = "";
+			$actions .= "<a class='ms-button ms-button-edit' href='" . $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $result['product_id'], 'SSL') . "' title='".$this->language->get('text_edit')."'></a>";
+			$actions .= "<a class='ms-button ms-button-delete' href='" . $this->url->link('multiseller/product/delete', 'token=' . $this->session->data['token'] . '&product_id=' . $result['product_id'], 'SSL') . "' title='".$this->language->get('text_delete')."'></a>";
+
+			// seller select
+			$sellerselect = "";
+			$sellerselect .= "
+			<select>
+				<option value='0'>" . $this->language->get('ms_catalog_products_noseller') . "</option>";
+				
+				foreach($sellers as $s) {
+					$sellerselect .= "<option value='{$s['seller_id']}'" . ($s['seller_id'] == $result['seller_id'] ? " selected='selected'" : "") . ">{$s['ms.nickname']}</option>";
+				}
+
+			$sellerselect .= "
+			</select>
+			<span class='ms-assign-seller' style='background-image: url('view/image/success.png'); width: 16px; height: 16px; display: inline-block; cursor: pointer; vertical-align: middle' title='Save' />
+			";
 			
-			$action = array();
-			$action[] = array(
-				'text' => $this->language->get('ms_edit'),
-				'href' => $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $result['product_id'], 'SSL')
-			);
-			
-			$this->data['products'][] = array(
-				'p.image' => $image,
-				'pd.name' => $result['pd.name'],
-				'ms.nickname' => $result['ms.nickname'],
-				'p.date_created' => date($this->language->get('date_format_short'), strtotime($result['p.date_created'])),
-				'p.date_modified' => date($this->language->get('date_format_short'), strtotime($result['p.date_modified'])),
-				'mp.product_status' => $result['mp.product_status'],
-				'status_text' => $this->language->get('ms_product_status_' . $result['mp.product_status']),
-				'action' => $action,
-				'product_id' => $result['product_id'],
-				'seller_id' => $result['seller_id']
+			$columns[] = array_merge(
+				$result,
+				array(
+					'checkbox' => "<input type='checkbox' name='selected[]' value='{$result['product_id']}' />",
+					'image' => "<img src='$image' style='padding: 1px; border: 1px solid #DDDDDD' />",
+					'name' => $result['pd.name'],
+					'seller' => $sellerselect,
+					'status' => $result['mp.product_status'] ? $this->language->get('ms_product_status_' . $result['mp.product_status']) : '',
+					'date_created' => date($this->language->get('date_format_short'), strtotime($result['p.date_created'])),
+					'date_modified' => date($this->language->get('date_format_short'), strtotime($result['p.date_modified'])),
+					'actions' => $actions
+				)
 			);
 		}
-		
-		$pagination = new Pagination();
-		$pagination->total = $total_products;
-		$pagination->page = $page;
-		$pagination->limit = $this->config->get('config_admin_limit');
-		$pagination->text = $this->language->get('text_pagination');
-		$pagination->url = $this->url->link("multiseller/product", 'token=' . $this->session->data['token'] . '&page={page}', 'SSL');
-		
-		$this->data['pagination'] = $pagination->render();
 
-		//$this->data['sellers'] = $this->MsLoader->MsSeller->getSellers();
+		$this->response->setOutput(json_encode(array(
+			'iTotalRecords' => $total,
+			'iTotalDisplayRecords' => $total,
+			'aaData' => $columns
+		)));
+	}
+	
+	public function index() {
+		$this->validate(__FUNCTION__);
 		
 		if (isset($this->session->data['error'])) {
 			$this->data['error_warning'] = $this->session->data['error'];

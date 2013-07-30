@@ -11,50 +11,26 @@
 	
 	<h1><?php echo $ms_account_orders_heading; ?></h1>
 	
-	<table class="list">
+	<table class="list" id="list-orders">
 		<thead>
 			<tr>
-				<td><?php echo $ms_account_orders_id; ?></td>
-				<?php if (!$this->config->get('msconf_hide_customer_email')) { ?>
-					<td><?php echo $ms_account_orders_customer; ?></td>
-				<?php } ?>
-				<td style="width: 40%"><?php echo $ms_account_orders_products; ?></td>
-				<td><?php echo $ms_date_created; ?></td>
-				<td><?php echo $ms_account_orders_total; ?></td>
+				<td class="tiny"><?php echo $ms_account_orders_id; ?></td>
+				<td class="large"><?php echo $ms_account_orders_customer; ?></td>
+				<td><?php echo $ms_account_orders_products; ?></td>
+				<td class="medium"><?php echo $ms_date_created; ?></td>
+				<td class="small"><?php echo $ms_account_orders_total; ?></td>
+			</tr>
+			<tr class="filter">
+				<td><input type="text"/></td>
+				<td><input type="text"/></td>
+				<td><input type="text"/></td>
+				<td><input type="text"/></td>
+				<td><input type="text"/></td>
 			</tr>
 		</thead>
 		
-		<tbody>
-		<?php if (isset($orders) && $orders) { ?>
-			<?php foreach ($orders as $order) { ?>
-			<tr>
-				<td><?php echo $order['order_id']; ?></td>
-				<?php if (!$this->config->get('msconf_hide_customer_email')) { ?>
-					<td><?php echo $order['customer']; ?></td>
-				<?php } ?>
-				<td class="left products">
-				<?php foreach ($order['products'] as $p) { ?>
-				<p>
-					<span class="name"><?php if ($p['quantity'] > 1) { echo "{$p['quantity']} x "; } ?> <a href="<?php echo $this->url->link('product/product', 'product_id=' . $p['product_id'], 'SSL'); ?>"><?php echo $p['name']; ?></a></span>
-					<span class="total"><?php echo $this->currency->format($p['seller_net_amt'], $this->config->get('config_currency')); ?></span>
-				</p>
-				<?php } ?>
-				</td>
-				<td><?php echo $order['date_created']; ?></td>
-				<td><?php echo $order['total']; ?></td>
-			</tr>
-			<?php } ?>
-		<?php } else { ?>
-			<tr>
-				<td class="center" colspan="5"><?php echo $ms_account_orders_noorders; ?></td>
-			</tr>
-		<?php } ?>
-		</tbody>
+		<tbody></tbody>
 	</table>
-	
-	<br />
-	
-	<div class="pagination"><?php echo $pagination; ?></div>		
 	
 	<div class="buttons">
 		<div class="left">
@@ -66,5 +42,20 @@
 	
 	<?php echo $content_bottom; ?>
 </div>
+
+<script>
+	$(function() {
+		$('#list-orders').dataTable( {
+			"sAjaxSource": "index.php?route=seller/account-order/getTableData&token=<?php echo $token; ?>",
+			"aoColumns": [
+				{ "mData": "order_id" },
+				{ "mData": "customer_name" },
+				{ "mData": "products", "bSortable": false, "sClass": "products" },
+				{ "mData": "date_created" },
+				{ "mData": "total_amount" }
+			],
+		});
+	});
+</script>
 
 <?php echo $footer; ?>

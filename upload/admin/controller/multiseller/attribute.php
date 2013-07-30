@@ -1,44 +1,62 @@
 <?php
 
 class ControllerMultisellerAttribute extends ControllerMultisellerBase {
-	public function index() {
-		$this->validate(__FUNCTION__);
-		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
+	public function getTableData() {
+		$colMap = array(
+			'id' => 'ma.attribute_id',
+			'status' => '`ma.enabled`',
+			'type' => 'attribute_type'
+		);
+		
+		$sorts = array('name', 'type', 'sort_order', 'status');
+		$filters = array_diff($sorts, array('status', 'sort_order', 'type'));
+		
+		list($sortCol, $sortDir) = $this->MsLoader->MsHelper->getSortParams($sorts, $colMap);
+		$filterParams = $this->MsLoader->MsHelper->getFilterParams($filters, $colMap);
 
-		$sort = array(
-			'order_by'  => 'ad.name',
-			'order_way' => 'ASC',
-			'page' => $page,
-			'limit' => $this->config->get('config_admin_limit')
+		$results = $this->MsLoader->MsAttribute->getAttributes(
+			array(),
+			array(
+				'order_by'  => $sortCol,
+				'order_way' => $sortDir,
+				'filters' => $filterParams,
+				'offset' => $this->request->get['iDisplayStart'],
+				'limit' => $this->request->get['iDisplayLength']
+			)
 		);
 
-		$attributes = $this->MsLoader->MsAttribute->getAttributes($sort);
+		$total = isset($results[0]) ? $results[0]['total_rows'] : 0;
 
-		foreach ($attributes as $result) {
-			$this->data['attributes'][] = array(
-				'attribute_id' => $result['attribute_id'],
-				'name' => $result['mad.name'],
-				'type' => $this->MsLoader->MsAttribute->getTypeText($result['ma.attribute_type']),
-				'sort_order' => $result['ma.sort_order'],
-				'enabled' => $result['ma.enabled'] ? 1  : 0,
-				'actions' => array(
-					array(
-						'text' => $this->language->get('text_edit'),
-						'href' => $this->url->link('multiseller/attribute/update', 'token=' . $this->session->data['token'] . '&attribute_id=' . $result['attribute_id'], 'SSL')
-					)
+		$columns = array();
+		foreach ($results as $result) {
+			// actions
+			$actions = "";
+			$actions .= "<a class='ms-button ms-button-edit' href='" . $this->url->link('multiseller/attribute/update', 'token=' . $this->session->data['token'] . '&attribute_id=' . $result['attribute_id'], 'SSL') . "' title='".$this->language->get('text_edit')."'></a>";
+			$actions .= "<a class='ms-button ms-button-delete' href='" . $this->url->link('multiseller/attribute/delete', 'token=' . $this->session->data['token'] . '&attribute_id=' . $result['attribute_id'], 'SSL') . "' title='".$this->language->get('text_delete')."'></a>";
+			
+			$columns[] = array_merge(
+				$result,
+				array(
+					'checkbox' => "<input type='checkbox' name='selected[]' value='{$result['attribute_id']}' />",
+					'name' => $result['mad.name'],
+					'type' => $this->MsLoader->MsAttribute->getTypeText($result['ma.attribute_type']),
+					'sort_order' => $result['ma.sort_order'],
+					'status' => $result['ma.enabled'] ? $this->language->get('ms_enabled')  : $this->language->get('ms_disabled'),
+					'actions' => $actions
 				)
 			);
 		}
-		
-		$pagination = new Pagination();
-		$pagination->page = $page;
-		$pagination->total = $this->MsLoader->MsAttribute->getTotalAttributes();		
-		$pagination->limit = $this->config->get('config_admin_limit');
-		$pagination->text = $this->language->get('text_pagination');
-		$pagination->url = $this->url->link("multiseller/attribute", 'token=' . $this->session->data['token'] . '&page={page}', 'SSL');
-		
-		$this->data['pagination'] = $pagination->render();
-		
+
+		$this->response->setOutput(json_encode(array(
+			'iTotalRecords' => $total,
+			'iTotalDisplayRecords' => $total,
+			'aaData' => $columns
+		)));
+	}
+	
+	public function index() {
+		$this->validate(__FUNCTION__);
+
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {

@@ -15,12 +15,37 @@ class MsComments extends Model {
 		return $res->row['total'];
 	}	
 
-	public function getComments($data = array(), $sort = array()) {
-		$sql = "SELECT  *
+	public function getComments($data = array(), $sort = array(), $cols = array()) {
+		$hFilters = $wFilters = '';
+		if(isset($sort['filters'])) {
+			foreach($sort['filters'] as $k => $v) {
+				if (!isset($cols[$k])) {
+					$wFilters .= " AND {$k} LIKE '%" . $this->db->escape($v) . "%'";
+				} else {
+					$hFilters .= " AND {$k} LIKE '%" . $this->db->escape($v) . "%'";
+				}
+			}
+		}
+
+		$sql = "SELECT
+					SQL_CALC_FOUND_ROWS
+					*,"
+					
+					// additional columns
+					. (isset($cols['product_name']) ? "
+						(SELECT name FROM " . DB_PREFIX . "product_description pd
+						WHERE product_id = mc.product_id
+						AND language_id = " . (int)$this->config->get('config_language_id') . ") as product_name,
+					" : "")
+					
+					."1
 				FROM " . DB_PREFIX . "ms_comments mc
 				WHERE 1 = 1 "
 			. (isset($data['displayed']) ? " AND mc.display = 1" : '')
 			. (isset($data['product_id']) ? " AND mc.product_id = " . (int)$data['product_id'] : '')
+			
+			. $wFilters
+			. $hFilters
 			. (isset($sort['order_by']) ? " ORDER BY {$sort['order_by']} {$sort['order_way']}" : '')
 			. (isset($sort['limit']) ? " LIMIT ".(int)$sort['offset'].', '.(int)($sort['limit']) : '');
 
@@ -29,6 +54,9 @@ class MsComments extends Model {
 		foreach ($res->rows as &$row)  {
 			$row['comment'] = htmlspecialchars_decode($row['comment']);
 		}
+
+		$total = $this->db->query("SELECT FOUND_ROWS() as total");
+		if ($res->rows) $res->rows[0]['total_rows'] = $total->row['total'];
 
 		return $res->rows;
 	}

@@ -1,6 +1,79 @@
 <?php
 
 class ControllerMultisellerSeller extends ControllerMultisellerBase {
+	public function getTableData() {
+		$colMap = array(
+			'seller' => '`c.name`',
+			'email' => 'c.email',
+			'balance' => '`current_balance`',
+			'date_created' => '`ms.date_created`',
+			'status' => '`ms.seller_status`'
+		);
+
+		$sorts = array('seller', 'email', 'total_sales', 'total_products', 'total_earnings', 'date_created', 'balance', 'status', 'date_created');
+		$filters = array_diff($sorts, array('status'));
+		
+		//var_dump($this->request->get);
+		
+		list($sortCol, $sortDir) = $this->MsLoader->MsHelper->getSortParams($sorts, $colMap);
+		$filterParams = $this->MsLoader->MsHelper->getFilterParams($filters, $colMap);
+
+		$results = $this->MsLoader->MsSeller->getSellers(
+			array(),
+			array(
+				'order_by'  => $sortCol,
+				'order_way' => $sortDir,
+				'filters' => $filterParams,
+				'offset' => $this->request->get['iDisplayStart'],
+				'limit' => $this->request->get['iDisplayLength']
+			),
+			array(
+				'total_products' => 1,
+				'total_earnings' => 1,
+				'current_balance' => 1
+			)
+		);
+
+		$total = isset($results[0]) ? $results[0]['total_rows'] : 0;
+
+		$columns = array();
+		foreach ($results as $result) {
+			// actions
+			$actions = "";
+			if ($this->MsLoader->MsBalance->getSellerBalance($result['seller_id']) - $this->MsLoader->MsBalance->getReservedSellerFunds($result['seller_id']) > 0) {
+				if (!empty($result['ms.paypal']) && filter_var($result['ms.paypal'], FILTER_VALIDATE_EMAIL)) {
+					$actions .= "<a class='ms-button ms-button-paypal' title='" . $this->language->get('ms_catalog_sellers_balance_paypal') . "'></a>";
+				} else {
+					$actions .= "<a class='ms-button ms-button-paypal-bw' title='".$this->language->get('ms_catalog_sellers_balance_invalid') . "'></a>";
+				}
+			}
+			$actions .= "<a class='ms-button ms-button-edit' href='" . $this->url->link('multiseller/seller/update', 'token=' . $this->session->data['token'] . '&seller_id=' . $result['seller_id'], 'SSL') . "' title='".$this->language->get('text_edit')."'></a>";
+			$actions .= "<a class='ms-button ms-button-delete' href='" . $this->url->link('multiseller/seller/delete', 'token=' . $this->session->data['token'] . '&seller_id=' . $result['seller_id'], 'SSL') . "' title='".$this->language->get('text_delete')."'></a>";
+
+			$available = $this->MsLoader->MsBalance->getSellerBalance($result['seller_id']) - $this->MsLoader->MsBalance->getReservedSellerFunds($result['seller_id']);
+			
+			// build table data
+			$columns[] = array_merge(
+				$result,
+				array(
+					'seller' => "<input type='hidden' value='{$result['seller_id']}' /><a href='".$this->url->link('sale/customer/update', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['seller_id'], 'SSL')."'>{$result['c.name']}({$result['ms.nickname']})</a>",
+					'email' => $result['c.email'],
+					'total_earnings' => $this->currency->format($this->MsLoader->MsSeller->getTotalEarnings($result['seller_id']), $this->config->get('config_currency')),
+					'balance' => $this->currency->format($this->MsLoader->MsBalance->getSellerBalance($result['seller_id']), $this->config->get('config_currency')) . '/' . $this->currency->format($available > 0 ? $available : 0, $this->config->get('config_currency')),
+					'status' => $this->language->get('ms_seller_status_' . $result['ms.seller_status']),
+					'date_created' => date($this->language->get('date_format_short'), strtotime($result['ms.date_created'])),
+					'actions' => $actions
+				)
+			);
+		}
+
+		$this->response->setOutput(json_encode(array(
+			'iTotalRecords' => $total,
+  			'iTotalDisplayRecords' => $total, //count($results),
+			'aaData' => $columns
+		)));
+	}
+	
 	public function jxSaveSellerInfo() {
 		$this->validate(__FUNCTION__);
 		$data = $this->request->post;
@@ -227,52 +300,9 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 		// paypal listing payment confirmation
 		if (isset($this->request->post['payment_status']) && strtolower($this->request->post['payment_status']) == 'completed') {
 			$this->data['success'] = $this->language->get('ms_payment_completed');
-		}		
-		
-		$this->data['total_balance'] = sprintf($this->language->get('ms_catalog_sellers_total_balance'), $this->currency->format($this->MsLoader->MsBalance->getTotalBalanceAmount(), $this->config->get('config_currency')), $this->currency->format($this->MsLoader->MsBalance->getTotalBalanceAmount(array('seller_status' => array(MsSeller::STATUS_ACTIVE))), $this->config->get('config_currency')));
-		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
-		$orderby = isset($this->request->get['orderby']) && in_array($this->request->get['orderby'], $columns) ? $this->request->get['orderby'] : 'date_created';
-		$orderway = isset($this->request->get['orderway']) ? $this->request->get['orderway'] : 'DESC';
-		
-		$results = $this->MsLoader->MsSeller->getSellers(
-			array(),
-			array(
-				'order_by'  => $orderby,
-				'order_way' => $orderway,
-				'offset' => ($page - 1) * $this->config->get('config_admin_limit'),
-				'limit' => $this->config->get('config_admin_limit')
-			)
-		);
-			
-		$total_sellers = $this->MsLoader->MsSeller->getTotalSellers();
-
-    	foreach ($results as &$result) {
-    		$result['date_created'] = date($this->language->get('date_format_short'), strtotime($result['ms.date_created']));
-    		$result['total_products'] = $this->MsLoader->MsProduct->getTotalProducts(array(
-				'seller_id' => $result['seller_id'],
-			));
-			
-			//$result['total_earnings'] = $this->currency->format($this->MsLoader->MsSeller->getEarningsForSeller($result['seller_id']), $this->config->get('config_currency'));
-			$result['current_balance'] = $this->currency->format($this->MsLoader->MsBalance->getSellerBalance($result['seller_id']), $this->config->get('config_currency'));
-			$result['earnings'] = $this->currency->format($this->MsLoader->MsSeller->getTotalEarnings($result['seller_id']), $this->config->get('config_currency'));
-			$result['total_sales'] = $this->MsLoader->MsSeller->getSalesForSeller($result['seller_id']);
-			$result['status'] = $this->language->get('ms_seller_status_' . $result['ms.seller_status']);
-			$result['customer_link'] = $this->url->link('sale/customer/update', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['seller_id'], 'SSL');
-			$available = $this->MsLoader->MsBalance->getSellerBalance($result['seller_id']) - $this->MsLoader->MsBalance->getReservedSellerFunds($result['seller_id']);
-			$result['available_balance'] = $this->currency->format($available > 0 ? $available : 0, $this->config->get('config_currency'));
-			 
 		}
 
-		$this->data['sellers'] = $results;
-			
-		$pagination = new Pagination();
-		$pagination->total = $total_sellers;
-		$pagination->page = $page;
-		$pagination->limit = $this->config->get('config_admin_limit');
-		$pagination->text = $this->language->get('text_pagination');
-		$pagination->url = $this->url->link("multiseller/seller", 'token=' . $this->session->data['token'] . '&page={page}', 'SSL');
-			
-		$this->data['pagination'] = $pagination->render();
+		$this->data['total_balance'] = sprintf($this->language->get('ms_catalog_sellers_total_balance'), $this->currency->format($this->MsLoader->MsBalance->getTotalBalanceAmount(), $this->config->get('config_currency')), $this->currency->format($this->MsLoader->MsBalance->getTotalBalanceAmount(array('seller_status' => array(MsSeller::STATUS_ACTIVE))), $this->config->get('config_currency')));
 		
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];

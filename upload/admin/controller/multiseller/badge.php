@@ -1,18 +1,64 @@
 <?php
 class ControllerMultisellerBadge extends ControllerMultisellerBase {
 	private $error = array();
+
+	public function getTableData() {
+		$colMap = array(
+			'id' => 'mb.badge_id'
+		);
+
+		$this->load->model('tool/image');
+		$sorts = array('id', 'name', 'description');
+		$filters = $sorts;
+		
+		list($sortCol, $sortDir) = $this->MsLoader->MsHelper->getSortParams($sorts, $colMap);
+		$filterParams = $this->MsLoader->MsHelper->getFilterParams($filters, $colMap);
+
+		$results = $this->MsLoader->MsBadge->getBadges(
+			array(),
+			array(
+				'order_by'  => $sortCol,
+				'order_way' => $sortDir,
+				'filters' => $filterParams,
+				'offset' => $this->request->get['iDisplayStart'],
+				'limit' => $this->request->get['iDisplayLength']
+			)
+		);
+
+		$total = isset($results[0]) ? $results[0]['total_rows'] : 0;
+
+		$columns = array();
+		foreach ($results as $result) {
+			// image
+			$image = $this->model_tool_image->resize($result['image'], 50, 50);
+			
+			// actions
+			$actions = "";
+			$actions .= "<a class='ms-button ms-button-edit' href='" . $this->url->link('multiseller/badge/update', 'token=' . $this->session->data['token'] . '&badge_id=' . $result['badge_id'], 'SSL') . "' title='".$this->language->get('text_edit')."'></a>";
+			$actions .= "<a class='ms-button ms-button-delete' href='" . $this->url->link('multiseller/badge/delete', 'token=' . $this->session->data['token'] . '&badge_id=' . $result['badge_id'], 'SSL') . "' title='".$this->language->get('text_delete')."'></a>";
+
+			$columns[] = array_merge(
+				$result,
+				array(
+					'checkbox' => "<input type='checkbox' name='selected[]' value='{$result['mb.badge_id']}' />",
+					'id' => $result['badge_id'],
+					'name' => $result['name'],
+					'description' => (mb_strlen($result['description']) > 80 ? mb_substr($result['description'], 0, 80) . '...' : $result['description']),
+					'image' => "<img src='$image' />",
+					'actions' => $actions
+				)
+			);
+		}
+
+		$this->response->setOutput(json_encode(array(
+			'iTotalRecords' => $total,
+			'iTotalDisplayRecords' => $total,
+			'aaData' => $columns
+		)));
+	}
 	
-	// List all badges
 	public function index() {
 		$this->validate(__FUNCTION__);
-		
-		$this->load->model('tool/image');
-		
-		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
-		
-		$url = '';
-		
-		$url .= isset($this->request->get['page']) ? '&page=' . $this->request->get['page'] : '';
 		
 		$this->data['breadcrumbs'] = $this->MsLoader->MsHelper->admSetBreadcrumbs(array(
 			array(
@@ -25,39 +71,9 @@ class ControllerMultisellerBadge extends ControllerMultisellerBase {
 			)
 		));
 		
-		$this->data['insert'] = $this->url->link('multiseller/badge/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-		$this->data['delete'] = $this->url->link('multiseller/badge/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+		$this->data['insert'] = $this->url->link('multiseller/badge/insert', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['delete'] = $this->url->link('multiseller/badge/delete', 'token=' . $this->session->data['token'], 'SSL');
 	
-		$this->data['badges'] = array();
-		
-		$sort_data = array(
-			'start' => ($page - 1) * $this->config->get('config_admin_limit'),
-			'limit' => $this->config->get('config_admin_limit')
-		);
-		
-		$total_badges = $this->MsLoader->MsBadge->getTotalBadges();
-		$results = $this->MsLoader->MsBadge->getBadges($sort_data);
-		
-		foreach ($results as $result) {
-			
-			$this->data['badges'][] = array(
-				'badge_id' => $result['badge_id'],
-				'name'              => $result['name'],
-				'description' => (mb_strlen($result['description']) > 80 ? mb_substr($result['description'], 0, 80) . '...' : $result['description']),
-				'selected'          => isset($this->request->post['selected']) && in_array($result['badge_id'], $this->request->post['selected']),
-				'image' => $this->model_tool_image->resize($result['image'], 50, 50)
-			);
-		}
-		
-		$pagination = new Pagination();
-		$pagination->total = $total_badges;
-		$pagination->page = $page;
-		$pagination->limit = $this->config->get('config_admin_limit');
-		$pagination->text = $this->language->get('text_pagination');
-		$pagination->url = $this->url->link("multiseller/badge", 'token=' . $this->session->data['token'] . '&page={page}', 'SSL');
-		
-		$this->data['pagination'] = $pagination->render();
-		
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {

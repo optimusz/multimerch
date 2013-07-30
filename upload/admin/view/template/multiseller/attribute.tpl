@@ -22,7 +22,7 @@
 	</div>
 	<div class="content">
 		<form action="" method="post" enctype="multipart/form-data" id="form">
-		<table class="list" style="text-align: center">
+		<table class="list" style="text-align: center" id="list-attributes">
 			<thead>
 			<tr>
 				<td width="1" style="text-align: center;"><input type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);" /></td>
@@ -32,33 +32,18 @@
 				<td><?php echo $ms_status; ?></a></td>
 				<td><?php echo $ms_action; ?></a></td>
 			</tr>
+			<tr class="filter">
+				<td></td>
+				<td><input type="text"/></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
 			</thead>
-			<tbody>
-			<?php if (isset($attributes) && $attributes) { ?>
-			<?php foreach ($attributes as $attribute) { ?>
-			<tr>
-				<td style="text-align: center;">
-				<input type="checkbox" name="selected[]" value="<?php echo $attribute['attribute_id']; ?>" />
-				</td>
-				<td><?php echo $attribute['name']; ?></td>
-				<td><?php echo $attribute['type']; ?></td>
-				<td><?php echo $attribute['sort_order']; ?></td>
-				<td><?php echo $attribute['enabled'] ? $ms_enabled : $ms_disabled; ?></td>
-				<td>
-					<a class="ms-button ms-button-edit" href="<?php echo $this->url->link('multiseller/attribute/update', 'token=' . $this->session->data['token'] . '&attribute_id=' . $attribute['attribute_id'], 'SSL'); ?>" title="<?php echo $text_edit; ?>"></a>
-					<a class="ms-button ms-button-delete" href="<?php echo $this->url->link('multiseller/attribute/delete', 'token=' . $this->session->data['token'] . '&attribute_id=' . $attribute['attribute_id'], 'SSL'); ?>" title="<?php echo $button_delete; ?>"></a>
-				</td>
-			</tr>
-			<?php } ?>
-			<?php } else { ?>
-			<tr>
-				<td class="center" colspan="10"><?php echo $text_no_results; ?></td>
-			</tr>
-			<?php } ?>
-			</tbody>
+			<tbody></tbody>
 		</table>
 		</form>
-		<div class="pagination"><?php echo $pagination; ?></div>
 	</div>
 	</div>
 </div>
@@ -66,6 +51,18 @@
 
 <script type="text/javascript">
 $(function() {
+	$('#list-attributes').dataTable( {
+		"sAjaxSource": "index.php?route=multiseller/attribute/getTableData&token=<?php echo $token; ?>",
+		"aoColumns": [
+			{ "mData": "checkbox", "bSortable": false },
+			{ "mData": "name" },
+			{ "mData": "type" },
+			{ "mData": "sort_order" },
+			{ "mData": "status" },
+			{ "mData": "actions", "bSortable": false, "sClass": "right" }
+		],
+	});
+
 	$("#ms-delete-attribute").click(function() {
 		var data  = $('#form').serialize();
 		$('#ms-delete-attribute').before('<img src="view/image/loading.gif" alt="" />');

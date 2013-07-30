@@ -5,7 +5,7 @@
 ]>
 <modification>
 	<id>MultiMerch Digital Multivendor Marketplace</id>
-	<version>3.0.1</version>
+	<version>4</version>
 	<author>http://ffct.cc</author>
 	
 	<!-- ************************ -->
@@ -902,7 +902,7 @@
 				<?php foreach ($scripts as $script) { ?>
 			]]></search>
 			<add><![CDATA[
-				<script type="text/javascript"> if (!window.console) console = {log: function() {}}; </script>
+				<script type="text/javascript"> if (!window.console) console = {log: function() {}}; var msGlobals = { config_admin_limit: '<?php echo $this->config->get('config_admin_limit'); ?>' }; </script>
 			]]></add>
 		</operation>
 

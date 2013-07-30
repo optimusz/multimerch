@@ -39,62 +39,52 @@
       	}
       </style>    
       <form action="" method="post" enctype="multipart/form-data" id="form">
-        <table class="list" style="text-align: center">
+        <table class="list" style="text-align: center" id="list-products">
           <thead>
             <tr>
               	<td width="1" style="text-align: center;"><input type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);" /></td>
               	<td><?php echo $ms_image; ?></td>
               	<td><?php echo $ms_product; ?></td>
 				<td><?php echo $ms_seller; ?></td>
-				<td><?php echo $ms_status; ?></td>
-				<td><?php echo $ms_date_created; ?></td>
-				<td><?php echo $ms_date_modified; ?></td>
-				<td><?php echo $ms_action; ?></td>
+				<td class="medium"><?php echo $ms_status; ?></td>
+				<td class="medium"><?php echo $ms_date_created; ?></td>
+				<td class="medium"><?php echo $ms_date_modified; ?></td>
+				<td class="medium"><?php echo $ms_action; ?></td>
             </tr>
+			<tr class="filter">
+				<td></td>
+				<td></td>
+				<td><input type="text"/></td>
+				<td><input type="text"/></td>
+				<td></td>
+				<td><input type="text"/></td>
+				<td><input type="text"/></td>
+				<td></td>
+			</tr>
           </thead>
           <tbody>
-            <?php if (isset($products) and $products) { ?>
-            <?php foreach ($products as $product) { ?>
-            <tr>
-              <td style="text-align: center;">
-                <input type="checkbox" name="selected[]" value="<?php echo $product['product_id']; ?>" />
-              </td>
-              <td class="center"><img src="<?php echo $product['p.image']; ?>" style="padding: 1px; border: 1px solid #DDDDDD" /></td>
-              <td><?php echo $product['pd.name']; ?></td>
-              <td>
-              	<select>
-              		<option value="0"><?php echo $ms_catalog_products_noseller; ?></option>
-              		<?php foreach($sellers as $s) { ?>
-              		<option value="<?php echo $s['seller_id']; ?>" <?php if ($s['seller_id'] == $product['seller_id']) { ?>selected="selected"<?php } ?>><?php echo $s['ms.nickname']; ?></option>
-              		<?php } ?>
-              	</select>
-              	<span class="ms-assign-seller" style="background-image: url('view/image/success.png'); width: 16px; height: 16px; display: inline-block; cursor: pointer; vertical-align: middle" title="Save" />
-              </td>
-              <td>
-              	<?php echo $product['mp.product_status'] ? $this->language->get('ms_product_status_' . $product['mp.product_status']) : '' ?> 
-              </td>
-              <td><?php echo $product['p.date_created']; ?></td>
-              <td><?php echo $product['p.date_modified']; ?></td>
-              <td>
-                <a class="ms-button ms-button-edit" href="<?php echo $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $product['product_id'], 'SSL'); ?>" title="<?php echo $text_edit; ?>"></a>
-                <a class="ms-button ms-button-delete" href="<?php echo $this->url->link('multiseller/product/delete', 'token=' . $this->session->data['token'] . '&product_id=' . $product['product_id'], 'SSL'); ?>" title="<?php echo $button_delete; ?>"></a>
-              </td>
-            </tr>
-            <?php } ?>
-            <?php } else { ?>
-            <tr>
-              <td class="center" colspan="10"><?php echo $text_no_results; ?></td>
-            </tr>
-            <?php } ?>
           </tbody>
         </table>
       </form>
-      <div class="pagination"><?php echo $pagination; ?></div>
     </div>
   </div>
 </div>
 <script type="text/javascript">
 $(document).ready(function() {
+	$('#list-products').dataTable( {
+		"sAjaxSource": "index.php?route=multiseller/product/getTableData&token=<?php echo $token; ?>",
+		"aoColumns": [
+			{ "mData": "checkbox", "bSortable": false },
+			{ "mData": "image", "bSortable": false },
+			{ "mData": "name" },
+			{ "mData": "seller" },
+			{ "mData": "status" },
+			{ "mData": "date_created" },
+			{ "mData": "date_modified" },
+			{ "mData": "actions", "bSortable": false, "sClass": "right" }
+		],
+	});
+
 	$('#date').datepicker({dateFormat: 'yy-mm-dd'});
 	
 	$(".ms-assign-seller").click(function() {

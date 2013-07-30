@@ -1,26 +1,58 @@
 <?php
 class MsOrderData extends Model {
-  	public function __construct($registry) {
-  		parent::__construct($registry);
-	}
+	public function getOrders($data = array(), $sort = array(), $cols = array()) {
+		$hFilters = $wFilters = '';
+		
+		if(isset($sort['filters'])) {
+			foreach($sort['filters'] as $k => $v) {
+				if (!isset($cols[$k])) {
+					$wFilters .= " AND {$k} LIKE '%" . $this->db->escape($v) . "%'";
+				} else {
+					$hFilters .= " AND {$k} LIKE '%" . $this->db->escape($v) . "%'";
+				}
+			}
+		}
+		
+		$sql = "SELECT
+					SQL_CALC_FOUND_ROWS
+					*,"
+					// additional columns
+					. (isset($cols['total_amount']) ? "
+						(SELECT SUM(seller_net_amt) AS total
+						FROM " . DB_PREFIX . "ms_order_product_data mopd
+						WHERE order_id = o.order_id
+						AND seller_id = " . (int)$data['seller_id'] . ") as total_amount,
+					" : "")
+					
+					// product names for filtering
+					. (isset($cols['products']) ? "
+						(SELECT GROUP_CONCAT(name)
+						FROM " . DB_PREFIX . "order_product
+						LEFT JOIN " . DB_PREFIX . "ms_order_product_data
+						USING(order_id, product_id)
+						WHERE order_id = o.order_id
+						AND seller_id = mopd.seller_id) as products,
+					" : "")
+				."1
+		FROM `" . DB_PREFIX . "order` o
+		INNER JOIN `" . DB_PREFIX . "ms_order_product_data` mopd
+		USING (order_id)
+		WHERE seller_id = " . (int)$data['seller_id']
 
-	public function getOrders($data = array(), $sort = array()) {
-		$sql = "SELECT *
-				FROM `" . DB_PREFIX . "order` o
-				WHERE order_id IN (
-					SELECT * FROM (
-						SELECT order_id
-						FROM `" . DB_PREFIX . "ms_order_product_data` mopd
-						WHERE seller_id = " . (int)$data['seller_id'] . "
-						GROUP BY order_id" 
-	    				. (isset($sort['limit']) ? " LIMIT ".(int)$sort['offset'].', '.(int)($sort['limit']) : '') . "
-					) as t
-    			)"
-				. (isset($sort['order_by']) ? " ORDER BY {$sort['order_by']} {$sort['order_way']}" : '');
-
+		. $wFilters
+		
+		. " GROUP BY order_id HAVING 1 = 1 "
+		
+		. $hFilters
+		
+		. (isset($sort['order_by']) ? " ORDER BY {$sort['order_by']} {$sort['order_way']}" : '')
+		. (isset($sort['limit']) ? " LIMIT ".(int)$sort['offset'].', '.(int)($sort['limit']) : '');
+		
 		$res = $this->db->query($sql);
+		$total = $this->db->query("SELECT FOUND_ROWS() as total");
 
-		return $res->rows;		
+		if ($res->rows) $res->rows[0]['total_rows'] = $total->row['total'];
+		return $res->rows;
 	}
 
 	public function getOrderTotal($order_id, $data) {

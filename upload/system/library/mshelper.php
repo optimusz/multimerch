@@ -1,6 +1,48 @@
 <?php
 
 class MsHelper extends Model {
+	public function getSortParams($sorts, $colMap, $defCol = false, $defWay = false) {
+		if (isset($this->request->get['iSortCol_0'])) {
+			if (isset($this->request->get['mDataProp_' . $this->request->get['iSortCol_0']])) {
+				$sortCol = $this->request->get['mDataProp_' . $this->request->get['iSortCol_0']];
+			} else {
+				$sortCol = $defCol ? $defCol : $sorts[0];
+			}
+		} else {
+			$sortCol = $defCol ? $defCol : $sorts[0];
+		}
+		
+		if (!in_array($sortCol, $sorts)) {
+			$sortCol = $defCol ? $defCol : $sorts[0];
+		}
+		
+		$sortCol = isset($colMap[$sortCol]) ? $colMap[$sortCol] : $sortCol; 
+		
+		if (isset($this->request->get['sSortDir_0'])) {
+			$sortDir = $this->request->get['sSortDir_0'] == 'desc' ? "DESC" : "ASC";
+		} else {
+			$sortDir = $defWay ? $defWay : "ASC";
+		}
+		
+		return array($sortCol, $sortDir);
+	}
+	
+	public function getFilterParams($filters, $colMap) {
+		$filterParams = array();
+		for ($col=0; $col < $this->request->get['iColumns']; $col++) {
+			if (isset($this->request->get['sSearch_' .$col])) {
+				$colName = $this->request->get['mDataProp_' . $col];
+				$filterVal = $this->request->get['sSearch_' .$col];
+				if (!empty($filterVal) && in_array($colName, $filters)) {
+					$colName = isset($colMap[$colName]) ? $colMap[$colName] : $colName;
+					$filterParams[$colName] = $this->request->get['sSearch_' .$col];
+				}
+			}
+		}
+		
+		return $filterParams;
+	}	
+	
 	public function setBreadcrumbs($data) {
 		$breadcrumbs = array();
 		

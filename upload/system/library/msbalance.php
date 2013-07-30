@@ -29,16 +29,31 @@ class MsBalance extends Model {
 		return $res->row['total'];
 	}
 
-	public function getBalanceEntries($sort) {
-		$sql = "SELECT *,
+	public function getBalanceEntries($data = array(), $sort = array()) {
+		$filters = '';
+		if(isset($sort['filters'])) {
+			foreach($sort['filters'] as $k => $v) {
+				$filters .= " AND {$k} LIKE '%" . $this->db->escape($v) . "%'";
+			}
+		}
+
+		// todo fix other getBalanceEntries calls
+		$sql = "SELECT
+					SQL_CALC_FOUND_ROWS
+					*,
 					mb.description as 'mb.description',
 					mb.date_created as 'mb.date_created'
 				FROM " . DB_PREFIX . "ms_balance mb
 				INNER JOIN " . DB_PREFIX . "ms_seller ms
 					ON (mb.seller_id = ms.seller_id)
-    			ORDER BY {$sort['order_by']} {$sort['order_way']}"
-    			. ($sort['limit'] ? " LIMIT ".(int)(($sort['page'] - 1) * $sort['limit']).', '.(int)($sort['limit']) : '');
+				WHERE 1 = 1"
+				. $filters
+				. (isset($sort['order_by']) ? " ORDER BY {$sort['order_by']} {$sort['order_way']}" : '')
+				. (isset($sort['limit']) ? " LIMIT ".(int)$sort['offset'].', '.(int)($sort['limit']) : '');
 		$res = $this->db->query($sql);
+
+		$total = $this->db->query("SELECT FOUND_ROWS() as total");
+		if ($res->rows) $res->rows[0]['total_rows'] = $total->row['total'];
 
 		return $res->rows;
 	}
@@ -90,6 +105,7 @@ class MsBalance extends Model {
 
 
 	public function getSellerBalance($seller_id) {
+		// note: update getSellers() if updating this
 		$sql = "SELECT COALESCE(
 					(SELECT balance FROM " . DB_PREFIX . "ms_balance
 						WHERE seller_id = " . (int)$seller_id . " 

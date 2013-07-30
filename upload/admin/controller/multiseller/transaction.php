@@ -1,39 +1,57 @@
 <?php
 
 class ControllerMultisellerTransaction extends ControllerMultisellerBase {
-	public function index() {
-		$this->validate(__FUNCTION__);
-		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
+	public function getTableData() {
+		$colMap = array(
+			'id' => 'balance_id',
+			'seller' => '`nickname`',
+			'description' => 'mb.description',
+			'date_created' => 'mb.date_created'
+		);
+		
+		$sorts = array('id', 'seller', 'amount', 'description', 'date_created');
+		$filters = $sorts;
+		
+		list($sortCol, $sortDir) = $this->MsLoader->MsHelper->getSortParams($sorts, $colMap);
+		$filterParams = $this->MsLoader->MsHelper->getFilterParams($filters, $colMap);
 
-		$sort = array(
-			'order_by'  => 'mb.date_created',
-			'order_way' => 'DESC',
-			'page' => $page,
-			'limit' => $this->config->get('config_admin_limit')
+		$results = $this->MsLoader->MsBalance->getBalanceEntries(
+			array(),
+			array(
+				'order_by'  => $sortCol,
+				'order_way' => $sortDir,
+				'filters' => $filterParams,
+				'offset' => $this->request->get['iDisplayStart'],
+				'limit' => $this->request->get['iDisplayLength']
+			)
 		);
 
-		$balance_entries = $this->MsLoader->MsBalance->getBalanceEntries($sort);
+		$total = isset($results[0]) ? $results[0]['total_rows'] : 0;
 
-		foreach ($balance_entries as $result) {
-			$this->data['transactions'][] = array(
-				'seller' => $result['nickname'],
-				'description' => (mb_strlen($result['mb.description']) > 80 ? mb_substr($result['mb.description'], 0, 80) . '...' : $result['mb.description']),
-				'net_amount' => $this->currency->format($result['amount'], $this->config->get('config_currency')),			
-				'date_created' => date($this->language->get('date_format_short'), strtotime($result['mb.date_created'])),
-				//'date_modified' => date($this->language->get('date_format_short'), strtotime($result['trn.date_modified'])),
-				//'status' => empty($result['req.date_processed']) ? 'Pending' : 'Completed',
+		$columns = array();
+		foreach ($results as $result) {
+			$columns[] = array_merge(
+				$result,
+				array(
+					'id' => $result['balance_id'],
+					'seller' => $result['nickname'],
+					'amount' => $this->currency->format($result['amount'], $this->config->get('config_currency')),
+					'description' => (mb_strlen($result['mb.description']) > 80 ? mb_substr($result['mb.description'], 0, 80) . '...' : $result['mb.description']),
+					'date_created' => date($this->language->get('date_format_short'), strtotime($result['mb.date_created'])),
+				)
 			);
 		}
+
+		$this->response->setOutput(json_encode(array(
+			'iTotalRecords' => $total,
+			'iTotalDisplayRecords' => $total,
+			'aaData' => $columns
+		)));
+	}
 		
-		$pagination = new Pagination();
-		$pagination->page = $page;
-		$pagination->total = $this->MsLoader->MsBalance->getTotalBalanceEntries();		
-		$pagination->limit = $this->config->get('config_admin_limit');
-		$pagination->text = $this->language->get('text_pagination');
-		$pagination->url = $this->url->link("multiseller/transaction", 'token=' . $this->session->data['token'] . '&page={page}', 'SSL');
-		
-		$this->data['pagination'] = $pagination->render();
-		
+	public function index() {
+		$this->validate(__FUNCTION__);
+
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {

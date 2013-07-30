@@ -21,46 +21,47 @@
 		</div>
 		<div class="content">
 		<form action="<?php echo $delete; ?>" method="post" enctype="multipart/form-data" id="form">
-			<table class="list" style="text-align: center">
+			<table class="list" style="text-align: center" id="list-badges">
 			<thead>
 				<tr>
-					<td width="1"><input type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);" /></td>
-					<td><?php echo $ms_badges_column_id; ?></td>
-					<td style="width: 100px"><?php echo $ms_badges_column_name; ?></td>
+					<td class="tiny"><input type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);" /></td>
+					<td class="tiny"><?php echo $ms_badges_column_id; ?></td>
+					<td class="large"><?php echo $ms_badges_column_name; ?></td>
 					<td><?php echo $ms_description; ?></td>
-					<td style="width: 450px"><?php echo $ms_badges_image; ?></td>
-					<td><?php echo $ms_badges_column_action; ?></td>
+					<td class="medium"><?php echo $ms_badges_image; ?></td>
+					<td class="medium"><?php echo $ms_badges_column_action; ?></td>
+				</tr>
+				
+				<tr class="filter">
+					<td></td>
+					<td><input type="text"/></td>
+					<td><input type="text"/></td>
+					<td><input type="text"/></td>
+					<td></td>
+					<td></td>
 				</tr>
 			</thead>
-			<tbody>
-				<?php if ($badges) { ?>
-				<?php foreach ($badges as $badge) { ?>
-				<tr>
-					<td style="text-align: center;"><?php if ($badge['selected']) { ?>
-						<input type="checkbox" name="selected[]" value="<?php echo $badge['badge_id']; ?>" checked="checked" />
-						<?php } else { ?>
-						<input type="checkbox" name="selected[]" value="<?php echo $badge['badge_id']; ?>" />
-						<?php } ?></td>
-					<td><?php echo $badge['badge_id']; ?></td>
-					<td><?php echo $badge['name']; ?></td>
-					<td><?php echo $badge['description']; ?></td>
-					<td><img src="<?php echo $badge['image']; ?>"/></td>
-					<td>
-						<a class="ms-button ms-button-edit" href="<?php echo $this->url->link('multiseller/badge/update', 'token=' . $this->session->data['token'] . '&badge_id=' . $badge['badge_id'], 'SSL'); ?>" title="<?php echo $text_edit; ?>"></a>
-						<a class="ms-button ms-button-delete" href="<?php echo $this->url->link('multiseller/badge/delete', 'token=' . $this->session->data['token'] . '&badge_id=' . $badge['badge_id'], 'SSL'); ?>" title="<?php echo $button_delete; ?>"></a>
-					</td>
-				</tr>
-				<?php } ?>
-				<?php } else { ?>
-				<tr>
-					<td class="center" colspan="6"><?php echo $text_no_results; ?></td>
-				</tr>
-				<?php } ?>
-			</tbody>
+			<tbody></tbody>
 			</table>
 		</form>
-		<div class="pagination"><?php echo $pagination; ?></div>
 		</div>
 	</div>
 </div>
+
+<script type="text/javascript">
+$(function() {
+	$('#list-badges').dataTable( {
+		"sAjaxSource": "index.php?route=multiseller/badge/getTableData&token=<?php echo $token; ?>",
+		"aoColumns": [
+			{ "mData": "checkbox", "bSortable": false },
+			{ "mData": "id" },
+			{ "mData": "name" },
+			{ "mData": "description" },
+			{ "mData": "image", "bSortable": false },
+			{ "mData": "actions", "bSortable": false, "sClass": "right" }
+		],
+	});
+});
+</script>
+
 <?php echo $footer; ?> 

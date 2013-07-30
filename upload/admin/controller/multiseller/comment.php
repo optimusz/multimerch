@@ -1,6 +1,61 @@
 <?php
 
 class ControllerMultisellerComment extends ControllerMultisellerBase {
+	public function getTableData() {
+		$colMap = array(
+			'customer_name' => 'name',
+			'date_created' => 'create_time',
+		);
+
+		$this->load->model('tool/image');
+		$sorts = array('customer_name', 'product_name', 'comment', 'date_created');
+		$filters = array_diff($sorts, array('date_created'));
+		
+		list($sortCol, $sortDir) = $this->MsLoader->MsHelper->getSortParams($sorts, $colMap);
+		$filterParams = $this->MsLoader->MsHelper->getFilterParams($filters, $colMap);
+
+		$results = $this->MsLoader->MsComments->getComments(
+			array(),
+			array(
+				'order_by'  => $sortCol,
+				'order_way' => $sortDir,
+				'filters' => $filterParams,
+				'offset' => $this->request->get['iDisplayStart'],
+				'limit' => $this->request->get['iDisplayLength']
+			),
+			array(
+				'product_name' => 1,
+			)
+		);
+
+		$total = isset($results[0]) ? $results[0]['total_rows'] : 0;
+
+		$columns = array();
+		foreach ($results as $result) {
+			// actions
+			$actions = "";
+			$actions .= "<a class='ms-button ms-button-delete' href='" . $this->url->link('multiseller/comment/delete', 'token=' . $this->session->data['token'] . '&comment_id=' . $result['id'], 'SSL') . "' title='".$this->language->get('text_delete')."'></a>";
+
+			$columns[] = array_merge(
+				$result,
+				array(
+					'checkbox' => "<input type='checkbox' name='selected[]' value='{$result['id']}' />",
+					'customer_name' => isset($result['customer_id']) ? "<a href='" . $this->url->link('sale/customer/update', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['customer_id'], 'SSL') . "'>{$result['name']}({$result['email']})</a>" : "{$result['name']}({$result['email']})",
+					'product_name' => $result['product_name'],
+					'comment' => (mb_strlen($result['comment']) > 80 ? mb_substr($result['comment'], 0, 80) . '...' : $result['comment']),
+					'date_created' => date($this->language->get('date_format_short'), $result['create_time']),
+					'actions' => $actions
+				)
+			);
+		}
+
+		$this->response->setOutput(json_encode(array(
+			'iTotalRecords' => $total,
+			'iTotalDisplayRecords' => $total,
+			'aaData' => $columns
+		)));
+	}	
+	
 	public function jxDelete() {
 		$this->validate(__FUNCTION__);
 		$mails = array();
@@ -18,40 +73,7 @@ class ControllerMultisellerComment extends ControllerMultisellerBase {
 	public function index() {
 		$this->load->model('catalog/product');
 		$this->validate(__FUNCTION__);
-		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
 
-		$sort = array(
-			'order_by'  => 'create_time',
-			'order_way' => 'DESC',
-			'offset' => ($page - 1) * $this->config->get('config_admin_limit'),
-			'limit' => $this->config->get('config_admin_limit')
-		);
-
-		$comments = $this->MsLoader->MsComments->getComments(array(), $sort);
-
-		foreach ($comments as $result) {
-			$product = $this->model_catalog_product->getProductDescriptions($result['product_id']);
-			$product = array_shift($product);
-			$this->data['comments'][] = array(
-				'comment_id' => $result['id'],
-				'name' => "{$result['name']} ({$result['email']})",
-				'customer_link' => isset($result['customer_id']) ? $this->url->link('sale/customer/update', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['customer_id'], 'SSL') : NULL,
-				'product_name' => $product['name'],
-				'comment' => (mb_strlen($result['comment']) > 80 ? mb_substr($result['comment'], 0, 80) . '...' : $result['comment']),
-				'date_created' => date($this->language->get('date_format_short'), $result['create_time']),
-				'delete_link' => $this->url->link('multiseller/comment/jxDelete', 'comment_id=' . $result['id'], 'SSL')
-			);
-		}
-
-		$pagination = new Pagination();
-		$pagination->page = $page;
-		$pagination->total = $this->MsLoader->MsComments->getTotalComments();		
-		$pagination->limit = $this->config->get('config_admin_limit');
-		$pagination->text = $this->language->get('text_pagination');
-		$pagination->url = $this->url->link("multiseller/comment", 'token=' . $this->session->data['token'] . '&page={page}', 'SSL');
-		
-		$this->data['pagination'] = $pagination->render();
-		
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {

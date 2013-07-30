@@ -1,43 +1,76 @@
 <?php
 
 class ControllerSellerAccountOrder extends ControllerSellerAccount {
-	public function index() {
-		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
-
-		$sort = array(
-			'order_by'  => 'date_added',
-			'order_way' => 'DESC',
-			'offset' => ($page - 1) * 5,
-			'limit' => 5
+	public function getTableData() {
+		$colMap = array(
+			'customer_name' => 'firstname',
+			'date_created' => 'o.date_added',
 		);
-
-		$seller_id = $this->customer->getId();
 		
+		$sorts = array('order_id', 'customer_name', 'date_created', 'total_amount');
+		$filters = array_merge($sorts, array('products'));
+		
+		list($sortCol, $sortDir) = $this->MsLoader->MsHelper->getSortParams($sorts, $colMap);
+		$filterParams = $this->MsLoader->MsHelper->getFilterParams($filters, $colMap);
+		
+		$seller_id = $this->customer->getId();
 		$orders = $this->MsLoader->MsOrderData->getOrders(
 			array(
 				'seller_id' => $seller_id,
 			),
-			$sort
+			array(
+				'order_by'  => $sortCol,
+				'order_way' => $sortDir,
+				'offset' => $this->request->get['iDisplayStart'],
+				'limit' => $this->request->get['iDisplayLength'],
+				'filters' => $filterParams
+			),
+			array(
+				'total_amount' => 1,
+				'products' => 1,
+			)
 		);
 		
-    	foreach ($orders as $order) {
-    		$this->data['orders'][] = array(
-    			'order_id' => $order['order_id'],
-    			'customer' => "{$order['firstname']} {$order['lastname']} ({$order['email']})",
-    			'products' => $this->MsLoader->MsOrderData->getOrderProducts(array('order_id' => $order['order_id'], 'seller_id' => $seller_id)),
-    			'date_created' => date($this->language->get('date_format_short'), strtotime($order['date_added'])),
-   				'total' => $this->currency->format($this->MsLoader->MsOrderData->getOrderTotal($order['order_id'], array('seller_id' => $seller_id)), $this->config->get('config_currency'))
-   			);
-   		}
+		$total = isset($orders[0]) ? $orders[0]['total_rows'] : 0;
+
+		$columns = array();
+		foreach ($orders as $order) {
+			$order_products = $this->MsLoader->MsOrderData->getOrderProducts(array('order_id' => $order['order_id'], 'seller_id' => $seller_id));
+			
+			if ($this->config->get('msconf_hide_customer_email')) {
+				$customer_name = "{$order['firstname']} {$order['lastname']}";
+			} else {
+				$customer_name = "{$order['firstname']} {$order['lastname']} ({$order['email']})";
+			}
+			
+			$products = "";
+			foreach ($order_products as $p) {
+				$products .= "<p>";
+					$products .= "<span class='name'>" . ($p['quantity'] > 1 ? "{$p['quantity']} x " : "") . "<a href='" . $this->url->link('product/product', 'product_id=' . $p['product_id'], 'SSL') . "'>{$p['name']}</a></span>";
+					$products .= "<span class='total'>" . $this->currency->format($p['seller_net_amt'], $this->config->get('config_currency')) . "</span>";
+				$products .= "</p>";
+			}
+			
+			$columns[] = array_merge(
+				$order,
+				array(
+					'order_id' => $order['order_id'],
+					'customer_name' => $customer_name,
+					'products' => $products,
+					'date_created' => date($this->language->get('date_format_short'), strtotime($order['date_added'])),
+					'total_amount' => $this->currency->format($order['total_amount'], $this->config->get('config_currency'))
+				)
+			);
+		}
 		
-		$pagination = new Pagination();
-		$pagination->total = $this->MsLoader->MsOrderData->getTotalOrders(array('seller_id' => $seller_id));
-		$pagination->page = $page;
-		$pagination->limit = $sort['limit']; 
-		$pagination->text = $this->language->get('text_pagination');
-		$pagination->url = $this->url->link('seller/account-order', 'page={page}', 'SSL');
+		$this->response->setOutput(json_encode(array(
+			'iTotalRecords' => $total,
+			'iTotalDisplayRecords' => $total,
+			'aaData' => $columns
+		)));
+	}
 		
-		$this->data['pagination'] = $pagination->render();
+	public function index() {
 		$this->data['link_back'] = $this->url->link('account/account', '', 'SSL');
 		
 		$this->document->setTitle($this->language->get('ms_account_orders_heading'));

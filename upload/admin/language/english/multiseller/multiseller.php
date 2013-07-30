@@ -18,6 +18,7 @@ $_['ms_type_time'] = 'Time';
 $_['text_image_manager'] = 'Image Manager';
 $_['text_browse'] = 'Browse';
 $_['text_clear'] = 'Clear';
+$_['ms_id'] = '#';
 
 $_['ms_error_directory'] = "Warning: Could not create directory: %s. Please create it manually and make it server-writable before proceeding. <br />";
 $_['ms_error_directory_notwritable'] = "Warning: Directory already exists and is not writable: %s. Please make sure it's empty and make it server-writable before proceeding. <br />";

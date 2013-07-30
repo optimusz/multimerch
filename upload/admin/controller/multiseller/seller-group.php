@@ -1,22 +1,68 @@
 <?php
 
 class ControllerMultisellerSellerGroup extends ControllerMultisellerBase {
-	
 	private $error = array();
+
+	public function getTableData() {
+		$colMap = array(
+			'id' => 'msg.seller_group_id'
+		);
+
+		$sorts = array('id', 'name', 'description');
+		$filters = $sorts;
+		
+		list($sortCol, $sortDir) = $this->MsLoader->MsHelper->getSortParams($sorts, $colMap);
+		$filterParams = $this->MsLoader->MsHelper->getFilterParams($filters, $colMap);
+
+		$results = $this->MsLoader->MsSellerGroup->getSellerGroups(
+			array(),
+			array(
+				'order_by'  => $sortCol,
+				'order_way' => $sortDir,
+				'filters' => $filterParams,
+				'offset' => $this->request->get['iDisplayStart'],
+				'limit' => $this->request->get['iDisplayLength']
+			)
+		);
+
+		$total = isset($results[0]) ? $results[0]['total_rows'] : 0;
+
+		$columns = array();
+		foreach ($results as $result) {
+			// actions
+			$actions = "";
+			$actions .= "<a class='ms-button ms-button-edit' href='" . $this->url->link('multiseller/seller-group/update', 'token=' . $this->session->data['token'] . '&seller_group_id=' . $result['seller_group_id'], 'SSL') . "' title='".$this->language->get('text_edit')."'></a>";
+			$actions .= "<a class='ms-button ms-button-delete' href='" . $this->url->link('multiseller/seller-group/delete', 'token=' . $this->session->data['token'] . '&seller_group_id=' . $result['seller_group_id'], 'SSL') . "' title='".$this->language->get('text_delete')."'></a>";
+			
+			$rates = $this->MsLoader->MsCommission->calculateCommission(array('seller_group_id' => $result['seller_group_id']));
+			$actual_fees = '';
+			foreach ($rates as $rate) {
+				$actual_fees .= '<span class="fee-rate-' . $rate['rate_type'] . '"><b>' . $this->language->get('ms_commission_short_' . $rate['rate_type']) . ':</b>' . ($rate['rate_type'] != MsCommission::RATE_SIGNUP ? $rate['percent'] . '%+' : '') . $this->currency->getSymbolLeft() .  $this->currency->format($rate['flat'], $this->config->get('config_currency'), '', FALSE) . $this->currency->getSymbolRight() . '&nbsp;&nbsp;';
+			}
+			
+			$columns[] = array_merge(
+				$result,
+				array(
+					'checkbox'          => "<input type='checkbox' name='selected[]' value='{$result['seller_group_id']}' />",
+					'id' => $result['seller_group_id'],
+					'name'              => $result['name'],
+					'description' => (mb_strlen($result['description']) > 80 ? mb_substr($result['description'], 0, 80) . '...' : $result['description']),
+					'rates' => $actual_fees,
+					'actions' => $actions
+				)
+			);
+		}
+
+		$this->response->setOutput(json_encode(array(
+			'iTotalRecords' => $total,
+			'iTotalDisplayRecords' => $total,
+			'aaData' => $columns
+		)));
+	}
 	
 	// List all the seller groups
 	public function index() {
 		$this->validate(__FUNCTION__);
-		
-		$sort = isset($this->request->get['sort']) ? $this->request->get['sort'] : 'msgd.name';
-		$order = isset($this->request->get['order']) ? $this->request->get['order'] : 'ASC';
-		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
-		
-		$url = '';
-		
-		$url .= isset($this->request->get['sort']) ? '&sort=' . $this->request->get['sort'] : '';
-		$url .= isset($this->request->get['order']) ? '&order=' . $this->request->get['order'] : '';
-		$url .= isset($this->request->get['page']) ? '&page=' . $this->request->get['page'] : '';
 		
 		$this->data['breadcrumbs'] = $this->MsLoader->MsHelper->admSetBreadcrumbs(array(
 			array(
@@ -29,56 +75,9 @@ class ControllerMultisellerSellerGroup extends ControllerMultisellerBase {
 			)
 		));
 		
-		$this->data['insert'] = $this->url->link('multiseller/seller-group/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-		$this->data['delete'] = $this->url->link('multiseller/seller-group/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+		$this->data['insert'] = $this->url->link('multiseller/seller-group/insert', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['delete'] = $this->url->link('multiseller/seller-group/delete', 'token=' . $this->session->data['token'], 'SSL');
 	
-		$this->data['seller_groups'] = array();
-		
-		$sort_data = array(
-			'sort'  => $sort,
-			'order' => $order,
-			'start' => ($page - 1) * $this->config->get('config_admin_limit'),
-			'limit' => $this->config->get('config_admin_limit')
-		);
-		
-		$total_seller_groups = $this->MsLoader->MsSellerGroup->getTotalSellerGroups();
-		$results = $this->MsLoader->MsSellerGroup->getSellerGroups($sort_data);
-
-		
-		
-		foreach ($results as $result) {
-			/*
-			$rates = $this->MsLoader->MsCommission->getCommissionRates($result['commission_id']);
-			$own_fees = '';
-			foreach ($rates as $rate) {
-				$own_fees .= '<span class="fee-rate-' . $rate['rate_type'] . '"><b>' . $this->language->get('ms_commission_short_' . $rate['rate_type']) . ':</b>' . ($rate['percent'] ? $rate['percent'] . '%' : '') . ($rate['percent'] && $rate['flat'] ? '+' : '') .  ($rate['flat'] ? $this->currency->getSymbolLeft() .  $this->currency->format($rate['flat'], $this->config->get('config_currency'), '', FALSE) . $this->currency->getSymbolRight() : '') . '&nbsp;&nbsp;</span>';
-			}
-			*/
-			$rates = $this->MsLoader->MsCommission->calculateCommission(array('seller_group_id' => $result['seller_group_id']));
-			$actual_fees = '';
-			foreach ($rates as $rate) {
-				$actual_fees .= '<span class="fee-rate-' . $rate['rate_type'] . '"><b>' . $this->language->get('ms_commission_short_' . $rate['rate_type']) . ':</b>' . ($rate['rate_type'] != MsCommission::RATE_SIGNUP ? $rate['percent'] . '%+' : '') . $this->currency->getSymbolLeft() .  $this->currency->format($rate['flat'], $this->config->get('config_currency'), '', FALSE) . $this->currency->getSymbolRight() . '&nbsp;&nbsp;';
-			}
-			
-			$this->data['seller_groups'][] = array(
-				'seller_group_id' => $result['seller_group_id'],
-				'name'              => $result['name'],
-				'description' => (mb_strlen($result['description']) > 80 ? mb_substr($result['description'], 0, 80) . '...' : $result['description']),
-				'selected'          => isset($this->request->post['selected']) && in_array($result['seller_group_id'], $this->request->post['selected']),
-				//'own_fees' => $own_fees,
-				'actual_fees' => $actual_fees
-			);
-		}
-		
-		$pagination = new Pagination();
-		$pagination->total = $total_seller_groups;
-		$pagination->page = $page;
-		$pagination->limit = $this->config->get('config_admin_limit');
-		$pagination->text = $this->language->get('text_pagination');
-		$pagination->url = $this->url->link("multiseller/seller-group", 'token=' . $this->session->data['token'] . '&page={page}', 'SSL');
-		
-		$this->data['pagination'] = $pagination->render();
-		
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
@@ -191,17 +190,6 @@ class ControllerMultisellerSellerGroup extends ControllerMultisellerBase {
 		
 		list($this->template, $this->children) = $this->MsLoader->MsHelper->admLoadTemplate('seller-group-form'); 
 		$this->response->setOutput($this->render());		
-		
-		/*
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-			$this->MsLoader->MsSellerGroup->editSellerGroup($this->request->get['seller_group_id'], $this->request->post);
-			
-			$this->session->data['success'] = $this->language->get('ms_success');
-			
-			$this->redirect($this->url->link('multiseller/seller-group', 'token=' . $this->session->data['token'] . $url, 'SSL'));
-		}
-		$this->getEditForm();
-		*/
 	}
 	
 	// Bulk delete of seller groups
@@ -229,7 +217,7 @@ class ControllerMultisellerSellerGroup extends ControllerMultisellerBase {
 			$this->data['action'] = $this->url->link('multiseller/seller-group/update', 'token=' . $this->session->data['token'] . '&seller_group_id=' . $this->request->get['seller_group_id'] . $url, 'SSL');
 		}
 		  
-    	$this->data['cancel'] = $this->url->link('multiseller/seller-group', 'token=' . $this->session->data['token'] . $url, 'SSL');
+		$this->data['cancel'] = $this->url->link('multiseller/seller-group', 'token=' . $this->session->data['token'] . $url, 'SSL');
 		
 		if (isset($this->request->get['seller_group_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
 			//$seller_group_info = $this->MsLoader->MsSellerGroup->getSellerGroup($this->request->get['seller_group_id']);

@@ -24,42 +24,41 @@
 		</div>
 		
 		<div class="content">
-		<form id="form">
-		<table class="list" style="text-align: center">
+		<table class="list" style="text-align: center" id="list-transactions">
 		<thead>
 			<tr>
-			<td><!--<input type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);" />--></td>
-			<td><?php echo $ms_seller; ?></a></td>
-			<td><?php echo $ms_net_amount; ?></a></td>
-			<td><?php echo $ms_description; ?></a></td>
-			<td><?php echo $ms_date; ?></a></td>
+				<td class="tiny"><?php echo $ms_id; ?></td>
+				<td class="medium"><?php echo $ms_seller; ?></a></td>
+				<td class="small"><?php echo $ms_net_amount; ?></a></td>
+				<td><?php echo $ms_description; ?></a></td>
+				<td class="medium"><?php echo $ms_date; ?></a></td>
+			</tr>
+			<tr class="filter">
+				<td><input type="text"/></td>
+				<td><input type="text"/></td>
+				<td><input type="text"/></td>
+				<td><input type="text"/></td>
+				<td><input type="text"/></td>
 			</tr>
 		</thead>
-		
-		<tbody>
-			<?php if (isset($transactions) && $transactions) { ?>
-			<?php foreach ($transactions as $transaction) { ?>
-			<tr>
-				<td><!--<input type="checkbox" name="selected[]" value="" />--></td>
-				<td><?php echo $transaction['seller']; ?></td>
-				<td><?php echo $transaction['net_amount']; ?></td>
-				<td><?php echo $transaction['description']; ?></td>
-				<td><?php echo $transaction['date_created']; ?></td>
-			</tr>
-			<?php } ?>
-			<?php } else { ?>
-			<tr>
-				<td class="center" colspan="10"><?php echo $text_no_results; ?></td>
-			</tr>
-			<?php } ?>
-		</tbody>
+		<tbody></tbody>
 		</table>
-		</form>
-		
-		<div class="pagination"><?php echo $pagination; ?></div>
-		
 		</div>
 	</div>
 </div>
 
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#list-transactions').dataTable( {
+		"sAjaxSource": "index.php?route=multiseller/transaction/getTableData&token=<?php echo $token; ?>",
+		"aoColumns": [
+			{ "mData": "id" },
+			{ "mData": "seller" },
+			{ "mData": "amount" },
+			{ "mData": "description" },
+			{ "mData": "date_created" },
+		],
+	});
+});
+</script>
 <?php echo $footer; ?> 

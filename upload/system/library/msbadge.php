@@ -34,18 +34,33 @@ class MsBadge extends Model {
 	}
 		
 	public function getBadges($data = array(), $sort = array()) {
-		$sql = "SELECT *,
-						mb.badge_id as 'mb.badge_id'
+		$filters = '';
+		if(isset($sort['filters'])) {
+			foreach($sort['filters'] as $k => $v) {
+				$filters .= " AND {$k} LIKE '%" . $this->db->escape($v) . "%'";
+			}
+		}
+
+		$sql = "SELECT
+					SQL_CALC_FOUND_ROWS
+					*,
+					mb.badge_id as 'mb.badge_id'
 				FROM " . DB_PREFIX . "ms_badge mb 
 				LEFT JOIN " . DB_PREFIX . "ms_badge_description mbd 
 					ON (mb.badge_id = mbd.badge_id) 
 				WHERE mbd.language_id = '" . (int)$this->config->get('config_language_id') . "'"
 				. (isset($data['badge_id']) ? " AND mb.badge_id =  " .  (int)$data['badge_id'] : '')
 
+				. $filters
+
 				. (isset($sort['order_by']) ? " ORDER BY {$sort['order_by']} {$sort['order_way']}" : '')
 				. (isset($sort['limit']) ? " LIMIT ".(int)$sort['offset'].', '.(int)($sort['limit']) : '');		
 
 		$res = $this->db->query($sql);
+		
+		$total = $this->db->query("SELECT FOUND_ROWS() as total");
+		if ($res->rows) $res->rows[0]['total_rows'] = $total->row['total'];
+		
 		return ($res->num_rows == 1 && isset($data['single']) ? $res->row : $res->rows);
 	}
 	

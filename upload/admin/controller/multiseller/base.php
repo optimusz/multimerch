@@ -2,9 +2,9 @@
 
 class ControllerMultisellerBase extends Controller {
 	private $error = array();
-
+	
 	public function __construct($registry) {
-		parent::__construct($registry);		
+		parent::__construct($registry);
 		$this->registry = $registry;
 		$parts = explode('/', $this->request->request['route']);
 		if (!isset($parts[2]) || !in_array($parts[2], array('install','uninstall'))) {
@@ -12,7 +12,10 @@ class ControllerMultisellerBase extends Controller {
 		
 		$this->data = array_merge($this->data, $this->load->language('multiseller/multiseller'));
 		$this->data['token'] = $this->session->data['token'];
-		$this->document->addStyle('view/stylesheet/multiseller.css');
+		$this->document->addStyle('view/stylesheet/multimerch/multiseller.css');
+		$this->document->addStyle('view/javascript/multimerch/datatables/css/jquery.dataTables.css');
+		$this->document->addScript('view/javascript/multimerch/datatables/js/jquery.dataTables.min.js');
+		$this->document->addScript('view/javascript/multimerch/common.js');
 	}
 			
 	public function validate($action, $level = 'access') {

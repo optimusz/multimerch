@@ -1,0 +1,180 @@
+.ms-settings .content form table tr h2 {
+	border-bottom: none;
+	text-transform: none;
+	margin: 25px 0 0;
+}
+
+.ms-settings .content form table tr:first-child h2 {
+	margin: 0;
+}
+
+td h3 {
+	color: #FF802B;
+	padding: 0;
+	margin: 0;
+}
+
+tr.ffSample {
+	display: none;
+}
+
+table.list tbody td,
+table.list thead td {
+	padding: 7px;
+}
+
+table.list td.checkbox {
+	width: 10px;
+}
+
+table.list td.comment {
+	width: 650px;
+}
+
+.ms-button {
+	width: 32px;
+	height: 32px;
+	display: inline-block;
+	margin: 0 1px;
+}
+
+.ms-button-small {
+	width: 16px;
+	height: 16px;
+}
+
+.ms-button-delete {
+	background-image: url(../../image/multiseller/ms-cross.png);
+}
+
+.ms-button-edit {
+	background-image: url(../../image/multiseller/ms-pencil.png);
+}
+
+.ms-button-paypal {
+	background-image: url(../../image/multiseller/ms-paypal.png);
+}
+
+.ms-button-paypal-bw {
+	background-image: url(../../image/multiseller/ms-paypal-bw.png);
+	cursor: default;
+}
+
+.ms-button-mark {
+	background-image: url(../../image/multiseller/ms-tick.png);
+}
+
+.ms-loading {
+	background: url(../../image/loading.gif) no-repeat center;
+}
+
+.ms-button-apply {
+	background-image: url(../../image/success.png);
+	display: inline-block;
+	cursor: pointer;
+	vertical-align: middle;
+}
+
+.ms-payout table.list tbody tr {
+	height: 50px;
+}
+
+.fee-rate-1 {
+	color: #4E8B00;
+}
+
+.fee-rate-2 {
+	color: #1C237A;
+}
+
+.fee-rate-3 {
+	color: #C84848;
+}
+
+h1 img {
+	width: 22px;
+}
+
+/* datatables */
+
+.dataTables_length, .dataTables_filter {
+	display: inline-block;
+	margin-bottom: 5px;
+}
+
+.dataTables_length {
+	float: left;
+}
+
+.dataTables_filter {
+	float: right;
+}
+
+
+.dataTables_wrapper table.dataTable {
+	margin-bottom: 10px;
+}
+
+.dataTables_wrapper .dataTables_paginate {
+	float: left;
+}
+
+.dataTables_wrapper .dataTables_info {
+	float: right;
+}
+
+/* table cell sizes*/
+table .tiny {
+	width: 50px;
+}
+
+table .small {
+	width: 75px;
+}
+
+table .medium {
+	width: 125px;
+}
+
+table .large {
+	width: 200px;
+}
+
+table .filter input[type="text"] {
+	width: 100%;
+	box-sizing: border-box;
+	-webkit-box-sizing:border-box;
+	-moz-box-sizing: border-box;
+}
+
+.dataTables_filter {
+	display: none;
+}
+
+table.list thead td.right {
+	text-align: center;
+}
+
+.dataTables_wrapper .paging_full_numbers a.paginate_button,
+.dataTables_wrapper .paging_full_numbers a.paginate_button:hover,
+.dataTables_wrapper .paging_full_numbers a.paginate_active {
+	border: 1px solid #DDDDDD;
+	padding: 4px 10px;
+	font-size: 12px;
+	text-decoration: none;
+	color: #A3A3A3 !important;
+	background-color: transparent;
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	border-radius: 0;
+	margin: 0 2px;	
+}
+
+.dataTables_wrapper .paging_full_numbers a.paginate_active {
+	border: 1px solid #269BC6;
+	color: #269BC6 !important;
+}
+
+.dataTables_wrapper .paging_full_numbers .paginate_button_disabled {
+	display: none;
+}

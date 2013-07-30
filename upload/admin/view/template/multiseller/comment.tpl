@@ -21,59 +21,50 @@
 		</div>
 		
 		<div class="content">
-		<form id="form">
-		<table class="list" style="text-align: center">
+		<table class="list" style="text-align: center" id="list-comments">
 		<thead>
 			<tr>
-			<td class="checkbox"><input type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);" /></td>
-			<td><?php echo $ms_name; ?></a></td>
-			<td><?php echo $ms_product; ?></a></td>
-			<td class="comment"><?php echo $ms_comments_comment; ?></a></td>
-			<td><?php echo $ms_date; ?></a></td>
-			<td><?php echo $ms_action; ?></a></td>
+				<td class="tiny"><input type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);" /></td>
+				<td class="large"><?php echo $ms_name; ?></a></td>
+				<td class="medium"><?php echo $ms_product; ?></a></td>
+				<td class="comment"><?php echo $ms_comments_comment; ?></a></td>
+				<td class="medium"><?php echo $ms_date; ?></a></td>
+				<td class="medium"><?php echo $ms_action; ?></a></td>
+			</tr>
+			
+			<tr class="filter">
+				<td></td>
+				<td><input type="text"/></td>
+				<td><input type="text"/></td>
+				<td><input type="text"/></td>
+				<td></td>
+				<td></td>
 			</tr>
 		</thead>
 		
-		<tbody>
-			<?php if (isset($comments) && $comments) { ?>
-			<?php foreach ($comments as $comment) { ?>
-			<tr>
-				<td><input type="checkbox" name="selected[]" value="<?php echo $comment['comment_id']; ?>" /></td>
-				<td>
-					<?php if (!$comment['customer_link']) { ?>
-						<?php echo $comment['name']; ?>
-					<? } else { ?>
-						<a href="<?php echo $comment['customer_link']; ?>"><?php echo $comment['name']; ?></a>
-					<?php } ?> 
-				</td>
-				<td><b><?php echo $comment['product_name']; ?></b></td>
-				<td><?php echo $comment['comment']; ?></td>
-				<td><?php echo $comment['date_created']; ?></td>
-				<td>
-					<a class="ms-button ms-button-delete" title="<?php echo $ms_delete; ?>"></a>
-				</td>
-			</tr>
-			<?php } ?>
-			<?php } else { ?>
-			<tr>
-				<td class="center" colspan="10"><?php echo $text_no_results; ?></td>
-			</tr>
-			<?php } ?>
-		</tbody>
+		<tbody></tbody>
 		</table>
-		</form>
-		
-		<div class="pagination"><?php echo $pagination; ?></div>
-		
 		</div>
 	</div>
 </div>
 
 <script type="text/javascript">
 $(document).ready(function() {
+	$('#list-comments').dataTable( {
+		"sAjaxSource": "index.php?route=multiseller/comment/getTableData&token=<?php echo $token; ?>",
+		"aoColumns": [
+			{ "mData": "checkbox", "bSortable": false },
+			{ "mData": "customer_name" },
+			{ "mData": "product_name" },
+			{ "mData": "comment" },
+			{ "mData": "date_created" },
+			{ "mData": "actions", "bSortable": false, "sClass": "right" }
+		],
+	});
+
 	$(".ms-button-delete").click(function() {
 		var comment_id = $(this).parents('tr').children('td:first').find('input:checkbox').val();
-	    $.ajax({
+		$.ajax({
 			type: "POST",
 			dataType: "json",
 			url: 'index.php?route=multiseller/comment/jxDelete&comment_id='+ comment_id +'&token=<?php echo $token; ?>',

@@ -1,6 +1,87 @@
 <?php
 
 class ControllerMultisellerPayment extends ControllerMultisellerBase {
+	public function getTableData() {
+		$colMap = array(
+			'seller' => 'ms.nickname',
+			'type' => 'payment_type',
+			'description' => 'mpay.description',
+			'date_created' => 'mpay.date_created',
+			'date_paid' => 'mpay.date_paid'
+		);
+		
+		$sorts = array('payment_type', 'seller', 'amount', 'description', 'payment_status', 'date_created', 'date_paid');
+		$filters = array_diff($sorts, array('payment_status', 'type'));
+		
+		list($sortCol, $sortDir) = $this->MsLoader->MsHelper->getSortParams($sorts, $colMap);
+		$filterParams = $this->MsLoader->MsHelper->getFilterParams($filters, $colMap);
+
+		$results = $this->MsLoader->MsPayment->getPayments(
+			array(),
+			array(
+				'order_by'  => $sortCol,
+				'order_way' => $sortDir,
+				'filters' => $filterParams,
+				'offset' => $this->request->get['iDisplayStart'],
+				'limit' => $this->request->get['iDisplayLength']
+			)
+		);
+
+		$total = isset($results[0]) ? $results[0]['total_rows'] : 0;
+
+		$columns = array();
+		foreach ($results as $result) {
+			// actions
+			$actions = "";
+			if ($result['amount'] > 0 && $result['payment_status'] == MsPayment::STATUS_UNPAID && in_array($result['payment_type'], array(MsPayment::TYPE_PAYOUT, MsPayment::TYPE_PAYOUT_REQUEST))) {
+			if (!empty($result['ms.paypal']) && filter_var($result['ms.paypal'], FILTER_VALIDATE_EMAIL)) { 
+				$actions .= "<a class='ms-button ms-button-paypal' title='" . $this->language->get('ms_payment_payout_paypal') . "'></a>";
+			} else {
+				$actions .= "<a class='ms-button ms-button-paypal-bw' title='" . $this->language->get('ms_payment_payout_invalid') . "'></a>";
+			}
+			}
+			if ($result['amount'] > 0 && $result['payment_status'] == MsPayment::STATUS_UNPAID) { 
+				$actions .= "<a class='ms-button ms-button-mark' title='" . $this->language->get('ms_payment_mark') . "'></a>";
+			}
+			$actions .= "<a class='ms-button ms-button-delete' title='" . $this->language->get('ms_payment_delete') . "'></a>";
+			
+			// paymentstatus
+			$paymentstatus = "<select name='ms-payment-status'>";
+			
+			$msPayment = new ReflectionClass('MsPayment');
+			foreach ($msPayment->getConstants() as $cname => $cval) {
+			if (strpos($cname, 'STATUS_') !== FALSE) {
+				$paymentstatus .= "<option value='$cval'" . ($result['payment_status'] == $cval ? "selected='selected'" : '') . ">" . $this->language->get('ms_payment_status_' . $cval) . "</option>";
+			}
+			}
+			$paymentstatus .= "
+			</select>
+			<span class='ms-button-small ms-button-apply ms-button-status' title='Save' />
+			";
+
+			
+			$columns[] = array_merge(
+				$result,
+				array(
+					'checkbox' => "<input type='checkbox' name='selected[]' value='{$result['payment_id']}' />",
+					'payment_type' => $this->language->get('ms_payment_type_' . $result['payment_type']),
+					'seller' => "<a href='".$this->url->link('multiseller/seller/update', 'token=' . $this->session->data['token'] . '&seller_id=' . $result['seller_id'], 'SSL')."'>{$result['nickname']}</a>",
+					'amount' => $this->currency->format(abs($result['amount']),$result['currency_code']),
+					'description' => (mb_strlen($result['mpay.description']) > 80 ? mb_substr($result['mpay.description'], 0, 80) . '...' : $result['mpay.description']),
+					'payment_status' => $paymentstatus,
+					'date_created' => date($this->language->get('date_format_short'), strtotime($result['mpay.date_created'])),
+					'date_paid' => $result['mpay.date_paid'] ? date($this->language->get('date_format_short'), strtotime($result['mpay.date_paid'])) : '',
+					'actions' => $actions
+				)
+			);
+		}
+		$this->response->setOutput(json_encode(array(
+			'iTotalRecords' => $total,
+			'iTotalDisplayRecords' => $total,
+			'aaData' => $columns
+		)));
+	}
+		
 	public function index() {
 		$this->validate(__FUNCTION__);
 		
@@ -30,36 +111,6 @@ class ControllerMultisellerPayment extends ControllerMultisellerBase {
 			'payment_type' => array(MsPayment::TYPE_PAYOUT),
 			'payment_status' => array(MsPayment::STATUS_PAID)
 		)), $this->config->get('config_currency'));
-		
-		$sort = array(
-			'order_by'  => 'mpay.date_created',
-			'order_way' => 'DESC',
-			'offset' => ($page - 1) * $this->config->get('config_admin_limit'),
-			'limit' => $this->config->get('config_admin_limit')
-		);
-
-		$results = $this->MsLoader->MsPayment->getPayments(array(), $sort);
-		$total_payments = $this->MsLoader->MsPayment->getTotalPayments(array());
-
-		foreach ($results as $result) {
-			$this->data['payments'][] = array_merge(
-				$result,
-				array(
-					'amount_text' => $this->currency->format(abs($result['amount']),$result['currency_code']),
-					'description' => (mb_strlen($result['mpay.description']) > 80 ? mb_substr($result['mpay.description'], 0, 80) . '...' : $result['mpay.description']),
-					'date_created' => date($this->language->get('date_format_short'), strtotime($result['mpay.date_created'])),
-					'date_paid' => $result['mpay.date_paid'] ? date($this->language->get('date_format_short'), strtotime($result['mpay.date_paid'])) : ''					
-				)
-			);
-		}
-		
-		$pagination = new Pagination();
-		$pagination->total = $total_payments;
-		$pagination->page = $page;
-		$pagination->limit = $this->config->get('config_admin_limit');
-		$pagination->text = $this->language->get('text_pagination');
-		$pagination->url = $this->url->link("multiseller/payment", 'token=' . $this->session->data['token'] . '&page={page}', 'SSL');
-		$this->data['pagination'] = $pagination->render();
 		
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
