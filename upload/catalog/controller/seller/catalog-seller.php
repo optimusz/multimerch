@@ -2,20 +2,22 @@
 class ControllerSellerCatalogSeller extends ControllerSellerCatalog {
 	public function __construct($registry) {
 		parent::__construct($registry);
+		
+		$this->language->load('product/category');
+		$this->load->model('localisation/country');
+		$this->load->model('catalog/category');
+		$this->load->model('catalog/product');
+		$this->load->model('tool/image');
 	}
 		
 	public function index() {
-		$this->load->model('localisation/country');
-		$this->language->load('product/category');
 		$this->document->addScript('catalog/view/javascript/jquery/jquery.total-storage.min.js');
-		
 		
 		$this->data['text_display'] = $this->language->get('text_display');
 		$this->data['text_list'] = $this->language->get('text_list');
 		$this->data['text_grid'] = $this->language->get('text_grid');
 		$this->data['text_sort'] = $this->language->get('text_sort');
 		$this->data['text_limit'] = $this->language->get('text_limit');
-				
 				
 		if (isset($this->request->get['sort'])) {
 			$order_by = $this->request->get['sort'];
@@ -200,19 +202,17 @@ class ControllerSellerCatalogSeller extends ControllerSellerCatalog {
 	}
 		
 	public function profile() {
-		$this->load->model('localisation/country');
-		$this->load->model('catalog/product');
-		$this->load->model('tool/image');
-    	
-		$seller = $this->MsLoader->MsSeller->getSeller($this->request->get['seller_id']);
-		
-		$this->document->addScript('catalog/view/javascript/dialog-sellercontact.js');
-		
-		if (empty($seller) || $seller['ms.seller_status'] != MsSeller::STATUS_ACTIVE) {
+		if (isset($this->request->get['seller_id'])) {
+			$seller = $this->MsLoader->MsSeller->getSeller($this->request->get['seller_id']);
+		}
+			
+		if (!isset($seller) || empty($seller) || $seller['ms.seller_status'] != MsSeller::STATUS_ACTIVE) {
 			$this->redirect($this->url->link('seller/catalog-seller', '', 'SSL'));
 			return;
 		}
-			
+
+		$this->document->addScript('catalog/view/javascript/dialog-sellercontact.js');
+
 		if ($seller['ms.avatar'] && file_exists(DIR_IMAGE . $seller['ms.avatar'])) {
 			$image = $this->MsLoader->MsFile->resizeImage($seller['ms.avatar'], $this->config->get('msconf_seller_avatar_seller_profile_image_width'), $this->config->get('msconf_seller_avatar_seller_profile_image_height'));
 		} else {
@@ -337,21 +337,17 @@ class ControllerSellerCatalogSeller extends ControllerSellerCatalog {
 		$this->response->setOutput($this->render());
   	}
   	
-	public function products() { 
-		$this->load->model('catalog/category');
-		$this->load->model('catalog/product');
-		$this->load->model('localisation/country');
-		$this->language->load('product/category');
-		$this->load->model('tool/image');
-		
-		$this->document->addScript('catalog/view/javascript/jquery/jquery.total-storage.min.js');
-		
-		$seller = $this->MsLoader->MsSeller->getSeller($this->request->get['seller_id']);
-
-		if (empty($seller) || $seller['ms.seller_status'] != MsSeller::STATUS_ACTIVE) {
+	public function products() {
+		if (isset($this->request->get['seller_id'])) {
+			$seller = $this->MsLoader->MsSeller->getSeller($this->request->get['seller_id']);
+		}
+			
+		if (!isset($seller) || empty($seller) || $seller['ms.seller_status'] != MsSeller::STATUS_ACTIVE) {
 			$this->redirect($this->url->link('seller/catalog-seller', '', 'SSL'));
 			return;
 		}
+
+		$this->document->addScript('catalog/view/javascript/jquery/jquery.total-storage.min.js');
 		
 		/* seller info part */	
 		if ($seller['ms.avatar'] && file_exists(DIR_IMAGE . $seller['ms.avatar'])) {
@@ -681,9 +677,9 @@ class ControllerSellerCatalogSeller extends ControllerSellerCatalog {
   	
   	public function jxRenderContactDialog() {
 		if ($this->config->get('msconf_hide_contact_seller')) {
-			return 0;
+			return;
 		}
-	
+
   		if (isset($this->request->get['product_id'])) {
 			$seller_id = $this->MsLoader->MsProduct->getSellerId($this->request->get['product_id']);
 			$this->data['product_id'] = (int)$this->request->get['product_id'];
