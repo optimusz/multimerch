@@ -27,6 +27,7 @@
 				<td class="tiny"><input type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);" /></td>
 				<td class="large"><?php echo $ms_name; ?></a></td>
 				<td class="medium"><?php echo $ms_product; ?></a></td>
+	            <td class="medium"><?php echo $ms_seller; ?></a></td>
 				<td class="comment"><?php echo $ms_comments_comment; ?></a></td>
 				<td class="medium"><?php echo $ms_date; ?></a></td>
 				<td class="medium"><?php echo $ms_action; ?></a></td>
@@ -36,6 +37,7 @@
 				<td></td>
 				<td><input type="text"/></td>
 				<td><input type="text"/></td>
+				<td></td>
 				<td><input type="text"/></td>
 				<td></td>
 				<td></td>
@@ -56,6 +58,7 @@ $(document).ready(function() {
 			{ "mData": "checkbox", "bSortable": false },
 			{ "mData": "customer_name" },
 			{ "mData": "product_name" },
+			{ "mData": "seller_name", "bSortable": false, "sClass": "right" }, },
 			{ "mData": "comment" },
 			{ "mData": "date_created" },
 			{ "mData": "actions", "bSortable": false, "sClass": "right" }

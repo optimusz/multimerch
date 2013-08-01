@@ -563,6 +563,8 @@
 			 	<!-- BEGIN COMMENTS TAB -->
 			 	<div id="tab-comments">
 				<table class="form">
+                    <!-- PRODUCT COMMENTS -->
+                    <tr><td colspan="2"><h2><?php echo $ms_config_product_comments; ?></h2></td></tr>                    
 					<tr>
 						<td>
 							<span><?php echo $ms_config_comments_enable; ?></span>
@@ -634,6 +636,84 @@
 							<input type="text" name="msconf_comments_maxlen" value="<?php echo $msconf_comments_maxlen; ?>" size="3"/>
 						</td>
 					</tr>
+                    
+                    <!-- PRODUCT COMMENTS END -->
+
+                    <!-- SELLER COMMENTS -->
+                    <tr><td colspan="2"><h2><?php echo $ms_config_seller_comments; ?></h2></td></tr>
+					<tr>
+						<td>
+							<span><?php echo $ms_config_seller_comments_enable; ?></span>
+							<span class="help"><?php echo $ms_config_seller_comments_enable_note; ?></span>
+						</td>
+						<td>
+							<input type="radio" name="msconf_seller_comments_enable" value="1" <?php if($msconf_seller_comments_enable == 1) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_yes; ?>
+							<input type="radio" name="msconf_seller_comments_enable" value="0" <?php if($msconf_seller_comments_enable == 0) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_no; ?>
+						</td>
+					</tr>
+
+					<tr>
+						<td>
+							<span><?php echo $ms_config_comments_allow_guests; ?></span>
+							<span class="help"><?php echo $ms_config_comments_allow_guests_note; ?></span>
+						</td>
+						<td>
+							<input type="radio" name="msconf_seller_comments_allow_guests" value="1" <?php if($msconf_seller_comments_allow_guests == 1) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_yes; ?>
+							<input type="radio" name="msconf_seller_comments_allow_guests" value="0" <?php if($msconf_seller_comments_allow_guests == 0) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_no; ?>
+						</td>
+					</tr>
+
+					<tr>
+						<td>
+							<span><?php echo $ms_config_comments_enforce_customer_data; ?></span>
+							<span class="help"><?php echo $ms_config_comments_enforce_customer_data_note; ?></span>
+						</td>
+						<td>
+							<input type="radio" name="msconf_seller_comments_enforce_customer_data" value="1" <?php if($msconf_seller_comments_enforce_customer_data == 1) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_yes; ?>
+							<input type="radio" name="msconf_seller_comments_enforce_customer_data" value="0" <?php if($msconf_seller_comments_enforce_customer_data == 0) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_no; ?>
+						</td>
+					</tr>
+
+					<tr>
+						<td>
+							<span><?php echo $ms_config_comments_enable_customer_captcha; ?></span>
+							<span class="help"><?php echo $ms_config_comments_enable_customer_captcha_note; ?></span>
+						</td>
+						<td>
+							<input type="radio" name="msconf_seller_comments_enable_customer_captcha" value="1" <?php if($msconf_seller_comments_enable_customer_captcha == 1) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_yes; ?>
+							<input type="radio" name="msconf_seller_comments_enable_customer_captcha" value="0" <?php if($msconf_seller_comments_enable_customer_captcha == 0) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_no; ?>
+						</td>
+					</tr>
+
+					<tr>
+						<td>
+							<span><?php echo $ms_config_comments_perpage; ?></span>
+							<span class="help"><?php echo $ms_config_comments_perpage_note; ?></span>
+						</td>
+						<td>
+							<input size="2" type="text" name="msconf_seller_comments_perpage" value="<?php echo $msconf_seller_comments_perpage; ?>" />
+						</td>
+					</tr>
+
+					<tr>
+						<td>
+							<span><?php echo $ms_config_comments_maxlen; ?></span>
+							<span class="help"><?php echo $ms_config_comments_maxlen_note; ?></span>
+						</td>
+						<td>
+							<input type="text" name="msconf_seller_comments_maxlen" value="<?php echo $msconf_seller_comments_maxlen; ?>" size="3"/>
+						</td>
+					</tr>
+                    <!-- SELLER COMMENTS END -->                    
+                    
 				</table>
 				</div>
 								

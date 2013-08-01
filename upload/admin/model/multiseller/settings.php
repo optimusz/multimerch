@@ -39,6 +39,7 @@ class ModelMultisellerSettings extends Model {
 					$this->db->query($sql);
 					
 					// todo add tab_display attribute field
+					$this->db->query("ALTER TABLE `" . DB_PREFIX . "ms_attribute` ADD `tab_display` TINYINT NOT NULL DEFAULT 0");
 					
 					// todo create a new attribute group and assign all attributes to it
 					
@@ -483,7 +484,7 @@ class ModelMultisellerSettings extends Model {
 			foreach ($data['layout_route'] as $layout_route) {
 				$this->db->query("INSERT INTO " . DB_PREFIX . "layout_route SET layout_id = '" . (int)$layout_id . "', store_id = '" . (int)$layout_route['store_id'] . "', route = '" . $this->db->escape($layout_route['route']) . "'");
 			}
-		}		
+		}
 	}
 	
 	public function dropTable() {

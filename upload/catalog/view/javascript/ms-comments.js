@@ -6,10 +6,18 @@ $(function() {
 	});
 
 	$(document).delegate('#mc-submit:not(.disabled)', 'click', function() {
+        if(typeof ms_comments_product_id !== 'undefined'){
+            var url = 'index.php?route=module/ms-comments/submitComment&product_id='+ms_comments_product_id;
+            var render_url = 'index.php?route=module/ms-comments/renderComments&product_id='+ms_comments_product_id;
+        }else if(typeof ms_comments_seller_id !== 'undefined'){
+            var url = 'index.php?route=module/ms-comments/submitComment&seller_id='+ms_comments_seller_id;
+            var render_url = 'index.php?route=module/ms-comments/renderComments&seller_id='+ms_comments_seller_id;
+        }
+        
 		$.ajax({
 			type: "POST",
 			dataType: "json",
-			url: 'index.php?route=module/ms-comments/submitComment&product_id='+ms_comments_product_id,
+			url: url,
 			data: $('#pcForm').serialize(),
 			beforeSend: function() {
 				$('#tab-comments .success, #tab-comments .warning').remove();
@@ -31,7 +39,7 @@ $(function() {
 				} else {
 					$('#comment-title').after('<div class="success">' + jsonData.success + '</div>');
 					$('#tab-comments input[type="text"]:not(:disabled), #tab-comments textarea:not(:disabled)').val('');
-					$('#tab-comments .pcComments').load('index.php?route=module/ms-comments/renderComments&product_id='+ms_comments_product_id);
+					$('#tab-comments .pcComments').load(render_url);
 				}
 			}
 		});

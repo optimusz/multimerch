@@ -36,12 +36,15 @@ class ControllerMultisellerComment extends ControllerMultisellerBase {
 			$actions = "";
 			$actions .= "<a class='ms-button ms-button-delete' href='" . $this->url->link('multiseller/comment/delete', 'token=' . $this->session->data['token'] . '&comment_id=' . $result['id'], 'SSL') . "' title='".$this->language->get('text_delete')."'></a>";
 
+            $seller = $this->MsLoader->MsSeller->getSeller($result['seller_id']);
+
 			$columns[] = array_merge(
 				$result,
 				array(
 					'checkbox' => "<input type='checkbox' name='selected[]' value='{$result['id']}' />",
 					'customer_name' => isset($result['customer_id']) ? "<a href='" . $this->url->link('sale/customer/update', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['customer_id'], 'SSL') . "'>{$result['name']}({$result['email']})</a>" : "{$result['name']}({$result['email']})",
 					'product_name' => $result['product_name'],
+					'seller_name' => $seller['name'],
 					'comment' => (mb_strlen($result['comment']) > 80 ? mb_substr($result['comment'], 0, 80) . '...' : $result['comment']),
 					'date_created' => date($this->language->get('date_format_short'), $result['create_time']),
 					'actions' => $actions

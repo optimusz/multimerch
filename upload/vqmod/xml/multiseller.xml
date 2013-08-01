@@ -895,6 +895,167 @@
 		</operation>
 	</file>	
 
+	<!-- cart controller -->
+	<file name="catalog/controller/checkout/cart.php">
+		<operation error="skip">
+			<search position="after"><![CDATA[
+				$this->data['products'][] = array(
+			]]></search>
+			<add><![CDATA[
+				'product_id' => $product['product_id'],
+			]]></add>
+		</operation>
+	</file>
+	
+	<!-- cart template -->
+	<file name="catalog/view/theme/&themeFolder;/template/checkout/cart.tpl">
+		<operation error="skip">
+			<search position="before"><![CDATA[
+				<td class="image"><?php echo $column_image; ?></td>
+			]]></search>
+			<add><![CDATA[
+				<td class="seller"><?php echo $this->language->get('ms_seller'); ?></td>
+			]]></add>
+		</operation>
+		
+		<operation>
+			<search position="before"><![CDATA[
+			<td class="image"><?php if ($product['thumb']) { ?>
+			]]></search>
+			<add><![CDATA[
+				<?php
+					$seller_id = $this->MsLoader->MsProduct->getSellerId($product['product_id']);
+					$seller = $this->MsLoader->MsSeller->getSeller($seller_id);
+					if (!$seller) {
+						$seller['nickname'] = '';
+						$seller['href'] = '#';
+					} else {
+						$seller['nickname'] = $seller['ms.nickname'];
+						$seller['href'] = $this->url->link('seller/catalog-seller/profile', 'seller_id=' . $seller['seller_id']);
+					}
+				?>
+				<td class="seller"><a href="<?php echo $seller['href'];?>"><?php echo $seller['nickname'];?></a></td>
+			]]></add>
+		</operation>
+	</file>
+	
+	<!-- mini cart controller -->
+	<file name="catalog/controller/module/cart.php">
+		<operation error="skip">
+			<search position="after"><![CDATA[
+			$this->data['products'][] = array(
+			]]></search>
+			<add><![CDATA[
+				'product_id' => $product['product_id'],
+			]]></add>
+		</operation>
+	</file>
+	
+	<!-- mini cart template -->
+	<file name="catalog/view/theme/&themeFolder;/template/module/cart.tpl">
+		<operation error="skip">
+			<search position="after"><![CDATA[
+				<a href="<?php echo $product['href']; ?>"><?php echo $product['name']; ?></a>
+			]]></search>
+			<add><![CDATA[
+			<?php
+				$seller_id = $this->MsLoader->MsProduct->getSellerId($product['product_id']);
+				$seller = $this->MsLoader->MsSeller->getSeller($seller_id);
+				if (!$seller) {
+					$seller['nickname'] = '';
+					$seller['href'] = '#';
+				} else {
+					$seller['nickname'] = $seller['ms.nickname'];
+					$seller['href'] = $this->url->link('seller/catalog-seller/profile', 'seller_id=' . $seller['seller_id']);
+				}
+			?>
+			<a href="<?php echo $seller['href'];?>"><?php echo $seller['nickname'];?></a>
+			]]></add>
+		</operation>
+	</file>
+
+	<!-- order model -->
+	<file name="catalog/controller/model/checkout.php">
+		<operation>
+			<search position="after"><![CDATA[
+			$this->data['products'][] = array(
+			]]></search>
+			<add><![CDATA[
+				'product_id'      => $product['product_id'],
+			]]></add>
+		</operation>
+	</file>
+
+	<!-- order confirmation email template -->
+	<file name="catalog/controller/model/checkout.php">
+		<operation error="skip">
+			<search position="after"><![CDATA[
+				<td style="font-size: 12px;	border-right: 1px solid #DDDDDD; border-bottom: 1px solid #DDDDDD; text-align: left; padding: 7px;"><?php echo $product['name']; ?>
+			]]></search>
+			<add><![CDATA[
+				<?php
+				$seller_id = $this->MsLoader->MsProduct->getSellerId($product['product_id']);
+				$seller = $this->MsLoader->MsSeller->getSeller($seller_id);
+				if ($seller) {
+					echo "<br/ > {$seller['ms.nicknname']} <br />";
+				}
+			]]></add>
+		</operation>
+	</file>
+
+	<!-- account order_info controller -->
+	<file name="catalog/controller/account/order.php">
+		<operation error="skip">
+			<search position="after"><![CDATA[
+			$this->data['products'][] = array(
+			]]></search>
+			<add><![CDATA[
+				'product_id' => $product['product_id'],
+			]]></add>
+		</operation>
+	</file>
+	
+	<!-- account order_info template -->
+	<file name="catalog/view/theme/&themeFolder;/template/account/order_info.tpl">
+		<operation error="skip">
+			<search position="replace"><![CDATA[
+				<td colspan="3"></td>
+			]]></search>
+			<add><![CDATA[
+				<td colspan="4"></td>
+			]]></add>
+		</operation>
+		
+		<operation error="skip">
+			<search position="after"><![CDATA[
+			<td class="left"><?php echo $column_name; ?></td>
+			]]></search>
+			<add><![CDATA[
+				<td><?php echo $this->language->get('ms_seller'); ?></td>
+			]]></add>
+		</operation>
+		
+		<operation error="skip">
+			<search position="after"><![CDATA[
+				<td class="left"><?php echo $product['name']; ?>
+			]]></search>
+			<add><![CDATA[
+			<?php
+			$seller_id = $this->MsLoader->MsProduct->getSellerId($product['product_id']);
+			$seller = $this->MsLoader->MsSeller->getSeller($seller_id);
+			if (!$seller) {
+				$seller['nickname'] = '';
+				$seller['href'] = '#';
+			} else {
+				$seller['nickname'] = $seller['ms.nickname'];
+				$seller['href'] = $this->url->link('seller/catalog-seller/profile', 'seller_id=' . $seller['seller_id']);
+			}
+			?>
+			<td><a href="<?php echo $seller['href'];?>"><?php echo $seller['nickname'];?></a></td>
+			]]></add>
+		</operation>
+	</file>
+
 	<!-- navigation menu -->
 	<file name="&adminFolder;/view/template/common/header.tpl">
 			<operation>

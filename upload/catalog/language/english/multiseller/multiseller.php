@@ -221,7 +221,8 @@ $_['ms_error_contact_captcha'] = 'Invalid captcha code';
 $_['ms_error_contact_text'] = 'Message cannot be longer than 2000 characters';
 $_['ms_error_contact_allfields'] = 'Please fill in all fields';
 
-// Account - General
+// Account - General 
+$_['ms_seller'] = 'Seller';
 $_['ms_account_dashboard'] = 'Dashboard';
 $_['ms_account_seller_account'] = 'Seller Account';
 $_['ms_account_sellerinfo'] = 'Seller profile';

@@ -74,6 +74,13 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		"msconf_comments_maxlen" => 500,
 		"msconf_comments_perpage" => 10,
 		
+		"msconf_seller_comments_enable" => 1,
+		"msconf_seller_comments_allow_guests" => 0,
+		"msconf_seller_comments_enforce_customer_data" => 1,
+		"msconf_seller_comments_enable_customer_captcha" => 0,
+		"msconf_seller_comments_maxlen" => 500,
+		"msconf_seller_comments_perpage" => 10,        
+        
 		"msconf_enable_rte" => 0,
 		"msconf_rte_whitelist" => "",
 		

@@ -206,12 +206,17 @@ $_['ms_config_allow_specials_note'] = 'Allow sellers to define special prices';
 
 $_['ms_config_allow_discounts'] = 'Allow quantity discounts';
 $_['ms_config_allow_discounts_note'] = 'Allow sellers to define quantity discounts';
-
+ 
 $_['ms_config_withdrawal_waiting_period'] = 'Payout waiting period';
 $_['ms_config_withdrawal_waiting_period_note'] = 'Seller balance entries newer than this value will not be available for payout requests';
 
-$_['ms_config_comments_enable'] = 'Enable comments';
-$_['ms_config_comments_enable_note'] = 'Enable or disable comments functionality';
+$_['ms_config_product_comments'] = 'Product comments';
+$_['ms_config_comments_enable'] = 'Enable product comments';
+$_['ms_config_comments_enable_note'] = 'Enable or disable product comments functionality';
+
+$_['ms_config_seller_comments'] = 'Seller comments';
+$_['ms_config_seller_comments_enable'] = 'Enable seller comments';
+$_['ms_config_seller_comments_enable_note'] = 'Enable or disable seller comments functionality';
 
 $_['ms_config_comments_perpage'] = 'Comments per page';
 $_['ms_config_comments_perpage_note'] = 'Number of comments per page in front store';

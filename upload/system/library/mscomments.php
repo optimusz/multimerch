@@ -41,9 +41,10 @@ class MsComments extends Model {
 					."1
 				FROM " . DB_PREFIX . "ms_comments mc
 				WHERE 1 = 1 "
+
 			. (isset($data['displayed']) ? " AND mc.display = 1" : '')
 			. (isset($data['product_id']) ? " AND mc.product_id = " . (int)$data['product_id'] : '')
-			
+				. (isset($data['seller_id']) ? " AND mc.seller_id = " . (int)$data['seller_id'] : '')			
 			. $wFilters
 			. $hFilters
 			. (isset($sort['order_by']) ? " ORDER BY {$sort['order_by']} {$sort['order_way']}" : '')
@@ -67,8 +68,10 @@ class MsComments extends Model {
 				WHERE 1 = 1 "
 				. (isset($data['displayed']) ? " AND mc.display = 1" : '') . "
 				AND mc.product_id IN (
-					SELECT product_id FROM `" . DB_PREFIX . "ms_product` WHERE seller_id = " . (int)$data['seller_id'] . " AND product_status = " . MsProduct::STATUS_ACTIVE . "
-				)"
+					SELECT product_id FROM `" . DB_PREFIX . "ms_product`
+                    WHERE seller_id = " . (int)$data['seller_id'] . "
+                    AND product_status = " . MsProduct::STATUS_ACTIVE . "
+				) OR (mc.product_id = 0 AND seller_id = " . (int)$data['seller_id'] . ")"
 				. (isset($sort['order_by']) ? " ORDER BY {$sort['order_by']} {$sort['order_way']}" : '')
 				. (isset($sort['limit']) ? " LIMIT ".(int)$sort['offset'].', '.(int)($sort['limit']) : '');
 
@@ -83,12 +86,13 @@ class MsComments extends Model {
 	
 	public function addComment($comment) {
 		$sql = "INSERT INTO `" . DB_PREFIX . "ms_comments`
-				(customer_id, user_id, parent_id, product_id, name, email, comment, display, create_time)
+				(customer_id, user_id, parent_id, product_id, seller_id, name, email, comment, display, create_time)
 		  		VALUES(" 
 			  		. (isset($comment["customer_id"]) ?  (int)$comment["customer_id"] : 'NULL') . ','
 			  		. (isset($comment["user_id"]) ?  (int)$comment["user_id"] : 'NULL') . ','
 			  		. (isset($comment["parent_id"]) ?  (int)$comment["parent_id"] : 'NULL') . ','
-			  		. (int)$comment["product_id"] . ','
+			  		. (isset($comment["product_id"]) ?  (int)$comment["product_id"] : 'NULL') . ','
+			  		. (isset($comment["seller_id"]) ?  (int)$comment["seller_id"] : 'NULL') . ','
 			  		. "'" . $this->db->escape($comment["name"]) . "',"
 			  		. "'" . $this->db->escape($comment["email"]) . "',"
 			  		. "'" . $this->db->escape($comment["comment"]) . "',
