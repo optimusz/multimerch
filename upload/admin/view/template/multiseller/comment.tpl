@@ -58,7 +58,7 @@ $(document).ready(function() {
 			{ "mData": "checkbox", "bSortable": false },
 			{ "mData": "customer_name" },
 			{ "mData": "product_name" },
-			{ "mData": "seller_name", "bSortable": false, "sClass": "right" }, },
+			{ "mData": "seller_name", "bSortable": false, "sClass": "right" },
 			{ "mData": "comment" },
 			{ "mData": "date_created" },
 			{ "mData": "actions", "bSortable": false, "sClass": "right" }

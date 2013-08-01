@@ -17,6 +17,7 @@ $_['ms_status'] = 'Status';
 $_['ms_date_paid'] = 'Date paid';
 $_['ms_description'] = 'Description';
 $_['ms_id'] = '#';
+$_['ms_by'] = 'by';
 
 
 $_['ms_date_created'] = 'Date created';
@@ -436,7 +437,7 @@ $_['ms_comments_success'] = 'Thank you for your comment.';
 $_['ms_comments_captcha'] = 'Enter the code in the box below:';
 $_['ms_comments_no_comments_yet'] = 'No comments added yet';
 $_['ms_comments_tab_comments'] = 'Comments (%s)';
-$_['ms_footer'] = '<br>MultiMerch Digital Marketplace by <a href="http://ffct.cc/">ffct.cc</a>';
+$_['ms_footer'] = '<br>MultiMerch Marketplace by <a href="http://multimerch.com/">multimerch.com</a>';
 
 // Catalog - Sellers list
 $_['ms_catalog_sellers_heading'] = 'Sellers';

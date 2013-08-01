@@ -6,7 +6,7 @@
 <modification>
 	<id>MultiMerch Digital Multivendor Marketplace</id>
 	<version>4</version>
-	<author>http://ffct.cc</author>
+	<author>http://multimerch.com/</author>
 	
 	<!-- ************************ -->
 	<!-- ************************ -->
@@ -28,13 +28,13 @@
 	</file>
 
 	<file name="system/library/customer.php">
-		<operation>
-			<search position="after"><![CDATA[
-				public function logout() {
-			]]></search>
-			<add><![CDATA[
-				unset($this->session->data['multiseller']);
-			]]></add>
+			<operation>
+				<search position="after"><![CDATA[
+					public function logout() {
+				]]></search>
+				<add><![CDATA[
+					unset($this->session->data['multiseller']);
+				]]></add>
 		</operation>
 	</file>
 
@@ -895,9 +895,9 @@
 		</operation>
 	</file>	
 
-	<!-- cart controller -->
+	<!-- seller info in cart -->
 	<file name="catalog/controller/checkout/cart.php">
-		<operation error="skip">
+		<operation error="log">
 			<search position="after"><![CDATA[
 				$this->data['products'][] = array(
 			]]></search>
@@ -907,41 +907,44 @@
 		</operation>
 	</file>
 	
-	<!-- cart template -->
 	<file name="catalog/view/theme/&themeFolder;/template/checkout/cart.tpl">
-		<operation error="skip">
-			<search position="before"><![CDATA[
-				<td class="image"><?php echo $column_image; ?></td>
-			]]></search>
-			<add><![CDATA[
-				<td class="seller"><?php echo $this->language->get('ms_seller'); ?></td>
-			]]></add>
-		</operation>
-		
-		<operation>
-			<search position="before"><![CDATA[
-			<td class="image"><?php if ($product['thumb']) { ?>
+		<operation error="log">
+			<search position="after"><![CDATA[
+				<a href="<?php echo $product['href']; ?>"><?php echo $product['name']; ?></a>
 			]]></search>
 			<add><![CDATA[
 				<?php
-					$seller_id = $this->MsLoader->MsProduct->getSellerId($product['product_id']);
-					$seller = $this->MsLoader->MsSeller->getSeller($seller_id);
-					if (!$seller) {
-						$seller['nickname'] = '';
-						$seller['href'] = '#';
-					} else {
-						$seller['nickname'] = $seller['ms.nickname'];
-						$seller['href'] = $this->url->link('seller/catalog-seller/profile', 'seller_id=' . $seller['seller_id']);
+					$this->load->language('multiseller/multiseller');
+					$seller = $this->MsLoader->MsSeller->getSeller($this->MsLoader->MsProduct->getSellerId($product['product_id']));
+					if ($seller) {
+						echo "<span class='ms-by-seller'>" . $this->language->get('ms_by') . " <a href='". $this->url->link('seller/catalog-seller/profile', 'seller_id=' . $seller['seller_id']) ."'>{$seller['ms.nickname']}</a>";
 					}
 				?>
-				<td class="seller"><a href="<?php echo $seller['href'];?>"><?php echo $seller['nickname'];?></a></td>
 			]]></add>
 		</operation>
 	</file>
 	
-	<!-- mini cart controller -->
+	<!-- seller info on checkout confirmation -->
+	<file name="catalog/view/theme/&themeFolder;/template/checkout/confirm.tpl">
+		<operation error="log">
+			<search position="after"><![CDATA[
+				<a href="<?php echo $product['href']; ?>"><?php echo $product['name']; ?></a>
+			]]></search>
+			<add><![CDATA[
+				<?php
+					$this->load->language('multiseller/multiseller');
+					$seller = $this->MsLoader->MsSeller->getSeller($this->MsLoader->MsProduct->getSellerId($product['product_id']));
+					if ($seller) {
+						echo "<span class='ms-by-seller'>" . $this->language->get('ms_by') . " <a href='". $this->url->link('seller/catalog-seller/profile', 'seller_id=' . $seller['seller_id']) ."'>{$seller['ms.nickname']}</a>";
+					}
+				?>
+			]]></add>
+		</operation>
+	</file>	
+	
+	<!--  seller info in minicart -->
 	<file name="catalog/controller/module/cart.php">
-		<operation error="skip">
+		<operation error="log">
 			<search position="after"><![CDATA[
 			$this->data['products'][] = array(
 			]]></search>
@@ -951,61 +954,60 @@
 		</operation>
 	</file>
 	
-	<!-- mini cart template -->
 	<file name="catalog/view/theme/&themeFolder;/template/module/cart.tpl">
-		<operation error="skip">
+		<operation error="log">
 			<search position="after"><![CDATA[
 				<a href="<?php echo $product['href']; ?>"><?php echo $product['name']; ?></a>
 			]]></search>
 			<add><![CDATA[
 			<?php
-				$seller_id = $this->MsLoader->MsProduct->getSellerId($product['product_id']);
-				$seller = $this->MsLoader->MsSeller->getSeller($seller_id);
-				if (!$seller) {
-					$seller['nickname'] = '';
-					$seller['href'] = '#';
-				} else {
-					$seller['nickname'] = $seller['ms.nickname'];
-					$seller['href'] = $this->url->link('seller/catalog-seller/profile', 'seller_id=' . $seller['seller_id']);
+				$this->load->language('multiseller/multiseller');
+				$seller = $this->MsLoader->MsSeller->getSeller($this->MsLoader->MsProduct->getSellerId($product['product_id']));
+				if ($seller) {
+					echo "<span class='ms-by-seller'>" . $this->language->get('ms_by') . " <a href='". $this->url->link('seller/catalog-seller/profile', 'seller_id=' . $seller['seller_id']) ."'>{$seller['ms.nickname']}</a>";
 				}
 			?>
-			<a href="<?php echo $seller['href'];?>"><?php echo $seller['nickname'];?></a>
 			]]></add>
 		</operation>
 	</file>
 
-	<!-- order model -->
-	<file name="catalog/controller/model/checkout.php">
-		<operation>
-			<search position="after"><![CDATA[
-			$this->data['products'][] = array(
+	<!-- seller info in confirmation email -->
+	<file name="catalog/model/checkout/order.php">
+		<operation error="log">
+			<search position="before"><![CDATA[
+				$template->data['products'][] = array(
 			]]></search>
 			<add><![CDATA[
-				'product_id'      => $product['product_id'],
+				$this->load->language('multiseller/multiseller');
+				$seller = $this->MsLoader->MsSeller->getSeller($this->MsLoader->MsProduct->getSellerId($product['product_id']));
+			]]></add>
+		</operation>
+
+		<operation error="log">
+			<search position="after"><![CDATA[
+				$template->data['products'][] = array(
+			]]></search>
+			<add><![CDATA[
+				'product_id' => $product['product_id'],
+				'seller_text' => $seller ? "<br/ > " . $this->language->get('ms_by') . " {$seller['ms.nickname']} <br />" : '',
 			]]></add>
 		</operation>
 	</file>
 
-	<!-- order confirmation email template -->
-	<file name="catalog/controller/model/checkout.php">
-		<operation error="skip">
+	<file name="catalog/view/theme/&themeFolder;/template/mail/order.tpl">
+		<operation error="log">
 			<search position="after"><![CDATA[
 				<td style="font-size: 12px;	border-right: 1px solid #DDDDDD; border-bottom: 1px solid #DDDDDD; text-align: left; padding: 7px;"><?php echo $product['name']; ?>
 			]]></search>
 			<add><![CDATA[
-				<?php
-				$seller_id = $this->MsLoader->MsProduct->getSellerId($product['product_id']);
-				$seller = $this->MsLoader->MsSeller->getSeller($seller_id);
-				if ($seller) {
-					echo "<br/ > {$seller['ms.nicknname']} <br />";
-				}
+				<?php echo $product['seller_text']; ?>
 			]]></add>
 		</operation>
 	</file>
 
-	<!-- account order_info controller -->
+	<!-- seller info in account -->
 	<file name="catalog/controller/account/order.php">
-		<operation error="skip">
+		<operation error="log">
 			<search position="after"><![CDATA[
 			$this->data['products'][] = array(
 			]]></search>
@@ -1015,43 +1017,19 @@
 		</operation>
 	</file>
 	
-	<!-- account order_info template -->
 	<file name="catalog/view/theme/&themeFolder;/template/account/order_info.tpl">
-		<operation error="skip">
-			<search position="replace"><![CDATA[
-				<td colspan="3"></td>
-			]]></search>
-			<add><![CDATA[
-				<td colspan="4"></td>
-			]]></add>
-		</operation>
-		
-		<operation error="skip">
-			<search position="after"><![CDATA[
-			<td class="left"><?php echo $column_name; ?></td>
-			]]></search>
-			<add><![CDATA[
-				<td><?php echo $this->language->get('ms_seller'); ?></td>
-			]]></add>
-		</operation>
-		
-		<operation error="skip">
+		<operation error="log">
 			<search position="after"><![CDATA[
 				<td class="left"><?php echo $product['name']; ?>
 			]]></search>
 			<add><![CDATA[
 			<?php
-			$seller_id = $this->MsLoader->MsProduct->getSellerId($product['product_id']);
-			$seller = $this->MsLoader->MsSeller->getSeller($seller_id);
-			if (!$seller) {
-				$seller['nickname'] = '';
-				$seller['href'] = '#';
-			} else {
-				$seller['nickname'] = $seller['ms.nickname'];
-				$seller['href'] = $this->url->link('seller/catalog-seller/profile', 'seller_id=' . $seller['seller_id']);
-			}
+				$this->load->language('multiseller/multiseller');
+				$seller = $this->MsLoader->MsSeller->getSeller($this->MsLoader->MsProduct->getSellerId($product['product_id']));
+				if ($seller) {
+					echo "<span class='ms-by-seller'>" . $this->language->get('ms_by') . " <a href='". $this->url->link('seller/catalog-seller/profile', 'seller_id=' . $seller['seller_id']) ."'>{$seller['ms.nickname']}</a>";
+				}
 			?>
-			<td><a href="<?php echo $seller['href'];?>"><?php echo $seller['nickname'];?></a></td>
 			]]></add>
 		</operation>
 	</file>

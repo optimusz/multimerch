@@ -389,11 +389,11 @@ final class MsSeller extends Model {
 				. (isset($data['seller_id']) ? " AND ms.seller_id =  " .  (int)$data['seller_id'] : '')
 				. (isset($data['seller_status']) ? " AND seller_status IN  (" .  $this->db->escape(implode(',', $data['seller_status'])) . ")" : '')
 				
-				. $hFilters
+				. $wFilters
 				
 				. " GROUP BY ms.seller_id HAVING 1 = 1 "
 				
-				. $wFilters
+				. $hFilters
 				
 				. (isset($sort['order_by']) ? " ORDER BY {$sort['order_by']} {$sort['order_way']}" : '')
 				. (isset($sort['limit']) ? " LIMIT ".(int)$sort['offset'].', '.(int)($sort['limit']) : '');

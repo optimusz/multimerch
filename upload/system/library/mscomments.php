@@ -1,9 +1,5 @@
 <?php
 class MsComments extends Model {
-  	public function __construct($registry) {
-  		parent::__construct($registry);
-	}
-	
 	public function getTotalComments($data = array()) {
 		$sql = "SELECT count(*) AS total
 				FROM `" . DB_PREFIX . "ms_comments` mc
@@ -44,9 +40,14 @@ class MsComments extends Model {
 
 			. (isset($data['displayed']) ? " AND mc.display = 1" : '')
 			. (isset($data['product_id']) ? " AND mc.product_id = " . (int)$data['product_id'] : '')
-				. (isset($data['seller_id']) ? " AND mc.seller_id = " . (int)$data['seller_id'] : '')			
+			. (isset($data['seller_id']) ? " AND mc.seller_id = " . (int)$data['seller_id'] : '')
+			
 			. $wFilters
+			
+			. " GROUP BY mc.id HAVING 1 = 1 "
+			
 			. $hFilters
+			
 			. (isset($sort['order_by']) ? " ORDER BY {$sort['order_by']} {$sort['order_way']}" : '')
 			. (isset($sort['limit']) ? " LIMIT ".(int)$sort['offset'].', '.(int)($sort['limit']) : '');
 
