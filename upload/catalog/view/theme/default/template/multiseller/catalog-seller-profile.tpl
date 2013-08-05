@@ -85,29 +85,20 @@
 		</div>
 	</div>
 	<?php } ?>
-    
-    <?php if ($this->config->get('msconf_seller_comments_enable')) { ?>
+	
+	<?php if ($this->config->get('msconf_seller_comments_enable')) { ?>
+	<script type="text/javascript">
+		$(function(){
+			$('#tab-comments .pcForm').load('index.php?route=module/ms-comments/renderForm&seller_id=<?php echo $seller_id; ?>>');
+			$('#tab-comments .pcComments').load('index.php?route=module/ms-comments/renderComments&seller_id=<?php echo $seller_id; ?>');
+		});
+	</script>
 
-    <script type="text/javascript" src="catalog/view/javascript/ms-comments.js"></script>
-    <?php if(file_exists('catalog/view/theme/'.$this->config->get('config_template').'/stylesheet/ms-comments.css')){ ?>
-    <link rel="stylesheet" type="text/css" href="catalog/view/theme/<?php echo $this->config->get('config_template'); ?>/stylesheet/ms-comments.css" />
-    <?php }else{ ?>
-    <link rel="stylesheet" type="text/css" href="catalog/view/theme/default/stylesheet/ms-comments.css" />
-    <?php } ?>
-    <script type="text/javascript">
-    <!--
-    $(function(){
-        $('#tab-comments .pcForm').load('index.php?route=module/ms-comments/renderForm&seller_id=<?php echo $seller_id; ?>>');
-        $('#tab-comments .pcComments').load('index.php?route=module/ms-comments/renderComments&seller_id=<?php echo $seller_id; ?>');
-    });
-    //-->
-    </script>
-
-    <div id="tab-comments">
-        <div class="pcComments"></div>
-        <div class="pcForm"></div>
-    </div>
-    <?php } ?>    
+	<div id="tab-comments">
+		<div class="pcComments"></div>
+		<div class="pcForm"></div>
+	</div>
+	<?php } ?>
 	
 	<?php echo $content_bottom; ?>
 </div>

@@ -887,7 +887,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		
 		// ckeditor
 		if($this->config->get('msconf_enable_rte'))
-			$this->document->addScript('catalog/view/javascript/ckeditor/ckeditor.js');
+			$this->document->addScript('catalog/view/javascript/multimerch/ckeditor/ckeditor.js');
 				
 		if ($this->config->get('msconf_enable_pdf_generator') && extension_loaded('imagick')) {
 			$this->document->addScript('catalog/view/javascript/dialog-pdf.js');

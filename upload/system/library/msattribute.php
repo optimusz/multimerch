@@ -12,6 +12,41 @@ class MsAttribute extends Model {
 	const TYPE_TIME = 10;
 	
 	
+	public function migrateAttributes() {
+		// todo create a new attribute group and assign all attributes to it
+		$this->db->query("INSERT INTO " . DB_PREFIX . "attribute_group SET sort_order = 0");
+		$attribute_group_id = $this->db->getLastId();
+		$languages = $this->model_localisation_language->getLanguages();
+		foreach ($languages as $code => $language) {
+			$this->db->query("INSERT INTO " . DB_PREFIX . "attribute_group_description SET attribute_group_id = '" . (int)$attribute_group_id . "', language_id = '" . (int)$language['language_id'] . "', name = 'Generic'");
+		}
+		
+		foreach ($this->MsLoader->MsAttribute->getAttributes() as $attribute) {
+			$attribute['attribute_description'] = $this->MsLoader->MsAttribute->getAttributeDescriptions($attribute['attribute_id']);
+			$attribute['attribute_value'] = $this->MsLoader->MsAttribute->getAttributeValues($attribute['attribute_id']);
+			foreach ($attribute['attribute_value'] as &$value) {
+				$value['attribute_value_description'] = $this->MsLoader->MsAttribute->getAttributeValueDescriptions($value['attribute_value_id']);
+			}
+
+			$attribute['attribute_group_id'] = $attribute_group_id;
+
+			// oc attribute
+			$this->db->query("INSERT INTO " . DB_PREFIX . "attribute SET sort_order = '" . (int)$attribute['sort_order'] . "', attribute_group_id = " . (int)$attribute['attribute_group_id']);
+			$oc_attribute_id = $this->db->getLastId();
+			
+			// attribute attribute
+			$sql = "INSERT INTO " . DB_PREFIX . "ms_attribute_attribute
+			SET ms_attribute_id = " . (int)$attribute['attribute_id'] . ",
+			oc_attribute_id = " . (int)$oc_attribute_id;
+			$this->db->query($sql);
+			
+			foreach ($attribute['attribute_description'] as $language_id => $value) {
+				// oc attribute description
+				$this->db->query("INSERT INTO " . DB_PREFIX . "attribute_description SET attribute_id = '" . (int)$oc_attribute_id . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($value['name']) . "'");
+			}
+		}
+	}
+	
 	public function createAttribute($data) {
 		$sql = "INSERT INTO " . DB_PREFIX . "ms_attribute
 				SET attribute_type = " . (int)$data['attribute_type'] . ",
@@ -161,7 +196,7 @@ class MsAttribute extends Model {
 		return $res->row;
 	}
 		
-	public function getAttributes($data, $sort = array()) {
+	public function getAttributes($data = array(), $sort = array()) {
 		$filters = '';
 		if(isset($sort['filters'])) {
 			foreach($sort['filters'] as $k => $v) {

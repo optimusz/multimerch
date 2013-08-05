@@ -311,7 +311,11 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 
 		// ckeditor
 		if($this->config->get('msconf_enable_rte'))
-			$this->document->addScript('catalog/view/javascript/ckeditor/ckeditor.js');
+			$this->document->addScript('catalog/view/javascript/multimerch/ckeditor/ckeditor.js');
+
+		// colorbox
+		$this->document->addScript('catalog/view/javascript/jquery/colorbox/jquery.colorbox.js');
+		$this->document->addStyle('catalog/view/javascript/jquery/colorbox/colorbox.css');
 		
 		$this->load->model('localisation/country');
 		$this->data['countries'] = $this->model_localisation_country->getCountries();		

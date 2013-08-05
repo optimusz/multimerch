@@ -1,11 +1,15 @@
 <?php
 class ModelMultisellerSettings extends Model {
+	public function __construct($registry) {
+		parent::__construct($registry);
+		$this->load->model('localisation/language');
+	}
 	public function checkDbVersion($version) {
 		switch ($version) {
-			case "3.1":
-				// todo
+			case "4.0":
+				$res = $this->db->query("SHOW COLUMNS FROM `" . DB_PREFIX . "ms_attribute` LIKE 'tab_display'");
 				break;
-							
+
 			case "3.0":
 				$res = $this->db->query("SHOW COLUMNS FROM `" . DB_PREFIX . "ms_commission_rate` LIKE 'payment_method'");
 				break;
@@ -28,8 +32,8 @@ class ModelMultisellerSettings extends Model {
 	public function update($version) {
 		if (!$this->checkDbVersion($version)) {
 			switch ($version) {
-				case "3.1":
-					// todo add attribute table & copy data
+				case "4.0":
+					// add attribute table & copy data
 					$sql = "
 						CREATE TABLE `" . DB_PREFIX . "ms_attribute_attribute` (
 						 `ms_attribute_id` int(11) DEFAULT NULL,
@@ -41,11 +45,14 @@ class ModelMultisellerSettings extends Model {
 					// todo add tab_display attribute field
 					$this->db->query("ALTER TABLE `" . DB_PREFIX . "ms_attribute` ADD `tab_display` TINYINT NOT NULL DEFAULT 0");
 					
-					// todo create a new attribute group and assign all attributes to it
-					
+					// update attribute structure
+					$this->MsLoader->MsAttribute->migrateAttributes();
+
 					// todo add order_id column to the payments table
+					$this->db->query("ALTER TABLE `" . DB_PREFIX . "ms_payment` ADD `order_id` int(11) DEFAULT NULL");
 					
 					// todo alter comments table, product_id 0 -> NULL
+					$this->db->query("ALTER TABLE `" . DB_PREFIX . "ms_comments` CHANGE `product_id` `product_id` int(11) DEFAULT NULL");
 					
 					// create layouts
 					$this->db->query("INSERT INTO " . DB_PREFIX . "layout SET name = 'MultiMerch Seller Account'");
@@ -457,7 +464,6 @@ class ModelMultisellerSettings extends Model {
 		$seller_group_id = $this->db->getLastId();
 		
 		// default seller group description
-		$this->load->model('localisation/language');
 		$languages = $this->model_localisation_language->getLanguages();
 		foreach ($languages as $code => $language) {
 			$this->db->query("INSERT INTO " . DB_PREFIX . "ms_seller_group_description SET seller_group_id = '" . (int)$seller_group_id . "', language_id = '" . (int)$language['language_id'] . "', name = 'Default', description = 'Default seller group'");
@@ -479,12 +485,6 @@ class ModelMultisellerSettings extends Model {
 		$this->db->query("INSERT INTO " . DB_PREFIX . "layout SET name = 'MultiMerch Seller Products'");
 		$layout_id = $this->db->getLastId();
 		$this->db->query("INSERT INTO " . DB_PREFIX . "layout_route SET layout_id = '" . (int)$layout_id . "', route = 'seller/catalog-seller/products'");
-		
-		if (isset($data['layout_route'])) {
-			foreach ($data['layout_route'] as $layout_route) {
-				$this->db->query("INSERT INTO " . DB_PREFIX . "layout_route SET layout_id = '" . (int)$layout_id . "', store_id = '" . (int)$layout_route['store_id'] . "', route = '" . $this->db->escape($layout_route['route']) . "'");
-			}
-		}
 	}
 	
 	public function dropTable() {

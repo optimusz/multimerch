@@ -205,12 +205,22 @@ class ControllerSellerCatalogSeller extends ControllerSellerCatalog {
 		if (isset($this->request->get['seller_id'])) {
 			$seller = $this->MsLoader->MsSeller->getSeller($this->request->get['seller_id']);
 		}
-			
+
 		if (!isset($seller) || empty($seller) || $seller['ms.seller_status'] != MsSeller::STATUS_ACTIVE) {
 			$this->redirect($this->url->link('seller/catalog-seller', '', 'SSL'));
 			return;
 		}
 
+		if ($this->config->get('msconf_seller_comments_enable')) {
+			$this->document->addScript('catalog/view/javascript/ms-comments.js');
+		
+			if(file_exists('catalog/view/theme/'.$this->config->get('config_template').'/stylesheet/ms-comments.css')){
+				$this->document->addStyle("catalog/view/theme/" . $this->config->get('config_template') . "/stylesheet/ms-comments.css");
+			} else {
+				$this->document->addStyle("catalog/view/theme/default/stylesheet/ms-comments.css");
+			}
+		}
+		
 		$this->document->addScript('catalog/view/javascript/dialog-sellercontact.js');
 
 		if ($seller['ms.avatar'] && file_exists(DIR_IMAGE . $seller['ms.avatar'])) {

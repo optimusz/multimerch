@@ -1,7 +1,7 @@
 <?php
 
 class ControllerModuleMultiseller extends ControllerMultisellerBase {
-	private $_versions = array("2.2", "2.3", "3.0");
+	private $_versions = array("2.2", "2.3", "3.0", "4.0");
 	
 	private $_controllers = array(
 		"multiseller/base",
@@ -196,6 +196,11 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 					$this->session->data['error'] .= sprintf($this->language->get('ms_error_directory_exists'), $dir);
 				}
 			}
+		}
+		
+		// ckeditor
+		if (!copy(DIR_APPLICATION . 'view/javascript/ckeditor/', DIR_CATALOG . 'view/javascript/multimerch/')) {
+			$this->session->data['error'] .= sprintf($this->language->get('ms_error_ckeditor'), DIR_APPLICATION . 'view/javascript/ckeditor/', DIR_CATALOG . 'view/javascript/multimerch/');
 		}
 	}
 
