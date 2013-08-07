@@ -1,17 +1,14 @@
 $(function() {
 	$.fn.dataTableExt.sErrMode = 'throw';
 
-	$.extend(true, $.fn.dataTable.defaults, {
-		"oLanguage": {
-			"oPaginate": {
-				"sFirst": "|<",
-				"sLast": ">|",
-				"sNext": ">",
-				"sPrevious": "<"
+	if (typeof config_language != 'undefined') {
+		$.extend($.fn.dataTable.defaults, {
+			"oLanguage": {
+				"sUrl": config_language
 			}
-		}
-	});
-
+		});
+	}
+	
 	$.extend($.fn.dataTable.defaults, {
 		"bProcessing": true,
 		"bSortCellsTop": true,
@@ -23,7 +20,7 @@ $(function() {
 		"sDom": 'rt<"pagination"pi><"clear">',
 		"asStripeClasses": [],
 		// todo insert proper value
-		"iDisplayLength": 5
+		"iDisplayLength": 10
 	});
 	
 	$("body").delegate(".dataTable .filter input[type='text']", "keyup",  function() {

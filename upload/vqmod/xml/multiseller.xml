@@ -64,7 +64,7 @@
 				<?php foreach ($scripts as $script) { ?>
 			]]></search>
 			<add><![CDATA[
-				<script type="text/javascript"> if (!window.console) console = {log: function() {}}; </script>
+				<script type="text/javascript"> if (!window.console) console = {log: function() {}}; var config_language = <?php echo $dt_language; ?>; </script>
 			]]></add>
 		</operation>	
 	</file>
@@ -98,6 +98,10 @@
 				));
 				
 				$this->MsLoader->MsHelper->addStyle('multiseller');
+				
+				// note: renamed catalog
+				$lang = "view/javascript/multimerch/datatables/lang/" . $this->config->get('config_language') . ".txt";
+				$this->data['dt_language'] = file_exists(DIR_APPLICATION . $lang) ? "'catalog/$lang'" : "undefined";
 			]]></add>
 		</operation>
 	</file>
@@ -1040,7 +1044,7 @@
 				<?php foreach ($scripts as $script) { ?>
 			]]></search>
 			<add><![CDATA[
-				<script type="text/javascript"> if (!window.console) console = {log: function() {}}; var msGlobals = { config_admin_limit: '<?php echo $this->config->get('config_admin_limit'); ?>' }; </script>
+				<script type="text/javascript"> if (!window.console) console = {log: function() {}}; var msGlobals = { config_admin_limit: '<?php echo $this->config->get('config_admin_limit'); ?>', config_language: <?php echo $dt_language; ?> }; </script>
 			]]></add>
 		</operation>
 
@@ -1075,6 +1079,8 @@
 			]]></search>
 			<add><![CDATA[
 			$this->data = array_merge($this->data, $this->load->language('multiseller/multiseller'));
+			$lang = "view/javascript/multimerch/datatables/lang/" . $this->config->get('config_admin_language') . ".txt";
+			$this->data['dt_language'] = file_exists(DIR_APPLICATION . $lang) ? "'$lang'" : "undefined";
 			]]></add>
 		</operation>
 		
