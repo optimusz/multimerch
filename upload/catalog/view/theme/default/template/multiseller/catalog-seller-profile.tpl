@@ -48,10 +48,13 @@
 		</div>
 	</div>
 
-	<?php if ($seller['products']) { ?>
-	<div class="box">
-		<div class="box-heading"><?php echo $ms_catalog_seller_profile_products; ?></div>
-		<div class="box-content">
+	<div id="seller-tabs" class="htabs">
+		<a href="#tab-products"><?php echo $ms_catalog_seller_profile_tab_products; ?></a>
+		<?php if ($this->config->get('msconf_seller_comments_enable')) { ?><a href="#tab-comments"><?php echo $ms_catalog_seller_profile_tab_comments; ?></a><?php } ?>
+	</div>
+	
+	<div id="tab-products" class="tab-content">
+		<?php if ($seller['products']) { ?>
 			<div class="box-product">
 				<?php foreach ($seller['products'] as $product) { ?>
 				<div>
@@ -82,25 +85,32 @@
 				<?php } ?>
 			</div>
 			<p style="text-align: right; margin: 0"><a href="<?php echo $seller['href']; ?>"><?php echo $ms_catalog_seller_profile_view; ?></a></p>
-		</div>
+		<?php } else { ?>
+			<p style="text-align: center"><?php echo $ms_catalog_seller_products_empty; ?></p>
+		<?php } ?>
 	</div>
-	<?php } ?>
 	
 	<?php if ($this->config->get('msconf_seller_comments_enable')) { ?>
-	<script type="text/javascript">
-		$(function(){
-			$('#tab-comments .pcForm').load('index.php?route=module/ms-comments/renderForm&seller_id=<?php echo $seller_id; ?>>');
-			$('#tab-comments .pcComments').load('index.php?route=module/ms-comments/renderComments&seller_id=<?php echo $seller_id; ?>');
-		});
-	</script>
-
-	<div id="tab-comments">
+	<div id="tab-comments" class="tab-content">
+		<script type="text/javascript">
+			$(function(){
+				$('#tab-comments .pcForm').load('index.php?route=module/ms-comments/renderForm&seller_id=<?php echo $seller_id; ?>>');
+				$('#tab-comments .pcComments').load('index.php?route=module/ms-comments/renderComments&seller_id=<?php echo $seller_id; ?>');
+			});
+		</script>
+	
 		<div class="pcComments"></div>
 		<div class="pcForm"></div>
 	</div>
 	<?php } ?>
-	
+
 	<?php echo $content_bottom; ?>
 </div>
+
+<script type="text/javascript">
+	$(function(){
+		$('#seller-tabs a').tabs();
+	});
+</script>
 
 <?php echo $footer; ?>

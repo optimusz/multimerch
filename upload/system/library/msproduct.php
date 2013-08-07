@@ -328,6 +328,7 @@ class MsProduct extends Model {
 			}
 		}
 
+		// specials
 		if (isset($data['product_specials'])) {
 			foreach ($data['product_specials'] as $product_special) {
 				$this->db->query("INSERT INTO " . DB_PREFIX . "product_special SET product_id = '" . (int)$product_id . "', customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "', priority = '" . (int)$product_special['priority'] . "', price = '" . (float)$product_special['price'] . "', date_start = '" . $this->db->escape($product_special['date_start']) . "', date_end = '" . $this->db->escape($product_special['date_end']) . "'");
@@ -615,9 +616,7 @@ class MsProduct extends Model {
 			}
 		}
 		
-		/*
-		 * specials
-		 */
+		// specials
 		$this->db->query("DELETE FROM " . DB_PREFIX . "product_special WHERE product_id = '" . (int)$product_id . "'");
 		if (isset($data['product_specials'])) {
 			foreach ($data['product_specials'] as $product_special) {
@@ -625,9 +624,7 @@ class MsProduct extends Model {
 			}
 		}		
 		
-		/*
-		 * specials
-		 */
+		// discounts
 		$this->db->query("DELETE FROM " . DB_PREFIX . "product_discount WHERE product_id = '" . (int)$product_id . "'");
 		if (isset($data['product_discounts'])) {
 			foreach ($data['product_discounts'] as $product_discount) {
@@ -637,7 +634,7 @@ class MsProduct extends Model {
 		
 		$this->registry->get('cache')->delete('product');
 		
-		return $product_id;		
+		return $product_id;
 	}
 	
 	public function hasDownload($product_id, $download_id) {

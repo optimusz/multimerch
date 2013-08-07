@@ -18,8 +18,7 @@ class MsLoader {
 	private static function _autoloadLibrary($class) {
 	 	$file = DIR_SYSTEM . 'library/' . strtolower($class) . '.php';
 		if (file_exists($file)) {
-			$vqmod = new VQMod();
-			require_once($vqmod->modCheck($file));
+			require_once(VQMod::modCheck($file));
 		}
 	}
 
@@ -29,8 +28,7 @@ class MsLoader {
 		if (isset($matches[0][1]) && isset($matches[0][2])) {
 			$file = DIR_APPLICATION . 'controller/' . strtolower($matches[0][1]) . '/' . strtolower($matches[0][2]) . '.php';
 			if (file_exists($file)) {
-				$vqmod = new VQMod();
-				require_once($vqmod->modCheck($file));
+				require_once(VQMod::modCheck($file));
 			}
 		}
 	}

@@ -202,6 +202,8 @@ class ControllerSellerCatalogSeller extends ControllerSellerCatalog {
 	}
 		
 	public function profile() {
+		$this->document->addScript('catalog/view/javascript/jquery/tabs.js');
+		
 		if (isset($this->request->get['seller_id'])) {
 			$seller = $this->MsLoader->MsSeller->getSeller($this->request->get['seller_id']);
 		}
