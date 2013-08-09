@@ -33,6 +33,15 @@ class ModelMultisellerSettings extends Model {
 		if (!$this->checkDbVersion($version)) {
 			switch ($version) {
 				case "4.0":
+					// add version table
+					$sql = "
+					CREATE TABLE `" . DB_PREFIX . "ms_version` (
+					`version_id` int(11) NOT NULL AUTO_INCREMENT,
+					`version` VARCHAR(32) NOT NULL DEFAULT '',
+					`distribution` VARCHAR(32) NOT NULL DEFAULT '',
+					PRIMARY KEY (`commission_id`)) default CHARSET=utf8";
+					$this->db->query($sql);					
+					
 					// add attribute table & copy data
 					$sql = "
 						CREATE TABLE `" . DB_PREFIX . "ms_attribute_attribute` (
