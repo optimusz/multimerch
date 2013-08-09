@@ -12,7 +12,7 @@ class ControllerSellerAccountTransaction extends ControllerSellerAccount {
 		
 		$seller_id = $this->customer->getId();
 		
-		$sorts = array('payment_type', 'amount', 'payment_status', 'date_created');
+		$sorts = array('payment_type', 'payment_id', 'amount', 'payment_status', 'date_created');
 		$filters = array_diff(array_merge($sorts, array('description')), array('payment_status', 'type'));
 	
 		list($sortCol, $sortDir) = $this->MsLoader->MsHelper->getSortParams($sorts, $colMap);
