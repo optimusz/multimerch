@@ -42,6 +42,8 @@ class ModelMultisellerSettings extends Model {
 					PRIMARY KEY (`version_id`)) default CHARSET=utf8";
 					$this->db->query($sql);
 					
+					$this->db->query("INSERT INTO " . DB_PREFIX . "ms_version (version, distribution) VALUES('" . $this->MsLoader->version . "','" . $this->MsLoader->dist ."')");
+					
 					// add attribute table & copy data
 					$sql = "
 						CREATE TABLE `" . DB_PREFIX . "ms_attribute_attribute` (
