@@ -40,7 +40,7 @@ class ModelMultisellerSettings extends Model {
 					`version` VARCHAR(32) NOT NULL DEFAULT '',
 					`distribution` VARCHAR(32) NOT NULL DEFAULT '',
 					PRIMARY KEY (`version_id`)) default CHARSET=utf8";
-					$this->db->query($sql);					
+					$this->db->query($sql);
 					
 					// add attribute table & copy data
 					$sql = "
@@ -468,7 +468,7 @@ class ModelMultisellerSettings extends Model {
 	}
 	
 	public function addData() {
-		$this->db->query("INSERT INTO " . DB_PREFIX . "ms_version (version, distribution) VALUES('4.0', 'standard')");
+		$this->db->query("INSERT INTO " . DB_PREFIX . "ms_version (version, distribution) VALUES('" . $this->MsLoader->version . "','" . $this->MsLoader->dist ."')");
 		
 		$this->db->query("INSERT INTO " . DB_PREFIX . "ms_commission () VALUES()");
 		$commission_id = $this->db->getLastId();
