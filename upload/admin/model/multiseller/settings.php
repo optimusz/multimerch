@@ -39,7 +39,7 @@ class ModelMultisellerSettings extends Model {
 					`version_id` int(11) NOT NULL AUTO_INCREMENT,
 					`version` VARCHAR(32) NOT NULL DEFAULT '',
 					`distribution` VARCHAR(32) NOT NULL DEFAULT '',
-					PRIMARY KEY (`commission_id`)) default CHARSET=utf8";
+					PRIMARY KEY (`version_id`)) default CHARSET=utf8";
 					$this->db->query($sql);					
 					
 					// add attribute table & copy data
@@ -195,7 +195,7 @@ class ModelMultisellerSettings extends Model {
 			 `version_id` int(11) NOT NULL AUTO_INCREMENT,
 			 `version` VARCHAR(32) NOT NULL DEFAULT '',
 			 `distribution` VARCHAR(32) NOT NULL DEFAULT '',
-			PRIMARY KEY (`commission_id`)) default CHARSET=utf8";
+			PRIMARY KEY (`version_id`)) default CHARSET=utf8";
 		$this->db->query($sql);
 	
 		$sql = "
