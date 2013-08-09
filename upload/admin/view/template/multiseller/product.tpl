@@ -86,13 +86,13 @@ $(document).ready(function() {
 	});
 
 	$('#date').datepicker({dateFormat: 'yy-mm-dd'});
-	
-	$(".ms-assign-seller").click(function() {
+
+	$(document).on( 'click', '.ms-assign-seller', function() {
 		var button = $(this);
 		var product_id = button.parents('tr').children('td:first').find('input:checkbox').val();
 		var seller_id = button.prev('select').find('option:selected').val();
 		$(this).hide().before('<img src="view/image/loading.gif" alt="" />');
-	    $.ajax({
+		$.ajax({
 			type: "POST",
 			dataType: "json",
 			url: 'index.php?route=multiseller/product/jxProductSeller&product_id='+ product_id +'&seller_id='+ seller_id +'&token=<?php echo $token; ?>',

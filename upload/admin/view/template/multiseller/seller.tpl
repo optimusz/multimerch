@@ -68,7 +68,7 @@ $(document).ready(function() {
 		]
 	} );
 
-	$(".ms-button-paypal").click(function() {
+	$(document).on('click', '.ms-button-paypal', function() {
 		var button = $(this);
 		var seller_id = button.parents('tr').children('td:first').find('input:hidden').val();
 		$(this).hide().before('<a class="ms-button ms-loading" />');

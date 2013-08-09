@@ -66,7 +66,7 @@ class ControllerMultisellerProduct extends ControllerMultisellerBase {
 
 			$sellerselect .= "
 			</select>
-			<span class='ms-assign-seller' style='background-image: url('view/image/success.png'); width: 16px; height: 16px; display: inline-block; cursor: pointer; vertical-align: middle' title='Save' />
+			<span class='ms-assign-seller' style='background-image: url(view/image/success.png); width: 16px; height: 16px; display: inline-block; cursor: pointer; vertical-align: middle' title='Save' />
 			";
 			
 			$columns[] = array_merge(

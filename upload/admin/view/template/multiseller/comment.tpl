@@ -65,7 +65,7 @@ $(document).ready(function() {
 		],
 	});
 
-	$(".ms-button-delete").click(function() {
+	$(document).on('click', '.ms-button-delete', function() {
 		var comment_id = $(this).parents('tr').children('td:first').find('input:checkbox').val();
 		$.ajax({
 			type: "POST",

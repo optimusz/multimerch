@@ -77,7 +77,8 @@ $(document).ready(function() {
 		],
 	});
 
-	$(".ms-button-status, .ms-button-mark").click(function() {
+	
+	$(document).on('click', '.ms-button-status, .ms-button-mark', function() {
 		var button = $(this);
 		var row = button.parents('tr');
 		var payment_id = row.children('td:first').find('input:checkbox').val();
@@ -112,9 +113,9 @@ $(document).ready(function() {
 		});
 	});
 	
-	$(".ms-button-delete").click(function() {
+	$(document).on('click', '.ms-button-delete', function() {
 		var payment_id = $(this).parents('tr').children('td:first').find('input:checkbox').val();
-	    $.ajax({
+		$.ajax({
 			type: "POST",
 			dataType: "json",
 			url: 'index.php?route=multiseller/payment/jxDelete&payment_id='+ payment_id +'&token=<?php echo $token; ?>',
@@ -133,7 +134,8 @@ $(document).ready(function() {
 		});
 	});	
 	
-	$(".ms-button-paypal").click(function() {
+	$(document).on('click', '.ms-button-paypal', function() {
+		.ms-button-status, .ms-button-mark
 		var button = $(this);
 		var payment_id = button.parents('tr').children('td:first').find('input:checkbox').val();
 		$(this).hide().before('<a class="ms-button ms-loading" />');
