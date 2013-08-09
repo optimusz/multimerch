@@ -53,7 +53,7 @@
 <script>
 	$(function() {
 		$('#list-products').dataTable( {
-			"sAjaxSource": "index.php?route=seller/account-product/getTableData&token=<?php echo $token; ?>",
+			"sAjaxSource": "index.php?route=seller/account-product/getTableData",
 			"aoColumns": [
 				{ "mData": "product_name" },
 				{ "mData": "product_price" },
