@@ -52,7 +52,7 @@ class ControllerMultisellerProduct extends ControllerMultisellerBase {
 			// actions
 			$actions = "";
 			$actions .= "<a class='ms-button ms-button-edit' href='" . $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $result['product_id'], 'SSL') . "' title='".$this->language->get('text_edit')."'></a>";
-			$actions .= "<a class='ms-button ms-button-delete' href='" . $this->url->link('multiseller/product/delete', 'token=' . $this->session->data['token'] . '&product_id=' . $result['product_id'], 'SSL') . "' title='".$this->language->get('text_delete')."'></a>";
+			$actions .= "<a class='ms-button ms-button-delete' href='" . $this->url->link('multiseller/product/delete', 'token=' . $this->session->data['token'] . '&product_id=' . $result['product_id'], 'SSL') . "' title='".$this->language->get('ms_delete')."'></a>";
 
 			// seller select
 			$sellerselect = "";

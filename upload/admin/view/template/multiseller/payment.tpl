@@ -135,7 +135,6 @@ $(document).ready(function() {
 	});	
 	
 	$(document).on('click', '.ms-button-paypal', function() {
-		.ms-button-status, .ms-button-mark
 		var button = $(this);
 		var payment_id = button.parents('tr').children('td:first').find('input:checkbox').val();
 		$(this).hide().before('<a class="ms-button ms-loading" />');
