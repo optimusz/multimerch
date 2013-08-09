@@ -182,6 +182,14 @@ class ModelMultisellerSettings extends Model {
 
 	public function createTable() {
 		$sql = "
+			CREATE TABLE `" . DB_PREFIX . "ms_version` (
+			 `version_id` int(11) NOT NULL AUTO_INCREMENT,
+			 `version` VARCHAR(32) NOT NULL DEFAULT '',
+			 `distribution` VARCHAR(32) NOT NULL DEFAULT '',
+			PRIMARY KEY (`commission_id`)) default CHARSET=utf8";
+		$this->db->query($sql);
+	
+		$sql = "
 			CREATE TABLE `" . DB_PREFIX . "ms_commission` (
 			 `commission_id` int(11) NOT NULL AUTO_INCREMENT,
 			PRIMARY KEY (`commission_id`)) default CHARSET=utf8";
@@ -451,6 +459,8 @@ class ModelMultisellerSettings extends Model {
 	}
 	
 	public function addData() {
+		$this->db->query("INSERT INTO " . DB_PREFIX . "ms_version (version, distribution) VALUES('4.0', 'standard')");
+		
 		$this->db->query("INSERT INTO " . DB_PREFIX . "ms_commission () VALUES()");
 		$commission_id = $this->db->getLastId();
 		
