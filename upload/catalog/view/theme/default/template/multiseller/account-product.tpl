@@ -65,7 +65,7 @@
 			],
 		});
 	
-		$(".ms-button-delete").click(function() {
+		$(document).on('click', '.ms-button-delete', function() {
 			if (!confirm('<?php echo $ms_account_products_confirmdelete; ?>')) return false;
 		});
 	});
