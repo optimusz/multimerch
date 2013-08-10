@@ -1,8 +1,8 @@
 <?php
 
 class MsLoader {
-	public version = "4.0";
-	public dist = "standard";	
+	public $version = "4.0";
+	public $dist = "standard";	
 	
 	public function __construct($registry) {
 		$this->registry = $registry;

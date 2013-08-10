@@ -90,7 +90,7 @@ class ControllerSellerAccountWithdrawal extends ControllerSellerAccount {
 		$this->data['msconf_allow_partial_withdrawal'] = $this->config->get('msconf_allow_partial_withdrawal');
 		$this->data['currency_code'] = $this->config->get('config_currency');
 		
-		if ($available_balance - $this->config->get('msconf_minimum_withdrawal_amount') > 0) {
+		if ($available_balance - $this->config->get('msconf_minimum_withdrawal_amount') >= 0) {
 			$this->data['withdrawal_minimum_reached'] = TRUE;
 		} else {
 			$this->data['withdrawal_minimum_reached'] = FALSE;

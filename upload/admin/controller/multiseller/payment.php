@@ -34,10 +34,10 @@ class ControllerMultisellerPayment extends ControllerMultisellerBase {
 			// actions
 			$actions = "";
 			if ($result['amount'] > 0 && $result['payment_status'] == MsPayment::STATUS_UNPAID && in_array($result['payment_type'], array(MsPayment::TYPE_PAYOUT, MsPayment::TYPE_PAYOUT_REQUEST))) {
-			if (!empty($result['ms.paypal']) && filter_var($result['ms.paypal'], FILTER_VALIDATE_EMAIL)) { 
+			if (!empty($result['payment_data']) && filter_var($result['payment_data'], FILTER_VALIDATE_EMAIL)) { 
 				$actions .= "<a class='ms-button ms-button-paypal' title='" . $this->language->get('ms_payment_payout_paypal') . "'></a>";
 			} else {
-				$actions .= "<a class='ms-button ms-button-paypal-bw' title='" . $this->language->get('ms_payment_payout_invalid') . "'></a>";
+				$actions .= "<a class='ms-button ms-button-paypal-bw' title='" . $this->language->get('ms_payment_payout_paypal_invalid') . "'></a>";
 			}
 			}
 			if ($result['amount'] > 0 && $result['payment_status'] == MsPayment::STATUS_UNPAID) { 
