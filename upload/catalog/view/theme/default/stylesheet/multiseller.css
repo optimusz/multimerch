@@ -4,6 +4,12 @@
 	float: none;
 }
 
+.checkout-content .buttons {
+	width: 98% !important;
+	margin-top: 10px;
+	display: inline-block;
+}
+
 #content .buttons {
 	width: 100%;
 	margin-top: 10px;
