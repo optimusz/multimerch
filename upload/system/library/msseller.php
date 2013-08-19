@@ -313,7 +313,7 @@ final class MsSeller extends Model {
 				
 		$res = $this->db->query($sql);
 
-		if (!($res->row['seller_id']))
+		if (!isset($res->row['seller_id']) || !$res->row['seller_id'])
 			return FALSE;
 		else
 			return $res->row;
