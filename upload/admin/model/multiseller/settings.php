@@ -23,7 +23,7 @@ class ModelMultisellerSettings extends Model {
 				break;
 		}
 		
-		if ($res->num_rows)
+		if (isset($res) && $res->num_rows)
 			return true;
 			
 		return false;
