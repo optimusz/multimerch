@@ -6,8 +6,6 @@ class ControllerModuleMsComments extends Controller {
 	}
 
 	public function renderComments() {
-		if (!$this->config->get('msconf_comments_enable')) return;
-		
         if(isset($this->request->get['product_id'])){
             $product_id = $this->request->get['product_id'];
             $this->data['product_id'] = $product_id;

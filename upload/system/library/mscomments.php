@@ -5,6 +5,7 @@ class MsComments extends Model {
 				FROM `" . DB_PREFIX . "ms_comments` mc
 				WHERE 1 = 1"
 				. (isset($data['displayed']) ? " AND mc.display = 1" : '')
+				. (isset($data['seller_id']) ? " AND mc.seller_id = " . (int)$data['seller_id'] : '')
 				. (isset($data['product_id']) ? " AND mc.product_id = " . (int)$data['product_id'] : '');
 
 		$res = $this->db->query($sql);

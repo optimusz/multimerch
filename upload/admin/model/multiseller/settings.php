@@ -23,7 +23,7 @@ class ModelMultisellerSettings extends Model {
 				break;
 		}
 		
-		if (isset($res) && $res->num_rows)
+		if (!isset($res) || (isset($res) && $res->num_rows))
 			return true;
 			
 		return false;
@@ -33,6 +33,36 @@ class ModelMultisellerSettings extends Model {
 		if (!$this->checkDbVersion($version)) {
 			switch ($version) {
 				case "4.0":
+					// badge admin area
+					$this->load->model('user/user_group');
+					$this->model_user_user_group->addPermission($this->user->getId(), 'access', 'multiseller/badge');
+					$this->model_user_user_group->addPermission($this->user->getId(), 'modify', 'multiseller/badge');
+					
+					// add badges table
+					$sql = "
+					CREATE TABLE IF NOT EXISTS `".DB_PREFIX."ms_badge` (
+					`badge_id` int(11) NOT NULL AUTO_INCREMENT,
+					`image` varchar(255) DEFAULT NULL,
+					PRIMARY KEY (`badge_id`)) default CHARSET=utf8";
+					$this->db->query($sql);
+					
+					$sql = "
+					CREATE TABLE IF NOT EXISTS `".DB_PREFIX."ms_badge_description` (
+					`badge_id` int(11) NOT NULL,
+					`name` varchar(32) NOT NULL DEFAULT '',
+					`description` text NOT NULL,
+					`language_id` int(11) DEFAULT NULL,
+					PRIMARY KEY (`badge_id`, `language_id`)) default CHARSET=utf8";
+					$this->db->query($sql);
+					
+					$sql = "
+					CREATE TABLE IF NOT EXISTS `".DB_PREFIX."ms_badge_seller_group` (
+					`badge_id` INT(11) NOT NULL,
+					`seller_id` int(11) DEFAULT NULL,
+					`seller_group_id` int(11) DEFAULT NULL,
+					PRIMARY KEY (`badge_id`, `seller_id`, `seller_group_id`)) default CHARSET=utf8";
+					$this->db->query($sql);
+					
 					// add version table
 					$sql = "
 					CREATE TABLE `" . DB_PREFIX . "ms_version` (
@@ -64,6 +94,8 @@ class ModelMultisellerSettings extends Model {
 					
 					// todo alter comments table, product_id 0 -> NULL
 					$this->db->query("ALTER TABLE `" . DB_PREFIX . "ms_comments` CHANGE `product_id` `product_id` int(11) DEFAULT NULL");
+					
+					
 					
 					// create layouts
 					$this->db->query("INSERT INTO " . DB_PREFIX . "layout SET name = 'MultiMerch Seller Account'");
