@@ -89,9 +89,6 @@ class ModelMultisellerSettings extends Model {
 					// update attribute structure
 					$this->MsLoader->MsAttribute->migrateAttributes();
 
-					// todo add order_id column to the payments table
-					// $this->db->query("ALTER TABLE `" . DB_PREFIX . "ms_payment` ADD `order_id` int(11) DEFAULT NULL");
-					
 					// todo alter comments table, product_id 0 -> NULL
 					$this->db->query("ALTER TABLE `" . DB_PREFIX . "ms_comments` CHANGE `product_id` `product_id` int(11) DEFAULT NULL");
 					
@@ -111,6 +108,11 @@ class ModelMultisellerSettings extends Model {
 					$this->db->query("INSERT INTO " . DB_PREFIX . "layout SET name = 'MultiMerch Seller Products'");
 					$layout_id = $this->db->getLastId();
 					$this->db->query("INSERT INTO " . DB_PREFIX . "layout_route SET layout_id = '" . (int)$layout_id . "', route = 'seller/catalog-seller/products'");
+					
+					$res = $this->db->query("SHOW COLUMNS FROM `" . DB_PREFIX . "ms_payment` LIKE 'order_id'");
+					if (!$res->num_rows) {
+						$this->db->query("ALTER TABLE `" . DB_PREFIX . "ms_payment` ADD `order_id` int(11) DEFAULT NULL");
+					}
 					break;
 				
 				case "3.0":
