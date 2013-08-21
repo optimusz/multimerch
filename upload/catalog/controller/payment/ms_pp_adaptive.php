@@ -159,7 +159,18 @@ class ControllerPaymentMSPPAdaptive extends Controller {
 		$this->language->load('payment/ms_pp_adaptive');
 		$this->load->model('checkout/order');
 		$this->load->model('account/order');
+		
+		if (!isset($this->session->data['order_id'])) {
+			$this->_log->write('PayPal Adaptive error: No order ID specified');
+			return
+		}
+		
 		$order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
+		
+		if (!$order_info) {
+			$this->_log->write('PayPal Adaptive error: Invalid order ID');
+			return
+		}
 		
 		if ($this->config->get('msppaconf_debug'))
 			$this->_log->write("Initializing payment for order ID {$order_info['order_id']}");
