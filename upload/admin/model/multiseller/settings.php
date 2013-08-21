@@ -90,12 +90,10 @@ class ModelMultisellerSettings extends Model {
 					$this->MsLoader->MsAttribute->migrateAttributes();
 
 					// todo add order_id column to the payments table
-					$this->db->query("ALTER TABLE `" . DB_PREFIX . "ms_payment` ADD `order_id` int(11) DEFAULT NULL");
+					// $this->db->query("ALTER TABLE `" . DB_PREFIX . "ms_payment` ADD `order_id` int(11) DEFAULT NULL");
 					
 					// todo alter comments table, product_id 0 -> NULL
 					$this->db->query("ALTER TABLE `" . DB_PREFIX . "ms_comments` CHANGE `product_id` `product_id` int(11) DEFAULT NULL");
-					
-					
 					
 					// create layouts
 					$this->db->query("INSERT INTO " . DB_PREFIX . "layout SET name = 'MultiMerch Seller Account'");
