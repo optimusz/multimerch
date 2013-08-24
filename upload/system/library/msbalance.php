@@ -47,9 +47,9 @@ class MsBalance extends Model {
 				INNER JOIN " . DB_PREFIX . "ms_seller ms
 					ON (mb.seller_id = ms.seller_id)
 				WHERE 1 = 1"
-				. (isset($data['order_id']) ? " AND order_id =  " .  (int)$data['order_id'] : '')
-				. (isset($data['product_id']) ? " AND product_id =  " .  (int)$data['product_id'] : '')
-				. (isset($data['seller_id']) ? " AND seller_id =  " .  (int)$data['seller_id'] : '')
+				. (isset($data['order_id']) ? " AND mb.order_id =  " .  (int)$data['order_id'] : '')
+				. (isset($data['product_id']) ? " AND mb.product_id =  " .  (int)$data['product_id'] : '')
+				. (isset($data['seller_id']) ? " AND mb.seller_id =  " .  (int)$data['seller_id'] : '')
 				. (isset($data['withdrawal_id']) ? " AND seller_id =  " .  (int)$data['withdrawal_id'] : '')
 				. (isset($data['balance_type']) ? " AND balance_type =  " .  (int)$data['balance_type'] : '')
 				. $filters
