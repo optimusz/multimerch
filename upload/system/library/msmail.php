@@ -22,7 +22,7 @@ class MsMail extends Model {
 	const SMT_TRANSACTION_PERFORMED = 16;
 	
 	const SMT_SELLER_CONTACT = 20;
-	//
+	const SMT_PRIVATE_MESSAGE = 22;
 	
 	const AMT_SELLER_ACCOUNT_CREATED = 101;
 	const AMT_SELLER_ACCOUNT_AWAITING_MODERATION = 102;
@@ -109,7 +109,7 @@ class MsMail extends Model {
 	}
 	
 	public function sendMail($mail_type, $data = array()) {
-		if (isset($data['product_id'])) {
+		if (isset($data['product_id']) && $data['product_id']) {
 			$product = $this->MsLoader->MsProduct->getProduct($data['product_id']);
 			$n = reset($product['languages']);
 			$product['name'] = $n['name'];
@@ -234,8 +234,12 @@ class MsMail extends Model {
 			case self::SMT_SELLER_CONTACT:
 				$mail_subject .= $this->language->get('ms_mail_subject_seller_contact');
 				$mail_text .= sprintf($this->language->get('ms_mail_seller_contact'), $data['customer_name'], $data['customer_email'], isset($data['product_id']) ? $product['name'] : '', $data['customer_message']);
-				break;				
+				break;
 				
+			case self::SMT_PRIVATE_MESSAGE:
+				$mail_subject .= $this->language->get('ms_mail_subject_private_message');
+				$mail_text .= sprintf($this->language->get('ms_mail_private_message'), $data['customer_name'], $data['title'], $data['customer_message']);
+				break;
 				
 			// admin
 			case self::AMT_PRODUCT_CREATED:

@@ -24,7 +24,8 @@ $(function() {
 		            					type: "POST",
 		            					dataType: "json",
 		            					url: 'index.php?route=seller/catalog-seller/jxSubmitContactDialog',
-		            					data: $("#ms-sellercontact-dialog form").serialize(),		            					beforeSend: function() {
+		            					data: $("#ms-sellercontact-dialog form").serialize(),
+		            					beforeSend: function() {
 		            						$('.ms-sellercontact-dialog .success,.ms-sellercontact-dialog .warning').remove();
 		            						$('#ms-sellercontact-dialog button').attr('disabled', true);
 		            						$('.ms-sellercontact-dialog .ui-dialog-buttonpane').before('<p class="attention" style="clear:both"><img src="catalog/view/theme/default/image/loading.gif" alt="" />Please wait...</div>');
@@ -47,8 +48,7 @@ $(function() {
 		            						
 		            						if (data.success) {
 		            							$('.ms-sellercontact-dialog .ui-dialog-buttonpane').before('<p class="success" style="clear:both">' + data.success + '</div>');
-		            							$('#ms-sellercontact-form #ms-sellercontact-captcha').val('');
-		            							$('#ms-sellercontact-form textarea').val('');
+		            							$('.ms-sellercontact-dialog input[type="text"], .ms-sellercontact-dialog textarea').val('');
 		            						}
 		            					}
 		            				});

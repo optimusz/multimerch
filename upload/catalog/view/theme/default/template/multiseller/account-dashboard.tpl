@@ -87,6 +87,13 @@
 			<span><?php echo $ms_account_dashboard_nav_balance; ?></span>
 		</a>
 		
+		<?php if ($this->config->get('msconf_enable_private_messaging') == 1) { ?>
+		<a href="<?php echo $this->url->link('account/msconversation', '', 'SSL'); ?>">
+			<img src="catalog/view/theme/<?php echo $this->config->get('config_template'); ?>/image/ms-envelope-96.png" />
+			<span><?php echo $ms_account_messages; ?></span>
+		</a>
+		<?php } ?>
+		
 		<?php if ($this->config->get('msconf_allow_withdrawal_requests')) { ?>
 		<a href="<?php echo $this->url->link('seller/account-withdrawal', '', 'SSL'); ?>">
 			<img src="catalog/view/theme/<?php echo $this->config->get('config_template'); ?>/image/ms-dollar.png" />

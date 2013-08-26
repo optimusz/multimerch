@@ -294,8 +294,10 @@ $_['ms_config_attribute_display_oc'] = 'OpenCart';
 $_['ms_config_attribute_display_both'] = 'Both';
 
 $_['ms_config_privacy'] = 'Privacy';
-$_['ms_config_hide_seller_contact'] = 'Hide contact seller link';
-$_['ms_config_hide_seller_contact_note'] = 'Hides contact seller link, which pops up the seller contact form (users will not be able to contact sellers)';
+$_['ms_config_enable_private_messaging'] = 'Enable private messaging system';
+$_['ms_config_enable_private_messaging_note'] = 'Enables or disables the PM system or the seller contact dialog';
+$_['ms_config_pm_dialog_only'] = 'Only seller contact via email dialog';
+
 $_['ms_config_hide_customer_email'] = 'Hide customer email address';
 $_['ms_config_hide_customer_email_note'] = 'Hides customer email address in the seller dashboard and in orders list';
 

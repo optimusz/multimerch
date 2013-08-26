@@ -4,6 +4,7 @@
 // * Global *
 // **********
 $_['ms_viewinstore'] = 'View in store';
+$_['ms_view'] = 'View';
 $_['ms_publish'] = 'Publish';
 $_['ms_unpublish'] = 'Unpublish';
 $_['ms_edit'] = 'Edit';
@@ -15,9 +16,13 @@ $_['ms_type'] = 'Type';
 $_['ms_amount'] = 'Amount';
 $_['ms_status'] = 'Status';
 $_['ms_date_paid'] = 'Date paid';
+$_['ms_last_message'] = 'Last message';
 $_['ms_description'] = 'Description';
 $_['ms_id'] = '#';
 $_['ms_by'] = 'by';
+$_['ms_action'] = 'Action';
+$_['ms_sender'] = 'Sender';
+$_['ms_message'] = 'Message';
 
 
 $_['ms_date_created'] = 'Date created';
@@ -335,6 +340,43 @@ $_['ms_product_status_' . MsProduct::STATUS_INACTIVE] = 'Inactive';
 $_['ms_product_status_' . MsProduct::STATUS_DISABLED] = 'Disabled';
 $_['ms_product_status_' . MsProduct::STATUS_DELETED] = 'Deleted';
 $_['ms_product_status_' . MsProduct::STATUS_UNPAID] = 'Unpaid listing fee';
+
+// Account - Conversations and Messages
+$_['ms_account_conversations'] = 'Conversations';
+$_['ms_account_messages'] = 'Messages';
+
+$_['ms_account_conversations_heading'] = 'Your Conversations';
+$_['ms_account_conversations_breadcrumbs'] = 'Your Conversations';
+
+$_['ms_account_conversations_status'] = 'Status';
+$_['ms_account_conversations_date_created'] = 'Date created';
+$_['ms_account_conversations_with'] = 'Conversation with';
+$_['ms_account_conversations_title'] = 'Title';
+
+$_['ms_conversation_title_product'] = 'Inquiry about product: %s';
+$_['ms_conversation_title'] = 'Inquiry from %s';
+
+$_['ms_account_conversations_read'] = 'Read';
+$_['ms_account_conversations_unread'] = 'Unread';
+
+$_['ms_account_messages_heading'] = 'Messages';
+$_['ms_account_messages_breadcrumbs'] = 'Messages';
+
+$_['ms_message_text'] = 'Your message';
+$_['ms_post_message'] = 'Send message';
+
+$_['ms_error_empty_message'] = 'Message cannot be left empty';
+
+$_['ms_mail_subject_private_message'] = 'New private message received';
+$_['ms_mail_private_message'] = <<<EOT
+You have received a new private message from %s!
+
+%s
+
+%s
+
+You can reply in the messaging area in your account.
+EOT;
 
 // Account - Transactions
 $_['ms_account_transactions_heading'] = 'Your Finances';

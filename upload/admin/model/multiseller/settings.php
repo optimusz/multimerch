@@ -6,6 +6,13 @@ class ModelMultisellerSettings extends Model {
 	}
 	public function checkDbVersion($version) {
 		switch ($version) {
+			case "4.1":
+				$res = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . "ms_version'");
+				if ($res->num_rows) {
+					$res = $this->db->query("SELECT version FROM `" . DB_PREFIX . "ms_version` WHERE version LIKE '4.1'");
+				}
+				break;
+			
 			case "4.0":
 				$res = $this->db->query("SHOW COLUMNS FROM `" . DB_PREFIX . "ms_attribute` LIKE 'tab_display'");
 				break;
@@ -32,6 +39,35 @@ class ModelMultisellerSettings extends Model {
 	public function update($version) {
 		if (!$this->checkDbVersion($version)) {
 			switch ($version) {
+				case "4.1":
+					$this->db->query("INSERT INTO " . DB_PREFIX . "ms_version (version, distribution) VALUES('" . $this->MsLoader->version . "','" . $this->MsLoader->dist ."')");
+				
+					// Conversations
+					$sql = "
+						CREATE TABLE `" . DB_PREFIX . "ms_conversation` (
+						 `conversation_id` int(11) NOT NULL AUTO_INCREMENT,
+						 `product_id` int(11) DEFAULT NULL,
+						 `order_id` int(11) DEFAULT NULL,
+						 `title` varchar(256) NOT NULL DEFAULT '',
+						 `date_created` DATETIME NOT NULL,
+						PRIMARY KEY (`conversation_id`)) default CHARSET=utf8";
+					$this->db->query($sql);
+					
+					// Messages
+					$sql = "
+					CREATE TABLE `" . DB_PREFIX . "ms_message` (
+					`message_id` int(11) NOT NULL AUTO_INCREMENT,
+					`conversation_id` int(11) NOT NULL,
+					`from` int(11) DEFAULT NULL,
+					`to` int(11) DEFAULT NULL,
+					`message` text NOT NULL DEFAULT '',
+					`read` tinyint(1) NOT NULL DEFAULT 0,
+					`date_created` DATETIME NOT NULL,
+					PRIMARY KEY (`message_id`)) default CHARSET=utf8";
+					$this->db->query($sql);
+					
+					break;
+				
 				case "4.0":
 					// badge admin area
 					$this->load->model('user/user_group');
@@ -499,6 +535,31 @@ class ModelMultisellerSettings extends Model {
 				`seller_group_id` int(11) DEFAULT NULL,
 			PRIMARY KEY (`badge_id`, `seller_id`, `seller_group_id`)) default CHARSET=utf8";
 		$this->db->query($sql);	
+		
+		// v4.1 ->>>
+		// Conversations
+		$sql = "
+			CREATE TABLE `" . DB_PREFIX . "ms_conversation` (
+			 `conversation_id` int(11) NOT NULL AUTO_INCREMENT,
+			 `product_id` int(11) DEFAULT NULL,
+			 `order_id` int(11) DEFAULT NULL,
+			 `title` varchar(256) NOT NULL DEFAULT '',
+			 `date_created` DATETIME NOT NULL,
+			PRIMARY KEY (`conversation_id`)) default CHARSET=utf8";
+		$this->db->query($sql);
+		
+		// Messages
+		$sql = "
+			CREATE TABLE `" . DB_PREFIX . "ms_message` (
+			`message_id` int(11) NOT NULL AUTO_INCREMENT,
+			`conversation_id` int(11) NOT NULL,
+			`from` int(11) DEFAULT NULL,
+			`to` int(11) DEFAULT NULL,
+			`message` text NOT NULL DEFAULT '',
+			`read` tinyint(1) NOT NULL DEFAULT 0,
+			`date_created` DATETIME NOT NULL,
+			PRIMARY KEY (`message_id`)) default CHARSET=utf8";
+		$this->db->query($sql);
 	}
 	
 	public function addData() {

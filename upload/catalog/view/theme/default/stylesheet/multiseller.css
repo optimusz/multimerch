@@ -883,3 +883,49 @@ table.list thead td.right {
 .dataTables_wrapper .paging_full_numbers .paginate_button_disabled {
 	display: none;
 }
+
+.ms-account-conversation .ms-read {
+	opacity: 0.2;
+	filter: alpha(opacity=20);
+}
+
+.ms-account-conversation-view .ms-messages {
+	border: 0px solid #000000;
+	border-spacing: 5px;
+	/*border-collapse: separate;*/
+}
+
+.ms-account-conversation-view .ms-message-head {
+	font-style: italic;
+	border-bottom: 2px solid #ddd;	
+}
+
+.ms-account-conversation-view .ms-message-row {
+	width: 100%;
+	display: inline-block;
+	border-bottom: 1px dotted #EEEEEE;
+	padding: 10px 0;
+}
+
+.ms-account-conversation-view .ms-message {
+	float: left;
+	display: inline-block;
+}
+
+.ms-account-conversation-view .ms-message-sender {
+	width: 100px;
+	font-weight: bold;
+}
+
+.ms-account-conversation-view .ms-message-head .ms-message-sender {
+	font-weight: normal;
+}
+
+.ms-account-conversation-view .ms-message-date {
+	width:150px;
+	float: right;
+}
+
+.ms-account-conversation-view .ms-message-text {
+	width: 500px;
+}

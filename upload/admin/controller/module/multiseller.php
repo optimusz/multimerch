@@ -1,7 +1,7 @@
 <?php
 
 class ControllerModuleMultiseller extends ControllerMultisellerBase {
-	private $_versions = array("2.2", "2.3", "3.0", "4.0");
+	private $_versions = array("2.2", "2.3", "3.0", "4.0", "4.1");
 	
 	private $_controllers = array(
 		"multiseller/base",
@@ -107,8 +107,9 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		
 		"msconf_attribute_display" => 0, // 0 - MM, 1 - OC, 2 - both
 		
-		"msconf_hide_contact_seller" => 0,
-		"msconf_hide_customer_email" => 0
+		"msconf_hide_customer_email" => 0,
+		
+		"msconf_enable_private_messaging" => 1 // 0 - no, 1 - yes, 2 - email only
 	);
 	
 	public function __construct($registry) {
