@@ -338,7 +338,7 @@ final class MsSeller extends Model {
 					. (isset($cols['total_products']) ? "
 						(SELECT COUNT(*) FROM " . DB_PREFIX . "product p
 						LEFT JOIN " . DB_PREFIX . "ms_product mp USING (product_id)
-						LEFT JOIN " . DB_PREFIX . "ms_seller ms USING (seller_id)
+						LEFT JOIN " . DB_PREFIX . "ms_seller USING (seller_id)
 						WHERE seller_id = ms.seller_id) as total_products,
 					" : "")
 

@@ -4,11 +4,11 @@ class ControllerMultisellerProduct extends ControllerMultisellerBase {
 	public function getTableData() {
 		$colMap = array(
 			'id' => 'product_id',
-			'name' => '`pd.name`',
-			'status' => '`mp.product_status`',
-			'seller' => '`ms.nickname`',
-			'date_created' => '`p.date_created`',
-			'date_modified' => '`p.date_modified`'
+			'name' => 'pd.name',
+			'status' => 'mp.product_status',
+			'seller' => 'ms.nickname',
+			'date_created' => 'p.date_created',
+			'date_modified' => 'p.date_modified'
 		);
 
 		$sorts = array('name', 'seller', 'date_created', 'date_modified', 'status');
