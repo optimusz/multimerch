@@ -497,14 +497,13 @@
 			]]></add>
 		</operation>
 		
-		<!-- product comments -->
 		<operation>
 			<search position="before" offset="1"><![CDATA[
 				<div id="tab-description" class="tab-content"><?php echo $description; ?></div>
 			]]></search>
 			<add><![CDATA[
 				<?php foreach ($ms_product_attributes as $attribute) { ?>
-					<?php if(isset($attribute['tab_display']) && $attribute['tab_display']) { ?>
+					<?php if(is_array($attribute['values']) && implode($attribute['values']) != '' && (isset($attribute['tab_display']) && $attribute['tab_display'])) { ?>
 					<a href="#tab-attribute-<?php echo $attribute['attribute_id']; ?>"><?php echo $attribute['name'] ?></a>
 					<?php } ?>
 				<?php } ?>
@@ -556,8 +555,8 @@
 				<span><?php echo $text_stock; ?></span> <?php echo $stock; ?><br />
 				<?php if ($this->config->get('msconf_attribute_display') != 1) { ?>
 				<?php foreach ($ms_product_attributes as $attribute) { ?>
-					<?php if(!isset($attribute['tab_display']) || !$attribute['tab_display']) { ?>
-						<span><?php echo $attribute['name']; ?>:</span> <?php if (isset($attribute['values']) && !empty($attribute['values'])) { echo implode(',',$attribute['values']); } ?> <br />
+					<?php if(is_array($attribute['values']) && implode($attribute['values']) != '' && (!isset($attribute['tab_display']) || !$attribute['tab_display'])) { ?>
+						<span><?php echo $attribute['name']; ?>:</span> <?php echo implode(',',$attribute['values']); ?> <br />
 					<?php } ?>
 				<?php } ?>
 				<?php } ?>
