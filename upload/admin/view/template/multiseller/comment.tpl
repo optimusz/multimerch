@@ -64,7 +64,7 @@ $(document).ready(function() {
 			{ "mData": "actions", "bSortable": false, "sClass": "right" }
 		],
 	});
-
+	
 	$(document).on('click', '.ms-button-delete', function() {
 		var comment_id = $(this).parents('tr').children('td:first').find('input:checkbox').val();
 		$.ajax({

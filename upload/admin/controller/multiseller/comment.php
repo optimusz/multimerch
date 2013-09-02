@@ -34,7 +34,8 @@ class ControllerMultisellerComment extends ControllerMultisellerBase {
 		foreach ($results as $result) {
 			// actions
 			$actions = "";
-			$actions .= "<a class='ms-button ms-button-delete' href='" . $this->url->link('multiseller/comment/delete', 'token=' . $this->session->data['token'] . '&comment_id=' . $result['id'], 'SSL') . "' title='".$this->language->get('text_delete')."'></a>";
+			//$actions .= "<a class='ms-button ms-button-delete' href='" . $this->url->link('multiseller/comment/jxdelete', 'token=' . $this->session->data['token'] . '&comment_id=' . $result['id'], 'SSL') . "' title='".$this->language->get('text_delete')."'></a>";
+			$actions .= "<a class='ms-button ms-button-delete' title='".$this->language->get('text_delete')."'></a>";
 
             $seller = $this->MsLoader->MsSeller->getSeller($result['seller_id']);
 
