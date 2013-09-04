@@ -166,7 +166,7 @@
 					<td>
 						<input type="text" name="product_quantity" value="<?php echo $product['quantity']; ?>" <?php if ($msconf_enable_quantities < 2) { ?>class="ffUnchangeable"<?php } ?> />
 						<p class="ms-note"><?php echo $ms_account_product_quantity_note; ?></p>
-						<p class="error" id="error_product_tags_<?php echo $langId; ?>"></p>
+						<p class="error" id="error_product_quantity"></p>
 					</td>
 				</tr> 
 				
