@@ -300,6 +300,8 @@ $_['ms_config_pm_dialog_only'] = 'Only seller contact via email dialog';
 
 $_['ms_config_hide_customer_email'] = 'Hide customer email address';
 $_['ms_config_hide_customer_email_note'] = 'Hides customer email address in the seller dashboard and in orders list';
+$_['ms_config_hide_email_in_email'] = 'Hide email addresses in emails';
+$_['ms_config_hide_email_in_email_note'] = 'Hides customer and seller email addresses in the emails sent by MultiMerch';
 
 // Seller - List
 $_['ms_catalog_sellers_heading'] = 'Sellers';
@@ -485,6 +487,16 @@ $_['ms_mail_product_purchased'] = <<<EOT
 Your product(s) have been purchased from %s.
 
 Customer: %s (%s)
+
+Products:
+%s
+Total: %s
+EOT;
+
+$_['ms_mail_product_purchased_no_email'] = <<<EOT
+Your product(s) have been purchased from %s.
+
+Customer: %s
 
 Products:
 %s

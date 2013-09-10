@@ -1392,6 +1392,19 @@
 							<?php echo $text_no; ?>
 						</td>
 					</tr>
+					
+					<tr>
+						<td>
+							<span><?php echo $ms_config_hide_email_in_email; ?></span>
+							<span class="help"><?php echo $ms_config_hide_email_in_email_note; ?></span>
+						</td>
+						<td>
+							<input type="radio" name="msconf_hide_emails_in_emails" value="1" <?php if($msconf_hide_emails_in_emails == 1) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_yes; ?>
+							<input type="radio" name="msconf_hide_emails_in_emails" value="0" <?php if($msconf_hide_emails_in_emails == 0) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_no; ?>
+						</td>
+					</tr>
 				</table>
 				</div>
 				<!-- END MISCELLANEOUS TAB -->

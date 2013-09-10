@@ -196,7 +196,11 @@ class MsMail extends Model {
 				$total = $this->currency->format($this->MsLoader->MsOrderData->getOrderTotal($data['order_id'], array('seller_id' => $data['seller_id'])), $this->config->get('config_currency'));
 			
 				$mail_subject .= $this->language->get('ms_mail_subject_product_purchased');
-				$mail_text .= sprintf($this->language->get('ms_mail_product_purchased'), $this->config->get('config_name'), $order_info['firstname'] . ' ' . $order_info['lastname'], $order_info['email'], $products, $total);
+				if (!$this->config->get('msconf_hide_emails_in_emails')) {
+					$mail_text .= sprintf($this->language->get('ms_mail_product_purchased'), $this->config->get('config_name'), $order_info['firstname'] . ' ' . $order_info['lastname'], $order_info['email'], $products, $total);
+				} else {
+					$mail_text .= sprintf($this->language->get('ms_mail_product_purchased_no_email'), $this->config->get('config_name'), $order_info['firstname'] . ' ' . $order_info['lastname'], $products, $total);
+				}
 
 				if ($this->config->get('msconf_provide_buyerinfo') == 1 || ($this->config->get('msconf_provide_buyerinfo') == 2 && $product['shipping'] == 1))
 				{
@@ -233,7 +237,11 @@ class MsMail extends Model {
 				
 			case self::SMT_SELLER_CONTACT:
 				$mail_subject .= $this->language->get('ms_mail_subject_seller_contact');
-				$mail_text .= sprintf($this->language->get('ms_mail_seller_contact'), $data['customer_name'], $data['customer_email'], isset($data['product_id']) ? $product['name'] : '', $data['customer_message']);
+				if (!$this->config->get('msconf_hide_emails_in_emails')) {
+					$mail_text .= sprintf($this->language->get('ms_mail_seller_contact'), $data['customer_name'], $data['customer_email'], isset($data['product_id']) ? $product['name'] : '', $data['customer_message']);
+				} else {
+					$mail_text .= sprintf($this->language->get('ms_mail_seller_contact_no_mail'), $data['customer_name'], isset($data['product_id']) ? $product['name'] : '', $data['customer_message']);
+				}
 				break;
 				
 			case self::SMT_PRIVATE_MESSAGE:

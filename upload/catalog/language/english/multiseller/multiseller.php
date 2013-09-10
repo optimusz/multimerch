@@ -102,6 +102,17 @@ Message:
 %s
 EOT;
 
+$_['ms_mail_seller_contact_no_mail'] = <<<EOT
+You have received a new customer message!
+
+Name: %s
+
+Product: %s
+
+Message:
+%s
+EOT;
+
 $_['ms_mail_product_purchased_info'] = <<<EOT
 \n
 Delivery address:
