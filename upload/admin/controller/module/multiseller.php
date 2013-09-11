@@ -109,6 +109,7 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		
 		"msconf_hide_customer_email" => 0,
 		"msconf_hide_emails_in_emails" => 0,
+		"msconf_hide_sellers_product_count" => 1,
 		
 		"msconf_enable_private_messaging" => 1 // 0 - no, 1 - yes, 2 - email only
 	);

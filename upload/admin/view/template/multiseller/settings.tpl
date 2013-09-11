@@ -1405,6 +1405,20 @@
 							<?php echo $text_no; ?>
 						</td>
 					</tr>
+					
+					<tr><td colspan="2"><h2><?php echo $ms_config_other; ?></h2></td></tr>
+					<tr>
+						<td>
+							<span><?php echo $ms_config_hide_sellers_product_count; ?></span>
+							<span class="help"><?php echo $ms_config_hide_sellers_product_count_note; ?></span>
+						</td>
+						<td>
+							<input type="radio" name="msconf_hide_sellers_product_count" value="1" <?php if($msconf_hide_sellers_product_count == 1) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_yes; ?>
+							<input type="radio" name="msconf_hide_sellers_product_count" value="0" <?php if($msconf_hide_sellers_product_count == 0) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_no; ?>
+						</td>
+					</tr>
 				</table>
 				</div>
 				<!-- END MISCELLANEOUS TAB -->

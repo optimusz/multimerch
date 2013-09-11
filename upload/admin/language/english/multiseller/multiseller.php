@@ -303,6 +303,10 @@ $_['ms_config_hide_customer_email_note'] = 'Hides customer email address in the 
 $_['ms_config_hide_email_in_email'] = 'Hide email addresses in emails';
 $_['ms_config_hide_email_in_email_note'] = 'Hides customer and seller email addresses in the emails sent by MultiMerch';
 
+$_['ms_config_other'] = 'Other';
+$_['ms_config_hide_sellers_product_count'] = 'Hide count of sellers and products in the header';
+$_['ms_config_hide_sellers_product_count_note'] = 'Hides line, which contains count of sellers and products in the header';
+
 // Seller - List
 $_['ms_catalog_sellers_heading'] = 'Sellers';
 $_['ms_catalog_sellers_breadcrumbs'] = 'Sellers';
