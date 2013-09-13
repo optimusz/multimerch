@@ -168,6 +168,7 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		$this->validate(__FUNCTION__);		
 		$this->load->model("multiseller/settings");
 		$this->load->model('setting/setting');
+		$this->model_multiseller_settings->dropTable();
 		$this->model_multiseller_settings->createTable();
 		$this->model_multiseller_settings->addData();
 		$this->model_setting_setting->editSetting('multiseller', $this->settings);
@@ -186,6 +187,7 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		);
 		
 		$this->session->data['success'] = $this->language->get('ms_success_installed');
+		$this->session->data['error'] = "";
 		
 		foreach ($dirs as $dir) {
 			if (!file_exists($dir)) {
@@ -202,15 +204,17 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		}
 		
 		// ckeditor
-		if (!copy(DIR_APPLICATION . 'view/javascript/ckeditor/', DIR_CATALOG . 'view/javascript/multimerch/')) {
+		/*if (!copy(DIR_APPLICATION . 'view/javascript/ckeditor/', DIR_CATALOG . 'view/javascript/multimerch/')) {
 			$this->session->data['error'] .= sprintf($this->language->get('ms_error_ckeditor'), DIR_APPLICATION . 'view/javascript/ckeditor/', DIR_CATALOG . 'view/javascript/multimerch/');
-		}
+		}*/
+		$this->session->data['error'] .= sprintf($this->language->get('ms_notice_ckeditor'), DIR_APPLICATION . 'view/javascript/ckeditor/', DIR_CATALOG . 'view/javascript/multimerch/');
 	}
 
 	public function uninstall() {
 		$this->validate(__FUNCTION__);
 		$this->load->model("multiseller/settings");
 		$this->model_multiseller_settings->dropTable();
+		$this->model_multiseller_settings->removeData();
 	}	
 
 	public function saveSettings() {

@@ -24,6 +24,7 @@ $_['ms_error_directory'] = "Warning: Could not create directory: %s. Please crea
 $_['ms_error_directory_notwritable'] = "Warning: Directory already exists and is not writable: %s. Please make sure it's empty and make it server-writable before proceeding. <br />";
 $_['ms_error_directory_exists'] = "Warning: Directory already exists: %s. Please make sure it's empty before proceeding. <br />";
 $_['ms_error_ckeditor'] = "Warning: Failed to copy CKEditor files from %s to %s. Please do it manually if you intend to use it for seller profile and product forms <br />";
+$_['ms_notice_ckeditor'] = "Notice: If you intend to use RTE (Rich Text Editor) for the seller profile and product forms, please manually copy CKEditor files from your %s to %s. <br />";
 $_['ms_error_product_publish'] = 'Failed to publish some products: seller account not active.';
 $_['ms_success_installed'] = 'Extension successfully installed';
 $_['ms_success_product_status'] = 'Successfully changed product status.';

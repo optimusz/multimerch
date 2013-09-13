@@ -633,4 +633,8 @@ class ModelMultisellerSettings extends Model {
 				
 		$this->db->query($sql);
 	}
+	
+	public function removeData() {
+	
+	}
 }
