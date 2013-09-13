@@ -627,6 +627,8 @@ class ModelMultisellerSettings extends Model {
 				`" . DB_PREFIX . "ms_badge`,
 				`" . DB_PREFIX . "ms_badge_description`,
 				`" . DB_PREFIX . "ms_badge_seller_group`,
+				`" . DB_PREFIX . "ms_conversation`,
+				`" . DB_PREFIX . "ms_message`,
 				`" . DB_PREFIX . "ms_version`";
 				
 		$this->db->query($sql);
