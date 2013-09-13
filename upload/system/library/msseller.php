@@ -300,7 +300,7 @@ final class MsSeller extends Model {
 						ms.commission_id as 'ms.commission_id',
 						ms.seller_group as 'ms.seller_group',
 						IFNULL(SUM(mp.number_sold), 0) as 'total_sales',
-						(SELECT keyword FROM " . DB_PREFIX . "url_alias WHERE `query` = 'seller_id=" . (int)$seller_id . "') AS keyword
+						(SELECT keyword FROM " . DB_PREFIX . "url_alias WHERE `query` = 'seller_id=" . (int)$seller_id . "' LIMIT 1) AS keyword
 				FROM `" . DB_PREFIX . "customer` c
 				INNER JOIN `" . DB_PREFIX . "ms_seller` ms
 					ON (c.customer_id = ms.seller_id)
