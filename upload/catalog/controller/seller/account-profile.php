@@ -102,13 +102,17 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 		}
 
 		// strip disallowed tags in description
-		if ($this->config->get('msconf_rte_whitelist') != '') {		
-			$allowed_tags = explode(",", $this->config->get('msconf_rte_whitelist'));
-			$allowed_tags_ready = "";
-			foreach($allowed_tags as $tag) {
-				$allowed_tags_ready .= "<".trim($tag).">";
+		if ($this->config->get('msconf_enable_rte')) {
+			if ($this->config->get('msconf_rte_whitelist') != '') {		
+				$allowed_tags = explode(",", $this->config->get('msconf_rte_whitelist'));
+				$allowed_tags_ready = "";
+				foreach($allowed_tags as $tag) {
+					$allowed_tags_ready .= "<".trim($tag).">";
+				}
+				$data['seller']['description'] = htmlspecialchars(strip_tags(htmlspecialchars_decode($data['seller']['description'], ENT_COMPAT), $allowed_tags_ready), ENT_COMPAT, 'UTF-8');
 			}
-			$data['seller']['description'] = strip_tags(html_entity_decode($data['seller']['description']), $allowed_tags_ready);
+		} else {
+			$data['seller']['description'] = htmlspecialchars(nl2br($data['seller']['description']), ENT_COMPAT, 'UTF-8');
 		}
 		
 		// uncomment to enable RTE for message field

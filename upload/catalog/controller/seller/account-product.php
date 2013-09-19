@@ -294,6 +294,8 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		
 		foreach ($data['languages'] as $language_id => $language) {
 			// main language inputs are mandatory
+
+			$description_length = $this->config->get('msconf_enable_rte') ? mb_strlen(strip_tags(htmlspecialchars_decode($language['product_description'], ENT_COMPAT))) : mb_strlen(htmlspecialchars_decode($language['product_description'], ENT_COMPAT));
 			if ($i == 0) {
 				$default = $language_id;
 				
@@ -302,10 +304,10 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 				} else if (mb_strlen($language['product_name']) < 4 || mb_strlen($language['product_name']) > 50 ) {
 					$json['errors']['product_name_' . $language_id] = sprintf($this->language->get('ms_error_product_name_length'), 4, 50);
 				}
-		
+
 				if (empty($language['product_description'])) {
 					$json['errors']['product_description_' . $language_id] = $this->language->get('ms_error_product_description_empty'); 
-				} else if (mb_strlen($language['product_description']) < 25 || mb_strlen($language['product_description']) > 4000 ) {
+				} else if ($description_length < 25 || $description_length > 4000) {
 					$json['errors']['product_description_' . $language_id] = sprintf($this->language->get('ms_error_product_description_length'), 25, 4000);
 				}
 			} else {
@@ -315,7 +317,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 					$data['languages'][$language_id]['product_name'] = $data['languages'][$default]['product_name'];
 				}
 
-				if (!empty($language['product_description']) && (mb_strlen($language['product_description']) < 25 || mb_strlen($language['product_description']) > 4000)) {
+				if (!empty($language['product_description']) && ($description_length < 25 || $description_length > 4000)) {
 					$json['errors']['product_description_' . $language_id] = sprintf($this->language->get('ms_error_product_description_length'), 25, 4000);
 				} else if (empty($language['product_description'])) {
 					$data['languages'][$language_id]['product_description'] = $data['languages'][$default]['product_description'];
@@ -325,18 +327,21 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 			if (!empty($language['product_tags']) && mb_strlen($language['product_tags']) > 1000) {
 				$json['errors']['product_tags_' . $language_id] = $this->language->get('ms_error_product_tags_length');			
 			}
-
-
+			
 			// strip disallowed tags in description
-			if ($this->config->get('msconf_rte_whitelist') != '') {
-				$allowed_tags = explode(",", $this->config->get('msconf_rte_whitelist'));
-				$allowed_tags_ready = "";
-				foreach($allowed_tags as $tag) {
-					$allowed_tags_ready .= "<".trim($tag).">";
+			if ($this->config->get('msconf_enable_rte')) {
+				if ($this->config->get('msconf_rte_whitelist') != '') {
+					$allowed_tags = explode(",", $this->config->get('msconf_rte_whitelist'));
+					$allowed_tags_ready = "";
+					foreach($allowed_tags as $tag) {
+						$allowed_tags_ready .= "<".trim($tag).">";
+					}
+					$data['languages'][$language_id]['product_description'] = htmlspecialchars(strip_tags(htmlspecialchars_decode($language['product_description'], ENT_COMPAT), $allowed_tags_ready), ENT_COMPAT, 'UTF-8');
 				}
-				$data['languages'][$language_id]['product_description'] = strip_tags(html_entity_decode($language['product_description']), $allowed_tags_ready);
+			} else {
+				$data['languages'][$language_id]['product_description'] = htmlspecialchars(nl2br($language['product_description']), ENT_COMPAT, 'UTF-8');
 			}
-
+			
 			// multilang attributes
 			if (isset($language['product_attributes'])) {
 				$product_attributes = $language['product_attributes'];

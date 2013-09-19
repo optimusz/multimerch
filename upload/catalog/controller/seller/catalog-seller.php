@@ -233,7 +233,7 @@ class ControllerSellerCatalogSeller extends ControllerSellerCatalog {
 		
 		$this->data['seller']['nickname'] = $seller['ms.nickname'];
 		$this->data['seller']['seller_id'] = $seller['seller_id'];
-		$this->data['seller']['description'] = $seller['ms.description'];
+		$this->data['seller']['description'] = html_entity_decode($seller['ms.description'], ENT_QUOTES, 'UTF-8');
 		$this->data['seller']['thumb'] = $image;
 		$this->data['seller']['href'] = $this->url->link('seller/catalog-seller/products', 'seller_id=' . $seller['seller_id']);
 		$this->data['seller_id'] = $this->request->get['seller_id'];

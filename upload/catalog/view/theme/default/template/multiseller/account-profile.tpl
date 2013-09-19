@@ -49,7 +49,7 @@
 					<td><?php echo $ms_account_sellerinfo_description; ?></td>
 					<td>
 						<!-- todo strip tags if rte disabled -->
-						<textarea name="seller[description]" id="seller_textarea" class="<?php echo $this->config->get('msconf_enable_rte') ? "ckeditor" : ''; ?>"><?php echo $seller['ms.description']; ?></textarea>
+						<textarea name="seller[description]" id="seller_textarea" class="<?php echo $this->config->get('msconf_enable_rte') ? "ckeditor" : ''; ?>"><?php echo $this->config->get('msconf_enable_rte') ? htmlspecialchars_decode($seller['ms.description']) : strip_tags(htmlspecialchars_decode($seller['ms.description'])); ?></textarea>
 						<p class="ms-note"><?php echo $ms_account_sellerinfo_description_note; ?></p>
 					</td>
 				</tr>

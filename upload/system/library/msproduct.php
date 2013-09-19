@@ -207,7 +207,7 @@ class MsProduct extends Model {
 			$sql = "INSERT INTO " . DB_PREFIX . "product_description
 					SET product_id = " . (int)$product_id . ",
 						name = '". $this->db->escape($language['product_name']) ."',
-						description = '". $this->db->escape(htmlspecialchars(nl2br($language['product_description']), ENT_COMPAT)) ."',
+						description = '". $this->db->escape($language['product_description']) ."',
 						tag = '" . $this->db->escape($language['product_tags']) . "',
 						language_id = " . (int)$language_id;
 			$this->db->query($sql);
@@ -402,7 +402,7 @@ class MsProduct extends Model {
 		foreach ($data['languages'] as $language_id => $language) {
 			$sql = "UPDATE " . DB_PREFIX . "product_description
 					SET name = '". $this->db->escape($language['product_name']) ."',
-						description = '". $this->db->escape(htmlspecialchars(nl2br($language['product_description']), ENT_COMPAT)) ."',
+						description = '". $this->db->escape($language['product_description']) ."',
 						tag = '". $this->db->escape($language['product_tags']) ."'
 					WHERE product_id = " . (int)$product_id . "
 					AND language_id = " . (int)$language_id;
