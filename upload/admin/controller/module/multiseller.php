@@ -207,7 +207,7 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		/*if (!copy(DIR_APPLICATION . 'view/javascript/ckeditor/', DIR_CATALOG . 'view/javascript/multimerch/')) {
 			$this->session->data['error'] .= sprintf($this->language->get('ms_error_ckeditor'), DIR_APPLICATION . 'view/javascript/ckeditor/', DIR_CATALOG . 'view/javascript/multimerch/');
 		}*/
-		$this->session->data['error'] .= sprintf($this->language->get('ms_notice_ckeditor'), DIR_APPLICATION . 'view/javascript/ckeditor/', DIR_CATALOG . 'view/javascript/multimerch/');
+		$this->session->data['error'] .= sprintf($this->language->get('ms_notice_ckeditor'), DIR_APPLICATION . 'view/javascript/ckeditor/', DIR_CATALOG . 'view/javascript/multimerch/ckeditor/');
 	}
 
 	public function uninstall() {
