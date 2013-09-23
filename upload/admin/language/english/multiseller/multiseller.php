@@ -191,8 +191,8 @@ $_['ms_parent_categories'] = 'All parent categories';
 $_['ms_config_restrict_categories'] = 'Disallowed categories';
 $_['ms_config_restrict_categories_note'] = '<u>Disallow</u> sellers to list products in these categories';
 
-$_['ms_config_product_included_fields'] = 'Included fields';
-$_['ms_config_product_included_fields_note'] = 'Fields to be added in the sellers form';
+$_['ms_config_product_included_fields'] = 'Include fields for products';
+$_['ms_config_product_included_fields_note'] = 'Fields to be added in the product form';
 
 $_['ms_config_provide_buyerinfo'] = 'Mail buyer information';
 $_['ms_config_provide_buyerinfo_note'] = 'Include buyer address in the "Product purchased" email';
