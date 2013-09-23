@@ -8,6 +8,7 @@ $_['ms_view'] = 'View';
 $_['ms_publish'] = 'Publish';
 $_['ms_unpublish'] = 'Unpublish';
 $_['ms_edit'] = 'Edit';
+$_['ms_clone'] = 'Clone';
 $_['ms_download'] = 'Download';
 $_['ms_create_product'] = 'Create product';
 $_['ms_delete'] = 'Delete';

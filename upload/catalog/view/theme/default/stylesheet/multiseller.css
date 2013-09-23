@@ -678,6 +678,10 @@ div.ms-jquery-dialog.ui-widget-content,
 	background-image: url(../image/ms-pencil.png);
 }
 
+.ms-button-clone {
+	background-image: url(../image/ms-clone.png);
+}
+
 .ms-button-delete {
 	background-image: url(../image/ms-cross.png);
 }

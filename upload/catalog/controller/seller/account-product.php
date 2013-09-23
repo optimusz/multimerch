@@ -81,6 +81,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 				}
 				
 				$actions .= "<a href='" . $this->url->link('seller/account-product/update', 'product_id=' . $product['product_id'], 'SSL') ."' class='ms-button ms-button-edit' title='" . $this->language->get('ms_edit') . "'></a>";
+				$actions .= "<a href='" . $this->url->link('seller/account-product/update', 'product_id=' . $product['product_id'] . "&clone=1", 'SSL') ."' class='ms-button ms-button-clone' title='" . $this->language->get('ms_clone') . "'></a>";
 				$actions .= "<a href='" . $this->url->link('seller/account-product/delete', 'product_id=' . $product['product_id'], 'SSL') ."' class='ms-button ms-button-delete' title='" . $this->language->get('ms_delete') . "'></a>";
 			}
 			
@@ -1061,6 +1062,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 	
 	public function update() {
 		$product_id = isset($this->request->get['product_id']) ? (int)$this->request->get['product_id'] : 0;
+		$clone = isset($this->request->get['clone']) ? (int)$this->request->get['clone'] : 0;
 		$seller_id = $this->customer->getId();
 		
 		if  ($this->MsLoader->MsProduct->productOwnedBySeller($product_id,$seller_id)) {
@@ -1159,6 +1161,10 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 
         $this->data['product'] = $product;
 		$this->data['product']['category_id'] = $this->MsLoader->MsProduct->getProductCategories($product_id);
+		
+		if ($clone) {
+			unset($this->data['product']['product_id']);
+		}
 
 		$this->data['heading'] = $this->language->get('ms_account_editproduct_heading');
 		$this->document->setTitle($this->language->get('ms_account_editproduct_heading'));
