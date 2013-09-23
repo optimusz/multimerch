@@ -44,7 +44,8 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		"msconf_allow_multiple_categories" => 0,
 		"msconf_additional_category_restrictions" => 0, // 0 - none, 1 - topmost, 2 - all parents
 		"msconf_restrict_categories" => array(),
-				
+		"msconf_product_included_fields" => array(),
+
 		"msconf_images_limits" => array(0,0),
 		"msconf_downloads_limits" => array(0,0),
 				
@@ -244,6 +245,9 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 
 		if (!isset($this->request->post['msconf_restrict_categories']))
 			$this->request->post['msconf_restrict_categories'] = array();
+
+        if (!isset($this->request->post['msconf_product_included_fields']))
+			$this->request->post['msconf_product_included_fields'] = array();
 		
 		// todo setting validation
 		$this->_editSettings();
@@ -289,7 +293,23 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		$this->load->model('catalog/information');
 		$this->data['informations'] = $this->model_catalog_information->getInformations();
 		$this->data['categories'] = $this->MsLoader->MsProduct->getCategories();
-		
+		$this->data['product_included_fieds'] = array(
+            'model' => $this->language->get('ms_catalog_products_field_model'),
+            'sku' => $this->language->get('ms_catalog_products_field_sku'),
+            'upc' => $this->language->get('ms_catalog_products_field_upc'),
+            'ean' => $this->language->get('ms_catalog_products_field_ean'),
+            'jan' => $this->language->get('ms_catalog_products_field_jan'),
+            'isbn' => $this->language->get('ms_catalog_products_field_isbn'),
+            'mpn' => $this->language->get('ms_catalog_products_field_mpn'),
+            'manufacturer' => $this->language->get('ms_catalog_products_field_manufacturer'),
+            'dateAvailable' => $this->language->get('ms_catalog_products_field_date_available'),
+            'taxClass' => $this->language->get('ms_catalog_products_field_tax_class'),
+            'subtract' => $this->language->get('ms_catalog_products_field_subtract'),
+            'stockStatus' => $this->language->get('ms_catalog_products_field_stock_status'),
+            'metaDescription' => $this->language->get('ms_catalog_products_field_meta_description'),
+            'metaKeywords' => $this->language->get('ms_catalog_products_field_meta_keyword')
+        );
+
 		$this->document->setTitle($this->language->get('ms_settings_heading'));
 
 		$this->data['breadcrumbs'] = $this->MsLoader->MsHelper->admSetBreadcrumbs(array(

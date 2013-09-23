@@ -301,9 +301,28 @@
 									<?php echo $category['name']; ?>
 								</div>
 							<?php } ?>
-							</div>						
+							</div>
 					  	</td>
-					</tr>						
+					</tr>
+
+                    <tr>
+                        <td>
+                            <span><?php echo $ms_config_product_included_fields; ?></span>
+                            <span class="help"><?php echo $ms_config_product_included_fields_note; ?></span>
+                        </td>
+                        <td>
+                            <div class="scrollbox">
+                                <?php $class = 'odd'; ?>
+                                <?php foreach ($product_included_fieds as $field_code=>$field_name) { ?>
+                                <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+                                <div class="<?php echo $class; ?>">
+                                    <input type="checkbox" name="msconf_product_included_fields[]" value="<?php echo $field_code; ?>" <?php if (isset($msconf_product_included_fields) && in_array($field_code, $msconf_product_included_fields)) { ?>checked="checked"<?php } ?> />
+                                    <?php echo $field_name; ?>
+                                </div>
+                                <?php } ?>
+                            </div>
+                        </td>
+                    </tr>
 					
 					<tr>
 						  <td>

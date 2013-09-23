@@ -20,7 +20,11 @@
      	<div id="general-tabs" class="htabs">
      		<a href="#tab-general"><?php echo $ms_account_product_tab_general; ?></a>
      		
-     		<?php if ($this->config->get('msconf_allow_specials')) { ?>
+     		<?php if (count($this->config->get('msconf_product_included_fields'))) { ?>
+     		<a href="#tab-data"><?php echo $ms_account_product_tab_data; ?></a>
+     		<?php } ?>
+
+            <?php if ($this->config->get('msconf_allow_specials')) { ?>
      		<a href="#tab-specials"><?php echo $ms_account_product_tab_specials; ?></a>
      		<?php } ?>
      		
@@ -67,7 +71,31 @@
 							<p class="error" id="error_product_description_<?php echo $langId; ?>"></p>
 						</td>
 					</tr>
-					
+
+                    <?php if (in_array('metaDescription', $this->config->get('msconf_product_included_fields'))) { ?>
+					<tr>
+						<td><?php echo $ms_account_product_meta_description; ?></td>
+						<td>
+							<!-- todo strip tags if rte disabled -->
+							<textarea name="languages[<?php echo $langId; ?>][product_meta_description]"><?php echo strip_tags(htmlspecialchars_decode($product['languages'][$langId]['meta_description'])); ?></textarea>
+							<p class="ms-note"><?php echo $ms_account_product_meta_description_note; ?></p>
+							<p class="error" id="error_product_meta_description_<?php echo $langId; ?>"></p>
+						</td>
+					</tr>
+                    <?php } ?>
+
+                    <?php if (in_array('metaKeywords', $this->config->get('msconf_product_included_fields'))) { ?>
+					<tr>
+						<td><?php echo $ms_account_product_meta_keyword; ?></td>
+						<td>
+							<!-- todo strip tags if rte disabled -->
+							<textarea name="languages[<?php echo $langId; ?>][product_meta_keyword]"><?php echo strip_tags(htmlspecialchars_decode($product['languages'][$langId]['meta_keyword'])); ?></textarea>
+							<p class="ms-note"><?php echo $ms_account_product_meta_keyword_note; ?></p>
+							<p class="error" id="error_product_meta_keyword_<?php echo $langId; ?>"></p>
+						</td>
+					</tr>
+                    <?php } ?>
+
 					<tr>
 						<td><?php echo $ms_account_product_tags; ?></td>
 						<td>
@@ -76,7 +104,7 @@
 							<p class="error" id="error_product_tags_<?php echo $langId; ?>"></p>
 						</td>
 					</tr>
-					
+
 					<?php if (isset($multilang_attributes) && !empty($multilang_attributes)) { ?>
 					<?php foreach ($multilang_attributes as &$attr) { ?>
 					<tr>
@@ -323,7 +351,140 @@
 				<?php } ?>
 			</table>
 		</div>
-		
+
+        <!-- data tab -->
+        <div id="tab-data">
+            <table class="ms-product">
+                <?php if (in_array('model', $this->config->get('msconf_product_included_fields'))) { ?>
+                <tr>
+                    <td><span class="required">*</span> <?php echo $ms_account_product_model; ?></td>
+                    <td>
+                        <input type="text" name="product_model" value="<?php echo $product['model']; ?>" />
+                        <p class="error" id="error_product_model; ?>"></p>
+                    </td>
+                </tr>
+                <?php } ?>
+                <?php if (in_array('sku', $this->config->get('msconf_product_included_fields'))) { ?>
+                <tr>
+                    <td><?php echo $ms_account_product_sku; ?></td>
+                    <td>
+                        <input type="text" name="product_sku" value="<?php echo $product['sku']; ?>" />
+                        <p class="ms-note"><?php echo $ms_account_product_sku_note; ?></p>
+                    </td>
+                </tr>
+                <?php } ?>
+                <?php if (in_array('upc', $this->config->get('msconf_product_included_fields'))) { ?>
+                <tr>
+                    <td><?php echo $ms_account_product_upc; ?></td>
+                    <td>
+                        <input type="text" name="product_upc" value="<?php echo $product['upc']; ?>" />
+                        <p class="ms-note"><?php echo $ms_account_product_upc_note; ?></p>
+                    </td>
+                </tr>
+                <?php } ?>
+                <?php if (in_array('ean', $this->config->get('msconf_product_included_fields'))) { ?>
+                <tr>
+                    <td><?php echo $ms_account_product_ean; ?></td>
+                    <td>
+                        <input type="text" name="product_ean" value="<?php echo $product['ean']; ?>" />
+                        <p class="ms-note"><?php echo $ms_account_product_ean_note; ?></p>
+                    </td>
+                </tr>
+                <?php } ?>
+                <?php if (in_array('jan', $this->config->get('msconf_product_included_fields'))) { ?>
+                <tr>
+                    <td><?php echo $ms_account_product_jan; ?></td>
+                    <td>
+                        <input type="text" name="product_jan" value="<?php echo $product['jan']; ?>" />
+                        <p class="ms-note"><?php echo $ms_account_product_jan_note; ?></p>
+                    </td>
+                </tr>
+                <?php } ?>
+                <?php if (in_array('isbn', $this->config->get('msconf_product_included_fields'))) { ?>
+                <tr>
+                    <td><?php echo $ms_account_product_isbn; ?></td>
+                    <td>
+                        <input type="text" name="product_isbn" value="<?php echo $product['isbn']; ?>" />
+                        <p class="ms-note"><?php echo $ms_account_product_isbn_note; ?></p>
+                    </td>
+                </tr>
+                <?php } ?>
+                <?php if (in_array('mpn', $this->config->get('msconf_product_included_fields'))) { ?>
+                <tr>
+                    <td><?php echo $ms_account_product_mpn; ?></td>
+                    <td>
+                        <input type="text" name="product_mpn" value="<?php echo $product['mpn']; ?>" />
+                        <p class="ms-note"><?php echo $ms_account_product_mpn_note; ?></p>
+                    </td>
+                </tr>
+                <?php } ?>
+                <?php if (in_array('mpn', $this->config->get('msconf_product_included_fields'))) { ?>
+                <tr>
+                    <td><?php echo $ms_account_product_manufacturer; ?></td>
+                    <td>
+                        <input type="text" name="product_manufacturer" value="<?php echo $product['manufacturer'] ?>" />
+                        <input type="hidden" name="product_manufacturer_id" value="<?php echo $product['manufacturer_id']; ?>" />
+                        <p class="ms-note"><?php echo $ms_account_product_manufacturer_note; ?></p>
+                    </td>
+                </tr>
+                <?php } ?>
+                <?php if (in_array('taxClass', $this->config->get('msconf_product_included_fields'))) { ?>
+                <tr>
+                    <td><?php echo $ms_account_product_tax_class; ?></td>
+                    <td>
+                        <select name="product_tax_class_id">
+                            <option value="0"><?php echo $text_none; ?></option>
+                            <?php foreach ($tax_classes as $tax_class) { ?>
+                            <?php if ($tax_class['tax_class_id'] == $product['tax_class_id']) { ?>
+                            <option value="<?php echo $tax_class['tax_class_id']; ?>" selected="selected"><?php echo $tax_class['title']; ?></option>
+                            <?php } else { ?>
+                            <option value="<?php echo $tax_class['tax_class_id']; ?>"><?php echo $tax_class['title']; ?></option>
+                            <?php } ?>
+                            <?php } ?>
+                        </select>
+                    </td>
+                </tr>
+                <?php } ?>
+                <?php if (in_array('subtract', $this->config->get('msconf_product_included_fields'))) { ?>
+                <tr>
+                    <td><?php echo $ms_account_product_subtract; ?></td>
+                    <td>
+                        <select name="product_subtract">
+                            <?php if ($product['subtract']) { ?>
+                            <option value="1" selected="selected"><?php echo $text_yes; ?></option>
+                            <option value="0"><?php echo $text_no; ?></option>
+                            <?php } else { ?>
+                            <option value="1"><?php echo $text_yes; ?></option>
+                            <option value="0" selected="selected"><?php echo $text_no; ?></option>
+                            <?php } ?>
+                        </select>
+                    </td>
+                </tr>
+                <?php } ?>
+                <?php if (in_array('stockStatus', $this->config->get('msconf_product_included_fields'))) { ?>
+                <tr>
+                    <td><?php echo $ms_account_product_stock_status; ?></td>
+                    <td>
+                        <select name="product_stock_status_id">
+                            <?php foreach ($stock_statuses as $stock_status) { ?>
+                            <?php if ($stock_status['stock_status_id'] == $product['stock_status_id']) { ?>
+                            <option value="<?php echo $stock_status['stock_status_id']; ?>" selected="selected"><?php echo $stock_status['name']; ?></option>
+                            <?php } else { ?>
+                            <option value="<?php echo $stock_status['stock_status_id']; ?>"><?php echo $stock_status['name']; ?></option>
+                            <?php } ?>
+                            <?php } ?>
+                        </select>
+                    </td>
+                </tr>
+                <?php } ?>
+                <?php if (in_array('dateAvailable', $this->config->get('msconf_product_included_fields'))) { ?>
+                <tr>
+                    <td><?php echo $ms_account_product_date_available; ?></td>
+                    <td><input type="text" name="product_date_available" value="<?php echo $date_available; ?>" size="12" class="date" /></td>
+                </tr>
+                <?php } ?>
+            </table>
+        </div>
 		<!-- specials tab -->
 		<?php if ($this->config->get('msconf_allow_specials')) { ?>
 		<div id="tab-specials">

@@ -191,6 +191,9 @@ $_['ms_parent_categories'] = 'All parent categories';
 $_['ms_config_restrict_categories'] = 'Disallowed categories';
 $_['ms_config_restrict_categories_note'] = '<u>Disallow</u> sellers to list products in these categories';
 
+$_['ms_config_product_included_fields'] = 'Included fields';
+$_['ms_config_product_included_fields_note'] = 'Fields to be added in the sellers form';
+
 $_['ms_config_provide_buyerinfo'] = 'Mail buyer information';
 $_['ms_config_provide_buyerinfo_note'] = 'Include buyer address in the "Product purchased" email';
 
@@ -380,6 +383,21 @@ $_['ms_product_status_' . MsProduct::STATUS_INACTIVE] = 'Inactive';
 $_['ms_product_status_' . MsProduct::STATUS_DISABLED] = 'Disabled';
 $_['ms_product_status_' . MsProduct::STATUS_DELETED] = 'Deleted';
 $_['ms_product_status_' . MsProduct::STATUS_UNPAID] = 'Unpaid listing fee';
+
+$_['ms_catalog_products_field_meta_keyword'] 	 = 'Meta Tag Keywords';
+$_['ms_catalog_products_field_meta_description'] = 'Meta Tag Description';
+$_['ms_catalog_products_field_model']            = 'Model';
+$_['ms_catalog_products_field_sku']              = 'SKU';
+$_['ms_catalog_products_field_upc']              = 'UPC';
+$_['ms_catalog_products_field_ean']              = 'EAN';
+$_['ms_catalog_products_field_jan']              = 'JAN';
+$_['ms_catalog_products_field_isbn']             = 'ISBN';
+$_['ms_catalog_products_field_mpn']              = 'MPN';
+$_['ms_catalog_products_field_manufacturer']     = 'Manufacturer';
+$_['ms_catalog_products_field_date_available']   = 'Date Available';
+$_['ms_catalog_products_field_stock_status']     = 'Out Of Stock Status';
+$_['ms_catalog_products_field_tax_class']        = 'Tax Class';
+$_['ms_catalog_products_field_subtract']         = 'Subtract Stock';
 
 // Catalog - Seller Groups
 $_['ms_catalog_seller_groups_heading'] = 'Seller groups';

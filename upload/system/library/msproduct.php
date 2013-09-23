@@ -24,7 +24,6 @@ class MsProduct extends Model {
 		}
 	}
 	
-	
 	private function _getPath($category_id) {
 		$query = $this->db->query("SELECT name, parent_id FROM " . DB_PREFIX . "category c LEFT JOIN " . DB_PREFIX . "category_description cd ON (c.category_id = cd.category_id) WHERE c.category_id = '" . (int)$category_id . "' AND cd.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY c.sort_order, cd.name ASC");
 		if ($query->row['parent_id']) {
@@ -177,15 +176,36 @@ class MsProduct extends Model {
 			$thumbnail = '';
 		}
 
+        $model = isset($data['product_model']) ? $data['product_model'] : $this->db->escape($data['languages'][$first]['product_name']);
+        $sku = isset($data['product_sku']) ? $data['product_sku'] : '';
+        $upc = isset($data['product_upc']) ? $data['product_upc'] : '';
+        $ean = isset($data['product_ean']) ? $data['product_ean'] : '';
+        $jan = isset($data['product_jan']) ? $data['product_jan'] : '';
+        $isbn = isset($data['product_isbn']) ? $data['product_isbn'] : '';
+        $mpn = isset($data['product_mpn']) ? $data['product_mpn'] : '';
+        $manufacturer_id = isset($data['manufacturer_id']) ? $data['manufacturer_id'] : 0;
+        $tax_class_id = isset($data['product_tax_class_id']) ? $data['product_tax_class_id'] : 0;
+        $stock_status_id = isset($data['product_stock_status_id']) ? $data['product_stock_status_id'] : $this->config->get('config_stock_status_id');
+        $date_available = isset($data['product_date_available']) ? $data['product_date_available'] : date('Y-m-d', time() - 86400);
+
 		$sql = "INSERT INTO " . DB_PREFIX . "product
-				SET price = " . (float)$data['product_price'] . ",
-					model = '".$this->db->escape($data['languages'][$first]['product_name']) ."',
+				SET model = '" . $this->db->escape($model) . "',
+				    sku = '" . $this->db->escape($sku) . "',
+				    upc = '" . $this->db->escape($upc) . "',
+				    ean = '" . $this->db->escape($ean) . "',
+				    jan = '" . $this->db->escape($jan) . "',
+				    isbn = '" . $this->db->escape($isbn) . "',
+				    mpn = '" . $this->db->escape($mpn) . "',
+				    manufacturer_id = '" . (int)$manufacturer_id . "',
+				    price = " . (float)$data['product_price'] . ",
 					image = '" .  $this->db->escape($thumbnail)  . "',
 					subtract = " . (int)$data['product_subtract'] . ",
+                    tax_class_id = '" . $this->db->escape($tax_class_id) . "',
+					stock_status_id = '" . (int)$stock_status_id . "',
+					date_available = '" . $this->db->escape($date_available) . "',
 					quantity = " . (int)$data['product_quantity'] . ",
 					shipping = " . (int)$data['product_enable_shipping'] . ",
 					status = " . (int)$data['enabled'] . ",
-					date_available = NOW(),				
 					date_added = NOW(),
 					date_modified = NOW()";
 		
@@ -204,10 +224,15 @@ class MsProduct extends Model {
 		}
 
 		foreach ($data['languages'] as $language_id => $language) {
+            $meta_description = isset($language['product_meta_description']) ? htmlspecialchars(nl2br($language['product_meta_description']), ENT_COMPAT) : '';
+            $meta_keyword = isset($language['product_meta_keyword']) ? htmlspecialchars(nl2br($language['product_meta_keyword']), ENT_COMPAT) : '';
+
 			$sql = "INSERT INTO " . DB_PREFIX . "product_description
 					SET product_id = " . (int)$product_id . ",
 						name = '". $this->db->escape($language['product_name']) ."',
 						description = '". $this->db->escape($language['product_description']) ."',
+						meta_description = '". $this->db->escape($meta_description) ."',
+						meta_keyword = '". $this->db->escape($meta_keyword) ."',
 						tag = '" . $this->db->escape($language['product_tags']) . "',
 						language_id = " . (int)$language_id;
 			$this->db->query($sql);
@@ -346,7 +371,6 @@ class MsProduct extends Model {
 		return $product_id;
 	}	
 
-	
 	public function editProduct($data) {
 		reset($data['languages']); $first = key($data['languages']);
 		$product_id = $data['product_id'];
@@ -380,8 +404,21 @@ class MsProduct extends Model {
 			$thumbnail = '';
 		}
 
+        $included_field_sql = '';
+        isset($data['product_model']) ? $included_field_sql .= " model = '" . $this->db->escape($data['product_model']) . "',"  : '';
+        isset($data['product_sku']) ? $included_field_sql .= " sku = '" . $this->db->escape($data['product_sku']) . "',"  : '';
+        isset($data['product_upc']) ? $included_field_sql .= " upc = '" . $this->db->escape($data['product_upc']) . "',"  : '';
+        isset($data['product_ean']) ? $included_field_sql .= " ean = '" . $this->db->escape($data['product_ean']) . "',"  : '';
+        isset($data['product_jan']) ? $included_field_sql .= " jan = '" . $this->db->escape($data['product_jan']) . "',"  : '';
+        isset($data['product_isbn']) ? $included_field_sql .= " isbn = '" . $this->db->escape($data['product_isbn']) . "',"  : '';
+        isset($data['product_mpn']) ? $included_field_sql .= " mpn = '" . $this->db->escape($data['product_mpn']) . "',"  : '';
+        isset($data['product_manufacturer_id']) ? $included_field_sql .= " manufacturer_id = '" . (int)$data['product_manufacturer_id'] . "',"  : '';
+        isset($data['product_tax_class_id']) ? $included_field_sql .= " tax_class_id = '" . $this->db->escape($data['product_tax_class_id']) . "',"  : '';
+        isset($data['product_stock_status_id']) ? $included_field_sql .= " stock_status_id = '" . (int)$data['product_stock_status_id'] . "',"  : '';
+        isset($data['product_date_available']) ? $included_field_sql .= " date_available = '" . $this->db->escape($data['product_date_available']) . "',"  : '';
+
 		$sql = "UPDATE " . DB_PREFIX . "product
-				SET price = " . (float)$data['product_price'] . ",
+				SET" . $included_field_sql . " price = " . (float)$data['product_price'] . ",
 					status = " . (int)$data['enabled'] . ",
 					image = '" . $this->db->escape($thumbnail) . "',
 					subtract = " . (int)$data['product_subtract'] . ",
@@ -400,8 +437,12 @@ class MsProduct extends Model {
 		 * languages
 		 */
 		foreach ($data['languages'] as $language_id => $language) {
+            $included_field_sql = '';
+            isset($language['product_meta_description']) ? $included_field_sql .= " meta_description = '". $this->db->escape(htmlspecialchars(nl2br($language['product_meta_description']), ENT_COMPAT)) ."',"  : '';
+            isset($language['product_meta_keyword']) ? $included_field_sql .= " meta_keyword = '". $this->db->escape(htmlspecialchars(nl2br($language['product_meta_keyword']), ENT_COMPAT)) ."',"  : '';
+
 			$sql = "UPDATE " . DB_PREFIX . "product_description
-					SET name = '". $this->db->escape($language['product_name']) ."',
+					SET" . $included_field_sql . " name = '". $this->db->escape($language['product_name']) ."',
 						description = '". $this->db->escape($language['product_description']) ."',
 						tag = '". $this->db->escape($language['product_tags']) ."'
 					WHERE product_id = " . (int)$product_id . "
@@ -714,6 +755,8 @@ class MsProduct extends Model {
 	//todo
 	public function getProduct($product_id) {
 		$sql = "SELECT 	p.price,
+		                p.model, p.sku, p.upc, p.ean, p.jan, p.isbn, p.mpn,
+		                p.manufacturer_id, p.tax_class_id, p.subtract, p.stock_status_id, p.date_available,
 						p.product_id as 'product_id',
 						mp.product_status as 'mp.product_status',
 						p.status as enabled,
@@ -742,9 +785,9 @@ class MsProduct extends Model {
 			$product_description_data[$result['language_id']] = array(
 				'name'             => $result['name'],
 				'description'      => $result['description'],
-				'tags'      => $result['tag']
-				//'meta_keyword'     => $result['meta_keyword'],
-				//'meta_description' => $result['meta_description']
+				'tags'      => $result['tag'],
+				'meta_keyword'     => $result['meta_keyword'],
+				'meta_description' => $result['meta_description']
 			);
 		}
 
@@ -895,5 +938,46 @@ class MsProduct extends Model {
 		$res = $this->db->query($sql);
 		$this->registry->get('cache')->delete('product');
 	}
+
+    public function getManufacturers($data = array()) {
+        $sql = "SELECT * FROM " . DB_PREFIX . "manufacturer";
+
+        if (!empty($data['filter_name'])) {
+            $sql .= " WHERE name LIKE '" . $this->db->escape($data['filter_name']) . "%'";
+        }
+
+        $sort_data = array(
+            'name',
+            'sort_order'
+        );
+
+        if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
+            $sql .= " ORDER BY " . $data['sort'];
+        } else {
+            $sql .= " ORDER BY name";
+        }
+
+        if (isset($data['order']) && ($data['order'] == 'DESC')) {
+            $sql .= " DESC";
+        } else {
+            $sql .= " ASC";
+        }
+
+        if (isset($data['start']) || isset($data['limit'])) {
+            if ($data['start'] < 0) {
+                $data['start'] = 0;
+            }
+
+            if ($data['limit'] < 1) {
+                $data['limit'] = 20;
+            }
+
+            $sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
+        }
+
+        $query = $this->db->query($sql);
+
+        return $query->rows;
+    }
 }
 ?>

@@ -55,6 +55,36 @@ $(function() {
 		}
 	});
 
+    // Manufacturer
+    $('input[name=\'product_manufacturer\']').autocomplete({
+        delay: 500,
+        source: function(request, response) {
+            $.ajax({
+                type: "POST",
+                dataType: 'json',
+                url: 'index.php?route=seller/account-product/jxautocomplete',
+                data: {'type':'manufacturers', 'filter_name': encodeURIComponent(request.term)},
+                success: function(json) {
+                    response($.map(json, function(item) {
+                        return {
+                            label: item.name,
+                            value: item.manufacturer_id
+                        }
+                    }));
+                }
+            });
+        },
+        select: function(event, ui) {
+            $('input[name=\'product_manufacturer\']').attr('value', ui.item.label);
+            $('input[name=\'product_manufacturer_id\']').attr('value', ui.item.value);
+
+            return false;
+        },
+        focus: function(event, ui) {
+            return false;
+        }
+    });
+
 	$(".product_image_files").delegate(".ms-remove", "click", function() {
 		$(this).parent().remove();
 	});

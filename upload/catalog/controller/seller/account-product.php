@@ -323,7 +323,10 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 					$data['languages'][$language_id]['product_description'] = $data['languages'][$default]['product_description'];
 				}
 			}
-			
+
+            $data['languages'][$language_id]['product_meta_description'] = $data['languages'][$default]['product_meta_description'];
+            $data['languages'][$language_id]['product_meta_keyword'] = $data['languages'][$default]['product_meta_keyword'];
+
 			if (!empty($language['product_tags']) && mb_strlen($language['product_tags']) > 1000) {
 				$json['errors']['product_tags_' . $language_id] = $this->language->get('ms_error_product_tags_length');			
 			}
@@ -478,7 +481,13 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		if (!isset($data['product_category']) || empty($data['product_category'])) {
 			$json['errors']['product_category'] = $this->language->get('ms_error_product_category_empty'); 		
 		}
-		
+
+        if (empty($data['product_model'])) {
+            $json['errors']['product_model'] = $this->language->get('ms_error_product_model_empty');
+        } else if (mb_strlen($data['product_model']) < 4 || mb_strlen($data['product_model']) > 64 ) {
+            $json['errors']['product_model'] = sprintf($this->language->get('ms_error_product_model_length'), 4, 64);
+        }
+
 		// generic attributes
 		$attributes = array();
 		$product_attributes = array();		
@@ -557,7 +566,10 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 			);
 		}
 		
-		$data['product_subtract'] = 0;
+
+        if(!isset($data['product_subtract'])){
+            $data['product_subtract'] = 0;
+        }
 		if ($this->config->get('msconf_enable_shipping') == 1) { // enable shipping
 			$data['product_enable_shipping'] = 1;
 		} else if ($this->config->get('msconf_enable_shipping') == 2) { // seller select
@@ -847,7 +859,42 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		return $this->response->setOutput($this->render());
   	}
 
-	public function index() {
+    public function jxAutocomplete() {
+        $data = $this->request->post;
+        $json = array();
+
+        switch($data['type']){
+            case 'manufacturers':
+                if (isset($data['filter_name'])) {
+                    $data = array(
+                        'filter_name' => $data['filter_name'],
+                        'start'       => 0,
+                        'limit'       => 20
+                    );
+
+                    $results = $this->MsLoader->MsHelper->getManufacturers($data);
+
+                    foreach ($results as $result) {
+                        $json[] = array(
+                            'manufacturer_id' => $result['manufacturer_id'],
+                            'name'            => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8'))
+                        );
+                    }
+                }
+        }
+
+        $sort_order = array();
+
+        foreach ($json as $key => $value) {
+            $sort_order[$key] = $value['name'];
+        }
+
+        array_multisort($sort_order, SORT_ASC, $json);
+
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function index() {
 		// paypal listing payment confirmation
 		if (isset($this->request->post['payment_status']) && strtolower($this->request->post['payment_status']) == 'completed') {
 			$this->data['success'] = $this->language->get('ms_success_product_published');
@@ -933,6 +980,9 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		}
 		$this->data['salt'] = $this->MsLoader->MsSeller->getSalt($this->customer->getId());
 		$this->data['categories'] = $this->MsLoader->MsProduct->getCategories();
+        $this->data['date_available'] = date('Y-m-d', time() - 86400);
+        $this->data['tax_classes'] = $this->MsLoader->MsHelper->getTaxClasses();
+        $this->data['stock_statuses'] = $this->MsLoader->MsHelper->getStockStatuses();
 
 		$attributes = $this->MsLoader->MsAttribute->getAttributes(
 			array(
@@ -1075,7 +1125,37 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
   		$decimal_point = $this->language->get('decimal_point');
   		$thousand_point = $this->language->get('thousand_point');
 		$product['price'] = number_format(round($product['price'], (int)$decimal_place), (int)$decimal_place, $decimal_point, '');
-		$this->data['product'] = $product;
+
+        if(isset($product['manufacturer_id'])){
+            $product['manufacturer_id'] = (int)$product['manufacturer_id'];
+            $manufacturer_info = $this->MsLoader->MsHelper->getManufacturer($product['manufacturer_id']);
+            if ($manufacturer_info) {
+                $product['manufacturer'] = $manufacturer_info['name'];
+            } else {
+                $product['manufacturer'] = '';
+            }
+        } else {
+            $product['manufacturer_id'] = 0;
+            $product['manufacturer'] = '';
+        };
+
+        if (isset($product['tax_class_id'])) {
+            $product['tax_class_id'] = $product['tax_class_id'];
+        } else {
+            $product['tax_class_id'] = 0;
+        }
+
+        if (isset($product['stock_status_id'])) {
+            $product['stock_status_id'] = $product['stock_status_id'];
+        } else {
+            $product['stock_status_id'] = $this->config->get('config_stock_status_id');
+        }
+
+        if (isset($product['date_available'])) {
+            $this->data['date_available'] = date('Y-m-d', strtotime($product['date_available']));
+        }
+
+        $this->data['product'] = $product;
 		$this->data['product']['category_id'] = $this->MsLoader->MsProduct->getProductCategories($product_id);
 
 		$this->data['heading'] = $this->language->get('ms_account_editproduct_heading');
