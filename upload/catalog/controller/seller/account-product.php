@@ -871,8 +871,9 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
                         'start'       => 0,
                         'limit'       => 20
                     );
-
-                    $results = $this->MsLoader->MsHelper->getManufacturers($data);
+					
+					$this->load->model('catalog/manufacturer');
+					$results = $this->model_catalog_manufacturer->getManufacturers($data);
 
                     foreach ($results as $result) {
                         $json[] = array(
@@ -1128,7 +1129,8 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 
         if(isset($product['manufacturer_id'])){
             $product['manufacturer_id'] = (int)$product['manufacturer_id'];
-            $manufacturer_info = $this->MsLoader->MsHelper->getManufacturer($product['manufacturer_id']);
+			$this->load->model('catalog/manufacturer');
+            $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer($product['manufacturer_id']);
             if ($manufacturer_info) {
                 $product['manufacturer'] = $manufacturer_info['name'];
             } else {
