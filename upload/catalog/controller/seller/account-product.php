@@ -1162,14 +1162,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
         $this->data['product'] = $product;
 		$this->data['product']['category_id'] = $this->MsLoader->MsProduct->getProductCategories($product_id);
 		
-		if ($clone) {
-			unset($this->data['product']['product_id']);
-		}
-
-		$this->data['heading'] = $this->language->get('ms_account_editproduct_heading');
-		$this->document->setTitle($this->language->get('ms_account_editproduct_heading'));
-		
-		$this->data['breadcrumbs'] = $this->MsLoader->MsHelper->setBreadcrumbs(array(
+		$breadcrumbs = array(
 			array(
 				'text' => $this->language->get('text_account'),
 				'href' => $this->url->link('account/account', '', 'SSL'),
@@ -1181,12 +1174,28 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 			array(
 				'text' => $this->language->get('ms_account_products_breadcrumbs'),
 				'href' => $this->url->link('seller/account-product', '', 'SSL'),
-			),				
-			array(
+			)
+		);
+		
+		if ($clone) {
+			$this->data['product']['product_id'] = 0;
+			
+			$breadcrumbs[] = array(
+				'text' => $this->language->get('ms_account_cloneproduct_breadcrumbs'),
+				'href' => $this->url->link('seller/account-product/update', '', 'SSL'),
+			);
+			$this->data['heading'] = $this->language->get('ms_account_cloneproduct_heading');
+			$this->document->setTitle($this->language->get('ms_account_cloneproduct_heading'));
+		} else {
+			$breadcrumbs[] = array(
 				'text' => $this->language->get('ms_account_editproduct_breadcrumbs'),
 				'href' => $this->url->link('seller/account-product/update', '', 'SSL'),
-			)
-		));
+			);
+			$this->data['heading'] = $this->language->get('ms_account_editproduct_heading');
+			$this->document->setTitle($this->language->get('ms_account_editproduct_heading'));
+		}
+		
+		$this->data['breadcrumbs'] = $this->MsLoader->MsHelper->setBreadcrumbs($breadcrumbs);
 	
 		list($this->template, $this->children) = $this->MsLoader->MsHelper->loadTemplate('account-product-form');
 		$this->response->setOutput($this->render());

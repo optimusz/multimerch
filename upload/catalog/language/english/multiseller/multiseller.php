@@ -330,6 +330,10 @@ $_['ms_account_product_sandbox'] = 'Warning: The payment gateway is in \'Sandbox
 $_['ms_account_editproduct_heading'] = 'Edit Product';
 $_['ms_account_editproduct_breadcrumbs'] = 'Edit Product';
 
+// Account - Clone product
+$_['ms_account_cloneproduct_heading'] = 'Clone Product';
+$_['ms_account_cloneproduct_breadcrumbs'] = 'Clone Product';
+
 // Account - Seller
 $_['ms_account_sellerinfo_heading'] = 'Seller Profile';
 $_['ms_account_sellerinfo_breadcrumbs'] = 'Seller Profile';
