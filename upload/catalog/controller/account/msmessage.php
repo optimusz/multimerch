@@ -65,10 +65,12 @@ class ControllerAccountMSMessage extends Controller {
 					'recipients' => $recepient_email,
 					'customer_name' => $customer_name,
 					'customer_message' => $message_text,
+					'title' => $conversation['title'],
 					'product_id' => $conversation['product_id'],
 					'addressee' => $addressee_name
 				)
-			);	
+			);
+			$this->MsLoader->MsMail->sendMails($mails);
 			
 			$json['success'] = $this->language->get('ms_sellercontact_success');
 			$json['redirect'] = $this->url->link('account/msmessage&conversation_id=' . $conversation_id, '', 'SSL');
