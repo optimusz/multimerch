@@ -324,9 +324,13 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 					$data['languages'][$language_id]['product_description'] = $data['languages'][$default]['product_description'];
 				}
 			}
-
-            $data['languages'][$language_id]['product_meta_description'] = $data['languages'][$default]['product_meta_description'];
-            $data['languages'][$language_id]['product_meta_keyword'] = $data['languages'][$default]['product_meta_keyword'];
+			
+			if (in_array('metaDescription', $this->config->get('msconf_product_included_fields'))) {
+				$data['languages'][$language_id]['product_meta_description'] = $data['languages'][$default]['product_meta_description'];
+			}
+			if (in_array('metaKeywords', $this->config->get('msconf_product_included_fields'))) {
+				$data['languages'][$language_id]['product_meta_keyword'] = $data['languages'][$default]['product_meta_keyword'];
+			}
 
 			if (!empty($language['product_tags']) && mb_strlen($language['product_tags']) > 1000) {
 				$json['errors']['product_tags_' . $language_id] = $this->language->get('ms_error_product_tags_length');			
@@ -483,11 +487,13 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 			$json['errors']['product_category'] = $this->language->get('ms_error_product_category_empty'); 		
 		}
 
-        if (empty($data['product_model'])) {
-            $json['errors']['product_model'] = $this->language->get('ms_error_product_model_empty');
-        } else if (mb_strlen($data['product_model']) < 4 || mb_strlen($data['product_model']) > 64 ) {
-            $json['errors']['product_model'] = sprintf($this->language->get('ms_error_product_model_length'), 4, 64);
-        }
+		if (in_array('model', $this->config->get('msconf_product_included_fields'))) {
+			if (empty($data['product_model'])) {
+				$json['errors']['product_model'] = $this->language->get('ms_error_product_model_empty');
+			} else if (mb_strlen($data['product_model']) < 4 || mb_strlen($data['product_model']) > 64 ) {
+				$json['errors']['product_model'] = sprintf($this->language->get('ms_error_product_model_length'), 4, 64);
+			}
+		}
 
 		// generic attributes
 		$attributes = array();
