@@ -1,7 +1,7 @@
 <?php
 
 class ControllerModuleMultiseller extends ControllerMultisellerBase {
-	private $_versions = array("2.2", "2.3", "3.0", "4.0", "4.1");
+	private $_versions = array("2.2", "2.3", "3.0", "4.0", "4.1", "4.2");
 	
 	private $_controllers = array(
 		"multiseller/base",
