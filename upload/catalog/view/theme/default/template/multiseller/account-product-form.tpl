@@ -19,8 +19,7 @@
 		<div class="content">
      	<div id="general-tabs" class="htabs">
      		<a href="#tab-general"><?php echo $ms_account_product_tab_general; ?></a>
-     		
-     		<?php if (count($this->config->get('msconf_product_included_fields'))) { ?>
+     		<?php if (!empty(array_intersect(array('model', 'sku', 'upc', 'ean', 'jan', 'isbn', 'mpn', 'manufacturer', 'taxClass', 'subtract', 'stockStatus', 'dateAvailable'), $this->config->get('msconf_product_included_fields')))) { ?>
      		<a href="#tab-data"><?php echo $ms_account_product_tab_data; ?></a>
      		<?php } ?>
 
@@ -418,7 +417,7 @@
                     </td>
                 </tr>
                 <?php } ?>
-                <?php if (in_array('mpn', $this->config->get('msconf_product_included_fields'))) { ?>
+                <?php if (in_array('manufacturer', $this->config->get('msconf_product_included_fields'))) { ?>
                 <tr>
                     <td><?php echo $ms_account_product_manufacturer; ?></td>
                     <td>
