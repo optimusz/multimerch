@@ -19,7 +19,12 @@
 		<div class="content">
      	<div id="general-tabs" class="htabs">
      		<a href="#tab-general"><?php echo $ms_account_product_tab_general; ?></a>
-     		<?php if (!empty(array_intersect(array('model', 'sku', 'upc', 'ean', 'jan', 'isbn', 'mpn', 'manufacturer', 'taxClass', 'subtract', 'stockStatus', 'dateAvailable'), $this->config->get('msconf_product_included_fields')))) { ?>
+			
+			<?php
+			$data_tab_fields = array('model', 'sku', 'upc', 'ean', 'jan', 'isbn', 'mpn', 'manufacturer', 'taxClass', 'subtract', 'stockStatus', 'dateAvailable');
+			$intersection_fields = array_intersect($data_tab_fields, $this->config->get('msconf_product_included_fields'));
+			?>
+     		<?php if (!empty($intersection_fields)) { ?>
      		<a href="#tab-data"><?php echo $ms_account_product_tab_data; ?></a>
      		<?php } ?>
 
