@@ -127,6 +127,8 @@ Delivery address:
 %s
 EOT;
 
+$_['ms_mail_product_purchased_comment'] = 'Comment: %s';
+
 $_['ms_mail_subject_withdraw_request_submitted'] = 'Payout request submitted';
 $_['ms_mail_withdraw_request_submitted'] = <<<EOT
 We have received your payout request. You will receive your earnings as soon as it is processed.

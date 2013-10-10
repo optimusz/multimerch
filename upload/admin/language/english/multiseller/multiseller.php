@@ -539,6 +539,8 @@ Delivery address:
 %s
 EOT;
 
+$_['ms_mail_product_purchased_comment'] = 'Comment: %s';
+
 // Sales - Mail
 $_['ms_transaction_sale'] = 'Sale: %s (-%s commission)';
 $_['ms_transaction_refund'] = 'Refund: %s';
