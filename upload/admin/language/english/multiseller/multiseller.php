@@ -242,7 +242,7 @@ $_['ms_config_graphical_sellermenu'] = 'Graphical seller menu';
 $_['ms_config_graphical_sellermenu_note'] = 'Graphical seller menu';
 
 $_['ms_config_sellers_slug'] = 'Sellers SEO keyword';
-$_['ms_config_sellers_slug_note'] = 'Sellers SEO keyword note';
+$_['ms_config_sellers_slug_note'] = 'Sellers list SEO keyword (will work only if SEO is enabled)';
 
 $_['ms_config_carousel'] = 'Seller carousel';
 $_['ms_config_topsellers'] = 'Top sellers';

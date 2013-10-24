@@ -1,13 +1,13 @@
 $(function() {
 	$.fn.dataTableExt.sErrMode = 'throw';
 
-	if (typeof msGlobals.config_language != 'undefined') {
+	/*if (typeof msGlobals.config_language != 'undefined') {
 		$.extend($.fn.dataTable.defaults, {
 			"oLanguage": {
 				"sUrl": msGlobals.config_language
 			}
 		});
-	}
+	}*/
 	
 	$.extend($.fn.dataTable.defaults, {
 		"bProcessing": true,
@@ -17,7 +17,8 @@ $(function() {
 		"aaSorting": [],
 		"bAutoWidth": false,
 		"bLengthChange": false,
-		"iDisplayLength": msGlobals.config_admin_limit
+		"iDisplayLength": 50
+		//"iDisplayLength": msGlobals.config_admin_limit
 		/*
 		"fnDrawCallback":function(){
 			if ( $('.dataTables_paginate span span.paginate_button').size()) {
