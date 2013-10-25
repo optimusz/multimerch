@@ -47,11 +47,11 @@ class ModelMultisellerSettings extends Model {
 		if (!$this->checkDbVersion($version)) {
 			switch ($version) {
 				case "4.2":
-					$this->db->query("INSERT INTO " . DB_PREFIX . "ms_version (version, distribution) VALUES('" . $this->MsLoader->version . "','" . $this->MsLoader->dist ."')");
+					$this->db->query("INSERT INTO " . DB_PREFIX . "ms_version (version, distribution) VALUES('4.2','" . $this->MsLoader->dist ."')");
 					break;
 				
 				case "4.1":
-					$this->db->query("INSERT INTO " . DB_PREFIX . "ms_version (version, distribution) VALUES('" . $this->MsLoader->version . "','" . $this->MsLoader->dist ."')");
+					$this->db->query("INSERT INTO " . DB_PREFIX . "ms_version (version, distribution) VALUES('4.1','" . $this->MsLoader->dist ."')");
 				
 					// Conversations
 					$sql = "
