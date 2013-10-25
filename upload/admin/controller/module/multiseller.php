@@ -222,12 +222,6 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		$this->validate(__FUNCTION__);
 		
 		/*magic
-		if ($this->request->post['msconf_image_preview_width'] > 200)
-			$this->request->post['msconf_image_preview_width'] = 200;
-
-		if ($this->request->post['msconf_image_preview_height'] > 200)
-			$this->request->post['msconf_image_preview_height'] = 200;
-			
 		$this->request->post['msconf_allowed_image_types'] = 'png,jpg';
 		$this->request->post['msconf_allowed_download_types'] = 'zip,rar,pdf';
 		
