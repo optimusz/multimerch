@@ -56,6 +56,9 @@ class MsOrderData extends Model {
 	}
 
 	public function getOrderTotal($order_id, $data) {
+		/* SELECT SUM(seller_net_amt) as 'total_amt',
+				  SUM(store_commission_pct) as 'total_pct',
+				  SUM(store_commission_flat) as 'total_flat' */
 		$sql = "SELECT SUM(seller_net_amt) as 'total'
 				FROM `" . DB_PREFIX . "ms_order_product_data` mopd
 				WHERE order_id = " . (int)$order_id
