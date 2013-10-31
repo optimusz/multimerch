@@ -114,6 +114,16 @@ Message:
 %s
 EOT;
 
+$_['ms_mail_product_purchased_no_email'] = <<<EOT
+Your product(s) have been purchased from %s.
+
+Customer: %s
+
+Products:
+%s
+Total: %s
+EOT;
+
 $_['ms_mail_product_purchased_info'] = <<<EOT
 \n
 Delivery address:
