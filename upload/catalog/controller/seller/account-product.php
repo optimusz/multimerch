@@ -486,14 +486,6 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		if (!isset($data['product_category']) || empty($data['product_category'])) {
 			$json['errors']['product_category'] = $this->language->get('ms_error_product_category_empty'); 		
 		}
-		
-		if (in_array('model', $this->config->get('msconf_product_included_fields'))) {
-			if (empty($data['product_model'])) {
-				$json['errors']['product_model'] = $this->language->get('ms_error_product_model_empty');
-			} else if (mb_strlen($data['product_model']) < 4 || mb_strlen($data['product_model']) > 64 ) {
-				$json['errors']['product_model'] = sprintf($this->language->get('ms_error_product_model_length'), 4, 64);
-			}
-		}
 
 		if (in_array('model', $this->config->get('msconf_product_included_fields'))) {
 			if (empty($data['product_model'])) {
