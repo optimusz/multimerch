@@ -12,8 +12,6 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		
 		$sorts = array('product_name', 'product_price', 'date_created', 'product_status', 'product_earnings', 'number_sold');
 		
-		//var_dump($this->request->get);
-		
 		list($sortCol, $sortDir) = $this->MsLoader->MsHelper->getSortParams($sorts, $colMap);
 
 		$seller_id = $this->customer->getId();
@@ -282,7 +280,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		
 		$json = array();
 
-		// only check default language for errors
+		// Only check default language for errors
 		$i = 0;
 		$default = 0;
 		$attributes = array();
@@ -400,6 +398,8 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 			}
 		} else if ((float)$data['product_price'] < (float)$this->config->get('msconf_minimum_product_price')) {
 			$json['errors']['product_price'] = $this->language->get('ms_error_product_price_low');
+		} else if (($this->config->get('msconf_maximum_product_price') != 0) && ((float)$data['product_price'] > (float)$this->config->get('msconf_maximum_product_price'))) {
+			$json['errors']['product_price'] = $this->language->get('ms_error_product_price_high');
 		}
 
 		$msconf_downloads_limits = $this->config->get('msconf_downloads_limits');
@@ -485,6 +485,14 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		// data array could have been modified in the previous step
 		if (!isset($data['product_category']) || empty($data['product_category'])) {
 			$json['errors']['product_category'] = $this->language->get('ms_error_product_category_empty'); 		
+		}
+		
+		if (in_array('model', $this->config->get('msconf_product_included_fields'))) {
+			if (empty($data['product_model'])) {
+				$json['errors']['product_model'] = $this->language->get('ms_error_product_model_empty');
+			} else if (mb_strlen($data['product_model']) < 4 || mb_strlen($data['product_model']) > 64 ) {
+				$json['errors']['product_model'] = sprintf($this->language->get('ms_error_product_model_length'), 4, 64);
+			}
 		}
 
 		if (in_array('model', $this->config->get('msconf_product_included_fields'))) {
@@ -589,26 +597,40 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 			$data['product_enable_shipping'] = 0;
 		}
 		
-		if ($this->config->get('msconf_enable_quantities') == 1) { // enable quantities
-			$data['product_quantity'] = (int)$data['product_quantity'];
+		// Set the quantity
+		$seller_group = $this->MsLoader->MsSellerGroup->getSellerGroup($seller['ms.seller_group']);
+		if ($this->config->get('msconf_enable_quantities') == 1) { // Enable quantities
+			if (isset($seller_group['product_quantity']) && $seller_group['product_quantity'] != 0) { // Seller group quantity is set
+				$data['product_quantity'] = (int)$seller_group['product_quantity'];
+			} else {
+				$data['product_quantity'] = (int)$data['product_quantity'];
+			}
 			$data['product_subtract'] = 1;
-		} else if ($this->config->get('msconf_enable_quantities') == 2) { // shipping dependent
+		} else if ($this->config->get('msconf_enable_quantities') == 2) { // Shipping dependent
 			if ($this->config->get('msconf_enable_shipping') == 1) {
 				$data['product_subtract'] = 1;
-				if (!isset($data['product_quantity']))
-					$data['product_quantity'] = 0;						
+				if (isset($seller_group['product_quantity']) && $seller_group['product_quantity'] != 0) { // Seller group quantity is set
+					$data['product_quantity'] = (int)$seller_group['product_quantity'];
+				} else {
+					if (!isset($data['product_quantity']))
+						$data['product_quantity'] = 0;
+				}
 			} else if ($this->config->get('msconf_enable_shipping') == 2) {
 				if (!$data['product_enable_shipping']) {
 					$data['product_quantity'] = 999;
 				} else {
 					$data['product_subtract'] = 1;
-					if (!isset($data['product_quantity']))
-						$data['product_quantity'] = 0;
+					if (isset($seller_group['product_quantity']) && $seller_group['product_quantity'] != 0) { // Seller group quantity is set
+						$data['product_quantity'] = (int)$seller_group['product_quantity'];
+					} else {
+						if (!isset($data['product_quantity']))
+							$data['product_quantity'] = 0;
+					}
 				}
-			} else { // shipping disabled
+			} else { // Shipping disabled and quantity is shipping dependent
 				$data['product_quantity'] = 999;
 			}
-		} else { // disable quantities
+		} else { // Disable quantities
 			$data['product_quantity'] = 999;
 		}
 		
@@ -954,6 +976,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		}		
 
 		$this->data['seller'] = $this->MsLoader->MsSeller->getSeller($this->customer->getId());
+		$this->data['seller_group'] = $this->MsLoader->MsSellerGroup->getSellerGroup($this->data['seller']['ms.seller_group']);
 		$product_id = isset($this->request->get['product_id']) ? (int)$this->request->get['product_id'] : 0;
 		if ($product_id) $product_status = $this->MsLoader->MsProduct->getStatus($product_id);
 

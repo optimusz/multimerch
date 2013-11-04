@@ -37,7 +37,7 @@ class ControllerMultisellerSellerGroup extends ControllerMultisellerBase {
 			$rates = $this->MsLoader->MsCommission->calculateCommission(array('seller_group_id' => $result['seller_group_id']));
 			$actual_fees = '';
 			foreach ($rates as $rate) {
-				$actual_fees .= '<span class="fee-rate-' . $rate['rate_type'] . '"><b>' . $this->language->get('ms_commission_short_' . $rate['rate_type']) . ':</b>' . ($rate['rate_type'] != MsCommission::RATE_SIGNUP ? $rate['percent'] . '%+' : '') . $this->currency->getSymbolLeft() .  $this->currency->format($rate['flat'], $this->config->get('config_currency'), '', FALSE) . $this->currency->getSymbolRight() . '&nbsp;&nbsp;';
+				$actual_fees .= '<span class="fee-rate-' . $rate['rate_type'] . '"><b>' . $this->language->get('ms_commission_short_' . $rate['rate_type']) . ':</b>' . ($rate['rate_type'] != MsCommission::RATE_SIGNUP ? $rate['percent'] . '%+' : '') . $this->currency->getSymbolLeft() .  $this->currency->format($rate['flat'], $this->config->get('config_currency')) . $this->currency->getSymbolRight() . '&nbsp;&nbsp;';
 			}
 			
 			$columns[] = array_merge(
@@ -140,7 +140,7 @@ class ControllerMultisellerSellerGroup extends ControllerMultisellerBase {
 	// Update a seller group
 	public function update() {
 		$this->validate(__FUNCTION__);
-				$this->load->model('tool/image');
+		$this->load->model('tool/image');
 		$this->data['token'] = $this->session->data['token'];
 		$this->data['heading'] = $this->language->get('ms_catalog_edit_seller_group_heading');
 		$this->document->setTitle($this->language->get('ms_catalog_edit_seller_group_heading'));
@@ -167,6 +167,8 @@ class ControllerMultisellerSellerGroup extends ControllerMultisellerBase {
 		$this->data['seller_group'] = array(
 			'seller_group_id' => $seller_group['seller_group_id'],
 			'description' => $this->MsLoader->MsSellerGroup->getSellerGroupDescriptions($this->request->get['seller_group_id']),
+			//'product_period' => $seller_group['product_period'],
+			'product_quantity' => $seller_group['product_quantity'],
 			'commission_id' => $seller_group['commission_id'],
 			'commission_rates' => $rates,
 		);
@@ -263,6 +265,9 @@ class ControllerMultisellerSellerGroup extends ControllerMultisellerBase {
 	public function jxSave() {
 		$data = $this->request->post['seller_group'];
 		$json = array();
+		
+		if (!isset($data['product_period']) || empty($data['product_period'])) $data['product_period'] = 0;
+		if (empty($data['product_quantity'])) $data['product_quantity'] = 0;
 
 		foreach ($data['description'] as $language_id => $value) {
 			if ((utf8_strlen($value['name']) < 3) || (utf8_strlen($value['name']) > 32)) {

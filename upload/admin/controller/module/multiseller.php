@@ -1,7 +1,7 @@
 <?php
 
 class ControllerModuleMultiseller extends ControllerMultisellerBase {
-	private $_versions = array("2.2", "2.3", "3.0", "4.0", "4.1", "4.2");
+	private $_versions = array("2.2", "2.3", "3.0", "4.0", "4.1", "4.2", "4.3");
 	
 	private $_controllers = array(
 		"multiseller/base",
@@ -34,6 +34,7 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		"msconf_allowed_image_types" => 'png,jpg,jpeg',
 		"msconf_allowed_download_types" => 'zip,rar,pdf',
 		"msconf_minimum_product_price" => 0,
+		"msconf_maximum_product_price" => 0,
 		"msconf_notification_email" => "",
 		"ms_carousel_module" => "",
 		"ms_topsellers_module" => "",
@@ -52,6 +53,8 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		"msconf_enable_shipping" => 0, // 0 - no, 1 - yes, 2 - seller select
 		"msconf_provide_buyerinfo" => 0, // 0 - no, 1 - yes, 2 - shipping dependent
 		"msconf_enable_quantities" => 0, // 0 - no, 1 - yes, 2 - shipping dependent
+		
+		"msconf_disable_product_after_quantity_depleted" => 0,
 		
 		"msconf_enable_pdf_generator" => 0,
 		"msconf_enable_seo_urls_seller" => 0,

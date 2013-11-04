@@ -44,6 +44,22 @@
 					<?php } ?>
 						</td>
 					</tr>
+					
+					<!--<tr>
+						<td><?php if($seller_group['seller_group_id'] == $this->config->get('msconf_default_seller_group_id')) { ?><span class="required">*</span><?php } ?> <?php echo $this->language->get('ms_product_period'); ?></td>
+						<td>
+							<input type="text" name="seller_group[product_period]" value="<?php echo isset($seller_group['product_period']) ? $seller_group['product_period'] : '' ?>" size="5"/>
+							<p class="error" id="error_product_period"></p>
+						</td>
+					</tr>-->
+					
+					<tr>
+						<td><?php if($seller_group['seller_group_id'] == $this->config->get('msconf_default_seller_group_id')) { ?><span class="required">*</span><?php } ?> <?php echo $this->language->get('ms_product_quantity'); ?></td>
+						<td>
+							<input type="text" name="seller_group[product_quantity]" value="<?php echo isset($seller_group['product_quantity']) ? $seller_group['product_quantity'] : '' ?>" size="5"/>
+							<p class="error" id="error_product_quantity"></p>
+						</td>
+					</tr>
 				</table>
 				</div>
 				
@@ -56,7 +72,7 @@
 							<input type="hidden" name="seller_group[commission_rates][<?php echo MsCommission::RATE_SALE; ?>][rate_id]" value="<?php echo $seller_group['commission_rates'][MsCommission::RATE_SALE]['rate_id']; ?>" />
 							<input type="hidden" name="seller_group[commission_rates][<?php echo MsCommission::RATE_SALE; ?>][rate_type]" value="<?php echo MsCommission::RATE_SALE; ?>" /> 
 							<?php echo $this->currency->getSymbolLeft(); ?>
-							<input type="text" name="seller_group[commission_rates][<?php echo MsCommission::RATE_SALE; ?>][flat]" value="<?php echo isset($seller_group['commission_rates'][MsCommission::RATE_SALE]['flat']) ? $this->currency->format($seller_group['commission_rates'][MsCommission::RATE_SALE]['flat'], $this->config->get('config_currency'), '', FALSE) : '' ?>" size="3"/>
+							<input type="text" name="seller_group[commission_rates][<?php echo MsCommission::RATE_SALE; ?>][flat]" value="<?php echo isset($seller_group['commission_rates'][MsCommission::RATE_SALE]['flat']) ? $this->currency->format($seller_group['commission_rates'][MsCommission::RATE_SALE]['flat'], $this->config->get('config_currency')) : '' ?>" size="3"/>
 							<?php echo $this->currency->getSymbolRight(); ?>
 							+<input type="text" name="seller_group[commission_rates][<?php echo MsCommission::RATE_SALE; ?>][percent]" value="<?php echo isset($seller_group['commission_rates'][MsCommission::RATE_SALE]['percent']) ? $seller_group['commission_rates'][MsCommission::RATE_SALE]['percent'] : ''; ?>" size="3"/>%
 							<p class="error" id="error_commission_sale"></p>
@@ -69,7 +85,7 @@
 							<input type="hidden" name="seller_group[commission_rates][<?php echo MsCommission::RATE_LISTING; ?>][rate_id]" value="<?php echo $seller_group['commission_rates'][MsCommission::RATE_LISTING]['rate_id']; ?>" />
 							<input type="hidden" name="seller_group[commission_rates][<?php echo MsCommission::RATE_LISTING; ?>][rate_type]" value="<?php echo MsCommission::RATE_LISTING; ?>" /> 
 							<?php echo $this->currency->getSymbolLeft(); ?>
-							<input type="text" name="seller_group[commission_rates][<?php echo MsCommission::RATE_LISTING; ?>][flat]" value="<?php echo isset($seller_group['commission_rates'][MsCommission::RATE_LISTING]['flat']) ? $this->currency->format($seller_group['commission_rates'][MsCommission::RATE_LISTING]['flat'], $this->config->get('config_currency'), '', FALSE) : '' ?>" size="3"/>
+							<input type="text" name="seller_group[commission_rates][<?php echo MsCommission::RATE_LISTING; ?>][flat]" value="<?php echo isset($seller_group['commission_rates'][MsCommission::RATE_LISTING]['flat']) ? $this->currency->format($seller_group['commission_rates'][MsCommission::RATE_LISTING]['flat'], $this->config->get('config_currency')) : '' ?>" size="3"/>
 							<?php echo $this->currency->getSymbolRight(); ?>
 							+<input type="text" name="seller_group[commission_rates][<?php echo MsCommission::RATE_LISTING; ?>][percent]" value="<?php echo isset($seller_group['commission_rates'][MsCommission::RATE_LISTING]['percent']) ? $seller_group['commission_rates'][MsCommission::RATE_LISTING]['percent'] : ''; ?>" size="3"/>%
 							<select name="seller_group[commission_rates][<?php echo MsCommission::RATE_LISTING; ?>][payment_method]">
@@ -92,7 +108,7 @@
 							<input type="hidden" name="seller_group[commission_rates][<?php echo MsCommission::RATE_SIGNUP; ?>][rate_id]" value="<?php echo $seller_group['commission_rates'][MsCommission::RATE_SIGNUP]['rate_id']; ?>" />
 							<input type="hidden" name="seller_group[commission_rates][<?php echo MsCommission::RATE_SIGNUP; ?>][rate_type]" value="<?php echo MsCommission::RATE_SIGNUP; ?>" /> 
 							<?php echo $this->currency->getSymbolLeft(); ?>
-							<input type="text" name="seller_group[commission_rates][<?php echo MsCommission::RATE_SIGNUP; ?>][flat]" value="<?php echo isset($seller_group['commission_rates'][MsCommission::RATE_SIGNUP]['flat']) ? $this->currency->format($seller_group['commission_rates'][MsCommission::RATE_SIGNUP]['flat'], $this->config->get('config_currency'), '', FALSE) : '' ?>" size="3"/>
+							<input type="text" name="seller_group[commission_rates][<?php echo MsCommission::RATE_SIGNUP; ?>][flat]" value="<?php echo isset($seller_group['commission_rates'][MsCommission::RATE_SIGNUP]['flat']) ? $this->currency->format($seller_group['commission_rates'][MsCommission::RATE_SIGNUP]['flat'], $this->config->get('config_currency')) : '' ?>" size="3"/>
 							<?php echo $this->currency->getSymbolRight(); ?>
 							<select name="seller_group[commission_rates][<?php echo MsCommission::RATE_SIGNUP; ?>][payment_method]">
 								<optgroup label="<?php echo $ms_payment_method; ?>">

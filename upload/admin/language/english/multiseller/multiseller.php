@@ -60,6 +60,9 @@ $_['ms_date_paid'] = 'Date paid';
 $_['ms_date'] = 'Date';
 $_['ms_description'] = 'Description';
 
+$_['ms_product_period'] = 'Product listing period (0 for unlimited)';
+$_['ms_product_quantity'] = 'Product quantity (0 for no limit)';
+
 $_['ms_commission'] = 'Commission';
 $_['ms_commissions_fees'] = 'Commissions & fees';
 $_['ms_commission_' . MsCommission::RATE_SALE] = 'Sale fee';
@@ -108,6 +111,9 @@ $_['ms_config_product_validation_note'] = 'Product validation';
 $_['ms_config_product_validation_none'] = 'No validation';
 $_['ms_config_product_validation_approval'] = 'Manual approval';
 
+$_['ms_config_disable_product_after_quantity_depleted'] = 'Disable product after quantity depletes';
+$_['ms_config_disable_product_after_quantity_depleted_note'] = 'The product will be disabled after it is sold out (quantity is 0)';
+
 $_['ms_config_nickname_rules'] = 'Seller nickname rules';
 $_['ms_config_nickname_rules_note'] = 'Character sets allowed in seller nicknames';
 $_['ms_config_nickname_rules_alnum'] = 'Alphanumeric';
@@ -126,8 +132,10 @@ $_['ms_config_enable_update_seo_urls_note'] = 'This setting enables new SEO URLs
 $_['ms_config_enable_non_alphanumeric_seo'] = 'Allow UTF8 in SEO URLs (experimental)';
 $_['ms_config_enable_non_alphanumeric_seo_note'] = 'This will not strip UTF8 symbols from SEO URLs. Use at your own risk.';
 
-$_['ms_config_minimum_product_price'] = 'Minimum product price';
-$_['ms_config_minimum_product_price_note'] = 'Minimum product price';
+$_['ms_config_minmax_product_price'] = 'Minimum and maximum product price';
+$_['ms_config_minimum_product_price'] = 'Min';
+$_['ms_config_maximum_product_price'] = 'Max';
+$_['ms_config_minmax_product_price_note'] = 'Minimum and maximum product price (0 for no limits)';
 
 $_['ms_config_allowed_image_types'] = 'Allowed image extensions';
 $_['ms_config_allowed_image_types_note'] = 'Allowed image extensions';

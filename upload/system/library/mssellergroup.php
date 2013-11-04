@@ -67,7 +67,12 @@ class MsSellerGroup extends Model {
 	public function createSellerGroup($data) {
 		// commissions
 		$commission_id = $this->MsLoader->MsCommission->createCommission($data['commission_rates']);
-		$this->db->query("INSERT INTO " . DB_PREFIX . "ms_seller_group (commission_id) VALUES(". (!is_null($commission_id) ? $commission_id : 'NULL') . ")");
+		$this->db->query("
+			INSERT INTO " . DB_PREFIX . "ms_seller_group 
+				SET commission_id = '" . (!is_null($commission_id) ? $commission_id : 'NULL') . "',
+					product_period = '" . (!is_null($data['product_period']) ? $data['product_period'] : '0') . "',
+					product_quantity = '" . (!is_null($data['product_quantity']) ? $data['product_quantity'] : '0') . "'
+		");
 		$seller_group_id = $this->db->getLastId();
 		
 		// badges
@@ -108,7 +113,9 @@ class MsSellerGroup extends Model {
 		}
 		
 		$sql = "UPDATE " . DB_PREFIX . "ms_seller_group
-				SET commission_id = " . (!is_null($commission_id) ? (int)$commission_id : 'NULL' ) . "
+				SET commission_id = " . (!is_null($commission_id) ? (int)$commission_id : 'NULL' ) . ",
+					product_period = '" . (!is_null($data['product_period']) ? $data['product_period'] : '0') . "',
+					product_quantity = '" . (!is_null($data['product_quantity']) ? $data['product_quantity'] : '0') . "'
 				WHERE seller_group_id = " . (int)$seller_group_id;
 		$this->db->query($sql);
 		

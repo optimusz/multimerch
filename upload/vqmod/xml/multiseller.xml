@@ -448,7 +448,6 @@
 				$this->db->query("UPDATE " . DB_PREFIX . "product SET quantity = (quantity - " . (int)$order_product['quantity'] . ") WHERE product_id = '" . (int)$order_product['product_id'] . "' AND subtract = '1'");
 			]]></search>
 			<add><![CDATA[
-				
 				$this->db->query("UPDATE " . DB_PREFIX . "ms_product SET number_sold  = (number_sold + " . (int)$order_product['quantity'] . ") WHERE product_id = '" . (int)$order_product['product_id'] . "'");
 			]]></add>
 		</operation>		
@@ -742,6 +741,25 @@
 				}
 			]]></add>
 		</operation>
+	</file>
+	
+	<!-- Disable the product if quantity is 0 -->
+	<file name="catalog/model/checkout/order.php">
+		<operation>
+			<search position="after"><![CDATA[
+				$this->db->query("UPDATE " . DB_PREFIX . "product SET quantity = (quantity - " . (int)$order_product['quantity'] . ") WHERE product_id = '" . (int)$order_product['product_id'] . "' AND subtract = '1'");
+			]]></search>
+			<add><![CDATA[
+				if ($this->config->get('msconf_disable_product_after_quantity_depleted')) {
+					$res = $this->db->query("SELECT quantity FROM " . DB_PREFIX . "product WHERE product_id = '" . (int)$order_product['product_id'] . "'");
+					if ((int)$res->row['quantity'] <= 0) {
+						$this->MsLoader->MsProduct->changeStatus((int)$order_product['product_id'], MsProduct::STATUS_DISABLED);
+						$this->MsLoader->MsProduct->disapprove((int)$order_product['product_id']);
+					}
+				}
+			]]></add>
+		</operation>
+
 	</file>
 
 	<!-- ************************ -->

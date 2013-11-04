@@ -234,6 +234,7 @@ $_['ms_error_product_tags_length'] = 'Line too long';
 $_['ms_error_product_price_empty'] = 'Please specify a price for your product';
 $_['ms_error_product_price_invalid'] = 'Invalid price';
 $_['ms_error_product_price_low'] = 'Price too low';
+$_['ms_error_product_price_high'] = 'Price too high';
 $_['ms_error_product_category_empty'] = 'Please select a category';
 $_['ms_error_product_model_empty'] = 'Product model cannot be empty';
 $_['ms_error_product_model_length'] = 'Product model should be between %s and %s characters';
