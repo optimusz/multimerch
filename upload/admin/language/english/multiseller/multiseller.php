@@ -114,6 +114,9 @@ $_['ms_config_product_validation_approval'] = 'Manual approval';
 $_['ms_config_disable_product_after_quantity_depleted'] = 'Disable product after quantity depletes';
 $_['ms_config_disable_product_after_quantity_depleted_note'] = 'The product will be disabled after it is sold out (quantity is 0)';
 
+$_['ms_config_enable_one_page_seller_registration'] = 'One-page registration';
+$_['ms_config_enable_one_page_seller_registration_note'] = 'Enable seller one-page registration';
+
 $_['ms_config_nickname_rules'] = 'Seller nickname rules';
 $_['ms_config_nickname_rules_note'] = 'Character sets allowed in seller nicknames';
 $_['ms_config_nickname_rules_alnum'] = 'Alphanumeric';

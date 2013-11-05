@@ -86,6 +86,19 @@
 					
 					<tr>
 						<td>
+							<span><?php echo $ms_config_enable_one_page_seller_registration; ?></span>
+							<span class="help"><?php echo $ms_config_enable_one_page_seller_registration_note; ?></span>
+						</td>
+						<td>
+							<input type="radio" name="msconf_enable_one_page_seller_registration" value="1" <?php if($msconf_enable_one_page_seller_registration == 1) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_yes; ?>
+							<input type="radio" name="msconf_enable_one_page_seller_registration" value="0" <?php if($msconf_enable_one_page_seller_registration == 0) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_no; ?>
+						</td>
+					</tr>
+					
+					<tr>
+						<td>
 							<span><?php echo $ms_config_nickname_rules; ?></span>
 							<span class="help"><?php echo $ms_config_nickname_rules_note; ?></span>
 						</td>

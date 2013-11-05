@@ -50,6 +50,10 @@ $_['ms_request_submitted'] = 'Your request is submitted';
 
 $_['ms_totals_line'] = 'Currently %s sellers and %s products for sale!';
 
+$_['ms_text_welcome'] = '<a href="%s">Login</a> | <a href="%s">Create an account</a> | <a href="%s">Create a seller account</a>.';
+$_['ms_button_register_seller'] = 'Register as a seller';
+$_['ms_register_seller_account'] = 'Register a seller account';
+
 // Mails
 
 // Seller
@@ -255,6 +259,8 @@ $_['ms_error_contact_text'] = 'Message cannot be longer than 2000 characters';
 $_['ms_error_contact_allfields'] = 'Please fill in all fields';
 
 // Account - General 
+$_['ms_account_register_seller'] = 'Register Seller Account';
+
 $_['ms_seller'] = 'Seller';
 $_['ms_account_dashboard'] = 'Dashboard';
 $_['ms_account_seller_account'] = 'Seller Account';
