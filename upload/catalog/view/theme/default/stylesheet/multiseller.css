@@ -682,6 +682,10 @@ div.ms-jquery-dialog.ui-widget-content,
 	background-image: url(../image/ms-clone.png);
 }
 
+.ms-button-relist {
+	background-image: url(../image/ms-relist.png);
+}
+
 .ms-button-delete {
 	background-image: url(../image/ms-cross.png);
 }

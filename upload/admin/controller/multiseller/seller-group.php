@@ -167,7 +167,7 @@ class ControllerMultisellerSellerGroup extends ControllerMultisellerBase {
 		$this->data['seller_group'] = array(
 			'seller_group_id' => $seller_group['seller_group_id'],
 			'description' => $this->MsLoader->MsSellerGroup->getSellerGroupDescriptions($this->request->get['seller_group_id']),
-			//'product_period' => $seller_group['product_period'],
+			'product_period' => $seller_group['product_period'],
 			'product_quantity' => $seller_group['product_quantity'],
 			'commission_id' => $seller_group['commission_id'],
 			'commission_rates' => $rates,

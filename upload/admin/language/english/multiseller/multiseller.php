@@ -60,9 +60,6 @@ $_['ms_date_paid'] = 'Date paid';
 $_['ms_date'] = 'Date';
 $_['ms_description'] = 'Description';
 
-$_['ms_product_period'] = 'Product listing period (0 for unlimited)';
-$_['ms_product_quantity'] = 'Product quantity (0 for no limit)';
-
 $_['ms_commission'] = 'Commission';
 $_['ms_commissions_fees'] = 'Commissions & fees';
 $_['ms_commission_' . MsCommission::RATE_SALE] = 'Sale fee';
@@ -114,26 +111,11 @@ $_['ms_config_product_validation_approval'] = 'Manual approval';
 $_['ms_config_disable_product_after_quantity_depleted'] = 'Disable product after quantity depletes';
 $_['ms_config_disable_product_after_quantity_depleted_note'] = 'The product will be disabled after it is sold out (quantity is 0)';
 
+$_['ms_config_allow_relisting'] = 'Allow relisting disabled products';
+$_['ms_config_allow_relisting_note'] = 'Sellers will be able to relist the products, which have been disabled (useful if you use product limitation by period or quantity in combination with listing fees)';
+
 $_['ms_config_enable_one_page_seller_registration'] = 'One-page registration';
 $_['ms_config_enable_one_page_seller_registration_note'] = 'Enable seller one-page registration';
-
-$_['ms_config_nickname_rules'] = 'Seller nickname rules';
-$_['ms_config_nickname_rules_note'] = 'Character sets allowed in seller nicknames';
-$_['ms_config_nickname_rules_alnum'] = 'Alphanumeric';
-$_['ms_config_nickname_rules_ext'] = 'Extended latin';
-$_['ms_config_nickname_rules_utf'] = 'Full UTF-8';
-
-$_['ms_config_enable_seo_urls_seller'] = 'Generate SEO URLs for new sellers';
-$_['ms_config_enable_seo_urls_seller_note'] = 'This option will generate SEO-friendly URLs for new sellers. SEO URLs need to be enabled in OpenCart to use this.';
-
-$_['ms_config_enable_seo_urls_product'] = 'Generate SEO URLs for new products (experimental)';
-$_['ms_config_enable_seo_urls_product_note'] = 'This option will generate SEO-friendly URLs for new product. SEO URLs need to be enabled in OpenCart to use this. Experimental, especially for non-English stores.';
-
-$_['ms_config_enable_update_seo_urls'] = 'Enable SEO URLs generation for updated products';
-$_['ms_config_enable_update_seo_urls_note'] = 'This setting enables new SEO URLs generation, when existing products are updated.';
-
-$_['ms_config_enable_non_alphanumeric_seo'] = 'Allow UTF8 in SEO URLs (experimental)';
-$_['ms_config_enable_non_alphanumeric_seo_note'] = 'This will not strip UTF8 symbols from SEO URLs. Use at your own risk.';
 
 $_['ms_config_minmax_product_price'] = 'Minimum and maximum product price';
 $_['ms_config_minimum_product_price'] = 'Min';
@@ -252,9 +234,6 @@ $_['ms_config_comments_maxlen_note'] = 'Maximum comment length when posting comm
 $_['ms_config_graphical_sellermenu'] = 'Graphical seller menu';
 $_['ms_config_graphical_sellermenu_note'] = 'Graphical seller menu';
 
-$_['ms_config_sellers_slug'] = 'Sellers SEO keyword';
-$_['ms_config_sellers_slug_note'] = 'Sellers list SEO keyword (will work only if SEO is enabled)';
-
 $_['ms_config_carousel'] = 'Seller carousel';
 $_['ms_config_topsellers'] = 'Top sellers';
 $_['ms_config_modules'] = 'Modules';
@@ -301,6 +280,18 @@ $_['ms_config_product_image_size_seller_products_list'] = 'Seller products list'
 
 $_['ms_config_badge_size'] = 'Badge size';
 
+$_['ms_config_seo'] = 'SEO';
+$_['ms_config_enable_seo_urls_seller'] = 'Generate SEO URLs for new sellers';
+$_['ms_config_enable_seo_urls_seller_note'] = 'This option will generate SEO-friendly URLs for new sellers. SEO URLs need to be enabled in OpenCart to use this.';
+$_['ms_config_enable_seo_urls_product'] = 'Generate SEO URLs for new products (experimental)';
+$_['ms_config_enable_seo_urls_product_note'] = 'This option will generate SEO-friendly URLs for new product. SEO URLs need to be enabled in OpenCart to use this. Experimental, especially for non-English stores.';
+$_['ms_config_enable_update_seo_urls'] = 'Enable SEO URLs generation for updated products';
+$_['ms_config_enable_update_seo_urls_note'] = 'This setting enables new SEO URLs generation, when existing products are updated.';
+$_['ms_config_enable_non_alphanumeric_seo'] = 'Allow UTF8 in SEO URLs (experimental)';
+$_['ms_config_enable_non_alphanumeric_seo_note'] = 'This will not strip UTF8 symbols from SEO URLs. Use at your own risk.';
+$_['ms_config_sellers_slug'] = 'Sellers SEO keyword';
+$_['ms_config_sellers_slug_note'] = 'Sellers list SEO keyword (will work only if SEO is enabled)';
+
 $_['ms_config_attributes'] = 'Attributes';
 $_['ms_config_attribute_display'] = 'Attribute display';
 $_['ms_config_attribute_display_note'] = 'Controls the way how attributes are displayed on the product page';
@@ -321,6 +312,12 @@ $_['ms_config_hide_email_in_email_note'] = 'Hides customer and seller email addr
 $_['ms_config_other'] = 'Other';
 $_['ms_config_hide_sellers_product_count'] = 'Hide count of sellers and products in the header';
 $_['ms_config_hide_sellers_product_count_note'] = 'Hides line, which contains count of sellers and products in the header';
+
+$_['ms_config_nickname_rules'] = 'Seller nickname rules';
+$_['ms_config_nickname_rules_note'] = 'Character sets allowed in seller nicknames';
+$_['ms_config_nickname_rules_alnum'] = 'Alphanumeric';
+$_['ms_config_nickname_rules_ext'] = 'Extended latin';
+$_['ms_config_nickname_rules_utf'] = 'Full UTF-8';
 
 // Seller - List
 $_['ms_catalog_sellers_heading'] = 'Sellers';
@@ -420,6 +417,9 @@ $_['ms_seller_groups_column_action'] = 'Actions';
 
 $_['ms_catalog_insert_seller_group_heading'] = 'New Seller Group';
 $_['ms_catalog_edit_seller_group_heading'] = 'Edit Seller Group';
+
+$_['ms_product_period'] = 'Product listing period (0 for unlimited)';
+$_['ms_product_quantity'] = 'Product quantity (0 for no limit)';
 
 $_['ms_error_seller_group_name'] = 'Error: Name must be between 3 and 32 symbols long';
 $_['ms_error_seller_group_default'] = 'Error: Default seller group can not be deleted!';

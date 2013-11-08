@@ -28,6 +28,7 @@
 		<td><?php echo $ms_account_products_earnings; ?></td>
 		<td><?php echo $ms_account_products_status; ?></td>
 		<td><?php echo $ms_account_products_date; ?></td>
+		<td><?php echo $ms_account_products_listing_until; ?></td>
 		<td class="large"><?php echo $ms_account_products_action; ?></td>
 	</tr>
 	</thead>
@@ -61,6 +62,7 @@
 				{ "mData": "product_earnings" },
 				{ "mData": "product_status" },
 				{ "mData": "date_created" },
+				{ "mData": "list_until" },
 				{ "mData": "actions", "bSortable": false, "sClass": "right" }
 			],
 		});

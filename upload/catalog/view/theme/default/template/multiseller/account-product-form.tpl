@@ -16,6 +16,8 @@
 		<input type="hidden" name="product_id" value="<?php echo $product['product_id']; ?>" />
 		<input type="hidden" name="action" id="ms_action" />
 		
+		<input type="hidden" name="list_until" value="<?php echo $list_until; ?>" />
+		
 		<div class="content">
      	<div id="general-tabs" class="htabs">
      		<a href="#tab-general"><?php echo $ms_account_product_tab_general; ?></a>
@@ -606,6 +608,12 @@
 			<?php } ?>
 			
 			<?php if(isset($payment_form)) { ?><div class="ms-payment-form"><?php echo $payment_form; ?></div><?php } ?>
+		<?php } ?>
+		
+		<?php if (isset($list_until) && $list_until != NULL) { ?>
+			<p class="attention">
+				<?php echo sprintf($this->language->get('ms_account_product_listing_until'), date($this->language->get('date_format_short'), strtotime($list_until))); ?>
+			</p>
 		<?php } ?>
 		
 		<div class="buttons">

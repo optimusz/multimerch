@@ -108,6 +108,32 @@
 		</operation>
 	</file>
 	
+	<!-- Disable products if listing period has ended -->
+	<file name="catalog/model/catalog/product.php">
+		<operation>
+			<search position="after"><![CDATA[
+				public function getTotalProducts($data = array()) {
+			]]></search>
+			<add><![CDATA[
+				// public function getProduct($product_id) {
+				$sql = "SELECT p.product_id as 'product_id'
+				FROM `" . DB_PREFIX . "product` p
+				LEFT JOIN `" . DB_PREFIX . "ms_product` mp
+					ON p.product_id = mp.product_id 
+				WHERE mp.list_until < NOW()";
+				
+				$res = $this->db->query($sql);
+				
+				if ($res->num_rows) {
+					foreach ($res->rows as $product) {
+						$this->MsLoader->MsProduct->changeStatus((int)$product['product_id'], MsProduct::STATUS_DISABLED);
+						$this->MsLoader->MsProduct->disapprove((int)$product['product_id']);
+					}
+				}
+			]]></add>
+		</operation>
+	</file>
+	
 	<!-- Add links to the one-page seller profile registration -->
 	<!-- In the header -->
 	<file name="catalog/controller/common/header.php">
@@ -539,6 +565,10 @@
 		    			<?php if ($seller['country']) { ?>
 			    			<p><b><?php echo $ms_catalog_seller_profile_country; ?></b> <?php echo $seller['country']; ?></p>
 			    		<?php } ?>
+						
+						<?php if ($seller['zone']) { ?>
+			    			<p><b><?php echo $ms_catalog_seller_profile_zone; ?></b> <?php echo $seller['zone']; ?></p>
+			    		<?php } ?>
 		
 			    		<?php if ($seller['company']) { ?>
 			    			<p><b><?php echo $ms_catalog_seller_profile_company; ?></b> <?php echo $seller['company']; ?></p>
@@ -649,6 +679,7 @@
 			$this->document->addStyle('catalog/view/theme/' . $this->config->get('config_template') . '/stylesheet/multiseller.css');
 			$this->data = array_merge($this->data, $this->load->language('multiseller/multiseller'));
 			$this->load->model('localisation/country');
+			$this->load->model('localisation/zone');
 			$this->load->model('tool/image');
 			
 			$seller_id = $this->MsLoader->MsProduct->getSellerId($this->request->get['product_id']);
@@ -666,10 +697,18 @@
 					
 				$country = $this->model_localisation_country->getCountry($seller['ms.country_id']);
 				
-				if (!empty($country)) {			
+				if (!empty($country)) {
 					$this->data['seller']['country'] = $country['name'];
 				} else {
 					$this->data['seller']['country'] = NULL;
+				}
+				
+				$zone = $this->model_localisation_zone->getZone($seller['ms.zone_id']);
+				
+				if (!empty($zone)) {			
+					$this->data['seller']['zone'] = $zone['name'];
+				} else {
+					$this->data['seller']['zone'] = NULL;
 				}
 				
 				if (!empty($seller['ms.company'])) {

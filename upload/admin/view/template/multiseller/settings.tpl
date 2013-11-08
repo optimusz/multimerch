@@ -86,6 +86,19 @@
 					
 					<tr>
 						<td>
+							<span><?php echo $ms_config_allow_relisting; ?></span>
+							<span class="help"><?php echo $ms_config_allow_relisting_note; ?></span>
+						</td>
+						<td>
+							<input type="radio" name="msconf_allow_relisting" value="1" <?php if($msconf_allow_relisting == 1) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_yes; ?>
+							<input type="radio" name="msconf_allow_relisting" value="0" <?php if($msconf_allow_relisting == 0) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_no; ?>
+					  	</td>
+					</tr>
+					
+					<tr>
+						<td>
 							<span><?php echo $ms_config_enable_one_page_seller_registration; ?></span>
 							<span class="help"><?php echo $ms_config_enable_one_page_seller_registration_note; ?></span>
 						</td>
@@ -95,73 +108,6 @@
 							<input type="radio" name="msconf_enable_one_page_seller_registration" value="0" <?php if($msconf_enable_one_page_seller_registration == 0) { ?> checked="checked" <?php } ?>  />
 							<?php echo $text_no; ?>
 						</td>
-					</tr>
-					
-					<tr>
-						<td>
-							<span><?php echo $ms_config_nickname_rules; ?></span>
-							<span class="help"><?php echo $ms_config_nickname_rules_note; ?></span>
-						</td>
-						<td>
-							<input type="radio" name="msconf_nickname_rules" value="0" <?php if($msconf_nickname_rules == 0) { ?> checked="checked" <?php } ?>  />
-							<?php echo $ms_config_nickname_rules_alnum; ?>
-							<input type="radio" name="msconf_nickname_rules" value="1" <?php if($msconf_nickname_rules == 1) { ?> checked="checked" <?php } ?>  />
-							<?php echo $ms_config_nickname_rules_ext; ?>
-							<input type="radio" name="msconf_nickname_rules" value="2" <?php if($msconf_nickname_rules == 2) { ?> checked="checked" <?php } ?>  />
-							<?php echo $ms_config_nickname_rules_utf; ?>
-					  	</td>
-					</tr>
-					
-					<tr>
-						<td>
-							<span><?php echo $ms_config_enable_seo_urls_seller; ?></span>
-							<span class="help"><?php echo $ms_config_enable_seo_urls_seller_note; ?></span>
-						</td>
-						<td>
-							<input type="radio" name="msconf_enable_seo_urls_seller" value="1" <?php if($msconf_enable_seo_urls_seller == 1) { ?> checked="checked" <?php } ?>  />
-							<?php echo $text_yes; ?>
-							<input type="radio" name="msconf_enable_seo_urls_seller" value="0" <?php if($msconf_enable_seo_urls_seller == 0) { ?> checked="checked" <?php } ?>  />
-							<?php echo $text_no; ?>
-						</td>
-					</tr>
-					
-					<tr>
-						<td>
-							<span><?php echo $ms_config_enable_seo_urls_product; ?></span>
-							<span class="help"><?php echo $ms_config_enable_seo_urls_product_note; ?></span>
-						</td>
-						<td>
-							<input type="radio" name="msconf_enable_seo_urls_product" value="1" <?php if($msconf_enable_seo_urls_product == 1) { ?> checked="checked" <?php } ?>  />
-							<?php echo $text_yes; ?>
-							<input type="radio" name="msconf_enable_seo_urls_product" value="0" <?php if($msconf_enable_seo_urls_product == 0) { ?> checked="checked" <?php } ?>  />
-							<?php echo $text_no; ?>
-					  	</td>
-					</tr>
-					
-					<!--<tr>
-						<td>
-							<span><?php //echo $ms_config_enable_update_seo_urls; ?></span>
-							<span class="help"><?php //echo $ms_config_enable_update_seo_urls_note; ?></span>
-						</td>
-						<td>
-							<input type="radio" name="msconf_enable_update_seo_urls" value="1" <?php //if($msconf_enable_update_seo_urls == 1) { ?> checked="checked" <?php //} ?>  />
-							<?php //echo $text_yes; ?>
-							<input type="radio" name="msconf_enable_update_seo_urls" value="0" <?php //if($msconf_enable_update_seo_urls == 0) { ?> checked="checked" <?php //} ?>  />
-							<?php //echo $text_no; ?>
-					  	</td>
-					</tr>-->
-					
-					<tr>
-						<td>
-							<span><?php echo $ms_config_enable_non_alphanumeric_seo; ?></span>
-							<span class="help"><?php echo $ms_config_enable_non_alphanumeric_seo_note; ?></span>
-						</td>
-						<td>
-							<input type="radio" name="msconf_enable_non_alphanumeric_seo" value="1" <?php if($msconf_enable_non_alphanumeric_seo == 1) { ?> checked="checked" <?php } ?>  />
-							<?php echo $text_yes; ?>
-							<input type="radio" name="msconf_enable_non_alphanumeric_seo" value="0" <?php if($msconf_enable_non_alphanumeric_seo == 0) { ?> checked="checked" <?php } ?>  />
-							<?php echo $text_no; ?>
-					  	</td>
 					</tr>
 
 					<tr>
@@ -216,16 +162,6 @@
 						</td>
 						<td>
 							<input type="text" name="msconf_rte_whitelist" value="<?php echo $msconf_rte_whitelist; ?>" />
-						</td>
-					</tr>
-					
-					<tr>
-						<td>
-							<span><?php echo $ms_config_sellers_slug; ?></span>
-							<span class="help"><?php echo $ms_config_sellers_slug_note; ?></span>
-						</td>
-						<td>
-							<input type="text" name="msconf_sellers_slug" value="<?php echo isset($msconf_sellers_slug) ? $msconf_sellers_slug : 'sellers' ; ?>" />
 						</td>
 					</tr>
 				</table>
@@ -1394,6 +1330,69 @@
 						</td>
 					</tr>
 					
+					<tr><td colspan="2"><h2><?php echo $ms_config_seo; ?></h2></td></tr>
+					<tr>
+						<td>
+							<span><?php echo $ms_config_enable_seo_urls_seller; ?></span>
+							<span class="help"><?php echo $ms_config_enable_seo_urls_seller_note; ?></span>
+						</td>
+						<td>
+							<input type="radio" name="msconf_enable_seo_urls_seller" value="1" <?php if($msconf_enable_seo_urls_seller == 1) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_yes; ?>
+							<input type="radio" name="msconf_enable_seo_urls_seller" value="0" <?php if($msconf_enable_seo_urls_seller == 0) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_no; ?>
+						</td>
+					</tr>
+					
+					<tr>
+						<td>
+							<span><?php echo $ms_config_enable_seo_urls_product; ?></span>
+							<span class="help"><?php echo $ms_config_enable_seo_urls_product_note; ?></span>
+						</td>
+						<td>
+							<input type="radio" name="msconf_enable_seo_urls_product" value="1" <?php if($msconf_enable_seo_urls_product == 1) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_yes; ?>
+							<input type="radio" name="msconf_enable_seo_urls_product" value="0" <?php if($msconf_enable_seo_urls_product == 0) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_no; ?>
+					  	</td>
+					</tr>
+					
+					<!--<tr>
+						<td>
+							<span><?php //echo $ms_config_enable_update_seo_urls; ?></span>
+							<span class="help"><?php //echo $ms_config_enable_update_seo_urls_note; ?></span>
+						</td>
+						<td>
+							<input type="radio" name="msconf_enable_update_seo_urls" value="1" <?php //if($msconf_enable_update_seo_urls == 1) { ?> checked="checked" <?php //} ?>  />
+							<?php //echo $text_yes; ?>
+							<input type="radio" name="msconf_enable_update_seo_urls" value="0" <?php //if($msconf_enable_update_seo_urls == 0) { ?> checked="checked" <?php //} ?>  />
+							<?php //echo $text_no; ?>
+					  	</td>
+					</tr>-->
+					
+					<tr>
+						<td>
+							<span><?php echo $ms_config_enable_non_alphanumeric_seo; ?></span>
+							<span class="help"><?php echo $ms_config_enable_non_alphanumeric_seo_note; ?></span>
+						</td>
+						<td>
+							<input type="radio" name="msconf_enable_non_alphanumeric_seo" value="1" <?php if($msconf_enable_non_alphanumeric_seo == 1) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_yes; ?>
+							<input type="radio" name="msconf_enable_non_alphanumeric_seo" value="0" <?php if($msconf_enable_non_alphanumeric_seo == 0) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_no; ?>
+					  	</td>
+					</tr>
+					
+					<tr>
+						<td>
+							<span><?php echo $ms_config_sellers_slug; ?></span>
+							<span class="help"><?php echo $ms_config_sellers_slug_note; ?></span>
+						</td>
+						<td>
+							<input type="text" name="msconf_sellers_slug" value="<?php echo isset($msconf_sellers_slug) ? $msconf_sellers_slug : 'sellers' ; ?>" />
+						</td>
+					</tr>
+					
 					<tr><td colspan="2"><h2><?php echo $ms_config_attributes; ?></h2></td></tr>
 					<tr>
 						<td>
@@ -1464,6 +1463,21 @@
 							<input type="radio" name="msconf_hide_sellers_product_count" value="0" <?php if($msconf_hide_sellers_product_count == 0) { ?> checked="checked" <?php } ?>  />
 							<?php echo $text_no; ?>
 						</td>
+					</tr>
+					
+					<tr>
+						<td>
+							<span><?php echo $ms_config_nickname_rules; ?></span>
+							<span class="help"><?php echo $ms_config_nickname_rules_note; ?></span>
+						</td>
+						<td>
+							<input type="radio" name="msconf_nickname_rules" value="0" <?php if($msconf_nickname_rules == 0) { ?> checked="checked" <?php } ?>  />
+							<?php echo $ms_config_nickname_rules_alnum; ?>
+							<input type="radio" name="msconf_nickname_rules" value="1" <?php if($msconf_nickname_rules == 1) { ?> checked="checked" <?php } ?>  />
+							<?php echo $ms_config_nickname_rules_ext; ?>
+							<input type="radio" name="msconf_nickname_rules" value="2" <?php if($msconf_nickname_rules == 2) { ?> checked="checked" <?php } ?>  />
+							<?php echo $ms_config_nickname_rules_utf; ?>
+					  	</td>
 					</tr>
 				</table>
 				</div>

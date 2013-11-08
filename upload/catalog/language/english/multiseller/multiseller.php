@@ -9,6 +9,7 @@ $_['ms_publish'] = 'Publish';
 $_['ms_unpublish'] = 'Unpublish';
 $_['ms_edit'] = 'Edit';
 $_['ms_clone'] = 'Clone';
+$_['ms_relist'] = 'Relist';
 $_['ms_download'] = 'Download';
 $_['ms_create_product'] = 'Create product';
 $_['ms_delete'] = 'Delete';
@@ -300,6 +301,7 @@ $_['ms_account_product_listing_percent'] = 'Listing fee for this product is base
 $_['ms_account_product_listing_balance'] = 'This amount will be deducted from your seller balance.';
 $_['ms_account_product_listing_paypal'] = 'You will be redirected to the PayPal payment page after product submission.';
 $_['ms_account_product_listing_itemname'] = 'Product listing fee at %s';
+$_['ms_account_product_listing_until'] = 'This product will be listed until %s';
 $_['ms_account_product_category'] = 'Category';
 $_['ms_account_product_category_note'] = 'Select category for your product';
 $_['ms_account_product_enable_shipping'] = 'Enable shipping';
@@ -353,6 +355,10 @@ $_['ms_account_editproduct_breadcrumbs'] = 'Edit Product';
 $_['ms_account_cloneproduct_heading'] = 'Clone Product';
 $_['ms_account_cloneproduct_breadcrumbs'] = 'Clone Product';
 
+// Account - Relist product
+$_['ms_account_relist_product_heading'] = 'Relist Product';
+$_['ms_account_relist_product_breadcrumbs'] = 'Relist Product';
+
 // Account - Seller
 $_['ms_account_sellerinfo_heading'] = 'Seller Profile';
 $_['ms_account_sellerinfo_breadcrumbs'] = 'Seller Profile';
@@ -365,6 +371,10 @@ $_['ms_account_sellerinfo_company_note'] = 'Your company (optional)';
 $_['ms_account_sellerinfo_country'] = 'Country';
 $_['ms_account_sellerinfo_country_dont_display'] = 'Do not display my country';
 $_['ms_account_sellerinfo_country_note'] = 'Select your country.';
+$_['ms_account_sellerinfo_zone'] = 'Region / State';
+$_['ms_account_sellerinfo_zone_select'] = 'Select region/state';
+$_['ms_account_sellerinfo_zone_not_selected'] = 'No region/state selected';
+$_['ms_account_sellerinfo_zone_note'] = 'Select your region/state from the list.';
 $_['ms_account_sellerinfo_avatar'] = 'Avatar';
 $_['ms_account_sellerinfo_avatar_note'] = 'Select your avatar';
 $_['ms_account_sellerinfo_paypal'] = 'Paypal';
@@ -397,9 +407,12 @@ $_['ms_account_products_sales'] = 'Sales';
 $_['ms_account_products_earnings'] = 'Earnings';
 $_['ms_account_products_status'] = 'Status';
 $_['ms_account_products_date'] = 'Date added';
+$_['ms_account_products_listing_until'] = 'Listing until';
 $_['ms_account_products_action'] = 'Action';
 $_['ms_account_products_noproducts'] = 'You don\'t have any products yet!';
 $_['ms_account_products_confirmdelete'] = 'Are you sure you want to delete your product?';
+
+$_['ms_not_defined'] = 'Not defined';
 
 $_['ms_product_status_' . MsProduct::STATUS_ACTIVE] = 'Active';
 $_['ms_product_status_' . MsProduct::STATUS_INACTIVE] = 'Inactive';
@@ -568,6 +581,7 @@ $_['ms_catalog_seller_profile_products'] = 'Some of seller\'s products';
 $_['ms_catalog_seller_profile_tab_products'] = 'Products';
 $_['ms_catalog_seller_profile_tab_comments'] = 'Comments';
 $_['ms_catalog_seller_profile_country'] = 'Country:';
+$_['ms_catalog_seller_profile_zone'] = 'Region/State:';
 $_['ms_catalog_seller_profile_website'] = 'Website:';
 $_['ms_catalog_seller_profile_company'] = 'Company:';
 $_['ms_catalog_seller_profile_totalsales'] = 'Total sales:';

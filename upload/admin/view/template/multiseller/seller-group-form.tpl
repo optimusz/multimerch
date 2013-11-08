@@ -45,13 +45,13 @@
 						</td>
 					</tr>
 					
-					<!--<tr>
+					<tr>
 						<td><?php if($seller_group['seller_group_id'] == $this->config->get('msconf_default_seller_group_id')) { ?><span class="required">*</span><?php } ?> <?php echo $this->language->get('ms_product_period'); ?></td>
 						<td>
 							<input type="text" name="seller_group[product_period]" value="<?php echo isset($seller_group['product_period']) ? $seller_group['product_period'] : '' ?>" size="5"/>
 							<p class="error" id="error_product_period"></p>
 						</td>
-					</tr>-->
+					</tr>
 					
 					<tr>
 						<td><?php if($seller_group['seller_group_id'] == $this->config->get('msconf_default_seller_group_id')) { ?><span class="required">*</span><?php } ?> <?php echo $this->language->get('ms_product_quantity'); ?></td>

@@ -207,10 +207,19 @@
 					<select name="seller_country">
 						<option value="" selected="selected"><?php echo $ms_account_sellerinfo_country_dont_display; ?></option>
 						<?php foreach ($countries as $country) { ?>
-						<option value="<?php echo $country['country_id']; ?>" <?php if ($seller_country_id == $country['country_id']) { ?>selected="selected"<?php } ?>><?php echo $country['name']; ?></option>
+						<option value="<?php echo $country['country_id']; ?>" <?php if ($seller_country == $country['country_id']) { ?>selected="selected"<?php } ?>><?php echo $country['name']; ?></option>
 						<?php } ?>
 					</select>
 					<p class="ms-note"><?php echo $ms_account_sellerinfo_country_note; ?></p>
+				</td>
+			</tr>
+			
+			<tr>
+				<td><?php echo $ms_account_sellerinfo_zone; ?></td>
+				<td>
+					<select name="seller_zone">
+					</select>
+					<p class="ms-note"><?php echo $ms_account_sellerinfo_zone_note; ?></p>
 				</td>
 			</tr>
 			
@@ -380,7 +389,7 @@ $('input[name=\'customer_group_id\']:checked').trigger('change');
 <script type="text/javascript"><!--
 $('select[name=\'country_id\']').bind('change', function() {
 	$.ajax({
-		url: 'index.php?route=account/register/country&country_id=' + this.value,
+		url: 'index.php?route=account/register-seller/country&country_id=' + this.value,
 		dataType: 'json',
 		beforeSend: function() {
 			$('select[name=\'country_id\']').after('<span class="wait">&nbsp;<img src="catalog/view/theme/default/image/loading.gif" alt="" /></span>');
@@ -419,8 +428,44 @@ $('select[name=\'country_id\']').bind('change', function() {
 	});
 });
 
+$('select[name=\'seller_country\']').bind('change', function() {
+	$.ajax({
+		url: 'index.php?route=account/register-seller/country&country_id=' + this.value,
+		dataType: 'json',
+		beforeSend: function() {
+			$('select[name=\'seller_country\']').after('<span class="wait">&nbsp;<img src="catalog/view/theme/default/image/loading.gif" alt="" /></span>');
+		},
+		complete: function() {
+			$('.wait').remove();
+		},
+		success: function(json) {
+			html = '<option value=""><?php echo $text_select; ?></option>';
+			
+			if (json['zone'] != '') {
+				for (i = 0; i < json['zone'].length; i++) {
+        			html += '<option value="' + json['zone'][i]['zone_id'] + '"';
+	    			
+					if (json['zone'][i]['zone_id'] == '<?php echo $zone_id; ?>') {
+	      				html += ' selected="selected"';
+	    			}
+	
+	    			html += '>' + json['zone'][i]['name'] + '</option>';
+				}
+			} else {
+				html += '<option value="0" selected="selected"><?php echo $text_none; ?></option>';
+			}
+			
+			$('select[name=\'seller_zone\']').html(html);
+		},
+		error: function(xhr, ajaxOptions, thrownError) {
+			alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		}
+	});
+});
+
 $('select[name=\'country_id\']').trigger('change');
-//--></script> 
+$('select[name=\'seller_country\']').trigger('change');
+//--></script>
 <script type="text/javascript"><!--
 $(document).ready(function() {
 	$('.colorbox').colorbox({

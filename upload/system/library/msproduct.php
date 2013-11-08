@@ -222,7 +222,7 @@ class MsProduct extends Model {
 			}
 			$this->db->query("INSERT INTO " . DB_PREFIX . "url_alias SET query = 'product_id=" . (int)$product_id . "', keyword = '" . $this->db->escape($data['keyword']) . "'");
 		}
-
+		
 		foreach ($data['languages'] as $language_id => $language) {
             $meta_description = isset($language['product_meta_description']) ? htmlspecialchars(nl2br($language['product_meta_description']), ENT_COMPAT) : '';
             $meta_keyword = isset($language['product_meta_keyword']) ? htmlspecialchars(nl2br($language['product_meta_keyword']), ENT_COMPAT) : '';
@@ -265,7 +265,8 @@ class MsProduct extends Model {
 				SET product_id = " . (int)$product_id . ",
 					seller_id = " . (int)$this->registry->get('customer')->getId() . ",
 					product_status = " . (int)$data['product_status'] . ",
-					product_approved = " . (int)$data['product_approved'];
+					product_approved = " . (int)$data['product_approved'] . ",
+					list_until = '" . (isset($data['list_until']) ? $this->db->escape($data['list_until']) : NULL)  . "'";
 
 		$this->db->query($sql);
 		
@@ -488,10 +489,9 @@ class MsProduct extends Model {
 		$sql = "UPDATE " . DB_PREFIX . "ms_product
 				SET product_status = " . (int)$data['product_status'] . ",
 					product_approved = " . (int)$data['product_approved'] . "
+					" . (isset($data['list_until']) ? ", list_until = '" . $this->db->escape($data['list_until']) . "'" : "")  . "
 				WHERE product_id = " . (int)$product_id; 
-		
 		$this->db->query($sql);
-		
 		
 		$sql = "DELETE FROM " . DB_PREFIX . "product_to_category
 				WHERE product_id = " . (int)$product_id;
@@ -829,6 +829,7 @@ class MsProduct extends Model {
 					mp.product_status as 'mp.product_status',
 					mp.product_approved as 'mp.product_approved',
 					mp.number_sold as 'mp.number_sold',
+					mp.list_until as 'mp.list_until',
 					p.date_added as 'p.date_created',
 					p.date_modified  as 'p.date_modified',
 					pd.description as 'pd.description'

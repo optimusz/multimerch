@@ -9,21 +9,21 @@ class ModelMultisellerSettings extends Model {
 			case "4.3":
 				$res = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . "ms_version'");
 				if ($res->num_rows) {
-					$res = $this->db->query("SELECT version FROM `" . DB_PREFIX . "ms_version` WHERE version LIKE '4.3'");
+					$res = $this->db->query("SELECT version FROM `" . DB_PREFIX . "ms_version` WHERE version >= '4.3'");
 				}
 				break;
-			
+		
 			case "4.2":
 				$res = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . "ms_version'");
 				if ($res->num_rows) {
-					$res = $this->db->query("SELECT version FROM `" . DB_PREFIX . "ms_version` WHERE version LIKE '4.2'");
+					$res = $this->db->query("SELECT version FROM `" . DB_PREFIX . "ms_version` WHERE version >= '4.2'");
 				}
 				break;
 				
 			case "4.1":
 				$res = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . "ms_version'");
 				if ($res->num_rows) {
-					$res = $this->db->query("SELECT version FROM `" . DB_PREFIX . "ms_version` WHERE version LIKE '4.1'");
+					$res = $this->db->query("SELECT version FROM `" . DB_PREFIX . "ms_version` WHERE version >= '4.1'");
 				}
 				break;
 			
@@ -54,12 +54,17 @@ class ModelMultisellerSettings extends Model {
 		if (!$this->checkDbVersion($version)) {
 			switch ($version) {
 				case "4.3":
-					$this->db->query("INSERT INTO " . DB_PREFIX . "ms_version (version, distribution) VALUES('4.2','" . $this->MsLoader->dist ."')");
+					$this->db->query("INSERT INTO " . DB_PREFIX . "ms_version (version, distribution) VALUES('4.3','" . $this->MsLoader->dist ."')");
 					
 					// Seller Groups
 					$this->db->query("ALTER TABLE `" . DB_PREFIX . "ms_seller_group` ADD `product_period` int(5) DEFAULT 0");
 					$this->db->query("ALTER TABLE `" . DB_PREFIX . "ms_seller_group` ADD `product_quantity` int(5) DEFAULT 0");
 					
+					// Listing Period
+					$this->db->query("ALTER TABLE `" . DB_PREFIX . "ms_product` ADD `list_until` DATE DEFAULT NULL");
+					
+					// Region/County for seller
+					$this->db->query("ALTER TABLE `" . DB_PREFIX . "ms_seller` ADD `zone_id` INT(11) NOT NULL DEFAULT '0'");
 					break;
 			
 				case "4.2":
@@ -342,6 +347,7 @@ class ModelMultisellerSettings extends Model {
 			 `number_sold` int(11) NOT NULL DEFAULT '0',
 			 `product_status` TINYINT NOT NULL,
 			 `product_approved` TINYINT NOT NULL,
+			 `list_until` DATE DEFAULT NULL,
 			PRIMARY KEY (`product_id`)) default CHARSET=utf8";
 		$this->db->query($sql);
 		
@@ -353,6 +359,7 @@ class ModelMultisellerSettings extends Model {
 			 `website` VARCHAR(2083) NOT NULL DEFAULT '',
 			 `description` TEXT NOT NULL DEFAULT '',
 			 `country_id` INT(11) NOT NULL DEFAULT '0',
+			 `zone_id` INT(11) NOT NULL DEFAULT '0',
 			 `avatar` VARCHAR(255) DEFAULT NULL,
 			 `paypal` VARCHAR(255) DEFAULT NULL,
 			 `date_created` DATETIME NOT NULL,

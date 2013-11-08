@@ -6,11 +6,12 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 			'product_name' => '`pd.name`',
 			'product_status' => '`mp.product_status`',
 			'date_created' => '`p.date_created`',
+			'list_until' => '`mp.list_until`',
 			'number_sold' => 'mp.number_sold',
 			'product_price' => 'p.price',
 		);
 		
-		$sorts = array('product_name', 'product_price', 'date_created', 'product_status', 'product_earnings', 'number_sold');
+		$sorts = array('product_name', 'product_price', 'date_created', 'list_until', 'product_status', 'product_earnings', 'number_sold');
 		
 		list($sortCol, $sortDir) = $this->MsLoader->MsHelper->getSortParams($sorts, $colMap);
 
@@ -81,6 +82,10 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 				$actions .= "<a href='" . $this->url->link('seller/account-product/update', 'product_id=' . $product['product_id'], 'SSL') ."' class='ms-button ms-button-edit' title='" . $this->language->get('ms_edit') . "'></a>";
 				$actions .= "<a href='" . $this->url->link('seller/account-product/update', 'product_id=' . $product['product_id'] . "&clone=1", 'SSL') ."' class='ms-button ms-button-clone' title='" . $this->language->get('ms_clone') . "'></a>";
 				$actions .= "<a href='" . $this->url->link('seller/account-product/delete', 'product_id=' . $product['product_id'], 'SSL') ."' class='ms-button ms-button-delete' title='" . $this->language->get('ms_delete') . "'></a>";
+			} else {
+				if ($this->config->get('msconf_allow_relisting')) {
+					$actions .= "<a href='" . $this->url->link('seller/account-product/update', 'product_id=' . $product['product_id'] . "&relist=1", 'SSL') ."' class='ms-button ms-button-relist' title='" . $this->language->get('ms_relist') . "'></a>";
+				}
 			}
 			
 			// product status
@@ -89,6 +94,13 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 				$status = "<span class='active' style='color: #080;'>" . $this->language->get('ms_product_status_' . $product['mp.product_status']) . "</td></span>";
 			} else {
 				$status = "<span class='inactive' style='color: #b00;'>" . $this->language->get('ms_product_status_' . $product['mp.product_status']) . "</td></span>";
+			}
+			
+			// List until
+			if (isset($product['mp.list_until']) && $product['mp.list_until'] != NULL) {
+				$list_until = date($this->language->get('date_format_short'), strtotime($product['mp.list_until']));
+			} else {
+				$list_until = $this->language->get('ms_not_defined');
 			}
 			
 			$columns[] = array_merge(
@@ -101,6 +113,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 					'product_earnings' => $this->currency->format($sale_data['seller_total'], $this->config->get('config_currency')),
 					'product_status' => $status,
 					'date_created' => date($this->language->get('date_format_short'), strtotime($product['p.date_created'])),
+					'list_until' => $list_until,
 					'actions' => $actions
 				)
 			);
@@ -645,6 +658,14 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 
 		if (empty($json['errors'])) {
 			$mails = array();
+			
+			// Relist the product
+			if ($this->config->get('msconf_allow_relisting')) {
+				if (isset($data['product_id']) && !empty($data['product_id'])) {
+					$this->MsLoader->MsProduct->changeStatus((int)$data['product_id'], MsProduct::STATUS_ACTIVE);
+				}
+			}
+			
 			// set product status
 			switch ($seller['ms.product_validation']) {
 				case MsProduct::MS_PRODUCT_VALIDATION_APPROVAL:
@@ -697,6 +718,12 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 			}
 
 			if (isset($data['product_id']) && !empty($data['product_id'])) {
+				if ($seller['ms.product_validation'] == MsProduct::MS_PRODUCT_VALIDATION_NONE) {
+					$data['enabled'] = 1;
+					$data['product_status'] = MsProduct::STATUS_ACTIVE;
+					$data['product_approved'] = 1;
+				}
+				
 				$product_id = $this->MsLoader->MsProduct->editProduct($data);
 				
 				if ($product['product_status'] == MsProduct::STATUS_UNPAID) {
@@ -775,6 +802,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 				
 				$this->session->data['success'] = $this->language->get('ms_success_product_updated');
 			} else {
+				//$data['list_until'] = date('Y-m-d', strtotime($data['list_until']));
 				$commissions = $this->MsLoader->MsCommission->calculateCommission(array('seller_id' => $this->customer->getId()));
 				$fee = (float)$commissions[MsCommission::RATE_LISTING]['flat'] + $commissions[MsCommission::RATE_LISTING]['percent'] * $data['product_price'] / 100;
 				$product_id = $this->MsLoader->MsProduct->saveProduct($data);
@@ -969,6 +997,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 
 		$this->data['seller'] = $this->MsLoader->MsSeller->getSeller($this->customer->getId());
 		$this->data['seller_group'] = $this->MsLoader->MsSellerGroup->getSellerGroup($this->data['seller']['ms.seller_group']);
+		
 		$product_id = isset($this->request->get['product_id']) ? (int)$this->request->get['product_id'] : 0;
 		if ($product_id) $product_status = $this->MsLoader->MsProduct->getStatus($product_id);
 
@@ -1077,6 +1106,11 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 			)
 		));
 		
+		// Product listing period
+		if ($this->data['seller_group']['product_period'] > 0) {
+			$this->data['list_until'] = date('Y-m-d', strtotime(date('Y-m-d')) + (24 * 3600 * $this->data['seller_group']['product_period']));
+		}
+		
 		list($this->template, $this->children) = $this->MsLoader->MsHelper->loadTemplate('account-product-form');
 		$this->response->setOutput($this->render());
 	}
@@ -1084,6 +1118,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 	public function update() {
 		$product_id = isset($this->request->get['product_id']) ? (int)$this->request->get['product_id'] : 0;
 		$clone = isset($this->request->get['clone']) ? (int)$this->request->get['clone'] : 0;
+		$relist = isset($this->request->get['relist']) ? (int)$this->request->get['relist'] : 0;
 		$seller_id = $this->customer->getId();
 		
 		if  ($this->MsLoader->MsProduct->productOwnedBySeller($product_id,$seller_id)) {
@@ -1200,6 +1235,10 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		
 		if ($clone) {
 			$this->data['product']['product_id'] = 0;
+			// Product listing period
+			if ($this->data['seller_group']['product_period'] > 0) {
+				$this->data['list_until'] = date('Y-m-d', strtotime(date('Y-m-d')) + (24 * 3600 * $this->data['seller_group']['product_period']));
+			}
 			
 			$breadcrumbs[] = array(
 				'text' => $this->language->get('ms_account_cloneproduct_breadcrumbs'),
@@ -1207,6 +1246,18 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 			);
 			$this->data['heading'] = $this->language->get('ms_account_cloneproduct_heading');
 			$this->document->setTitle($this->language->get('ms_account_cloneproduct_heading'));
+		} else if ($relist) {
+			// Product listing period
+			if ($this->data['seller_group']['product_period'] > 0) {
+				$this->data['list_until'] = date('Y-m-d', strtotime(date('Y-m-d')) + (24 * 3600 * $this->data['seller_group']['product_period']));
+			}
+			
+			$breadcrumbs[] = array(
+				'text' => $this->language->get('ms_account_relist_product_breadcrumbs'),
+				'href' => $this->url->link('seller/account-product/update', '', 'SSL'),
+			);
+			$this->data['heading'] = $this->language->get('ms_account_relist_product_heading');
+			$this->document->setTitle($this->language->get('ms_account_relist_product_heading'));
 		} else {
 			$breadcrumbs[] = array(
 				'text' => $this->language->get('ms_account_editproduct_breadcrumbs'),

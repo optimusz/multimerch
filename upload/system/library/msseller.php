@@ -93,6 +93,7 @@ final class MsSeller extends Model {
 					description = '" . $this->db->escape($data['description']) . "',
 					company = '" . $this->db->escape($data['company']) . "',
 					country_id = " . (int)$data['country'] . ",
+					zone_id = " . (int)$data['zone'] . ",
 					commission_id = " . (isset($commission_id) ? $commission_id : 'NULL') . ",
 					product_validation = " . (int)$data['product_validation'] . ",
 					paypal = '" . $this->db->escape($data['paypal']) . "',
@@ -152,7 +153,8 @@ final class MsSeller extends Model {
 		$sql = "UPDATE " . DB_PREFIX . "ms_seller
 				SET description = '" . $this->db->escape($data['description']) . "',
 					company = '" . $this->db->escape($data['company']) . "',
-					country_id = " . (int)$data['country'] . ","
+					country_id = " . (int)$data['country'] . ",
+					zone_id = " . (int)$data['zone'] . ","
 					. (isset($data['status']) ? "seller_status=  " .  (int)$data['status'] . "," : '')
 					. (isset($data['approved']) ? "seller_approved=  " .  (int)$data['approved'] . "," : '')
 					. "paypal = '" . $this->db->escape($data['paypal']) . "',
@@ -296,6 +298,7 @@ final class MsSeller extends Model {
 						ms.product_validation as 'ms.product_validation',
 						ms.avatar as 'ms.avatar',
 						ms.country_id as 'ms.country_id',
+						ms.zone_id as 'ms.zone_id',
 						ms.description as 'ms.description',
 						ms.commission_id as 'ms.commission_id',
 						ms.seller_group as 'ms.seller_group',
@@ -377,6 +380,7 @@ final class MsSeller extends Model {
 					ms.date_created as 'ms.date_created',
 					ms.avatar as 'ms.avatar',
 					ms.country_id as 'ms.country_id',
+					ms.zone_id as 'ms.zone_id',
 					ms.description as 'ms.description',
 					ms.paypal as 'ms.paypal',
 					IFNULL(SUM(mp.number_sold), 0) as 'total_sales'
