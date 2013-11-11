@@ -143,7 +143,7 @@
 			]]></search>
 			<add><![CDATA[
 				if ($this->config->get('msconf_enable_one_page_seller_registration')) {
-					$this->data['text_welcome'] = sprintf($this->language->get('ms_text_welcome'), $this->url->link('account/login', '', 'SSL'), $this->url->link('account/register-seller', '', 'SSL'), $this->url->link('account/register-seller', '', 'SSL'));
+					$this->data['text_welcome'] = sprintf($this->language->get('ms_text_welcome'), $this->url->link('account/login', '', 'SSL'), $this->url->link('account/register', '', 'SSL'), $this->url->link('account/register-seller', '', 'SSL'));
 				} else {
 					$this->data['text_welcome'] = sprintf($this->language->get('text_welcome'), $this->url->link('account/login', '', 'SSL'), $this->url->link('account/register', '', 'SSL'));
 				}
