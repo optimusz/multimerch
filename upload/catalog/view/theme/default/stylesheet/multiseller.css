@@ -526,8 +526,7 @@ div.ms-jquery-dialog.ui-widget-content,
        border: 1px solid #BBBBBB;
        color: #666666;
        border-bottom-left-radius: 0;
-       border-bottom-right-radius: 0;	
-   
+       border-bottom-right-radius: 0;
 }
 
 .ms-jquery-dialog .ui-widget-header .ui-icon,
@@ -584,6 +583,37 @@ div.ms-jquery-dialog.ui-widget-content,
 	display: inline-block;
 }
 
+/* Seller rate form */
+
+.ms-seller-rate-dialog .ms-form {
+	width: 96%;
+}
+
+.ms-seller-rate-dialog .ms-form textarea {
+	width: 250px;
+	height: 50px;
+}
+
+.ms-seller-rate-dialog .ms-form label {
+	font-weight: bold;
+	display: inline-block;
+}
+
+.ms-seller-rate-dialog .ms-form .ratings {
+	display: inline;
+	font-weight: normal;
+}
+
+.ms-seller-rate-dialog .ms-form .ratings input[type=radio], .ms-seller-rate-dialog .ms-form .ratings input.radio, .ms-seller-rate-dialog .ms-form .ratings span {
+	display:inline;
+	width: 20px;
+	padding: 0;
+	margin:0;
+	vertical-align: center;
+	position: relative;
+	top: 5px;
+	*overflow: hidden;
+}
 
 /* seller contact form */
 

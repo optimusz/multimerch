@@ -34,8 +34,19 @@
 					<p><b><?php echo $ms_catalog_seller_profile_website; ?></b> <?php echo $seller['website']; ?></p>
 				<?php } ?>
 				
+				<?php
+					if ($total_votes % 10 == 1) {
+						$ms_rating_word = $ms_catalog_seller_profile_ratings_singular;
+					} else {
+						$ms_rating_word = $ms_catalog_seller_profile_ratings_plural;
+					}
+				?>
+				
 				<p><b><?php echo $ms_catalog_seller_profile_totalsales; ?></b> <?php echo $seller['total_sales']; ?></p>
 				<p><b><?php echo $ms_catalog_seller_profile_totalproducts; ?></b> <?php echo $seller['total_products']; ?></p>
+				<p><b><?php echo $ms_catalog_seller_profile_rating_overall; ?></b> <?php echo $avg_overall; ?> (<?php echo $total_votes . " " . $ms_rating_word; ?>)</p>
+				<p><b><?php echo $ms_catalog_seller_profile_rating_communication; ?></b> <?php echo $avg_communication; ?></p>
+				<p><b><?php echo $ms_catalog_seller_profile_rating_honesty; ?></b> <?php echo $avg_honesty; ?></p>
 				<?php if ((!$this->customer->getId() || ($this->customer->getId() && $this->customer->getId() != $seller['seller_id'])) && ($this->config->get('msconf_enable_private_messaging') == 2 || ($this->config->get('msconf_enable_private_messaging') == 1 && $this->customer->getId()))) { ?>
 					<p><a href="index.php?route=seller/catalog-seller/jxRenderContactDialog&seller_id=<?php echo $seller_id; ?>" class="ms-sellercontact" title="<?php echo $ms_sellercontact_title; ?>"><?php echo $ms_catalog_product_contact; ?></a></p>
 				<?php } ?>

@@ -54,10 +54,10 @@
 	<!-- ************************ -->
 	<!-- ************************ -->
 	<!--       FRONT OFFICE       -->
-	<!-- ************************ -->	
-	<!-- ************************ -->	
+	<!-- ************************ -->
+	<!-- ************************ -->
 	
-	<!-- ie console fix -->
+	<!-- IE console fix -->
 	<file name="catalog/view/theme/&themeFolder;/template/common/header.tpl">
 			<operation>
 			<search position="before"><![CDATA[
@@ -213,8 +213,118 @@
 			]]></add>
 		</operation>
 	</file>
+
+	<!-- ****************** -->
+	<!-- * Seller Ratings * -->
+	<!-- ****************** -->
+
+	<!-- Get order status id from database -->
+	<file name="catalog/model/account/order.php">
+		<operation>
+			<search position="replace"><![CDATA[
+				$query = $this->db->query("SELECT o.order_id, o.firstname, o.lastname, os.name as status, o.date_added, o.total, o.currency_code, o.currency_value FROM `" . DB_PREFIX . "order` o LEFT JOIN " . DB_PREFIX . "order_status os ON (o.order_status_id = os.order_status_id) WHERE o.customer_id = '" . (int)$this->customer->getId() . "' AND o.order_status_id > '0' AND os.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY o.order_id DESC LIMIT " . (int)$start . "," . (int)$limit);
+			]]></search>
+			<add><![CDATA[
+				$query = $this->db->query("SELECT o.order_id, o.firstname, o.lastname, os.name as status, os.order_status_id, o.date_added, o.total, o.currency_code, o.currency_value FROM `" . DB_PREFIX . "order` o LEFT JOIN " . DB_PREFIX . "order_status os ON (o.order_status_id = os.order_status_id) WHERE o.customer_id = '" . (int)$this->customer->getId() . "' AND o.order_status_id > '0' AND os.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY o.order_id DESC LIMIT " . (int)$start . "," . (int)$limit);
+			]]></add>
+		</operation>
+	</file>
 	
-	<!-- seller account area links -->
+	<file name="catalog/controller/account/order.php">
+		<!-- Function to render rating dialog -->
+		<operation>
+			<search position="before"><![CDATA[
+				public function index() {
+			]]></search>
+			<add><![CDATA[
+				public function renderSellerRateDialog() {
+					if (isset($this->request->get['order_id'])) {
+						$order_id = (int)$this->request->get['order_id'];
+					} else {
+						return 0;
+					}
+					
+					$this->data = array_merge($this->data, $this->load->language('multiseller/multiseller'));
+					
+					$order_sellers = $this->MsLoader->MsOrderData->getOrderSellers(array('order_id' => $order_id));
+					
+					$this->data['sellers'] = array();
+					foreach ($order_sellers['sellers'] as $order_seller) {
+						$seller_id = $order_seller['seller_id'];
+						$seller = $this->MsLoader->MsSeller->getSeller($seller_id);
+						if (empty($seller))
+							return false;
+						
+						$seller_record = array(
+							'seller_id' 	=> $seller_id,
+							'seller_thumb' 	=> (!empty($seller['ms.avatar'])) ? $this->MsLoader->MsFile->resizeImage($seller['ms.avatar'], $this->config->get('config_image_category_width'), $this->config->get('config_image_category_height')) : $this->MsLoader->MsFile->resizeImage('ms_no_image.jpg', $this->config->get('config_image_category_width'), $this->config->get('config_image_category_height')),
+							'seller_href' 	=> $this->url->link('seller/catalog-seller/profile', 'seller_id=' . $seller_id),
+							'seller_nick' 	=> $seller['ms.nickname'],
+							'products' 		=> $this->MsLoader->MsOrderData->getOrderProducts(array('order_id' => $order_id, 'seller_id' => $seller_id)),
+							'rating' 		=> $this->MsLoader->MsSeller->getRate(array('order_id' => $order_id, 'seller_id' => $seller_id))
+						);
+						$this->data['sellers'][] = $seller_record;
+					}
+					$this->data['order_id'] = $order_id;
+					
+					list($this->template, $this->children) = $this->MsLoader->MsHelper->loadTemplate('dialog-seller-rate');
+					return $this->response->setOutput($this->render());
+				}
+			]]></add>
+		</operation>
+		
+		<!-- Check whether order status is "Completed" -->
+		<operation>
+			<search position="replace"><![CDATA[
+				$this->data['orders'][] = array(
+			]]></search>
+			<add><![CDATA[
+				$this->data['orders'][] = array(
+					'status_order'   => $result['order_status_id'] == 5 /* Complete */ ? true : false,	
+			]]></add>
+		</operation>
+		
+		<!-- Add script to execute dialog -->
+		<operation>
+			<search position="after"><![CDATA[
+				if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/order_list.tpl')) {
+			]]></search>
+			<add><![CDATA[
+				$this->document->addScript('catalog/view/javascript/dialog-seller-rate.js');
+			]]></add>
+		</operation>
+		
+		<!-- Add language variable -->
+		<operation>
+			<search position="after" index="1"><![CDATA[
+				$this->language->load('account/order');
+			]]></search>
+			<add><![CDATA[
+				$this->language->load('multiseller/multiseller');
+				$this->data['ms_rate'] = $this->language->get('ms_rate');
+				//$this->data = array_merge($this->data, $this->load->language('multiseller/multiseller'));
+			]]></add>
+		</operation>
+	</file>
+
+	<file name="catalog/view/theme/&themeFolder;/template/account/order_list.tpl">
+		<operation>
+			<!-- Add "Rate" button and perform checks (order has any product with seller; not all sellers are rated yet; order status is "completed") -->
+			<search position="replace"><![CDATA[
+				<div class="order-info"><a href="<?php echo $order['href']; ?>"><img src="catalog/view/theme/default/image/info.png" alt="<?php echo $button_view; ?>" title="<?php echo $button_view; ?>" /></a>&nbsp;&nbsp;<a href="<?php echo $order['reorder']; ?>"><img src="catalog/view/theme/default/image/reorder.png" alt="<?php echo $button_reorder; ?>" title="<?php echo $button_reorder; ?>" /></a></div>
+
+			]]></search>
+			<add><![CDATA[
+				<?php $order_ratings = $this->MsLoader->MsSeller->getRate(array('order_id' => $order['order_id'])); ?>
+				<?php $order_sellers = $this->MsLoader->MsOrderData->getOrderSellers(array('order_id' => $order['order_id'])); ?>
+				<div class="order-info"><?php if ($order['status_order'] && ($order_sellers['total_rows'] > 0) && ($order_ratings['total_rows'] < $order_sellers['total_rows'])) { ?><a class="ms-seller-rate" href="index.php?route=account/order/renderSellerRateDialog&order_id=<?php echo $order['order_id']; ?>"><img src=catalog/view/theme/default/image/ms-rate-16.png alt="<?php echo $ms_rate; ?>" title="<?php echo $ms_rate; ?>" /></a>&nbsp;&nbsp;<?php } ?><a href="<?php echo $order['href']; ?>"><img src="catalog/view/theme/default/image/info.png" alt="<?php echo $button_view; ?>" title="<?php echo $button_view; ?>" /></a>&nbsp;&nbsp;<a href="<?php echo $order['reorder']; ?>"><img src="catalog/view/theme/default/image/reorder.png" alt="<?php echo $button_reorder; ?>" title="<?php echo $button_reorder; ?>" /></a></div>
+			]]></add>
+		</operation>
+	</file>
+
+	<!-- ***************************** -->
+	<!-- * Seller account area links * -->
+	<!-- ***************************** -->
 	<file name="catalog/view/theme/&themeFolder;/template/account/account.tpl">
 		<operation>
 			<search position="before"><![CDATA[
@@ -583,6 +693,14 @@
 						<?php if ((!$this->customer->getId() || ($this->customer->getId() && $this->customer->getId() != $seller['seller_id'])) && ($this->config->get('msconf_enable_private_messaging') == 2 || ($this->config->get('msconf_enable_private_messaging') == 1 && $this->customer->getId()))) { ?>
 							<p><a href="index.php?route=seller/catalog-seller/jxRenderContactDialog&product_id=<?php echo $product_id; ?>" class="ms-sellercontact" title="<?php echo $ms_sellercontact_title; ?>"><?php echo $ms_catalog_product_contact; ?></a></p>
 						<?php } ?>
+						<?php
+							if ($seller['total_votes'] % 10 == 1) {
+								$ms_rating_word = $ms_catalog_seller_profile_ratings_singular;
+							} else {
+								$ms_rating_word = $ms_catalog_seller_profile_ratings_plural;
+							}
+						?>
+						<p><b><?php echo $ms_catalog_seller_profile_rating; ?></b> <?php echo $seller['avg_overall']; ?> (<?php echo $seller['total_votes'] . " " . $ms_rating_word; ?>)</p>
 		    		</div>
 		    	</div>
 		    </div>
@@ -733,6 +851,13 @@
 					'seller_id' => $seller['seller_id'],
 					'product_status' => array(MsProduct::STATUS_ACTIVE)
 				));
+
+				$ms_rating = $this->MsLoader->MsSeller->getRate(array('seller_id' => $seller['seller_id']), true);
+				$this->data['seller']['avg_overall'] = round((float)$ms_rating['avg_overall'], 1);
+				$this->data['seller']['total_votes'] = count($ms_rating['rows']);
+				if ($this->data['seller']['total_votes'] == 0) {
+					$this->data['seller']['avg_overall'] = $ms_catalog_seller_profile_rating_not_defined;
+				}
 				
 				$badges = array_unique(array_merge(
 					$this->MsLoader->MsBadge->getSellerGroupBadges(array('seller_id' => $seller['seller_id'], 'language_id' => $this->config->get('config_language_id'))),

@@ -10,6 +10,7 @@ $_['ms_unpublish'] = 'Unpublish';
 $_['ms_edit'] = 'Edit';
 $_['ms_clone'] = 'Clone';
 $_['ms_relist'] = 'Relist';
+$_['ms_rate'] = 'Rate';
 $_['ms_download'] = 'Download';
 $_['ms_create_product'] = 'Create product';
 $_['ms_delete'] = 'Delete';
@@ -420,6 +421,23 @@ $_['ms_product_status_' . MsProduct::STATUS_DISABLED] = 'Disabled';
 $_['ms_product_status_' . MsProduct::STATUS_DELETED] = 'Deleted';
 $_['ms_product_status_' . MsProduct::STATUS_UNPAID] = 'Unpaid listing fee';
 
+// Account - ratings
+$_['ms_seller_ratings'] = 'Ratings: ';
+$_['ms_seller_rate_title'] = 'Rate Sellers';
+
+$_['ms_seller_rating_communication'] = 'Communication: ';
+$_['ms_seller_rating_honesty'] = 'Honesty: ';
+$_['ms_seller_rating_overall'] = 'Overall: ';
+$_['ms_seller_rate_comment_text'] = 'Comment';
+
+$_['entry_bad'] = 'Bad';
+$_['entry_good'] = 'Good';
+
+$_['ms_seller_rate_success'] = 'You rating was submitted!';
+$_['ms_error_rate_comment_length'] = 'Comment text is too long. Only 300 symbols are allowed.';
+$_['ms_error_rate_no_comment'] = 'Enter the comment text.';
+$_['ms_error_rate_no_rating'] = 'All ratings should be defined.';
+
 // Account - Conversations and Messages
 $_['ms_account_conversations'] = 'Conversations';
 $_['ms_account_messages'] = 'Messages';
@@ -456,6 +474,10 @@ You have received a new private message from %s!
 
 You can reply in the messaging area in your account.
 EOT;
+
+
+$_['ms_mail_subject_seller_vote'] = 'Vote for the seller';
+$_['ms_mail_seller_vote_message'] = 'Vote for the seller';
 
 // Account - Transactions
 $_['ms_account_transactions_heading'] = 'Your Finances';
@@ -587,6 +609,15 @@ $_['ms_catalog_seller_profile_company'] = 'Company:';
 $_['ms_catalog_seller_profile_totalsales'] = 'Total sales:';
 $_['ms_catalog_seller_profile_totalproducts'] = 'Total products:';
 $_['ms_catalog_seller_profile_view'] = 'View all %s\'s products';
+
+// Ratings
+$_['ms_catalog_seller_profile_rating'] = 'Rating:';
+$_['ms_catalog_seller_profile_ratings_singular'] = 'rating';
+$_['ms_catalog_seller_profile_ratings_plural'] = 'ratings';
+$_['ms_catalog_seller_profile_rating_overall'] = 'Overall rating:';
+$_['ms_catalog_seller_profile_rating_communication'] = 'Communication rating:';
+$_['ms_catalog_seller_profile_rating_honesty'] = 'Honesty rating:';
+$_['ms_catalog_seller_profile_rating_not_defined'] = 'Not rated yet';
 
 // Catalog - Seller's products list
 $_['ms_catalog_seller_products_heading'] = '%s\'s products';

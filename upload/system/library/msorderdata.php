@@ -137,6 +137,32 @@ class MsOrderData extends Model {
 		return $res->rows;
 	}
 	
+	public function getOrderSellers($data) {
+		$sql = "SELECT 
+					SQL_CALC_FOUND_ROWS
+					DISTINCT(seller_id)
+				FROM " . DB_PREFIX . "order_product
+				LEFT JOIN " . DB_PREFIX . "ms_order_product_data msopd USING(order_id, product_id)
+				WHERE 1 = 1"
+				. (isset($data['order_id']) ? " AND order_id =  " .  (int)$data['order_id'] : '');
+				
+		$res = $this->db->query($sql);
+		$result['sellers'] = $res->rows;
+		$total_res = $this->db->query("SELECT FOUND_ROWS() as total");
+		$total = $total_res->row['total'];
+		$seller_id = 0;
+		foreach ($result['sellers'] as $seller) {
+			if ($seller['seller_id'] == NULL || empty($seller['seller_id'])) {
+				unset($result['sellers'][$seller_id]);
+				$total = $total - 1;
+			}
+			$seller_id++;
+		}
+			
+		$result['total_rows'] = $total;
+		return $result;
+	}
+	
 	public function addOrderProductData($order_id, $product_id, $data) {
 		$sql = "INSERT INTO " . DB_PREFIX . "ms_order_product_data
 				SET order_id = " . (int)$order_id . ",

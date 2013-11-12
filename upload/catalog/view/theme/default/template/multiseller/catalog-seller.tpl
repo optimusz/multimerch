@@ -55,8 +55,17 @@
 			<p class="website"><b><?php echo $ms_catalog_sellers_website; ?></b> <?php echo $seller['website']; ?></p>
 			<?php } ?>
 			
+			<?php
+				if ($seller['total_votes'] % 10 == 1) {
+					$ms_rating_word = $ms_catalog_seller_profile_ratings_singular;
+				} else {
+					$ms_rating_word = $ms_catalog_seller_profile_ratings_plural;
+				}
+			?>
+			
 			<p class="totalsales"><b><?php echo $ms_catalog_sellers_totalsales; ?></b> <?php echo $seller['total_sales']; ?></p>
 			<p class="totalproducts"><b><?php echo $ms_catalog_sellers_totalproducts; ?></b> <?php echo $seller['total_products']; ?></p>
+			<p class="seller_votes"><b><?php echo $ms_catalog_seller_profile_rating; ?></b> <?php echo $seller['avg']; ?> (<?php echo $seller['total_votes'] . " " . $ms_rating_word; ?>)</p>
 			</div>
 			<div class="seller-description"><?php echo $seller['description']; ?></div>
 			</div>
@@ -109,6 +118,7 @@ function display(view) {
 				
 				html += '<p class="totalsales">' + $(element).find('.totalsales').html() + '</p>';
 				html += '<p class="totalproducts">' + $(element).find('.totalproducts').html() + '</p>';				
+				html += '<p class="seller_votes">' + $(element).find('.seller_votes').html() + '</p>';
 			html += '</div>';
 
 			html += '<div class="seller-description">' + $(element).find('.seller-description').html() + '</div>';

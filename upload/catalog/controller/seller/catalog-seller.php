@@ -31,7 +31,7 @@ class ControllerSellerCatalogSeller extends ControllerSellerCatalog {
 			$order_way = 'ASC';
 		}
 		
-		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;	
+		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
 		
 		if (isset($this->request->get['limit'])) {
 			$limit = $this->request->get['limit'];
@@ -64,6 +64,9 @@ class ControllerSellerCatalogSeller extends ControllerSellerCatalog {
 				$image = $this->MsLoader->MsFile->resizeImage('ms_no_image.jpg', $this->config->get('msconf_seller_avatar_seller_list_image_width'), $this->config->get('msconf_seller_avatar_seller_list_image_height'));
 			}
 
+
+			$rate = $this->MsLoader->MsSeller->getRate(array('seller_id' => $result['seller_id']), true);
+
 			$country = $this->model_localisation_country->getCountry($result['ms.country_id']);
 			$this->data['sellers'][] = array(
 				'seller_id'  => $result['seller_id'],
@@ -80,7 +83,9 @@ class ControllerSellerCatalogSeller extends ControllerSellerCatalog {
 					'seller_id' => $result['seller_id'],
 					'product_status' => array(MsProduct::STATUS_ACTIVE)
 				)),
-				'href'        => $this->url->link('seller/catalog-seller/profile', '&seller_id=' . $result['seller_id'])
+				'href'        => $this->url->link('seller/catalog-seller/profile', '&seller_id=' . $result['seller_id']),
+				'avg' => round((float)$rate['avg_overall'], 2),
+				'total_votes' => count($rate['rows'])
 			);
 		}
 		
@@ -206,6 +211,7 @@ class ControllerSellerCatalogSeller extends ControllerSellerCatalog {
 		
 		if (isset($this->request->get['seller_id'])) {
 			$seller = $this->MsLoader->MsSeller->getSeller($this->request->get['seller_id']);
+			$rate = $this->MsLoader->MsSeller->getRate(array('seller_id' => (int)$this->request->get['seller_id']), true);
 		}
 
 		if (!isset($seller) || empty($seller) || $seller['ms.seller_status'] != MsSeller::STATUS_ACTIVE) {
@@ -237,6 +243,10 @@ class ControllerSellerCatalogSeller extends ControllerSellerCatalog {
 		$this->data['seller']['thumb'] = $image;
 		$this->data['seller']['href'] = $this->url->link('seller/catalog-seller/products', 'seller_id=' . $seller['seller_id']);
 		$this->data['seller_id'] = $this->request->get['seller_id'];
+		$this->data['avg_overall'] = round((float)$rate['avg_overall'], 2);
+		$this->data['avg_communication'] = round((float)$rate['avg_communication'], 2);
+		$this->data['avg_honesty'] = round((float)$rate['avg_honesty'], 2);
+		$this->data['total_votes'] =  count($rate['rows']);
 		
 		$country = $this->model_localisation_country->getCountry($seller['ms.country_id']);
 		
@@ -757,7 +767,7 @@ class ControllerSellerCatalogSeller extends ControllerSellerCatalog {
 			$json['success'] = $this->language->get('ms_sellercontact_success');
 		}
 		$this->response->setOutput(json_encode($json));
-	}	
+	}
 	
 	public function jxRenderContactDialog() {
 		if ($this->config->get('msconf_enable_private_messaging') == 2) {
@@ -826,6 +836,42 @@ class ControllerSellerCatalogSeller extends ControllerSellerCatalog {
 	
 		list($this->template, $this->children) = $this->MsLoader->MsHelper->loadTemplate('dialog-sellercontact');
 		return $this->response->setOutput($this->render());
+	}
+	
+	public function jxSubmitRateDialog() {
+		$data = $this->request->post;
+		
+		$json = array();
+		
+		foreach ($data['seller_id'] as $seller_id) {
+			if (mb_strlen($data['ms-seller-rate-text'][$seller_id]) > 300) {
+				$json['errors'][] = $this->language->get('ms_error_rate_comment_length');
+			} else if (!isset($data['ms-seller-rate-text'][$seller_id]) || $data['ms-seller-rate-text'][$seller_id] == "") {
+				$json['errors'][] = $this->language->get('ms_error_rate_no_comment');
+			} else if ( !isset($data['rating_overall'][$seller_id]) || $data['rating_overall'][$seller_id] == "" || !isset($data['rating_communication'][$seller_id]) || $data['rating_communication'][$seller_id] == "" || !isset($data['rating_honesty'][$seller_id]) || $data['rating_honesty'][$seller_id] == "" ) {
+				$json['errors'][] = $this->language->get('ms_error_rate_no_rating');
+			}
+		}
+		
+		if (!isset($json['errors'])) {
+			foreach ($data['seller_id'] as $seller_id) {
+				$seller_rating = array(
+					'order_id' => $data['order_id'],
+					'evaluator_id' => $this->customer->getId(),
+					'rated_user_id' => $seller_id,
+					'comment' => $data['ms-seller-rate-text'][$seller_id],
+					'rating_overall' => $data['rating_overall'][$seller_id],
+					'rating_communication' => $data['rating_communication'][$seller_id],
+					'rating_honesty' => $data['rating_honesty'][$seller_id]
+				);
+				
+				$this->MsLoader->MsSeller->rate($seller_rating);
+			}
+			
+			$json['success'] = $this->language->get('ms_seller_rate_success');
+			$json['redirect'] = $this->url->link('account/order');
+		}
+		$this->response->setOutput(json_encode($json));
 	}
 }
 ?>

@@ -474,6 +474,62 @@ final class MsSeller extends Model {
 		$this->db->query("DELETE FROM " . DB_PREFIX . "ms_payment WHERE seller_id = '" . (int)$seller_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "url_alias WHERE `query` = 'seller_id=".(int)$seller_id."'");
 	}
+
+	public function rate($data) {
+		$sql = "INSERT INTO `" . DB_PREFIX . "ms_rating`
+				SET order_id = " . (int)$data['order_id'] .",
+					evaluator_id = " . (int)$data['evaluator_id'] .",
+					rated_user_id = " . (int)$data['rated_user_id'] .",
+					comment = '" . (isset($data['comment']) ? $this->db->escape($data['comment']) : '') . "',
+					rating_overall = " . (int)$data['rating_overall'] . ",
+					rating_communication = " . (int)$data['rating_communication'] . ",
+					rating_honesty = " . (int)$data['rating_honesty'];
+
+		$this->db->query($sql);
+		return $this->db->getLastId();
+	}
+
+	public function getRate($data, $average=false) {
+		$sql = "SELECT
+					SQL_CALC_FOUND_ROWS
+					rating_id,
+					evaluator_id,
+					rated_user_id,
+					order_id,
+					comment,
+					rating_overall,
+					rating_communication,
+					rating_honesty
+				FROM `" . DB_PREFIX . "ms_rating`
+				WHERE 1=1 "
+				. (isset($data['seller_id']) ? " AND rated_user_id =  " .  (int)$data['seller_id'] : '')
+				. (isset($data['order_id']) ? " AND order_id =  " .  (int)$data['order_id'] : '')
+				. (isset($data['customer_id']) ? " AND evaluator_id =  " .  (int)$data['customer_id'] : '');
+
+		$result = array();
+		
+		$res = $this->db->query($sql);
+		$result['rows'] = $res->rows;
+		$total = $this->db->query("SELECT FOUND_ROWS() as total");
+		$result['total_rows'] = $total->row['total'];
+		
+		if ($average) {
+			$sql = "SELECT
+						AVG(rating_overall) AS average_overall,
+						AVG(rating_communication) AS average_communication,
+						AVG(rating_honesty) AS average_honesty
+					FROM `" . DB_PREFIX . "ms_rating`
+					WHERE 1=1 "
+					. (isset($data['seller_id']) ? " AND rated_user_id =  " .  (int)$data['seller_id'] : '')
+					. (isset($data['customer_id']) ? " AND evaluator_id =  " .  (int)$data['customer_id'] : '');
+			$avg = $this->db->query($sql);
+			$result['avg_overall'] = $avg->row['average_overall'];
+			$result['avg_communication'] = $avg->row['average_communication'];
+			$result['avg_honesty'] = $avg->row['average_honesty'];
+		}
+		
+		return $result;
+	}
 }
 
 ?>

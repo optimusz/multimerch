@@ -55,7 +55,6 @@ class ModelMultisellerSettings extends Model {
 			switch ($version) {
 				case "4.3":
 					$this->db->query("INSERT INTO " . DB_PREFIX . "ms_version (version, distribution) VALUES('4.3','" . $this->MsLoader->dist ."')");
-					
 					// Seller Groups
 					$this->db->query("ALTER TABLE `" . DB_PREFIX . "ms_seller_group` ADD `product_period` int(5) DEFAULT 0");
 					$this->db->query("ALTER TABLE `" . DB_PREFIX . "ms_seller_group` ADD `product_quantity` int(5) DEFAULT 0");
@@ -65,8 +64,22 @@ class ModelMultisellerSettings extends Model {
 					
 					// Region/County for seller
 					$this->db->query("ALTER TABLE `" . DB_PREFIX . "ms_seller` ADD `zone_id` INT(11) NOT NULL DEFAULT '0'");
+
+					// Ratings
+					$sql = "
+						CREATE TABLE `" . DB_PREFIX . "ms_rating` (
+						 `rating_id` int(11) NOT NULL AUTO_INCREMENT,
+						 `evaluator_id` int(11) DEFAULT NULL,
+						 `rated_user_id` int(11) DEFAULT NULL,
+						 `order_id` int(11) DEFAULT NULL,
+						 `comment` VARCHAR(255) DEFAULT NULL,
+						 `rating_overall` int(1) DEFAULT NULL,
+						 `rating_communication` int(1) DEFAULT NULL,
+						 `rating_honesty` int(1) DEFAULT NULL,
+						PRIMARY KEY (`rating_id`)) default CHARSET=utf8";
+					$this->db->query($sql);
 					break;
-			
+				
 				case "4.2":
 					$this->db->query("INSERT INTO " . DB_PREFIX . "ms_version (version, distribution) VALUES('4.2','" . $this->MsLoader->dist ."')");
 					break;
@@ -370,9 +383,21 @@ class ModelMultisellerSettings extends Model {
 			 `commission_id` int(11) DEFAULT NULL,
 			PRIMARY KEY (`seller_id`)) default CHARSET=utf8";
 		$this->db->query($sql);
+
+		$sql = "
+			CREATE TABLE `" . DB_PREFIX . "ms_rating` (
+			 `rating_id` int(11) NOT NULL AUTO_INCREMENT,
+			 `evaluator_id` int(11) DEFAULT NULL,
+			 `rated_user_id` int(11) DEFAULT NULL,
+			 `order_id` int(11) DEFAULT NULL,
+			 `comment` VARCHAR(255) DEFAULT NULL,
+			 `rating_overall` int(1) DEFAULT NULL,
+			 `rating_communication` int(1) DEFAULT NULL,
+			 `rating_honesty` int(1) DEFAULT NULL,
+			PRIMARY KEY (`rating_id`)) default CHARSET=utf8";
+		$this->db->query($sql);
 		
-		$createTable = "
-			CREATE TABLE " . DB_PREFIX . "ms_comments (
+		$createTable = " CREATE TABLE " . DB_PREFIX . "ms_comments (
 			 `id` int(11) NOT NULL AUTO_INCREMENT,
 			 `parent_id` int(11) DEFAULT NULL,
 			 `product_id` int(11) DEFAULT NULL,
@@ -636,11 +661,12 @@ class ModelMultisellerSettings extends Model {
 		$layout_id = $this->db->getLastId();
 		$this->db->query("INSERT INTO " . DB_PREFIX . "layout_route SET layout_id = '" . (int)$layout_id . "', route = 'seller/catalog-seller/products'");
 	}
-	
+
 	public function dropTable() {
 		$sql = "DROP TABLE IF EXISTS
 				`" . DB_PREFIX . "ms_product`,
 				`" . DB_PREFIX . "ms_seller`,
+				`" . DB_PREFIX . "ms_rating`,
 				`" . DB_PREFIX . "ms_order_product_data`,
 				`" . DB_PREFIX . "ms_comments`,
 				`" . DB_PREFIX . "ms_balance`,

@@ -23,6 +23,8 @@ class MsMail extends Model {
 	
 	const SMT_SELLER_CONTACT = 20;
 	const SMT_PRIVATE_MESSAGE = 22;
+
+	const SMT_SELLER_VOTE = 23;
 	
 	const AMT_SELLER_ACCOUNT_CREATED = 101;
 	const AMT_SELLER_ACCOUNT_AWAITING_MODERATION = 102;
@@ -247,6 +249,11 @@ class MsMail extends Model {
 			case self::SMT_PRIVATE_MESSAGE:
 				$mail_subject .= $this->language->get('ms_mail_subject_private_message');
 				$mail_text .= sprintf($this->language->get('ms_mail_private_message'), $data['customer_name'], $data['title'], $data['customer_message']);
+				break;
+//ancor
+			case self::SMT_SELLER_VOTE:
+				$mail_subject .= $this->language->get('ms_mail_subject_seller_vote');
+				$mail_text .= sprintf($this->language->get('ms_mail_seller_vote_message'), $data['customer_name'], $data['title'], $data['customer_message']);
 				break;
 				
 			// admin
