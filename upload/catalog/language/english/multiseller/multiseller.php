@@ -38,6 +38,7 @@ $_['ms_button_generate'] = 'Generate images from PDF';
 $_['ms_button_submit_request'] = 'Submit request';
 $_['ms_button_save'] = 'Save';
 $_['ms_button_cancel'] = 'Cancel';
+$_['ms_button_select_predefined_avatar'] = 'Select Pre-defined avatar';
 
 $_['ms_button_select_image'] = 'Select image';
 $_['ms_button_select_images'] = 'Select images';

@@ -1479,6 +1479,20 @@
 							<?php echo $ms_config_nickname_rules_utf; ?>
 					  	</td>
 					</tr>
+					<tr>
+						<td>
+							<span><?php echo $ms_config_avatars_for_sellers; ?></span>
+							<span class="help"><?php echo $ms_config_avatars_for_sellers_note; ?></span>
+						</td>
+						<td>
+							<input type="radio" name="msconf_avatars_for_sellers" value="0" <?php if($msconf_avatars_for_sellers == 0) { ?> checked="checked" <?php } ?>  />
+							<?php echo $ms_config_avatars_manually; ?>
+							<input type="radio" name="msconf_avatars_for_sellers" value="1" <?php if($msconf_avatars_for_sellers == 1) { ?> checked="checked" <?php } ?>  />
+							<?php echo $ms_config_avatars_both; ?>
+							<input type="radio" name="msconf_avatars_for_sellers" value="2" <?php if($msconf_avatars_for_sellers == 2) { ?> checked="checked" <?php } ?>  />
+							<?php echo $ms_config_avatars_predefined; ?>
+						</td>
+					</tr>
 				</table>
 				</div>
 				<!-- END MISCELLANEOUS TAB -->

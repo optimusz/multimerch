@@ -599,6 +599,11 @@ class ControllerAccountRegisterSeller extends Controller {
 				break;
 		}
 
+		// Get avatars
+		if ($this->config->get('msconf_avatars_for_sellers') == 1 || $this->config->get('msconf_avatars_for_sellers') == 2) {
+			$this->data['predefined_avatars'] = $this->MsLoader->MsFile->getPredefinedAvatars();
+		}
+
 		$this->data['seller_validation'] = $this->config->get('msconf_seller_validation');
 		
 		$this->response->setOutput($this->render());	
@@ -769,8 +774,11 @@ class ControllerAccountRegisterSeller extends Controller {
 		}
 		
 		if (isset($data['seller_avatar_name']) && !empty($data['seller_avatar_name'])) {
-			if (!$this->MsLoader->MsFile->checkFileAgainstSession($data['seller_avatar_name'])) {
-				//$json['errors']['seller[avatar]'] = $this->language->get('ms_error_file_upload_error');
+			if ($this->config->get('msconf_avatars_for_sellers') == 2 && !$this->MsLoader->MsFile->checkPredefinedAvatar($data['seller_avatar_name'])) {
+				$this->error['seller_avatar'] = $this->language->get('ms_error_file_upload_error');
+			} elseif ($this->config->get('msconf_avatars_for_sellers') == 1 && !$this->MsLoader->MsFile->checkPredefinedAvatar($data['seller_avatar_name']) && !$this->MsLoader->MsFile->checkFileAgainstSession($data['seller_avatar_name'])) {
+				$this->error['seller_avatar'] = $this->language->get('ms_error_file_upload_error');
+			} elseif ($this->config->get('msconf_avatars_for_sellers') == 0 && !$this->MsLoader->MsFile->checkFileAgainstSession($data['seller_avatar_name'])) {
 				$this->error['seller_avatar'] = $this->language->get('ms_error_file_upload_error');
 			}
 		}

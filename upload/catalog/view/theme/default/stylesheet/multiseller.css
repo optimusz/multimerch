@@ -967,3 +967,24 @@ table.list thead td.right {
 .ms-account-conversation-view .ms-message-text {
 	width: 500px;
 }
+.avatars-list input {
+    display: none;
+}
+.avatars-list label {
+    padding: 5px;
+}
+.avatars-list div {
+    float: left;
+    margin: 5px;
+}
+.avatars-list img {
+    cursor: pointer;
+}
+.avatars-list label span {
+    display: block;
+    width: 100px;
+    height: 100px;
+}
+.avatars-group {
+    overflow: hidden;
+}

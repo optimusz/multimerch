@@ -96,7 +96,11 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 		}
 		
 		if (isset($data['seller']['avatar_name']) && !empty($data['seller']['avatar_name'])) {
-			if (!$this->MsLoader->MsFile->checkFileAgainstSession($data['seller']['avatar_name'])) {
+			if ($this->config->get('msconf_avatars_for_sellers') == 2 && !$this->MsLoader->MsFile->checkPredefinedAvatar($data['seller']['avatar_name'])) {
+				$json['errors']['seller[avatar]'] = $this->language->get('ms_error_file_upload_error');
+			} elseif ($this->config->get('msconf_avatars_for_sellers') == 1 && !$this->MsLoader->MsFile->checkPredefinedAvatar($data['seller']['avatar_name']) && !$this->MsLoader->MsFile->checkFileAgainstSession($data['seller']['avatar_name'])) {
+				$json['errors']['seller[avatar]'] = $this->language->get('ms_error_file_upload_error');
+			} elseif ($this->config->get('msconf_avatars_for_sellers') == 0 && !$this->MsLoader->MsFile->checkFileAgainstSession($data['seller']['avatar_name'])) {
 				$json['errors']['seller[avatar]'] = $this->language->get('ms_error_file_upload_error');
 			}
 		}
@@ -424,6 +428,11 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 				'href' => $this->url->link('seller/account-profile', '', 'SSL'),
 			)
 		));
+
+		// Get avatars
+		if ($this->config->get('msconf_avatars_for_sellers') == 1 || $this->config->get('msconf_avatars_for_sellers') == 2) {
+			$this->data['predefined_avatars'] = $this->MsLoader->MsFile->getPredefinedAvatars();
+		}
 		
 		list($this->template, $this->children) = $this->MsLoader->MsHelper->loadTemplate('account-profile');
 		$this->response->setOutput($this->render());

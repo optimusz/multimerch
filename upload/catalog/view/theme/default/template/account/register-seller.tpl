@@ -204,7 +204,7 @@
 			<tr>
 				<td><?php echo $ms_account_sellerinfo_country; ?></td>
 				<td>
-					<select name="seller_country">
+					<select name="seller_country_id">
 						<option value="" selected="selected"><?php echo $ms_account_sellerinfo_country_dont_display; ?></option>
 						<?php foreach ($countries as $country) { ?>
 						<option value="<?php echo $country['country_id']; ?>" <?php if ($seller_country == $country['country_id']) { ?>selected="selected"<?php } ?>><?php echo $country['name']; ?></option>
@@ -237,19 +237,40 @@
 			<tr>
 				<td><?php echo $ms_account_sellerinfo_avatar; ?></td>
 				<td>
-					<!--<input type="file" name="ms-file-selleravatar" id="ms-file-selleravatar" />-->
-					<a name="ms-file-selleravatar" id="ms-file-selleravatar" class="button"><span><?php echo $ms_button_select_image; ?></span></a>
-					<p class="ms-note"><?php echo $ms_account_sellerinfo_avatar_note; ?></p>
-					<p class="error" id="error_sellerinfo_avatar"></p>
-					
-					<div id="sellerinfo_avatar_files">
-					<?php if (!empty($seller_avatar)) { ?>
-						<div class="ms-image">
-							<input type="hidden" name="seller_avatar_name" value="<?php echo $seller_avatar['name']; ?>" />
-							<img src="<?php echo $seller_avatar['thumb']; ?>" />
-							<img class="ms-remove" src="catalog/view/theme/default/image/remove.png" />
+					<div class="buttons">
+						<!--<input type="file" name="ms-file-selleravatar" id="ms-file-selleravatar" />-->
+						<?php if ($this->config->get('msconf_avatars_for_sellers') != 2) { ?>
+						<a name="ms-file-selleravatar" id="ms-file-selleravatar" class="button"><span><?php echo $ms_button_select_image; ?></span></a>
+						<?php } ?>
+						<?php if ($this->config->get('msconf_avatars_for_sellers') == 1 || $this->config->get('msconf_avatars_for_sellers') == 2) { ?>
+						<a name="ms-predefined-avatars" id="ms-predefined-avatars" class="button"><span><?php echo $ms_button_select_predefined_avatar; ?></span></a>
+
+						<div style="display: none"><div id="ms-predefined-avatars-container">
+								<?php if ($predefined_avatars) { ?>
+									<?php foreach ($predefined_avatars as $avatar_category_name => $avatars) { ?>
+										<div class="avatars-group">
+											<h4><?php echo $avatar_category_name; ?></h4>
+											<div class="avatars-list">
+												<?php foreach ($avatars as $key => $avatar) { ?>
+													<img src="<?php echo $avatar['image']; ?>" data-value="<?php echo $avatar['dir'] . $avatar['filename']; ?>">
+												<?php } ?>
+											</div>
+										</div>
+									<?php } ?>
+								<?php } ?>
+							</div></div>
+						<?php } ?>
+						<p class="ms-note"><?php echo $ms_account_sellerinfo_avatar_note; ?></p>
+						<p class="error" id="error_sellerinfo_avatar"></p>
+						<div id="sellerinfo_avatar_files">
+						<?php if (!empty($seller_avatar)) { ?>
+							<div class="ms-image">
+								<input type="hidden" name="seller_avatar_name" value="<?php echo $seller_avatar['name']; ?>" />
+								<img src="<?php echo $seller_avatar['thumb']; ?>" />
+								<img class="ms-remove" src="catalog/view/theme/default/image/remove.png" />
+							</div>
+						<?php } ?>
 						</div>
-					<?php } ?>
 					</div>
 				</td>
 			</tr>
@@ -473,5 +494,26 @@ $(document).ready(function() {
 		height: 480
 	});
 });
-//--></script> 
+//--></script>
+<?php if ($this->config->get('msconf_avatars_for_sellers') == 1 || $this->config->get('msconf_avatars_for_sellers') == 2) { ?>
+	<script type="text/javascript">
+		$('#ms-predefined-avatars').colorbox({
+			width:'600px', height:'70%', inline:true, href:'#ms-predefined-avatars-container'
+		});
+
+		$('.avatars-list img').click(function() {
+			if ($('.ms-image img').length == 0) {
+				$('#sellerinfo_avatar_files').html('<div class="ms-image">' +
+					'<input type="hidden" value="'+$(this).data('value')+'" name="seller_avatar_name" />' +
+					'<img src="'+$(this).attr('src')+'" />' +
+					'<span class="ms-remove"></span>' +
+					'</div>');
+			} else {
+				$('.ms-image input[name="seller[avatar_name]"]').val($(this).data('value'));
+				$('.ms-image img').attr('src', $(this).attr('src'));
+			}
+			$(window).colorbox.close();
+		});
+	</script>
+<?php } ?>
 <?php echo $footer; ?>

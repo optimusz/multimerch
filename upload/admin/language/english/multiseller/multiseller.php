@@ -319,6 +319,13 @@ $_['ms_config_nickname_rules_alnum'] = 'Alphanumeric';
 $_['ms_config_nickname_rules_ext'] = 'Extended latin';
 $_['ms_config_nickname_rules_utf'] = 'Full UTF-8';
 
+// Avatars
+$_['ms_config_avatars_for_sellers'] = 'Avatars for sellers';
+$_['ms_config_avatars_for_sellers_note'] = 'Define the way seller avatars work';
+$_['ms_config_avatars_manually'] = 'Uploaded manually by seller';
+$_['ms_config_avatars_both'] = 'Both uploaded by seller and pre-defined';
+$_['ms_config_avatars_predefined'] = 'Only pre-defined';
+
 // Seller - List
 $_['ms_catalog_sellers_heading'] = 'Sellers';
 $_['ms_catalog_sellers_breadcrumbs'] = 'Sellers';

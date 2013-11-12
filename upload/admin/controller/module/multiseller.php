@@ -63,6 +63,7 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		"msconf_enable_update_seo_urls" => 0,
 		"msconf_enable_non_alphanumeric_seo" => 0,
 		"msconf_product_image_path" => 'sellers/',
+		"msconf_predefined_avatars_path" => 'avatars/',
 		"msconf_temp_image_path" => 'tmp/',
 		"msconf_temp_download_path" => 'tmp/',
 		"msconf_seller_terms_page" => "",
@@ -115,7 +116,8 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		"msconf_hide_customer_email" => 0,
 		"msconf_hide_emails_in_emails" => 0,
 		"msconf_hide_sellers_product_count" => 1,
-		
+		"msconf_avatars_for_sellers" => 0, // 0 - Uploaded manually by seller, 1 - Both, uploaded by seller and pre-defined, 2 - Only pre-defined
+
 		"msconf_enable_private_messaging" => 1, // 0 - no, 1 - yes, 2 - email only
 		"msconf_enable_one_page_seller_registration" => 0 // 0 - no, 1 - yes
 	);
