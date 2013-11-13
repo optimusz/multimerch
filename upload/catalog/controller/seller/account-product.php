@@ -655,6 +655,11 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		// sample rows
 		unset($data['product_specials'][0]);
 		unset($data['product_discounts'][0]);
+		
+		// Listing until
+		if (!isset($data['listing_until']) || $data['listing_until'] == "") {
+			$data['listing_until'] = NULL;
+		}
 
 		if (empty($json['errors'])) {
 			$mails = array();
@@ -707,7 +712,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 					$data['product_status'] = MsProduct::STATUS_ACTIVE;
 					$data['product_approved'] = 1;
 					
-					if (!isset($data['product_id']) || empty($data['product_id'])) {		
+					if (!isset($data['product_id']) || empty($data['product_id'])) {
 						$mails[] = array(
 							'type' => MsMail::AMT_PRODUCT_CREATED
 						);
@@ -716,14 +721,8 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 					}
 					break;
 			}
-
+			
 			if (isset($data['product_id']) && !empty($data['product_id'])) {
-				if ($seller['ms.product_validation'] == MsProduct::MS_PRODUCT_VALIDATION_NONE) {
-					$data['enabled'] = 1;
-					$data['product_status'] = MsProduct::STATUS_ACTIVE;
-					$data['product_approved'] = 1;
-				}
-				
 				$product_id = $this->MsLoader->MsProduct->editProduct($data);
 				
 				if ($product['product_status'] == MsProduct::STATUS_UNPAID) {
@@ -1109,6 +1108,8 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		// Product listing period
 		if ($this->data['seller_group']['product_period'] > 0) {
 			$this->data['list_until'] = date('Y-m-d', strtotime(date('Y-m-d')) + (24 * 3600 * $this->data['seller_group']['product_period']));
+		} else {
+			$this->data['list_until'] = NULL;
 		}
 		
 		list($this->template, $this->children) = $this->MsLoader->MsHelper->loadTemplate('account-product-form');
@@ -1238,6 +1239,8 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 			// Product listing period
 			if ($this->data['seller_group']['product_period'] > 0) {
 				$this->data['list_until'] = date('Y-m-d', strtotime(date('Y-m-d')) + (24 * 3600 * $this->data['seller_group']['product_period']));
+			} else {
+				$this->data['list_until'] = NULL;
 			}
 			
 			$breadcrumbs[] = array(
@@ -1250,6 +1253,8 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 			// Product listing period
 			if ($this->data['seller_group']['product_period'] > 0) {
 				$this->data['list_until'] = date('Y-m-d', strtotime(date('Y-m-d')) + (24 * 3600 * $this->data['seller_group']['product_period']));
+			} else {
+				$this->data['list_until'] = NULL;
 			}
 			
 			$breadcrumbs[] = array(

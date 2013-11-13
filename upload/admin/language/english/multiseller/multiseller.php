@@ -111,8 +111,8 @@ $_['ms_config_product_validation_approval'] = 'Manual approval';
 $_['ms_config_disable_product_after_quantity_depleted'] = 'Disable product after quantity depletes';
 $_['ms_config_disable_product_after_quantity_depleted_note'] = 'The product will be disabled after it is sold out (quantity is 0)';
 
-$_['ms_config_allow_relisting'] = 'Allow relisting disabled products';
-$_['ms_config_allow_relisting_note'] = 'Sellers will be able to relist the products, which have been disabled (useful if you use product limitation by period or quantity in combination with listing fees)';
+$_['ms_config_allow_relisting'] = 'Allow re-listing disabled products';
+$_['ms_config_allow_relisting_note'] = 'Sellers will be able to re-list the products, which have been disabled (useful if you use product limitation by period or quantity in combination with listing fees)';
 
 $_['ms_config_enable_one_page_seller_registration'] = 'One-page registration';
 $_['ms_config_enable_one_page_seller_registration_note'] = 'Enable seller one-page registration';
@@ -425,7 +425,7 @@ $_['ms_seller_groups_column_action'] = 'Actions';
 $_['ms_catalog_insert_seller_group_heading'] = 'New Seller Group';
 $_['ms_catalog_edit_seller_group_heading'] = 'Edit Seller Group';
 
-$_['ms_product_period'] = 'Product listing period (0 for unlimited)';
+$_['ms_product_period'] = 'Product listing period in days (0 for unlimited)';
 $_['ms_product_quantity'] = 'Product quantity (0 for no limit)';
 
 $_['ms_error_seller_group_name'] = 'Error: Name must be between 3 and 32 symbols long';

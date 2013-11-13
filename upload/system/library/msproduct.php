@@ -265,8 +265,8 @@ class MsProduct extends Model {
 				SET product_id = " . (int)$product_id . ",
 					seller_id = " . (int)$this->registry->get('customer')->getId() . ",
 					product_status = " . (int)$data['product_status'] . ",
-					product_approved = " . (int)$data['product_approved'] . ",
-					list_until = '" . (isset($data['list_until']) ? $this->db->escape($data['list_until']) : NULL)  . "'";
+					product_approved = " . (int)$data['product_approved']
+					. ( (isset($data['list_until']) && $data['list_until'] != NULL ) ? ", list_until = '" . $this->db->escape($data['list_until']) . "'" : "");
 
 		$this->db->query($sql);
 		
@@ -488,8 +488,8 @@ class MsProduct extends Model {
 		
 		$sql = "UPDATE " . DB_PREFIX . "ms_product
 				SET product_status = " . (int)$data['product_status'] . ",
-					product_approved = " . (int)$data['product_approved'] . "
-					" . (isset($data['list_until']) ? ", list_until = '" . $this->db->escape($data['list_until']) . "'" : "")  . "
+					product_approved = " . (int)$data['product_approved'] . ",
+					list_until = " . ( (isset($data['list_until']) && $data['list_until'] != NULL ) ? "'" . $this->db->escape($data['list_until']) . "'" : "NULL")  . "
 				WHERE product_id = " . (int)$product_id; 
 		$this->db->query($sql);
 		
