@@ -79,7 +79,7 @@ class ControllerPaymentMSPPAdaptive extends Controller {
    		);
 
    		$this->data['breadcrumbs'][] = array(
-       		'text'      => $this->language->get('text_module'),
+       		'text'      => $this->language->get('text_payment'),
 			'href'      => $this->url->link('extension/module', 'token=' . $this->session->data['token'], 'SSL'),
       		'separator' => ' :: '
    		);
