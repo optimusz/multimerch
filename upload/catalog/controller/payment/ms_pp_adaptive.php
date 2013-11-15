@@ -11,7 +11,7 @@ class ControllerPaymentMSPPAdaptive extends Controller {
 		if ($this->config->get('msppaconf_sandbox')) {
 			$endPoint = "https://svcs.sandbox.paypal.com/AdaptivePayments/";
 		} else {
-			$entPoint = "https://svcs.paypal.com/AdaptivePayments/";
+			$endPoint = "https://svcs.paypal.com/AdaptivePayments/";
 		}
 		
 		$this->_paypal = new PayPal($this->config->get('msppaconf_api_username'), $this->encryption->decrypt($this->config->get('msppaconf_api_password')), $this->encryption->decrypt($this->config->get('msppaconf_api_signature')), $this->config->get('msppaconf_sandbox'), $endPoint, $this->config->get('msppaconf_api_appid'));
