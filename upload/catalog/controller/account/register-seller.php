@@ -94,7 +94,7 @@ class ControllerAccountRegisterSeller extends Controller {
 			$this->session->data['seller']['nickname'] = $this->request->post['seller_nickname'];
 			$this->session->data['seller']['description'] = $this->request->post['seller_description'];
 			$this->session->data['seller']['company'] = $this->request->post['seller_company'];
-			$this->session->data['seller']['country'] = $this->request->post['seller_country'];
+			$this->session->data['seller']['country'] = $this->request->post['seller_country_id'];
 			$this->session->data['seller']['zone'] = $this->request->post['seller_zone'];
 			$this->session->data['seller']['paypal'] = $this->request->post['seller_paypal'];
 			$this->session->data['seller']['avatar_name'] = $this->request->post['seller_avatar_name'];
@@ -480,11 +480,16 @@ class ControllerAccountRegisterSeller extends Controller {
 			$this->data['seller_company'] = '';
 		}
 		
-		if (isset($this->request->post['seller_country'])) {
+		/*if (isset($this->request->post['seller_country'])) {
     		$this->data['seller_country'] = $this->request->post['seller_country'];
 		} else {
 			$this->data['seller_country'] = '';
-		}
+		}*/
+		if (isset($this->request->post['seller_country'])) {
+			$this->data['seller_country'] = $this->request->post['seller_country'];
+		} else {
+      		$this->data['seller_country'] = $this->config->get('config_country_id');
+    	}
 		
 		if (isset($this->request->post['seller_zone'])) {
     		$this->data['seller_zone'] = $this->request->post['seller_zone'];

@@ -233,7 +233,9 @@ $('select[name=\'seller\\[country\\]\']').bind('change', function() {
 	});
 });
 
-$('select[name=\'seller\\[country\\]\']').trigger('change');
+if ($('select[name=\'seller\\[country\\]\']').val()) {
+	$('select[name=\'seller\\[country\\]\']').trigger('change');
+}
 //--></script>
 <?php if ($this->config->get('msconf_avatars_for_sellers') == 1 || $this->config->get('msconf_avatars_for_sellers') == 2) { ?>
 <script type="text/javascript">
