@@ -295,7 +295,7 @@ class MsProduct extends Model {
 				$newFile = $this->MsLoader->MsFile->moveDownload($dl['filename']);
 				$fileMask = substr($newFile,0,strrpos($newFile,'.'));
 				
-				$this->db->query("INSERT INTO " . DB_PREFIX . "download SET remaining = 5, filename = '" . $this->db->escape($newFile) . "', mask = '" . $this->db->escape($fileMask) . "'");
+				$this->db->query("INSERT INTO " . DB_PREFIX . "download SET remaining = 50, filename = '" . $this->db->escape($newFile) . "', mask = '" . $this->db->escape($fileMask) . "'");
 				$download_id = $this->db->getLastId();
 				$this->db->query("INSERT INTO " . DB_PREFIX . "product_to_download SET product_id = '" . (int)$product_id . "', download_id = '" . (int)$download_id . "'");
 				
