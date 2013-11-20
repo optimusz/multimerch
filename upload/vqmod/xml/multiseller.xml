@@ -957,7 +957,7 @@
 				$this->data['seller']['avg_overall'] = round((float)$ms_rating['avg_overall'], 1);
 				$this->data['seller']['total_votes'] = count($ms_rating['rows']);
 				if ($this->data['seller']['total_votes'] == 0) {
-					$this->data['seller']['avg_overall'] = $ms_catalog_seller_profile_rating_not_defined;
+					$this->data['seller']['avg_overall'] = $this->data['ms_catalog_seller_profile_rating_not_defined'];
 				}
 				
 				$badges = array_unique(array_merge(
