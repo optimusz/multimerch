@@ -238,16 +238,16 @@ class ControllerPaymentMSPPAdaptive extends Controller {
 			}
 			
 			// store commission
-			$receivers[0]['amount'] += $store_commission_flat + $store_commission_pct;
+			$receivers[0]['amount'] += $this->currency->format($store_commission_flat, $order_info['currency_code'], 1, false) + $this->currency->format($store_commission_pct, $order_info['currency_code'], 1, false);
 			
 			// seller royalty
 			if (isset($receivers[$seller_id]['ms.paypal']) && !empty($receivers[$seller_id]['ms.paypal']) && filter_var($receivers[$seller_id]['ms.paypal'], FILTER_VALIDATE_EMAIL)) {
 				// paypal present, add seller net amount to the payment total
-				$receivers[$seller_id]['amount'] += $seller_net_amt;
+				$receivers[$seller_id]['amount'] += $this->currency->format($seller_net_amt, $order_info['currency_code'], 1, false);
 			} else {
 				// paypal not set, create balance transaction instead
 				// add the amount to the store payment
-				$receivers[0]['amount'] += $seller_net_amt;
+				$receivers[0]['amount'] += $this->currency->format($seller_net_amt, $order_info['currency_code'], 1, false);
 			}
 		}
 		

@@ -1,19 +1,21 @@
 <?php
 // Heading
-$_['heading_title']					 = '[ffct.cc] PayPal Adaptive Payments for MultiMerch';
+$_['heading_title']	= '[ffct.cc] PayPal Adaptive Payments for MultiMerch';
 
-$_['ppa_api_username']					 = 'API Username';
-$_['ppa_api_username_note']					 = 'API Username';
-$_['ppa_api_password']					 = 'API Password';
-$_['ppa_api_password_note']					 = 'API Password';
-$_['ppa_api_signature']					 = 'API Signature';
-$_['ppa_api_signature_note']					 = 'API Signature';
-$_['ppa_api_appid']					 = 'Application ID';
-$_['ppa_api_appid_note']					 = 'Application ID';
-$_['ppa_secret']					 = 'Shared secret';
-$_['ppa_secret_key']					 = 'Key';
-$_['ppa_secret_value']					 = 'Value';
-$_['ppa_secret_note']					 = 'Strings that will be used for IPN validation. This can be anything';
+$_['text_payment'] = 'Payment';
+
+$_['ppa_api_username'] = 'API Username';
+$_['ppa_api_username_note'] = 'API Username';
+$_['ppa_api_password'] = 'API Password';
+$_['ppa_api_password_note'] = 'API Password';
+$_['ppa_api_signature']	= 'API Signature';
+$_['ppa_api_signature_note'] = 'API Signature';
+$_['ppa_api_appid'] = 'Application ID';
+$_['ppa_api_appid_note'] = 'Application ID';
+$_['ppa_secret'] = 'Shared secret';
+$_['ppa_secret_key'] = 'Key';
+$_['ppa_secret_value'] = 'Value';
+$_['ppa_secret_note'] = 'Strings that will be used for IPN validation. This can be anything';
 
 
 $_['ppa_payment_type']					 = 'Payment type';
@@ -21,7 +23,6 @@ $_['ppa_payment_type_note']					 = 'See <a href="https://cms.paypal.com/us/cgi-b
 $_['ppa_payment_type_simple']					 = 'Simple';
 $_['ppa_payment_type_parallel']					 = 'Parallel';
 $_['ppa_payment_type_chained']					 = 'Chained';
-
 
 $_['ppa_feespayer']					 = 'Fees payer';
 $_['ppa_feespayer_note']					 = 'See <a href="https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&content_ID=developer/e_howto_api_APIntro">introduction to PayPal Adaptive Payments</a> for details';
@@ -54,7 +55,7 @@ $_['ppa_debug_note']					 = 'Logs detailed information to the PayPal log';
 $_['ppa_total']					 = 'Total';
 $_['ppa_total_note']				 = 'The checkout total the order must reach before this payment method becomes active.';
 
-$_['ppa_status']			 = 'Status:';
+$_['ppa_status'] = 'Status:';
 $_['ppa_completed_status'] = 'Completed Status:';
 $_['ppa_error_status'] = 'Error/Failed Status';
 $_['ppa_pending_status'] = 'Pending Status';
@@ -71,6 +72,6 @@ $_['ppa_error_receiver'] = 'You need to specify the primary receiver (#1)';
 $_['ppa_error_credentials'] = 'You need to specify all API credentials';
 $_['ppa_error_secret'] = 'Both secret key and value required';
 
-$_['text_pp_adaptive']				 = '<a onclick="window.open(\'https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&content_ID=developer/e_howto_api_APIntro\');"><img src="view/image/payment/paypal.png" alt="PayPal Adaptive" title="PayPal Adaptive" style="border: 1px solid #EEEEEE;" /></a>';
+$_['text_pp_adaptive'] = '<a onclick="window.open(\'https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&content_ID=developer/e_howto_api_APIntro\');"><img src="view/image/payment/paypal.png" alt="PayPal Adaptive" title="PayPal Adaptive" style="border: 1px solid #EEEEEE;" /></a>';
 
 ?>
