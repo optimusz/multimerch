@@ -79,6 +79,8 @@ class ControllerAccountRegisterSeller extends Controller {
 					break;
 			}
 			
+			$this->session->data['seller']['nickname'] = $this->request->post['seller_nickname'];
+			
 			// SEO urls generation for sellers
 			if ($this->config->get('msconf_enable_seo_urls_seller')) {
 				$latin_check = '/[^\x{0030}-\x{007f}]/u';
@@ -91,7 +93,6 @@ class ControllerAccountRegisterSeller extends Controller {
 				}
 			}
 			
-			$this->session->data['seller']['nickname'] = $this->request->post['seller_nickname'];
 			$this->session->data['seller']['description'] = $this->request->post['seller_description'];
 			$this->session->data['seller']['company'] = $this->request->post['seller_company'];
 			$this->session->data['seller']['country'] = $this->request->post['seller_country_id'];

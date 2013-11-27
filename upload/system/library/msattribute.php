@@ -313,12 +313,16 @@ class MsAttribute extends Model {
 		
 		$sql = "SELECT *,
 						mad.name as attribute_name,
-						mavd.name as attribute_value_name
+						mavd.name as attribute_value_name,
+						ma.attribute_type as attribute_type,
+						mav.image as image
 				FROM " . DB_PREFIX . "ms_product_attribute mpa
 				LEFT JOIN `" . DB_PREFIX . "ms_attribute` ma
 					ON (mpa.attribute_id = ma.attribute_id)
 				LEFT JOIN " . DB_PREFIX . "ms_attribute_description mad
 					ON (mpa.attribute_id = mad.attribute_id)
+				LEFT JOIN " . DB_PREFIX . "ms_attribute_value mav
+					ON (mpa.attribute_value_id = mav.attribute_value_id)
 				LEFT JOIN " . DB_PREFIX . "ms_attribute_value_description mavd
 					ON (mpa.attribute_value_id = mavd.attribute_value_id)
 				WHERE mpa.product_id = '".(int)$product_id."'"
@@ -337,6 +341,8 @@ class MsAttribute extends Model {
 			$attribute_data[$attribute['attribute_id']]['name'] = $attribute['attribute_name'];
 			$attribute_data[$attribute['attribute_id']]['values'][$attribute['attribute_value_id']] = $attribute['attribute_value_name'];
 			$attribute_data[$attribute['attribute_id']]['tab_display'] = $attribute['tab_display'];
+			$attribute_data[$attribute['attribute_id']]['attribute_type'] = $attribute['attribute_type'];
+			$attribute_data[$attribute['attribute_id']]['image'] = $attribute['image'];
 		}
 		
 		return $attribute_data;

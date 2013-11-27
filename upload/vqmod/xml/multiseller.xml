@@ -868,7 +868,14 @@
 				<?php if ($this->config->get('msconf_attribute_display') != 1) { ?>
 				<?php foreach ($ms_product_attributes as $attribute) { ?>
 					<?php if(is_array($attribute['values']) && implode($attribute['values']) != '' && (!isset($attribute['tab_display']) || !$attribute['tab_display'])) { ?>
-						<span><?php echo $attribute['name']; ?>:</span> <?php echo implode(',',$attribute['values']); ?> <br />
+						<?php if ($attribute['attribute_type'] == MsAttribute::TYPE_IMAGE) { ?>
+							<?php $attribute['image'] = (!empty($attribute['image']) ? $this->MsLoader->MsFile->resizeImage($attribute['image'], 50, 50) : $this->MsLoader->MsFile->resizeImage('no_image.jpg', 50, 50)); ?>
+							<span><?php echo $attribute['name']; ?>:</span><?php echo implode(',',$attribute['values']); ?>
+							<img src="<?php echo $attribute['image']; ?>" style="vertical-align: middle; padding: 1px; border: 1px solid #DDDDDD; margin-bottom: 10px" />
+							<br />
+						<?php } else { ?>
+							<span><?php echo $attribute['name']; ?>:</span> <?php echo implode(',',$attribute['values']); ?> <br />
+						<?php } ?>
 					<?php } ?>
 				<?php } ?>
 				<?php } ?>
