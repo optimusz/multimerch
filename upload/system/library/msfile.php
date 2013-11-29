@@ -91,9 +91,17 @@ class MsFile extends Model {
 
 	public function checkImage($file) {
 		$errors = $this->checkFile($file, $this->config->get('msconf_allowed_image_types'));
-
+		
 		if (!$errors) {
 			$size = getimagesize($file["tmp_name"]);
+			
+			list($width, $height, $type, $attr) = getimagesize($file["tmp_name"]);
+			
+			if (($this->config->get('msconf_min_uploaded_image_width') > 0 && $width < $this->config->get('msconf_min_uploaded_image_width')) || ($this->config->get('msconf_min_uploaded_image_height') > 0 && $height < $this->config->get('msconf_min_uploaded_image_height'))) {
+				$errors[] = sprintf($this->language->get('ms_error_image_too_small'), $this->config->get('msconf_min_uploaded_image_width'), $this->config->get('msconf_min_uploaded_image_height'));
+			} else if (($this->config->get('msconf_max_uploaded_image_width') > 0 && $width > $this->config->get('msconf_max_uploaded_image_width')) || ($this->config->get('msconf_max_uploaded_image_height') > 0 && $height > $this->config->get('msconf_max_uploaded_image_height'))) {
+				$errors[] = sprintf($this->language->get('ms_error_image_too_big'), $this->config->get('msconf_max_uploaded_image_width'), $this->config->get('msconf_max_uploaded_image_height'));
+			}
 			//@TODO? Flash reports all files as octet-stream
 			//if(!isset($size) || stripos($file['type'],'image/') === FALSE || stripos($size['mime'],'image/') === FALSE) {
 			if(!isset($size)) {

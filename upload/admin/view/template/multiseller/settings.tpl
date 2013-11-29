@@ -1330,6 +1330,30 @@
 						</td>
 					</tr>
 					
+					<tr>
+						<td>
+							<span><?php echo $ms_config_minimum_uploaded_image_size; ?></span>
+							<span class="help"><?php echo $ms_config_minimum_uploaded_image_size_note; ?></span>
+						</td>
+						<td>
+							<input type="text" name="msconf_min_uploaded_image_width" value="<?php echo $msconf_min_uploaded_image_width; ?>" size="3" />
+							x
+							<input type="text" name="msconf_min_uploaded_image_height" value="<?php echo $msconf_min_uploaded_image_height; ?>" size="3" />
+						</td>
+					</tr>
+					
+					<tr>
+						<td>
+							<span><?php echo $ms_config_maximum_uploaded_image_size; ?></span>
+							<span class="help"><?php echo $ms_config_maximum_uploaded_image_size_note; ?></span>
+						</td>
+						<td>
+							<input type="text" name="msconf_max_uploaded_image_width" value="<?php echo $msconf_max_uploaded_image_width; ?>" size="3" />
+							x
+							<input type="text" name="msconf_max_uploaded_image_height" value="<?php echo $msconf_max_uploaded_image_height; ?>" size="3" />
+						</td>
+					</tr>
+					
 					<tr><td colspan="2"><h2><?php echo $ms_config_seo; ?></h2></td></tr>
 					<tr>
 						<td>

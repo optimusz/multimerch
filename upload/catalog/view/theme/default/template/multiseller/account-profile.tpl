@@ -68,7 +68,7 @@
 						<select name="seller[country]">
 							<option value="" selected="selected"><?php echo $ms_account_sellerinfo_country_dont_display; ?></option>
 							<?php foreach ($countries as $country) { ?>
-							<option value="<?php echo $country['country_id']; ?>" <?php if ($seller['ms.country_id'] == $country['country_id']) { ?>selected="selected"<?php } ?>><?php echo $country['name']; ?></option>
+							<option value="<?php echo $country['country_id']; ?>" <?php if ($seller['ms.country_id'] == $country['country_id'] || $country_id == $country['country_id']) { ?>selected="selected"<?php } ?>><?php echo $country['name']; ?></option>
 							<?php } ?>
 						</select>
 						<p class="ms-note"><?php echo $ms_account_sellerinfo_country_note; ?></p>

@@ -14,7 +14,7 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		"multiseller/comment",
 		"multiseller/badge"
 	);
-		
+	
 	private $settings = array(
 		"msconf_seller_validation" => MsSeller::MS_SELLER_VALIDATION_NONE,
 		"msconf_product_validation" => MsProduct::MS_PRODUCT_VALIDATION_NONE,
@@ -24,7 +24,7 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		"msconf_minimum_withdrawal_amount" => "50",
 		"msconf_allow_partial_withdrawal" => 1,
 		
-		"msconf_paypal_sandbox" => 1,			
+		"msconf_paypal_sandbox" => 1,
 		"msconf_paypal_address" => "",
 		"msconf_paypal_api_username" => "",
 		"msconf_paypal_api_password" => "",
@@ -38,18 +38,18 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		"msconf_notification_email" => "",
 		"ms_carousel_module" => "",
 		"ms_topsellers_module" => "",
-		"ms_newsellers_module" => "",	
-		"ms_sellerdropdown_module" => "",	
+		"ms_newsellers_module" => "",
+		"ms_sellerdropdown_module" => "",
 		"msconf_allow_free_products" => 0,
 		
 		"msconf_allow_multiple_categories" => 0,
 		"msconf_additional_category_restrictions" => 0, // 0 - none, 1 - topmost, 2 - all parents
 		"msconf_restrict_categories" => array(),
 		"msconf_product_included_fields" => array(),
-
+		
 		"msconf_images_limits" => array(0,0),
 		"msconf_downloads_limits" => array(0,0),
-				
+		
 		"msconf_enable_shipping" => 0, // 0 - no, 1 - yes, 2 - seller select
 		"msconf_provide_buyerinfo" => 0, // 0 - no, 1 - yes, 2 - shipping dependent
 		"msconf_enable_quantities" => 0, // 0 - no, 1 - yes, 2 - shipping dependent
@@ -86,7 +86,7 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		"msconf_seller_comments_enable_customer_captcha" => 0,
 		"msconf_seller_comments_maxlen" => 500,
 		"msconf_seller_comments_perpage" => 10,        
-        
+		
 		"msconf_enable_rte" => 0,
 		"msconf_rte_whitelist" => "",
 		
@@ -106,8 +106,13 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		"msconf_product_seller_profile_image_height" => 100,
 		"msconf_product_seller_products_image_width" => 100,
 		"msconf_product_seller_products_image_height" => 100,
-		"msconf_badge_width" => 30,		
+		"msconf_badge_width" => 30,
 		"msconf_badge_height" => 30,
+		
+		"msconf_min_uploaded_image_width" => 0,
+		"msconf_min_uploaded_image_height" => 0,
+		"msconf_max_uploaded_image_width" => 0,
+		"msconf_max_uploaded_image_height" => 0,
 		
 		"msconf_sellers_slug" => "sellers",
 		
@@ -123,7 +128,7 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 	);
 	
 	public function __construct($registry) {
-		parent::__construct($registry);		
+		parent::__construct($registry);	
 		$this->registry = $registry;
 	}
 	
@@ -143,7 +148,7 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 				$extensions_to_be_installed[] = str_replace('_module','',$name);
 			}
 		}
-
+		
 		foreach($set as $s=>$v) {
 			if ((strpos($s,'_module') !== FALSE)) {
 				if (!isset($this->request->post[$s])) {
@@ -173,7 +178,7 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		}
 	}
 	public function install() {
-		$this->validate(__FUNCTION__);		
+		$this->validate(__FUNCTION__);
 		$this->load->model("multiseller/settings");
 		$this->load->model('setting/setting');
 		$this->model_multiseller_settings->dropTable();
@@ -290,29 +295,29 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		} else {
 			$this->data['error_image'] = array();
 		}
-
+		
 		$this->load->model('catalog/information');
 		$this->data['informations'] = $this->model_catalog_information->getInformations();
 		$this->data['categories'] = $this->MsLoader->MsProduct->getCategories();
 		$this->data['product_included_fieds'] = array(
-            'model' => $this->language->get('ms_catalog_products_field_model'),
-            'sku' => $this->language->get('ms_catalog_products_field_sku'),
-            'upc' => $this->language->get('ms_catalog_products_field_upc'),
-            'ean' => $this->language->get('ms_catalog_products_field_ean'),
-            'jan' => $this->language->get('ms_catalog_products_field_jan'),
-            'isbn' => $this->language->get('ms_catalog_products_field_isbn'),
-            'mpn' => $this->language->get('ms_catalog_products_field_mpn'),
-            'manufacturer' => $this->language->get('ms_catalog_products_field_manufacturer'),
-            'dateAvailable' => $this->language->get('ms_catalog_products_field_date_available'),
-            'taxClass' => $this->language->get('ms_catalog_products_field_tax_class'),
-            'subtract' => $this->language->get('ms_catalog_products_field_subtract'),
-            'stockStatus' => $this->language->get('ms_catalog_products_field_stock_status'),
-            'metaDescription' => $this->language->get('ms_catalog_products_field_meta_description'),
-            'metaKeywords' => $this->language->get('ms_catalog_products_field_meta_keyword')
-        );
-
+			'model' => $this->language->get('ms_catalog_products_field_model'),
+			'sku' => $this->language->get('ms_catalog_products_field_sku'),
+			'upc' => $this->language->get('ms_catalog_products_field_upc'),
+			'ean' => $this->language->get('ms_catalog_products_field_ean'),
+			'jan' => $this->language->get('ms_catalog_products_field_jan'),
+			'isbn' => $this->language->get('ms_catalog_products_field_isbn'),
+			'mpn' => $this->language->get('ms_catalog_products_field_mpn'),
+			'manufacturer' => $this->language->get('ms_catalog_products_field_manufacturer'),
+			'dateAvailable' => $this->language->get('ms_catalog_products_field_date_available'),
+			'taxClass' => $this->language->get('ms_catalog_products_field_tax_class'),
+			'subtract' => $this->language->get('ms_catalog_products_field_subtract'),
+			'stockStatus' => $this->language->get('ms_catalog_products_field_stock_status'),
+			'metaDescription' => $this->language->get('ms_catalog_products_field_meta_description'),
+			'metaKeywords' => $this->language->get('ms_catalog_products_field_meta_keyword')
+		);
+		
 		$this->document->setTitle($this->language->get('ms_settings_heading'));
-
+		
 		$this->data['breadcrumbs'] = $this->MsLoader->MsHelper->admSetBreadcrumbs(array(
 			array(
 				'text' => $this->language->get('ms_menu_multiseller'),
@@ -322,7 +327,7 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 				'text' => $this->language->get('ms_settings_breadcrumbs'),
 				'href' => $this->url->link('multiseller/settings', '', 'SSL'),
 			)
-		));		
+		));
 		
 		list($this->template, $this->children) = $this->MsLoader->MsHelper->admLoadTemplate('settings');
 		$this->response->setOutput($this->render());

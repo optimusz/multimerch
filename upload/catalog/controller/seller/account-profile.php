@@ -347,6 +347,7 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 			}
 			
 			$this->data['seller'] = $seller;
+			$this->data['country_id'] = $seller['ms.country_id'];
 			
 			if (!empty($seller['ms.avatar'])) {
 				$this->data['seller']['avatar']['name'] = $seller['ms.avatar'];
@@ -363,6 +364,8 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 			$this->data['ms_account_sellerinfo_terms_note'] = '';
 		} else {
 			$this->data['seller'] = FALSE;
+			$this->data['country_id'] = $this->config->get('config_country_id');
+
 			$this->data['statustext'] = $this->language->get('ms_account_status_please_fill_in');
 			
 			if ($this->config->get('msconf_seller_terms_page')) {

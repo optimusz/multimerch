@@ -280,6 +280,11 @@ $_['ms_config_product_image_size_seller_products_list'] = 'Seller products list'
 
 $_['ms_config_badge_size'] = 'Badge size';
 
+$_['ms_config_minimum_uploaded_image_size'] = 'Minimum uploaded image size (Width x Height)';
+$_['ms_config_minimum_uploaded_image_size_note'] = 'Define minimum image dimensions allowed for uploaded images. Set 0 for no limits.';
+$_['ms_config_maximum_uploaded_image_size'] = 'Maximum uploaded image size (Width x Height)';
+$_['ms_config_maximum_uploaded_image_size_note'] = 'Define maximum image dimensions allowed for uploaded images. Set 0 for no limits.';
+
 $_['ms_config_seo'] = 'SEO';
 $_['ms_config_enable_seo_urls_seller'] = 'Generate SEO URLs for new sellers';
 $_['ms_config_enable_seo_urls_seller_note'] = 'This option will generate SEO-friendly URLs for new sellers. SEO URLs need to be enabled in OpenCart to use this.';
