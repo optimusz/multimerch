@@ -247,6 +247,7 @@ class ControllerSellerCatalogSeller extends ControllerSellerCatalog {
 		$this->data['avg_communication'] = round((float)$rate['avg_communication'], 2);
 		$this->data['avg_honesty'] = round((float)$rate['avg_honesty'], 2);
 		$this->data['total_votes'] =  count($rate['rows']);
+		$this->data['href_ratings'] = $this->url->link('seller/catalog-seller/ratings', 'seller_id=' . $seller['seller_id'], 'SSL');
 		
 		$country = $this->model_localisation_country->getCountry($seller['ms.country_id']);
 		
@@ -359,6 +360,115 @@ class ControllerSellerCatalogSeller extends ControllerSellerCatalog {
 		list($this->template, $this->children) = $this->MsLoader->MsHelper->loadTemplate('catalog-seller-profile');
 		$this->response->setOutput($this->render());
   	}
+
+	public function ratings() {
+		if (isset($this->request->get['seller_id'])) {
+			$seller = $this->MsLoader->MsSeller->getSeller($this->request->get['seller_id']);
+		}
+
+		if (!isset($seller) || empty($seller) || $seller['ms.seller_status'] != MsSeller::STATUS_ACTIVE) {
+			$this->redirect($this->url->link('seller/catalog-seller', '', 'SSL'));
+			return;
+		}
+
+		$this->data['seller'] = $seller;
+		$this->data['seller']['nickname'] = $seller['ms.nickname'];
+
+		if ($seller['ms.avatar'] && file_exists(DIR_IMAGE . $seller['ms.avatar'])) {
+			$image = $this->MsLoader->MsFile->resizeImage($seller['ms.avatar'], $this->config->get('msconf_seller_avatar_seller_profile_image_width'), $this->config->get('msconf_seller_avatar_seller_profile_image_height'));
+		} else {
+			$image = $this->MsLoader->MsFile->resizeImage('ms_no_image.jpg', $this->config->get('msconf_seller_avatar_seller_profile_image_width'), $this->config->get('msconf_seller_avatar_seller_profile_image_height'));
+		}
+
+		$this->data['seller']['thumb'] = $image;
+
+		// badges
+		$badges = array_unique(array_merge(
+			$this->MsLoader->MsBadge->getSellerGroupBadges(array('seller_id' => $seller['seller_id'], 'language_id' => $this->config->get('config_language_id'))),
+			$this->MsLoader->MsBadge->getSellerGroupBadges(array('seller_group_id' => $seller['ms.seller_group'], 'language_id' => $this->config->get('config_language_id'))),
+			$this->MsLoader->MsBadge->getSellerGroupBadges(array('seller_group_id' => $this->config->get('msconf_default_seller_group_id'), 'language_id' => $this->config->get('config_language_id')))
+		), SORT_REGULAR);
+
+		foreach ($badges as &$badge) {
+			$badge['image'] = $this->model_tool_image->resize($badge['image'], $this->config->get('msconf_badge_width'), $this->config->get('msconf_badge_height'));
+		}
+
+		$this->data['seller']['badges'] = $badges;
+
+		// rates
+		if (isset($this->request->get['page']) && $this->request->get['page'] > 0) {
+			$page = (int)$this->request->get['page'];
+		} else {
+			$page = 1;
+		}
+
+		$limit = $this->config->get('msconf_seller_ratings_perpage');
+		$start = ($page - 1) * $limit;
+
+		$data = array(
+			'seller_id' => $seller['seller_id'],
+			'start' => $start,
+			'limit' => $limit
+		);
+
+		$this->data['ms_ratings'] = array();
+
+		$ratings = $this->MsLoader->MsSeller->getRate($data, true);
+
+		$this->data['avg_overall'] = round((float)$ratings['avg_overall'], 2);
+		$this->data['avg_communication'] = round((float)$ratings['avg_communication'], 2);
+		$this->data['avg_honesty'] = round((float)$ratings['avg_honesty'], 2);
+		$this->data['total_votes'] =  $ratings['total_rows'];
+
+		if ($ratings['rows']) {
+			$this->load->model('account/customer');
+
+			foreach ($ratings['rows'] as $row) {
+				$customer = $this->model_account_customer->getCustomer($row['evaluator_id']);
+
+				$this->data['ms_ratings'][] = array(
+					'evaluator_name' => $customer ? ($customer['firstname'] . ' ' . $customer['lastname']) : '',
+					'comment' => $row['comment'],
+					'rating_overall' => $row['rating_overall'],
+					'rating_communication' => $row['rating_communication'],
+					'rating_honesty' => $row['rating_honesty']
+				);
+			}
+
+			$pagination = new Pagination();
+			$pagination->total = $ratings['total_rows'];
+			$pagination->page = $page;
+			$pagination->limit = $limit;
+			$pagination->text = $this->language->get('text_pagination');
+			$pagination->url = $this->url->link('seller/catalog-seller/ratings', 'seller_id=' . $this->request->get['seller_id'] . '&page={page}', 'SSL');
+
+			$this->data['pagination'] = $pagination->render();
+		} else {
+			$this->data['ms_catalog_seller_profile_rating_not_defined'] = $this->language->get('ms_catalog_seller_profile_rating_not_defined');
+		}
+
+
+		$this->data['ms_catalog_seller_profile_view'] = sprintf($this->language->get('ms_catalog_seller_profile_view'), $this->data['seller']['nickname']);
+		$this->document->setTitle(sprintf($this->language->get('ms_catalog_seller_profile_heading'), $this->data['seller']['nickname']));
+
+		$this->data['breadcrumbs'] = $this->MsLoader->MsHelper->setBreadcrumbs(array(
+			array(
+				'text' => $this->language->get('ms_catalog_sellers'),
+				'href' => $this->url->link('seller/catalog-seller', '', 'SSL'),
+			),
+			array(
+				'text' => sprintf($this->language->get('ms_catalog_seller_profile_breadcrumbs'), $this->data['seller']['nickname']),
+				'href' => $this->url->link('seller/catalog-seller/profile', '&seller_id=' . $this->request->get['seller_id'], 'SSL'),
+			),
+			array(
+				'text' => $this->language->get('ms_catalog_seller_ratings_breadcrumbs'),
+				'href' => $this->url->link('seller/catalog-seller/ratings', '&seller_id=' . $this->request->get['seller_id'], 'SSL'),
+			)
+		));
+
+		list($this->template, $this->children) = $this->MsLoader->MsHelper->loadTemplate('catalog-seller-ratings');
+		$this->response->setOutput($this->render());
+	}
   	
 	public function products() {
 		if (isset($this->request->get['seller_id'])) {
@@ -844,8 +954,8 @@ class ControllerSellerCatalogSeller extends ControllerSellerCatalog {
 		$json = array();
 		
 		foreach ($data['seller_id'] as $seller_id) {
-			if (mb_strlen($data['ms-seller-rate-text'][$seller_id]) > 300) {
-				$json['errors'][] = $this->language->get('ms_error_rate_comment_length');
+			if (mb_strlen($data['ms-seller-rate-text'][$seller_id]) > $this->config->get('msconf_seller_rate_comment_maxlen')) {
+				$json['errors'][] = sprintf($this->language->get('ms_error_rate_comment_length'), $this->config->get('msconf_seller_rate_comment_maxlen'));
 			} else if (!isset($data['ms-seller-rate-text'][$seller_id]) || $data['ms-seller-rate-text'][$seller_id] == "") {
 				$json['errors'][] = $this->language->get('ms_error_rate_no_comment');
 			} else if ( !isset($data['rating_overall'][$seller_id]) || $data['rating_overall'][$seller_id] == "" || !isset($data['rating_communication'][$seller_id]) || $data['rating_communication'][$seller_id] == "" || !isset($data['rating_honesty'][$seller_id]) || $data['rating_honesty'][$seller_id] == "" ) {

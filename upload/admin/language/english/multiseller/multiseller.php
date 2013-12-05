@@ -231,6 +231,14 @@ $_['ms_config_comments_enable_customer_captcha_note'] = 'Enable captcha for regi
 $_['ms_config_comments_maxlen'] = 'Maximum comment length';
 $_['ms_config_comments_maxlen_note'] = 'Maximum comment length when posting comments in front store';
 
+$_['ms_config_seller_ratings'] = 'Seller ratings';
+
+$_['ms_config_rate_comment_maxlen'] = 'Maximum rate comment length';
+$_['ms_config_rate_comment_maxlen_note'] = 'Maximum comment length when rating seller in front store';
+
+$_['ms_config_ratings_perpage'] = 'Number of ratings per page';
+$_['ms_config_ratings_perpage_note'] = 'Number of ratings per page in front store';
+
 $_['ms_config_graphical_sellermenu'] = 'Graphical seller menu';
 $_['ms_config_graphical_sellermenu_note'] = 'Graphical seller menu';
 

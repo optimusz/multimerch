@@ -358,7 +358,7 @@
 						
 						$seller_record = array(
 							'seller_id' 	=> $seller_id,
-							'seller_thumb' 	=> (!empty($seller['ms.avatar'])) ? $this->MsLoader->MsFile->resizeImage($seller['ms.avatar'], $this->config->get('config_image_category_width'), $this->config->get('config_image_category_height')) : $this->MsLoader->MsFile->resizeImage('ms_no_image.jpg', $this->config->get('config_image_category_width'), $this->config->get('config_image_category_height')),
+							'seller_thumb' 	=> (!empty($seller['ms.avatar'])) ? $this->MsLoader->MsFile->resizeImage($seller['ms.avatar'], $this->config->get('msconf_seller_avatar_product_page_image_width'), $this->config->get('msconf_seller_avatar_product_page_image_height')) : $this->MsLoader->MsFile->resizeImage('ms_no_image.jpg', $this->config->get('msconf_seller_avatar_product_page_image_width'), $this->config->get('msconf_seller_avatar_product_page_image_height')),
 							'seller_href' 	=> $this->url->link('seller/catalog-seller/profile', 'seller_id=' . $seller_id),
 							'seller_nick' 	=> $seller['ms.nickname'],
 							'products' 		=> $this->MsLoader->MsOrderData->getOrderProducts(array('order_id' => $order_id, 'seller_id' => $seller_id)),

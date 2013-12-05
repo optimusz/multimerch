@@ -47,6 +47,9 @@
 				<p><b><?php echo $ms_catalog_seller_profile_rating_overall; ?></b> <?php echo $avg_overall; ?> (<?php echo $total_votes . " " . $ms_rating_word; ?>)</p>
 				<p><b><?php echo $ms_catalog_seller_profile_rating_communication; ?></b> <?php echo $avg_communication; ?></p>
 				<p><b><?php echo $ms_catalog_seller_profile_rating_honesty; ?></b> <?php echo $avg_honesty; ?></p>
+				<?php if ($total_votes) { ?>
+				<p><a href="<?php echo $href_ratings; ?>"><?php echo $ms_catalog_seller_ratings; ?></a></p>
+				<?php } ?>
 				<?php if ((!$this->customer->getId() || ($this->customer->getId() && $this->customer->getId() != $seller['seller_id'])) && ($this->config->get('msconf_enable_private_messaging') == 2 || ($this->config->get('msconf_enable_private_messaging') == 1 && $this->customer->getId()))) { ?>
 					<p><a href="index.php?route=seller/catalog-seller/jxRenderContactDialog&seller_id=<?php echo $seller_id; ?>" class="ms-sellercontact" title="<?php echo $ms_sellercontact_title; ?>"><?php echo $ms_catalog_product_contact; ?></a></p>
 				<?php } ?>

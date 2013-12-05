@@ -695,7 +695,28 @@
 						</td>
 					</tr>
                     <!-- SELLER COMMENTS END -->                    
-                    
+
+					<!-- SELLER RATINGS START -->
+					<tr><td colspan="2"><h2><?php echo $ms_config_seller_ratings; ?></h2></td></tr>
+					<tr>
+						<td>
+							<span><?php echo $ms_config_rate_comment_maxlen; ?></span>
+							<span class="help"><?php echo $ms_config_rate_comment_maxlen_note; ?></span>
+						</td>
+						<td>
+							<input type="text" name="msconf_seller_rate_comment_maxlen" value="<?php echo $msconf_seller_rate_comment_maxlen; ?>" size="3"/>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<span><?php echo $ms_config_ratings_perpage; ?></span>
+							<span class="help"><?php echo $ms_config_ratings_perpage_note; ?></span>
+						</td>
+						<td>
+							<input type="text" name="msconf_seller_ratings_perpage" value="<?php echo $msconf_seller_ratings_perpage; ?>" size="3"/>
+						</td>
+					</tr>
+                    <!-- SELLER RATINGS END -->
 				</table>
 				</div>
 								

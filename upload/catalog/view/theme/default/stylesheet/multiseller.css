@@ -988,3 +988,14 @@ table.list thead td.right {
 .avatars-group {
     overflow: hidden;
 }
+.comment-column-right {
+    float: right;
+    padding: 0 0 10px 10px;
+    width: 20%;
+}
+.comment-ratings {
+    width: 100%;
+}
+.comment-ratings tr td {
+    padding-right: 10px;
+}

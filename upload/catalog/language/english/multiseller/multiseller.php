@@ -437,7 +437,7 @@ $_['entry_bad'] = 'Bad';
 $_['entry_good'] = 'Good';
 
 $_['ms_seller_rate_success'] = 'You rating was submitted!';
-$_['ms_error_rate_comment_length'] = 'Comment text is too long. Only 300 symbols are allowed.';
+$_['ms_error_rate_comment_length'] = 'Comment text is too long. Only %s symbols are allowed.';
 $_['ms_error_rate_no_comment'] = 'Enter the comment text.';
 $_['ms_error_rate_no_rating'] = 'All ratings should be defined.';
 
@@ -621,6 +621,8 @@ $_['ms_catalog_seller_profile_rating_overall'] = 'Overall rating:';
 $_['ms_catalog_seller_profile_rating_communication'] = 'Communication rating:';
 $_['ms_catalog_seller_profile_rating_honesty'] = 'Honesty rating:';
 $_['ms_catalog_seller_profile_rating_not_defined'] = 'Not rated yet';
+$_['ms_catalog_seller_ratings_breadcrumbs'] = 'Ratings';
+$_['ms_catalog_seller_ratings'] = 'Ratings';
 
 // Catalog - Seller's products list
 $_['ms_catalog_seller_products_heading'] = '%s\'s products';

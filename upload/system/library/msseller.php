@@ -506,6 +506,18 @@ final class MsSeller extends Model {
 				. (isset($data['order_id']) ? " AND order_id =  " .  (int)$data['order_id'] : '')
 				. (isset($data['customer_id']) ? " AND evaluator_id =  " .  (int)$data['customer_id'] : '');
 
+		if (isset($data['start']) && isset($data['limit'])) {
+			if ($data['start'] < 0) {
+				$data['start'] = 0;
+			}
+
+			if ($data['limit'] < 1) {
+				$data['limit'] = 10;
+			}
+
+			$sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
+		}
+
 		$result = array();
 		
 		$res = $this->db->query($sql);
