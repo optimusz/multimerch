@@ -519,6 +519,7 @@ $_['ms_action'] = 'Action';
 
 // Mails
 $_['ms_mail_greeting'] = "Hello %s,\n\n";
+$_['ms_mail_greeting_no_name'] = "Hello,\n\n";
 $_['ms_mail_ending'] = "\n\nRegards,\n%s";
 $_['ms_mail_message'] = "\n\nMessage:\n%s";
 

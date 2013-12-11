@@ -146,7 +146,10 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 						$mails[] = array(
 							'type' => MsMail::AMT_SELLER_ACCOUNT_AWAITING_MODERATION,
 							'data' => array(
-								'message' => $data['seller']['reviewer_message']
+								'message' => $data['seller']['reviewer_message'],
+								'seller_name' => $data['seller']['nickname'],
+								'customer_name' => $this->customer->getFirstname() . ' ' . $this->customer->getLastname(),
+								'customer_email' => $this->MsLoader->MsSeller->getSellerEmail($this->customer->getId())
 							)
 						);
 						$data['seller']['status'] = MsSeller::STATUS_INACTIVE;
@@ -159,7 +162,12 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 							'type' => MsMail::SMT_SELLER_ACCOUNT_CREATED
 						);
 						$mails[] = array(
-							'type' => MsMail::AMT_SELLER_ACCOUNT_CREATED
+							'type' => MsMail::AMT_SELLER_ACCOUNT_CREATED,
+							'data' => array(
+								'seller_name' => $data['seller']['nickname'],
+								'customer_name' => $this->customer->getFirstname() . ' ' . $this->customer->getLastname(),
+								'customer_email' => $this->MsLoader->MsSeller->getSellerEmail($this->customer->getId())
+							)
 						);
 						$data['seller']['status'] = MsSeller::STATUS_ACTIVE;
 						$data['seller']['approved'] = 1;

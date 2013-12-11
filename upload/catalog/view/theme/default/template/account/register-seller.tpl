@@ -313,7 +313,7 @@
 	
 	<!-- Common part -->
 	
-    <h2><?php echo $text_newsletter; ?></h2>
+    <!--<h2><?php echo $text_newsletter; ?></h2>
     <div class="content">
       <table class="form">
         <tr>
@@ -331,15 +331,15 @@
             <?php } ?></td>
         </tr>
       </table>
-    </div>
+    </div>-->
     <?php if ($text_agree) { ?>
     <div class="buttons">
-      <div class="right"><?php echo $text_agree; ?>
+      <!--<div class="right"><?php echo $text_agree; ?>
         <?php if ($agree) { ?>
         <input type="checkbox" name="agree" value="1" checked="checked" />
         <?php } else { ?>
         <input type="checkbox" name="agree" value="1" />
-        <?php } ?>
+        <?php } ?>-->
         <input type="submit" value="<?php echo $button_continue; ?>" class="button" />
       </div>
     </div>

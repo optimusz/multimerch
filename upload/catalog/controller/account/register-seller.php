@@ -59,7 +59,10 @@ class ControllerAccountRegisterSeller extends Controller {
 					$mails[] = array(
 						'type' => MsMail::AMT_SELLER_ACCOUNT_AWAITING_MODERATION,
 						'data' => array(
-							'message' => $this->session->data['seller']['reviewer_message']
+							'message' => $this->session->data['seller']['reviewer_message'],
+							'seller_name' => $this->request->post['seller_nickname'],
+							'customer_name' => $this->customer->getFirstname() . ' ' . $this->customer->getLastname(),
+							'customer_email' => $this->MsLoader->MsSeller->getSellerEmail($this->customer->getId())
 						)
 					);
 					$this->session->data['seller']['status'] = MsSeller::STATUS_INACTIVE;
@@ -72,7 +75,12 @@ class ControllerAccountRegisterSeller extends Controller {
 						'type' => MsMail::SMT_SELLER_ACCOUNT_CREATED
 					);
 					$mails[] = array(
-						'type' => MsMail::AMT_SELLER_ACCOUNT_CREATED
+						'type' => MsMail::AMT_SELLER_ACCOUNT_CREATED,
+						'data' => array(
+							'seller_name' => $this->request->post['seller_nickname'],
+							'customer_name' => $this->customer->getFirstname() . ' ' . $this->customer->getLastname(),
+							'customer_email' => $this->MsLoader->MsSeller->getSellerEmail($this->customer->getId())
+						)
 					);
 					$this->session->data['seller']['status'] = MsSeller::STATUS_ACTIVE;
 					$this->session->data['seller']['approved'] = 1;
@@ -155,7 +163,7 @@ class ControllerAccountRegisterSeller extends Controller {
 				$this->MsLoader->MsMail->sendMails($mails);
 			}
 			
-	  		$this->redirect($this->url->link('account/success'));
+	  		$this->redirect($this->url->link('account/seller-success'));
     	} 
 
       	$this->data['breadcrumbs'] = array();
@@ -184,7 +192,7 @@ class ControllerAccountRegisterSeller extends Controller {
 		$this->data['text_your_details'] = $this->language->get('text_your_details');
     	$this->data['text_your_address'] = $this->language->get('text_your_address');
     	$this->data['text_your_password'] = $this->language->get('text_your_password');
-		$this->data['text_newsletter'] = $this->language->get('text_newsletter');
+		//$this->data['text_newsletter'] = $this->language->get('text_newsletter');
 		$this->data['text_yes'] = $this->language->get('text_yes');
 		$this->data['text_no'] = $this->language->get('text_no');
 		$this->data['text_select'] = $this->language->get('text_select');
@@ -205,7 +213,7 @@ class ControllerAccountRegisterSeller extends Controller {
     	$this->data['entry_city'] = $this->language->get('entry_city');
     	$this->data['entry_country'] = $this->language->get('entry_country');
     	$this->data['entry_zone'] = $this->language->get('entry_zone');
-		$this->data['entry_newsletter'] = $this->language->get('entry_newsletter');
+		//$this->data['entry_newsletter'] = $this->language->get('entry_newsletter');
     	$this->data['entry_password'] = $this->language->get('entry_password');
     	$this->data['entry_confirm'] = $this->language->get('entry_confirm');
 
@@ -456,11 +464,11 @@ class ControllerAccountRegisterSeller extends Controller {
 			$this->data['confirm'] = '';
 		}
 		
-		if (isset($this->request->post['newsletter'])) {
+		/*if (isset($this->request->post['newsletter'])) {
     		$this->data['newsletter'] = $this->request->post['newsletter'];
 		} else {
 			$this->data['newsletter'] = '';
-		}
+		}*/
 		
 		// Seller account fields
 		if (isset($this->request->post['seller_nickname'])) {
@@ -524,11 +532,11 @@ class ControllerAccountRegisterSeller extends Controller {
 			$this->data['text_agree'] = '';
 		}
 		
-		if (isset($this->request->post['agree'])) {
+		/*if (isset($this->request->post['agree'])) {
       		$this->data['agree'] = $this->request->post['agree'];
 		} else {
 			$this->data['agree'] = false;
-		}
+		}*/
 		
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/register-seller.tpl')) {
 			$this->template = $this->config->get('config_template') . '/template/account/register-seller.tpl';
@@ -708,9 +716,9 @@ class ControllerAccountRegisterSeller extends Controller {
 			
 			$information_info = $this->model_catalog_information->getInformation($this->config->get('config_account_id'));
 			
-			if ($information_info && !isset($this->request->post['agree'])) {
+			/*if ($information_info && !isset($this->request->post['agree'])) {
       			$this->error['warning'] = sprintf($this->language->get('error_agree'), $information_info['title']);
-			}
+			}*/
 		}
 		
 		// ***** Seller account part *****

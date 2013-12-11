@@ -61,6 +61,7 @@ $_['ms_register_seller_account'] = 'Register a seller account';
 
 // Seller
 $_['ms_mail_greeting'] = "Hello %s,\n\n";
+$_['ms_mail_greeting_no_name'] = "Hello,\n\n";
 $_['ms_mail_ending'] = "\n\nRegards,\n%s";
 $_['ms_mail_message'] = "\n\nMessage:\n%s";
 
@@ -172,11 +173,15 @@ EOT;
 $_['ms_mail_admin_subject_seller_account_created'] = 'New seller account created';
 $_['ms_mail_admin_seller_account_created'] = <<<EOT
 New seller account at %s has been created!
+Seller name: %s (%s)
+E-mail: %s
 EOT;
 
 $_['ms_mail_admin_subject_seller_account_awaiting_moderation'] = 'New seller account awaiting moderation';
 $_['ms_mail_admin_seller_account_awaiting_moderation'] = <<<EOT
 New seller account at %s has been created and is now awaiting moderation.
+Seller name: %s (%s)
+E-mail: %s
 
 You can process it in the Multiseller - Sellers section in back office.
 EOT;
@@ -265,6 +270,9 @@ $_['ms_error_contact_allfields'] = 'Please fill in all fields';
 
 // Account - General 
 $_['ms_account_register_seller'] = 'Register Seller Account';
+$_['ms_account_register_seller_success_heading'] = 'Your Seller Account Has Been Created!';
+$_['ms_account_register_seller_success_message']  = '<p>Welcome to %s!</p> <p>Congratulations! Your new seller account has been successfully created!</p> <p>You can now take advantage of seller privileges and start selling your products with us.</p> <p>If you have any problems, <a href="%s">contact us</a>.</p>';
+$_['ms_account_register_seller_success_approval'] = '<p>Welcome to %s!</p> <p>Your seller account has been registered and is waiting for approval. You will be notified by email once your account has been activated by the store owner.</p><p>If you have any problems, <a href="%s">contact us</a>.</p>';
 
 $_['ms_seller'] = 'Seller';
 $_['ms_account_dashboard'] = 'Dashboard';

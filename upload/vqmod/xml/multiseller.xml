@@ -69,7 +69,7 @@
 		</operation>	
 	</file>
 	
-	<!-- number of sellers/products line -->
+	<!-- Number of sellers/products line -->
 	<file name="catalog/view/theme/&themeFolder;/template/common/header.tpl">
 		<operation error="log">
 			<search position="after"><![CDATA[
@@ -235,7 +235,23 @@
 		</operation>
 	</file>
 	
-	<!-- Add links to the one-page seller profile registration -->
+	<!-- Redirect sellers to the seller dashboard after login -->
+	<file name="catalog/controller/account/login.php">
+		<operation error="log">
+			<search position="replace"><![CDATA[
+				$this->redirect($this->url->link('account/account', '', 'SSL'));
+			]]></search>
+			<add><![CDATA[
+				if ($this->MsLoader->MsSeller->isCustomerSeller($this->customer->getId())) {
+					$this->redirect($this->url->link('seller/account-dashboard', '', 'SSL'));
+				} else {
+					$this->redirect($this->url->link('account/account', '', 'SSL'));
+				}
+			]]></add>
+		</operation>
+	</file>
+	
+	<!-- * Add links to the one-page seller profile registration * -->
 	<!-- In the header -->
 	<file name="catalog/controller/common/header.php">
 		<operation error="log">

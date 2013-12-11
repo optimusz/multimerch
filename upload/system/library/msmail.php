@@ -151,9 +151,13 @@ class MsMail extends Model {
 		$mail->setFrom($this->config->get('config_email'));
 		$mail->setSender($this->config->get('config_name'));
 		if (!isset($data['addressee'])) {
-			$mail_text = 	sprintf($this->language->get('ms_mail_greeting'), $this->_getAddressee($mail_type));
+			if ($mail_type < 100) {
+				$mail_text = sprintf($this->language->get('ms_mail_greeting'), $this->_getAddressee($mail_type));
+			} else {
+				$mail_text = $this->language->get('ms_mail_greeting_no_name');
+			}
 		} else {
-			$mail_text = 	sprintf($this->language->get('ms_mail_greeting'), $data['addressee']);			
+			$mail_text = sprintf($this->language->get('ms_mail_greeting'), $data['addressee']);			
 		}
 		$mail_subject = '['.$this->config->get('config_name').'] ';
 		
@@ -256,7 +260,7 @@ class MsMail extends Model {
 				$mail_text .= sprintf($this->language->get('ms_mail_seller_vote_message'), $data['customer_name'], $data['title'], $data['customer_message']);
 				break;
 				
-			// admin
+			// Admin
 			case self::AMT_PRODUCT_CREATED:
 				$mail_subject .= $this->language->get('ms_mail_admin_subject_product_created');
 				$mail_text .= sprintf($this->language->get('ms_mail_admin_product_created'), $product['name'], $this->config->get('config_name'));
@@ -264,11 +268,11 @@ class MsMail extends Model {
 			
 			case self::AMT_SELLER_ACCOUNT_CREATED:
 				$mail_subject .= $this->language->get('ms_mail_admin_subject_seller_account_created');
-				$mail_text .= sprintf($this->language->get('ms_mail_admin_seller_account_created'), $this->config->get('config_name'));
+				$mail_text .= sprintf($this->language->get('ms_mail_admin_seller_account_created'), $this->config->get('config_name'), $data['seller_name'], $data['customer_name'], $data['customer_email']);
 				break;
 			case self::AMT_SELLER_ACCOUNT_AWAITING_MODERATION:
 				$mail_subject .= $this->language->get('ms_mail_admin_subject_seller_account_awaiting_moderation');
-				$mail_text .= sprintf($this->language->get('ms_mail_admin_seller_account_awaiting_moderation'), $this->config->get('config_name'));
+				$mail_text .= sprintf($this->language->get('ms_mail_admin_seller_account_awaiting_moderation'), $this->config->get('config_name'), $data['seller_name'], $data['customer_name'], $data['customer_email']);
 				break;
 				
 			case self::AMT_NEW_PRODUCT_AWAITING_MODERATION:
