@@ -191,7 +191,7 @@ class ControllerPaymentMSPPAdaptive extends Controller {
 		
 		// primary (store)
 		$receivers[0] = array();
-		$receivers[0]['amount'] = 0;
+		$receivers[0]['amount'] = $this->currency->format(0, $order_info['currency_code'], 1, false);
 		$receivers[0]['ms.paypal'] = $this->config->get('msppaconf_receiver');
 		
 		$order_products = $this->model_account_order->getOrderProducts($this->session->data['order_id']);
@@ -202,7 +202,7 @@ class ControllerPaymentMSPPAdaptive extends Controller {
 			if (!isset($receivers[$seller_id])) {
 				$seller = $this->MsLoader->MsSeller->getSeller($seller_id);
 				$receivers[$seller_id] = $seller;
-				$receivers[$seller_id]['amount'] = 0;
+				$receivers[$seller_id]['amount'] = $this->currency->format(0, $order_info['currency_code'], 1, false);
 			}
 			
 			// don't calculate fees for free products
@@ -272,7 +272,8 @@ class ControllerPaymentMSPPAdaptive extends Controller {
 		}
 		
 		$toPay = $total = $this->currency->format($order_info['total'], $order_info['currency_code'], false, false);
-		$i = $payableAmount = 0;
+		$i = 0;
+		$payableAmount = $this->currency->format(0, $order_info['currency_code'], 1, false);
 		
 		if ($this->config->get('msppaconf_debug')) {
 			$this->_log->write("Generating amounts for order ID {$order_info['order_id']}");

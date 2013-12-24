@@ -294,7 +294,7 @@
 			<tr>
 				<td><?php echo $ms_account_sellerinfo_reviewer_message; ?></td>
 				<td>
-					<textarea name="seller[reviewer_message]" id="message_textarea"></textarea>
+					<textarea name="seller_reviewer_message" id="seller_reviewer_message"></textarea>
 					<p class="ms-note"><?php echo $ms_account_sellerinfo_reviewer_message_note; ?></p>
 				</td>
 			</tr>
@@ -509,7 +509,7 @@ $(document).ready(function() {
 					'<span class="ms-remove"></span>' +
 					'</div>');
 			} else {
-				$('.ms-image input[name="seller[avatar_name]"]').val($(this).data('value'));
+				$('.ms-image input[name="seller_avatar_name"]').val($(this).data('value'));
 				$('.ms-image img').attr('src', $(this).attr('src'));
 			}
 			$(window).colorbox.close();

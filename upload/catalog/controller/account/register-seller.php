@@ -45,6 +45,10 @@ class ControllerAccountRegisterSeller extends Controller {
 				$this->session->data['payment_zone_id'] = $this->request->post['zone_id'];			
 			}
 			
+			if (!isset($this->session->data['seller_reviewer_message'])) {
+				$this->session->data['seller_reviewer_message'] = NULL;
+			}
+			
 			// Seller account part
 			$json = array();
 			$mails = array();
@@ -59,7 +63,7 @@ class ControllerAccountRegisterSeller extends Controller {
 					$mails[] = array(
 						'type' => MsMail::AMT_SELLER_ACCOUNT_AWAITING_MODERATION,
 						'data' => array(
-							'message' => $this->session->data['seller']['reviewer_message'],
+							'message' => $this->session->data['seller_reviewer_message'],
 							'seller_name' => $this->request->post['seller_nickname'],
 							'customer_name' => $this->customer->getFirstname() . ' ' . $this->customer->getLastname(),
 							'customer_email' => $this->MsLoader->MsSeller->getSellerEmail($this->customer->getId())
@@ -106,7 +110,9 @@ class ControllerAccountRegisterSeller extends Controller {
 			$this->session->data['seller']['country'] = $this->request->post['seller_country_id'];
 			$this->session->data['seller']['zone'] = $this->request->post['seller_zone'];
 			$this->session->data['seller']['paypal'] = $this->request->post['seller_paypal'];
-			$this->session->data['seller']['avatar_name'] = $this->request->post['seller_avatar_name'];
+			if (isset($this->request->post['seller_avatar_name'])) {
+				$this->session->data['seller']['avatar_name'] = $this->request->post['seller_avatar_name'];
+			}
 			
 			$this->session->data['seller']['seller_id'] = $this->customer->getId();
 			$this->session->data['seller']['product_validation'] = $this->config->get('msconf_product_validation'); 
@@ -516,6 +522,18 @@ class ControllerAccountRegisterSeller extends Controller {
     		$this->data['seller_avatar'] = $this->request->post['seller_avatar'];
 		} else {
 			$this->data['seller_avatar'] = '';
+		}
+		
+		if (isset($this->request->post['seller_avatar_name'])) {
+    		$this->data['seller_avatar_name'] = $this->request->post['seller_avatar_name'];
+		} else {
+			$this->data['seller_avatar_name'] = '';
+		}
+		
+		if (isset($this->request->post['seller_reviewer_message'])) {
+    		$this->data['seller_reviewer_message'] = $this->request->post['seller_reviewer_message'];
+		} else {
+			$this->data['seller_reviewer_message'] = '';
 		}
 		
 		if ($this->config->get('config_account_id')) {
