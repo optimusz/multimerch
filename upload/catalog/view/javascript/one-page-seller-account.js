@@ -2,6 +2,57 @@ $(function() {
 	$("#sellerinfo_avatar_files").delegate(".ms-remove", "click", function() {
 		$(this).parent().remove();
 	});
+	
+	$("#ms-submit-button").click(function() {
+		$('.success').remove();
+		var button = $(this);
+		var id = $(this).attr('id');
+		
+		if (msGlobals.config_enable_rte == 1) {
+			for (instance in CKEDITOR.instances) {
+				CKEDITOR.instances[instance].updateElement();
+			}
+		}
+		
+		$.ajax({
+			type: "POST",
+			dataType: "json",
+			url: 'index.php?route=account/register-seller/index',
+			data: $("form#ms-sellerinfo").serialize(),
+			beforeSend: function() {
+				button.hide().before('<span class="wait">&nbsp;<img src="catalog/view/theme/default/image/loading.gif" alt="" /></span>');
+				$('p.error').remove();
+			},
+			complete: function(jqXHR, textStatus) {
+				if (textStatus != 'success') {
+					button.show().prev('span.wait').remove();
+					$(".warning.main").text(msGlobals.formError).show();
+					window.scrollTo(0,0);
+				}
+			},
+			success: function(jsonData) {
+				if (!jQuery.isEmptyObject(jsonData.errors)) {
+					$('#ms-submit-button').show().prev('span.wait').remove();
+					$('.error').text('');
+					for (error in jsonData.errors) {
+						if ($('[name="'+error+'"]').length > 0)
+							$('[name="'+error+'"]').parents('td').append('<p class="error">' + jsonData.errors[error] + '</p>');
+						else if ($('#error_'+error).length > 0)
+							$('#error_'+error).text(jsonData.errors[error]);
+						else
+							$(".warning.main").text(jsonData.errors[error]).show();
+					}
+					window.scrollTo(0,0);
+				} else if (!jQuery.isEmptyObject(jsonData.data) && jsonData.data.amount) {
+					$(".ms-payment-form form input[name='custom']").val(jsonData.data.custom);
+					$(".ms-payment-form form input[name='amount']").val(jsonData.data.amount);
+					$(".ms-payment-form form").submit();
+				} else {
+					window.location = jsonData.redirect;
+				}
+	       	}
+		});
+	});
 
 	var uploader = new plupload.Uploader({
 		runtimes : 'gears,html5,flash,silverlight',

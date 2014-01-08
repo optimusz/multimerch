@@ -607,7 +607,7 @@ class ControllerAccountRegisterSeller extends Controller {
 		switch($this->data['group_commissions'][MsCommission::RATE_SIGNUP]['payment_method']) {
 			case MsPayment::METHOD_PAYPAL:
 				$this->data['ms_commission_payment_type'] = $this->language->get('ms_account_sellerinfo_fee_paypal');
-				$this->data['payment_data'] = array(
+				/*$this->data['payment_data'] = array(
 					'sandbox' => $this->config->get('msconf_paypal_sandbox'),
 					'action' => $this->config->get('msconf_paypal_sandbox') ? "https://www.sandbox.paypal.com/cgi-bin/webscr" : "https://www.paypal.com/cgi-bin/webscr",
 					'business' => $this->config->get('msconf_paypal_address'),
@@ -622,7 +622,7 @@ class ControllerAccountRegisterSeller extends Controller {
 				);
 				
 				list($this->template, $this->children) = $this->MsLoader->MsHelper->loadTemplate('payment-paypal');
-				$this->data['payment_form'] = $this->render();
+				$this->data['payment_form'] = $this->render();*/
 				break;
 				
 			case MsPayment::METHOD_BALANCE:
