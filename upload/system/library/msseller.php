@@ -312,7 +312,8 @@ final class MsSeller extends Model {
 				WHERE ms.seller_id = " .  (int)$seller_id
 				. (isset($data['product_id']) ? " AND mp.product_id =  " .  (int)$data['product_id'] : '')
 				. (isset($data['seller_status']) ? " AND seller_status IN  (" .  $this->db->escape(implode(',', $data['seller_status'])) . ")" : '')
-				. " LIMIT 1";
+				. " GROUP BY ms.seller_id
+				LIMIT 1";
 				
 		$res = $this->db->query($sql);
 

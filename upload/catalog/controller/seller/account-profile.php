@@ -90,9 +90,9 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 		if (mb_strlen($data['seller']['description']) > 1000) {
 			$json['errors']['seller[description]'] = $this->language->get('ms_error_sellerinfo_description_length');			
 		}
-
-		if (mb_strlen($data['seller']['paypal']) > 256) {
-			$json['errors']['seller[paypal]'] = $this->language->get('ms_error_sellerinfo_paypal');			
+		
+		if (($data['seller']['paypal'] != "") && ((utf8_strlen($data['seller']['paypal']) > 128) || !preg_match('/^[^\@]+@.*\.[a-z]{2,6}$/i', $data['seller']['paypal']))) {
+			$json['errors']['seller[paypal]'] = $this->language->get('ms_error_sellerinfo_paypal');
 		}
 		
 		if (isset($data['seller']['avatar_name']) && !empty($data['seller']['avatar_name'])) {
@@ -293,7 +293,7 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 								// assign payment variables
 								$json['data']['amount'] = $this->currency->format($fee, $this->config->get('config_currency'), '', FALSE);
 								$json['data']['custom'] = $payment_id;
-			
+								
 								return $this->response->setOutput(json_encode($json));
 								break;
 	

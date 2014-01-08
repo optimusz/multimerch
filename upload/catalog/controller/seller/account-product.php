@@ -535,7 +535,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 			}
 			
 			// attribute validation
-			if (in_array($attribute['attribute_type'], array(MsAttribute::TYPE_SELECT, MsAttribute::TYPE_RADIO, MsAttribute::TYPE_IMAGE))) {
+			if (in_array($attribute['attribute_type'], array(MsAttribute::TYPE_SELECT, MsAttribute::TYPE_RADIO, MsAttribute::TYPE_IMAGE)) && isset($product_attributes[$attribute_id])) {
 				// select, radio, image
 				if ((int)$product_attributes[$attribute_id] == 0) {
 					// not required, not checked
@@ -579,14 +579,15 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 			}
 
 			// set attributes
-			$data['product_attributes'][$attribute_id] = array(
-				'attribute_type' => $attribute['attribute_type'],
-				'value' => $product_attributes[$attribute_id]['value'],
-				'value_id' => $product_attributes[$attribute_id]['value_id'],
-			);
+			if (isset($data['product_attributes'][$attribute_id])) {
+				$data['product_attributes'][$attribute_id] = array(
+					'attribute_type' => $attribute['attribute_type'],
+					'value' => $product_attributes[$attribute_id]['value'],
+					'value_id' => $product_attributes[$attribute_id]['value_id'],
+				);
+			}
 		}
 		
-
         if(!isset($data['product_subtract'])){
             $data['product_subtract'] = 0;
         }

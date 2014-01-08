@@ -148,7 +148,7 @@ class ControllerAccountRegisterSeller extends Controller {
 						$json['data']['custom'] = $payment_id;
 	
 						$this->MsLoader->MsMail->sendMails($mails);
-						return $this->response->setOutput(json_encode($json));
+						return $json;
 						break;
 
 					case MsPayment::METHOD_BALANCE:
@@ -224,7 +224,7 @@ class ControllerAccountRegisterSeller extends Controller {
     	$this->data['entry_confirm'] = $this->language->get('entry_confirm');
 
 		$this->data['button_continue'] = $this->language->get('button_continue');
-    
+		
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
@@ -638,11 +638,10 @@ class ControllerAccountRegisterSeller extends Controller {
 
 		$this->data['seller_validation'] = $this->config->get('msconf_seller_validation');
 		
-		$this->response->setOutput($this->render());	
+		$this->response->setOutput($this->render());
   	}
 
   	protected function validate() {
-	
 		// ***** Buyer account part *****
 		
     	if ((utf8_strlen($this->request->post['firstname']) < 1) || (utf8_strlen($this->request->post['firstname']) > 32)) {
@@ -799,8 +798,8 @@ class ControllerAccountRegisterSeller extends Controller {
 			//$json['errors']['seller[description]'] = $this->language->get('ms_error_sellerinfo_description_length');
 			$this->error['seller_description'] = $this->language->get('ms_error_sellerinfo_description_length');
 		}
-
-		if (mb_strlen($data['seller_paypal']) > 256) {
+		
+		if (($data['seller_paypal'] != "") && ((utf8_strlen($data['seller_paypal']) > 128) || !preg_match('/^[^\@]+@.*\.[a-z]{2,6}$/i', $data['seller_paypal']))) {
 			//$json['errors']['seller[paypal]'] = $this->language->get('ms_error_sellerinfo_paypal');
 			$this->error['seller_paypal'] = $this->language->get('ms_error_sellerinfo_paypal');
 		}

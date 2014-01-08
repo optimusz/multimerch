@@ -14,7 +14,7 @@
   
   <h1><?php echo $ms_account_register_seller; ?></h1>
   <p><?php echo $text_account_already; ?></p>
-  <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data">
+  <form id="ms-accountinfo">
     <h2><?php echo $text_your_details; ?></h2>
     <div class="content">
       <table class="form">
@@ -340,13 +340,13 @@
         <?php } else { ?>
         <input type="checkbox" name="agree" value="1" />
         <?php } ?>-->
-        <input type="submit" value="<?php echo $button_continue; ?>" class="button" />
+        <a class="button" id="ms-submit-button" value="<?php echo $button_continue; ?>"><span><?php echo $ms_button_save; ?></span></a>
       </div>
     </div>
     <?php } else { ?>
     <div class="buttons">
       <div class="right">
-        <input type="submit" value="<?php echo $button_continue; ?>" class="button" />
+        <a class="button" id="ms-submit-button" value="<?php echo $button_continue; ?>"><span><?php echo $ms_button_save; ?></span></a>
       </div>
     </div>
     <?php } ?>

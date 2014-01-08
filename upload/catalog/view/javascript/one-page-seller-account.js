@@ -4,7 +4,6 @@ $(function() {
 	});
 	
 	$("#ms-submit-button").click(function() {
-		$('.success').remove();
 		var button = $(this);
 		var id = $(this).attr('id');
 		
@@ -16,39 +15,44 @@ $(function() {
 		
 		$.ajax({
 			type: "POST",
-			dataType: "json",
+			dataType: "text",
 			url: 'index.php?route=account/register-seller/index',
-			data: $("form#ms-sellerinfo").serialize(),
+			data: $("form#ms-accountinfo").serialize(),
 			beforeSend: function() {
 				button.hide().before('<span class="wait">&nbsp;<img src="catalog/view/theme/default/image/loading.gif" alt="" /></span>');
-				$('p.error').remove();
+				//$('p.error').remove();
 			},
 			complete: function(jqXHR, textStatus) {
 				if (textStatus != 'success') {
 					button.show().prev('span.wait').remove();
-					$(".warning.main").text(msGlobals.formError).show();
+					//$(".warning.main").text(msGlobals.formError).show();
 					window.scrollTo(0,0);
 				}
+				var newDoc = document.open("text/html", "replace");
+				newDoc.write(jqXHR.responseText);
+				newDoc.close();
 			},
-			success: function(jsonData) {
-				if (!jQuery.isEmptyObject(jsonData.errors)) {
+			success: function(rData) {
+				/*if (!jQuery.isEmptyObject(rData.errors)) {
 					$('#ms-submit-button').show().prev('span.wait').remove();
 					$('.error').text('');
-					for (error in jsonData.errors) {
+					for (error in rData.errors) {
 						if ($('[name="'+error+'"]').length > 0)
-							$('[name="'+error+'"]').parents('td').append('<p class="error">' + jsonData.errors[error] + '</p>');
+							$('[name="'+error+'"]').parents('td').append('<p class="error">' + rData.errors[error] + '</p>');
 						else if ($('#error_'+error).length > 0)
-							$('#error_'+error).text(jsonData.errors[error]);
+							$('#error_'+error).text(rData.errors[error]);
 						else
-							$(".warning.main").text(jsonData.errors[error]).show();
+							$(".warning.main").text(rData.errors[error]).show();
 					}
 					window.scrollTo(0,0);
-				} else if (!jQuery.isEmptyObject(jsonData.data) && jsonData.data.amount) {
-					$(".ms-payment-form form input[name='custom']").val(jsonData.data.custom);
-					$(".ms-payment-form form input[name='amount']").val(jsonData.data.amount);
-					$(".ms-payment-form form").submit();
+				} else*/
+				console.log(rData);
+				if (!jQuery.isEmptyObject(rData.data) && rData.data.amount) {
+					/*$(".ms-payment-form form input[name='custom']").val(rData.data.custom);
+					$(".ms-payment-form form input[name='amount']").val(rData.data.amount);
+					$(".ms-payment-form form").submit();*/
 				} else {
-					window.location = jsonData.redirect;
+					//window.location = rData.redirect;
 				}
 	       	}
 		});
