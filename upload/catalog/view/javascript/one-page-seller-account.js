@@ -28,9 +28,11 @@ $(function() {
 					//$(".warning.main").text(msGlobals.formError).show();
 					window.scrollTo(0,0);
 				}
-				var newDoc = document.open("text/html", "replace");
-				newDoc.write(jqXHR.responseText);
-				newDoc.close();
+				if (jqXHR.responseText.indexOf("<html>") >= 0) {
+					var newDoc = document.open("text/html", "replace");
+					newDoc.write(jqXHR.responseText);
+					newDoc.close();
+				}
 			},
 			success: function(rData) {
 				/*if (!jQuery.isEmptyObject(rData.errors)) {
@@ -46,11 +48,11 @@ $(function() {
 					}
 					window.scrollTo(0,0);
 				} else*/
-				console.log(rData);
-				if (!jQuery.isEmptyObject(rData.data) && rData.data.amount) {
-					/*$(".ms-payment-form form input[name='custom']").val(rData.data.custom);
-					$(".ms-payment-form form input[name='amount']").val(rData.data.amount);
-					$(".ms-payment-form form").submit();*/
+				if (rData && rData.length !== 0) {
+					var payment = rData.split(",");
+					$(".ms-payment-form form input[name='custom']").val(payment[1]);
+					$(".ms-payment-form form input[name='amount']").val(payment[0]);
+					$(".ms-payment-form form").submit();
 				} else {
 					//window.location = rData.redirect;
 				}

@@ -144,11 +144,16 @@ class ControllerAccountRegisterSeller extends Controller {
 						));
 						
 						// assign payment variables
-						$json['data']['amount'] = $this->currency->format($fee, $this->config->get('config_currency'), '', FALSE);
-						$json['data']['custom'] = $payment_id;
+						//$json['data']['amount'] = $this->currency->format($fee, $this->config->get('config_currency'), '', FALSE);
+						//$json['data']['custom'] = $payment_id;
+						$payment['amount'] = $this->currency->format($fee, $this->config->get('config_currency'), '', FALSE);
+						$payment['custom'] = $payment_id;
 	
 						$this->MsLoader->MsMail->sendMails($mails);
-						return $json;
+						//return $this->response->setOutput(json_encode($json));
+						//return $payment['amount'] . ',' . $payment['custom'];
+						echo $payment['amount'] . ',' . $payment['custom'];
+						return;
 						break;
 
 					case MsPayment::METHOD_BALANCE:
@@ -167,10 +172,9 @@ class ControllerAccountRegisterSeller extends Controller {
 				}
 			} else {
 				$this->MsLoader->MsMail->sendMails($mails);
+				$this->redirect($this->url->link('account/seller-success'));
 			}
-			
-	  		$this->redirect($this->url->link('account/seller-success'));
-    	} 
+    	}
 
       	$this->data['breadcrumbs'] = array();
 
@@ -556,21 +560,6 @@ class ControllerAccountRegisterSeller extends Controller {
 			$this->data['agree'] = false;
 		}*/
 		
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/register-seller.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/account/register-seller.tpl';
-		} else {
-			$this->template = 'default/template/account/register-seller.tpl';
-		}
-		
-		$this->children = array(
-			'common/column_left',
-			'common/column_right',
-			'common/content_top',
-			'common/content_bottom',
-			'common/footer',
-			'common/header'	
-		);
-		
 		// ***** Seller account part *****
 		$this->document->addScript('catalog/view/javascript/one-page-seller-account.js');
 		$this->document->addScript('catalog/view/javascript/plupload/plupload.full.js');
@@ -607,7 +596,7 @@ class ControllerAccountRegisterSeller extends Controller {
 		switch($this->data['group_commissions'][MsCommission::RATE_SIGNUP]['payment_method']) {
 			case MsPayment::METHOD_PAYPAL:
 				$this->data['ms_commission_payment_type'] = $this->language->get('ms_account_sellerinfo_fee_paypal');
-				/*$this->data['payment_data'] = array(
+				$this->data['payment_data'] = array(
 					'sandbox' => $this->config->get('msconf_paypal_sandbox'),
 					'action' => $this->config->get('msconf_paypal_sandbox') ? "https://www.sandbox.paypal.com/cgi-bin/webscr" : "https://www.paypal.com/cgi-bin/webscr",
 					'business' => $this->config->get('msconf_paypal_address'),
@@ -622,7 +611,7 @@ class ControllerAccountRegisterSeller extends Controller {
 				);
 				
 				list($this->template, $this->children) = $this->MsLoader->MsHelper->loadTemplate('payment-paypal');
-				$this->data['payment_form'] = $this->render();*/
+				$this->data['payment_form'] = $this->render();
 				break;
 				
 			case MsPayment::METHOD_BALANCE:
@@ -637,6 +626,21 @@ class ControllerAccountRegisterSeller extends Controller {
 		}
 
 		$this->data['seller_validation'] = $this->config->get('msconf_seller_validation');
+		
+		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/register-seller.tpl')) {
+			$this->template = $this->config->get('config_template') . '/template/account/register-seller.tpl';
+		} else {
+			$this->template = 'default/template/account/register-seller.tpl';
+		}
+		
+		$this->children = array(
+			'common/column_left',
+			'common/column_right',
+			'common/content_top',
+			'common/content_bottom',
+			'common/footer',
+			'common/header'	
+		);
 		
 		$this->response->setOutput($this->render());
   	}

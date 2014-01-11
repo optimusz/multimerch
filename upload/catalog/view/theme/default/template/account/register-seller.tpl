@@ -307,8 +307,6 @@
 			<?php echo sprintf($this->language->get('ms_account_sellerinfo_fee_flat'),$this->currency->format($group_commissions[MsCommission::RATE_SIGNUP]['flat'], $this->config->get('config_currency')), $this->config->get('config_name')); ?>
 			<?php echo $ms_commission_payment_type; ?>
 		</p>
-		
-		<?php if(isset($payment_form)) { ?><div class="ms-payment-form"><?php echo $payment_form; ?></div><?php } ?>
 	<?php } ?>
 	
 	<!-- Common part -->
@@ -351,6 +349,12 @@
     </div>
     <?php } ?>
   </form>
+  
+  <!-- Payment Form -->
+  	<?php if (isset($group_commissions) && $group_commissions[MsCommission::RATE_SIGNUP]['flat'] > 0) { ?>
+		<?php if(isset($payment_form)) { ?><div class="ms-payment-form"><?php echo $payment_form; ?></div><?php } ?>
+	<?php } ?>
+  
   <?php echo $content_bottom; ?></div>
 
 <!-- Seller account part -->
