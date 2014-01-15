@@ -253,7 +253,7 @@ class ModelMultisellerSettings extends Model {
 					$this->db->query("CREATE TABLE `" . DB_PREFIX . "ms_attribute` (`attribute_id` int(11) NOT NULL AUTO_INCREMENT, `attribute_type` int(11) NOT NULL, `number` TINYINT NOT NULL DEFAULT 0, `multilang` TINYINT NOT NULL DEFAULT 0, `required` TINYINT NOT NULL DEFAULT 0, `enabled` TINYINT NOT NULL DEFAULT 1, `sort_order` int(3) NOT NULL, PRIMARY KEY (`attribute_id`)) DEFAULT CHARSET=utf8");
 					$this->db->query("CREATE TABLE `" . DB_PREFIX . "ms_attribute_description` (`attribute_id` int(11) NOT NULL, `language_id` int(11) NOT NULL, `name` varchar(128) NOT NULL, `description` TEXT NOT NULL DEFAULT '', PRIMARY KEY (`attribute_id`,`language_id`)) DEFAULT CHARSET=utf8");
 					$this->db->query("CREATE TABLE `" . DB_PREFIX . "ms_attribute_value` (`attribute_value_id` int(11) NOT NULL AUTO_INCREMENT, `attribute_id` int(11) NOT NULL, `image` varchar(255) NOT NULL, `sort_order` int(3) NOT NULL, PRIMARY KEY (`attribute_value_id`)) DEFAULT CHARSET=utf8");
-					$this->db->query("CREATE TABLE `" . DB_PREFIX . "ms_attribute_value_description` (`attribute_value_id` int(11) NOT NULL,`language_id` int(11) NOT NULL, `attribute_id` int(11) NOT NULL, `name` varchar(128) NOT NULL, PRIMARY KEY (`attribute_value_id`,`language_id`)) DEFAULT CHARSET=utf8");
+					$this->db->query("CREATE TABLE `" . DB_PREFIX . "ms_attribute_value_description` (`attribute_value_id` int(11) NOT NULL,`language_id` int(11) NOT NULL, `attribute_id` int(11) NOT NULL, `name` TEXT NOT NULL, PRIMARY KEY (`attribute_value_id`,`language_id`)) DEFAULT CHARSET=utf8");
 
 					$option_ids = implode(',',$this->config->get('msconf_product_options'));
 					if (empty($option_ids)) return true;
@@ -532,9 +532,9 @@ class ModelMultisellerSettings extends Model {
 			 `attribute_value_id` int(11) NOT NULL,
 			 `language_id` int(11) NOT NULL,
 			 `attribute_id` int(11) NOT NULL,
-			 `name` varchar(128) NOT NULL,
+			 `name` TEXT NOT NULL,
 			 PRIMARY KEY (`attribute_value_id`,`language_id`)
-			) DEFAULT CHARSET=utf8";		
+			) DEFAULT CHARSET=utf8";
 		$this->db->query($sql);
 		
 		$sql = " 

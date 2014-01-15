@@ -379,7 +379,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 							$json['errors']["languages[$language_id][product_attributes][$attribute_id]"] = sprintf($this->language->get('ms_error_product_attribute_long'), 100);
 							continue;
 						}
-						// text input validation
+					// text input validation
 					} else if ($attribute['attribute_type'] == MsAttribute::TYPE_TEXTAREA) {
 						if (mb_strlen($product_attributes[$attribute_id]['value']) > 2000) {
 							$json['errors']["languages[$language_id][product_attributes][$attribute_id]"] = sprintf($this->language->get('ms_error_product_attribute_long'), 2000);
