@@ -610,6 +610,7 @@ $_['ms_catalog_sellers'] = 'Sellers';
 $_['ms_catalog_sellers_empty'] = 'There are no sellers yet.';
 $_['ms_catalog_seller_profile_heading'] = '%s\'s profile';
 $_['ms_catalog_seller_profile_breadcrumbs'] = '%s\'s profile';
+$_['ms_catalog_seller_profile_about_seller'] = 'About the seller';
 $_['ms_catalog_seller_profile_products'] = 'Some of seller\'s products';
 $_['ms_catalog_seller_profile_tab_products'] = 'Products';
 $_['ms_catalog_seller_profile_tab_comments'] = 'Comments';

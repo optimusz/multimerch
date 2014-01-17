@@ -57,7 +57,7 @@
 		</div>
 			
 		<div class="seller-description">
-			<h4>About the seller</h4>
+			<h4><?php echo $ms_catalog_seller_profile_about_seller; ?></h4>
 			<?php echo $seller['description']; ?>
 		</div>
 	</div>
