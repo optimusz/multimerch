@@ -665,9 +665,6 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		if (empty($json['errors'])) {
 			$mails = array();
 			
-			$commissions = $this->MsLoader->MsCommission->calculateCommission(array('seller_id' => $this->customer->getId()));
-			$fee = (float)$commissions[MsCommission::RATE_LISTING]['flat'] + $commissions[MsCommission::RATE_LISTING]['percent'] * $data['product_price'] / 100;
-			
 			// Relist the product
 			if ($this->config->get('msconf_allow_relisting')) {
 				$product_status = $this->MsLoader->MsProduct->getStatus((int)$data['product_id']);
