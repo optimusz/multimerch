@@ -665,9 +665,14 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		if (empty($json['errors'])) {
 			$mails = array();
 			
+			$commissions = $this->MsLoader->MsCommission->calculateCommission(array('seller_id' => $this->customer->getId()));
+			$fee = (float)$commissions[MsCommission::RATE_LISTING]['flat'] + $commissions[MsCommission::RATE_LISTING]['percent'] * $data['product_price'] / 100;
+			
 			// Relist the product
 			if ($this->config->get('msconf_allow_relisting')) {
-				if (isset($data['product_id']) && !empty($data['product_id'])) {
+				$product_status = $this->MsLoader->MsProduct->getStatus((int)$data['product_id']);
+				//if ((isset($data['product_id']) && !empty($data['product_id'])) && ($product_status == MsProduct::STATUS_DISABLED || $product_status == MsProduct::STATUS_UNPAID)) {
+				if ((isset($data['product_id']) && !empty($data['product_id'])) && $product_status == MsProduct::STATUS_DISABLED) {
 					$this->MsLoader->MsProduct->changeStatus((int)$data['product_id'], MsProduct::STATUS_ACTIVE);
 				}
 			}
@@ -725,11 +730,9 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 			
 			if (isset($data['product_id']) && !empty($data['product_id'])) {
 				$product_id = $this->MsLoader->MsProduct->editProduct($data);
-				
 				if ($product['product_status'] == MsProduct::STATUS_UNPAID) {
 					$commissions = $this->MsLoader->MsCommission->calculateCommission(array('seller_id' => $this->customer->getId()));
 					$fee = (float)$commissions[MsCommission::RATE_LISTING]['flat'] + $commissions[MsCommission::RATE_LISTING]['percent'] * $data['product_price'] / 100;
-					
 					if ($fee > 0) {
 						switch($commissions[MsCommission::RATE_LISTING]['payment_method']) {
 							case MsPayment::METHOD_PAYPAL:
@@ -1123,7 +1126,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		$relist = isset($this->request->get['relist']) ? (int)$this->request->get['relist'] : 0;
 		$seller_id = $this->customer->getId();
 		
-		if  ($this->MsLoader->MsProduct->productOwnedBySeller($product_id,$seller_id)) {
+		if  ($this->MsLoader->MsProduct->productOwnedBySeller($product_id, $seller_id)) {
     		$product = $this->MsLoader->MsProduct->getProduct($product_id);
 		} else {
 			$product = NULL;
@@ -1131,6 +1134,16 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 
 		if (!$product)
 			return $this->redirect($this->url->link('seller/account-product', '', 'SSL'));
+			
+		// Fees for re-listing
+		if ($relist) {
+			$commissions = $this->MsLoader->MsCommission->calculateCommission(array('seller_id' => $this->customer->getId()));
+			$fee = (float)$commissions[MsCommission::RATE_LISTING]['flat'] + $commissions[MsCommission::RATE_LISTING]['percent'] * $product['price'] / 100;
+			
+			if ($fee > 0) {
+				$this->MsLoader->MsProduct->changeStatus($product_id, MsProduct::STATUS_UNPAID);
+			}
+		}
 			
 		$this->_initForm();
 
