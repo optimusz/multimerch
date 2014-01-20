@@ -672,55 +672,63 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 				}
 			}
 			
-			// set product status
-			switch ($seller['ms.product_validation']) {
-				case MsProduct::MS_PRODUCT_VALIDATION_APPROVAL:
-					$data['enabled'] = 0;
-					$data['product_status'] = MsProduct::STATUS_INACTIVE;
-					$data['product_approved'] = 0;
-					if (isset($data['product_id']) && !empty($data['product_id'])) {
-						//$request_type = MsRequestProduct::TYPE_PRODUCT_UPDATE;
-					} else {
-						//$request_type = MsRequestProduct::TYPE_PRODUCT_CREATE;
-					}
-					
-					if (!isset($data['product_id']) || empty($data['product_id'])) {
-						$mails[] = array(
-							'type' => MsMail::SMT_PRODUCT_AWAITING_MODERATION
-						);
-						$mails[] = array(
-							'type' => MsMail::AMT_NEW_PRODUCT_AWAITING_MODERATION,
-							'data' => array(
-								'message' => $data['product_message']
-							)
-						);
-					} else {
-						$mails[] = array(
-							'type' => MsMail::SMT_PRODUCT_AWAITING_MODERATION
-						);
-						$mails[] = array(
-							'type' => MsMail::AMT_EDIT_PRODUCT_AWAITING_MODERATION,
-							'data' => array(
-								'message' => $data['product_message']
-							)
-						);						
-					}
-					break;
-					
-				case MsProduct::MS_PRODUCT_VALIDATION_NONE:
-				default:
-					$data['enabled'] = 1;
-					$data['product_status'] = MsProduct::STATUS_ACTIVE;
-					$data['product_approved'] = 1;
-					
-					if (!isset($data['product_id']) || empty($data['product_id'])) {
-						$mails[] = array(
-							'type' => MsMail::AMT_PRODUCT_CREATED
-						);
-					} else {
-						// product edited mail if needed
-					}
-					break;
+			// If it is allowed for inactive seller to list new products
+			if ($this->config->get('msconf_allow_inactive_seller_products') && $this->MsLoader->MsSeller->getStatus() == MsSeller::STATUS_INACTIVE) {
+				$data['enabled'] = 0;
+				$data['product_status'] = MsProduct::STATUS_INACTIVE;
+				$data['product_approved'] = 0;
+				// No e-mails are sent here
+			} else {
+				// Set product status
+				switch ($seller['ms.product_validation']) {
+					case MsProduct::MS_PRODUCT_VALIDATION_APPROVAL:
+						$data['enabled'] = 0;
+						$data['product_status'] = MsProduct::STATUS_INACTIVE;
+						$data['product_approved'] = 0;
+						/*if (isset($data['product_id']) && !empty($data['product_id'])) {
+							//$request_type = MsRequestProduct::TYPE_PRODUCT_UPDATE;
+						} else {
+							//$request_type = MsRequestProduct::TYPE_PRODUCT_CREATE;
+						}*/
+						
+						if (!isset($data['product_id']) || empty($data['product_id'])) {
+							$mails[] = array(
+								'type' => MsMail::SMT_PRODUCT_AWAITING_MODERATION
+							);
+							$mails[] = array(
+								'type' => MsMail::AMT_NEW_PRODUCT_AWAITING_MODERATION,
+								'data' => array(
+									'message' => isset($data['product_message']) ? $data['product_message'] : ''
+								)
+							);
+						} else {
+							$mails[] = array(
+								'type' => MsMail::SMT_PRODUCT_AWAITING_MODERATION
+							);
+							$mails[] = array(
+								'type' => MsMail::AMT_EDIT_PRODUCT_AWAITING_MODERATION,
+								'data' => array(
+									'message' => isset($data['product_message']) ? $data['product_message'] : ''
+								)
+							);						
+						}
+						break;
+						
+					case MsProduct::MS_PRODUCT_VALIDATION_NONE:
+					default:
+						$data['enabled'] = 1;
+						$data['product_status'] = MsProduct::STATUS_ACTIVE;
+						$data['product_approved'] = 1;
+						
+						if (!isset($data['product_id']) || empty($data['product_id'])) {
+							$mails[] = array(
+								'type' => MsMail::AMT_PRODUCT_CREATED
+							);
+						} else {
+							// product edited mail if needed
+						}
+						break;
+				}
 			}
 			
 			if (isset($data['product_id']) && !empty($data['product_id'])) {

@@ -108,6 +108,9 @@ $_['ms_config_product_validation_note'] = 'Product validation';
 $_['ms_config_product_validation_none'] = 'No validation';
 $_['ms_config_product_validation_approval'] = 'Manual approval';
 
+$_['ms_config_allow_inactive_seller_products'] = 'Allow inactive sellers to list products';
+$_['ms_config_allow_inactive_seller_products_note'] = 'Allows inactive sellers to list new products, which will be inactive. After approval of such seller all his products will become active at once.';
+
 $_['ms_config_disable_product_after_quantity_depleted'] = 'Disable product after quantity depletes';
 $_['ms_config_disable_product_after_quantity_depleted_note'] = 'The product will be disabled after it is sold out (quantity is 0)';
 

@@ -204,7 +204,7 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 						'seller_id' => $seller['seller_id']
 					)
 				);
-	
+	// echo '<pre>'; print_r($seller); echo '</pre>'; die();
 				switch ($data['seller']['status']) {
 					case MsSeller::STATUS_INACTIVE:
 					case MsSeller::STATUS_DISABLED:
@@ -220,6 +220,19 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 						$data['seller']['approved'] = 0;
 						break;
 					case MsSeller::STATUS_ACTIVE:
+						if ($seller['ms.seller_status'] == MsSeller::STATUS_INACTIVE && $this->config->get('msconf_allow_inactive_seller_products')) {
+							$products = $this->MsLoader->MsProduct->getProducts(array(
+								'seller_id' => $seller['seller_id']
+							));
+							
+							foreach ($products as $p) {
+								$this->MsLoader->MsProduct->changeStatus($p['product_id'], $data['seller']['status']);
+								if ($this->config->get('msconf_product_validation') == MsProduct::MS_PRODUCT_VALIDATION_NONE) {
+									$this->MsLoader->MsProduct->approve($p['product_id']);
+								}
+							}
+						}
+						
 						$data['seller']['approved'] = 1;
 						break;
 				}

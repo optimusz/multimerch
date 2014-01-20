@@ -73,6 +73,19 @@
 					
 					<tr>
 						<td>
+							<span><?php echo $ms_config_allow_inactive_seller_products; ?></span>
+							<span class="help"><?php echo $ms_config_allow_inactive_seller_products_note; ?></span>
+						</td>
+						<td>
+							<input type="radio" name="msconf_allow_inactive_seller_products" value="1" <?php if($msconf_allow_inactive_seller_products == 1) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_yes; ?>
+							<input type="radio" name="msconf_allow_inactive_seller_products" value="0" <?php if($msconf_allow_inactive_seller_products == 0) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_no; ?>
+					  	</td>
+					</tr>		
+          
+					<tr>
+						<td>
 							<span><?php echo $ms_config_disable_product_after_quantity_depleted; ?></span>
 							<span class="help"><?php echo $ms_config_disable_product_after_quantity_depleted_note; ?></span>
 						</td>

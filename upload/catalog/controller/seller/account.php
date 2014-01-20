@@ -40,8 +40,12 @@ class ControllerSellerAccount extends Controller {
     			$this->redirect($this->url->link('seller/account-profile', '', 'SSL'));
     		}
     	} else if ($this->MsLoader->MsSeller->getStatus() != MsSeller::STATUS_ACTIVE) {
-    		if (!array_intersect($parts, array('account-profile', 'jxsavesellerinfo', 'jxUploadSellerAvatar'))) {
-    			$this->redirect($this->url->link('seller/account-profile', '', 'SSL'));
+			$allowed_routes = array('account-profile', 'jxsavesellerinfo', 'jxUploadSellerAvatar');
+			if ($this->MsLoader->MsSeller->getStatus() == MsSeller::STATUS_INACTIVE && $this->config->get('msconf_allow_inactive_seller_products')) {
+				$allowed_routes[] = 'account-product';
+			}
+    		if (!array_intersect($parts, $allowed_routes)) {
+				$this->redirect($this->url->link('seller/account-profile', '', 'SSL'));
     		}
     	}
 		

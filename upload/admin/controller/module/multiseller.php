@@ -18,6 +18,7 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 	private $settings = array(
 		"msconf_seller_validation" => MsSeller::MS_SELLER_VALIDATION_NONE,
 		"msconf_product_validation" => MsProduct::MS_PRODUCT_VALIDATION_NONE,
+		"msconf_allow_inactive_seller_products" => 0,
 		"msconf_nickname_rules" => 0, // 0 - alnum, 1 - latin extended, 2 - utf
 		"msconf_credit_order_statuses" => array(5),
 		"msconf_debit_order_statuses" => array(8),
