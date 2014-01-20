@@ -667,9 +667,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 			
 			// Relist the product
 			if ($this->config->get('msconf_allow_relisting')) {
-				$product_status = $this->MsLoader->MsProduct->getStatus((int)$data['product_id']);
-				//if ((isset($data['product_id']) && !empty($data['product_id'])) && ($product_status == MsProduct::STATUS_DISABLED || $product_status == MsProduct::STATUS_UNPAID)) {
-				if ((isset($data['product_id']) && !empty($data['product_id'])) && $product_status == MsProduct::STATUS_DISABLED) {
+				if ((isset($data['product_id']) && !empty($data['product_id'])) && $this->MsLoader->MsProduct->getStatus((int)$data['product_id']) == MsProduct::STATUS_DISABLED) {
 					$this->MsLoader->MsProduct->changeStatus((int)$data['product_id'], MsProduct::STATUS_ACTIVE);
 				}
 			}
