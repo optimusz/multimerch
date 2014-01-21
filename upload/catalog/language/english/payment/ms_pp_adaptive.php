@@ -7,4 +7,6 @@ $_['ppa_error_distribution']        = 'Configuration Error: Invalid Amount Distr
 $_['ppa_error_noreceivers']        = 'Configuration Error: No valid receivers specified. Order ID: %s';
 $_['ppa_error_request']        = 'PayPal Request Error: Correlation ID %s';
 $_['ppa_error_response']        = 'PayPal Response Error: Status %s Correlation ID: %s';
+
+$_['ms_transaction_order'] = 'Sale: Order Id #%s';
 ?>

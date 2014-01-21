@@ -215,8 +215,8 @@ class ControllerPaymentMSPPAdaptive extends Controller {
 				$store_commission_flat = $store_commission_pct = $seller_net_amt = 0;
 			}
 			
-			// create order data if required
-			/*$order_data = $this->MsLoader->MsOrderData->getOrderData(
+			// Create order data if required
+			$order_data = $this->MsLoader->MsOrderData->getOrderData(
 				array(
 					'product_id' => $order_product['product_id'],
 					'order_id' => $order_product['order_id'],
@@ -224,7 +224,7 @@ class ControllerPaymentMSPPAdaptive extends Controller {
 			);
 			
 			if (!$order_data) {
-				// create order product data
+				// Create order product data
 				$this->MsLoader->MsOrderData->addOrderProductData(
 					$order_product['order_id'],
 					$order_product['product_id'],
@@ -235,7 +235,7 @@ class ControllerPaymentMSPPAdaptive extends Controller {
 						'seller_net_amt' => $seller_net_amt
 					)
 				);
-			}*/
+			}
 			
 			// store commission
 			$receivers[0]['amount'] += $this->currency->format($store_commission_flat, $order_info['currency_code'], 1, false) + $this->currency->format($store_commission_pct, $order_info['currency_code'], 1, false);

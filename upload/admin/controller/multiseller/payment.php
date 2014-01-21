@@ -243,7 +243,7 @@ class ControllerMultisellerPayment extends ControllerMultisellerBase {
 
 		if (isset($this->request->post['selected'])) {
 			$payments = array();
-			$total = 0;
+			$total = $this->currency->format(0, $this->config->get('config_currency'), 1, false);
 			foreach ($this->request->post['selected'] as $payment_id) {
 				$result = $this->MsLoader->MsPayment->getPayments(
 					array(
@@ -259,13 +259,13 @@ class ControllerMultisellerPayment extends ControllerMultisellerBase {
 					$payments[] = array (
 						'nickname' => $result['nickname'],
 						'paypal' => $result['paypal'],
-						'amount' => $this->currency->format(abs($result['amount']),$result['currency_code'])
+						'amount' => $this->currency->format(abs($result['amount']), $result['currency_code'], '', false)
 					);
 				}
 			}
 			
 			if ($payments) {
-				$this->data['total_amount'] = $this->currency->format($total, $this->config->get('config_currency'));
+				$this->data['total_amount'] = $this->currency->format($total, $this->config->get('config_currency'), '', false);
 				$this->data['payments'] = $payments;
 				list($this->template, $this->children) = $this->MsLoader->MsHelper->admLoadTemplate('dialog-withdrawal-masspay');
 				$json['html'] = $this->render();
