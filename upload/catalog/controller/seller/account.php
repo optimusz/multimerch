@@ -43,6 +43,13 @@ class ControllerSellerAccount extends Controller {
 			$allowed_routes = array('account-profile', 'jxsavesellerinfo', 'jxUploadSellerAvatar');
 			if ($this->MsLoader->MsSeller->getStatus() == MsSeller::STATUS_INACTIVE && $this->config->get('msconf_allow_inactive_seller_products')) {
 				$allowed_routes[] = 'account-product';
+				$allowed_routes[] = 'jxSubmitProduct';
+				$allowed_routes[] = 'jxUploadDownloads';
+				$allowed_routes[] = 'jxUploadImages';
+				$allowed_routes[] = 'jxSubmitPdfgenDialog';
+				$allowed_routes[] = 'jxRenderPdfgenDialog';
+				$allowed_routes[] = 'jxAutocomplete';
+				$allowed_routes[] = 'tab-shipping';
 			}
     		if (!array_intersect($parts, $allowed_routes)) {
 				$this->redirect($this->url->link('seller/account-profile', '', 'SSL'));

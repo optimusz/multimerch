@@ -153,7 +153,11 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 							)
 						);
 						$data['seller']['status'] = MsSeller::STATUS_INACTIVE;
-						$json['redirect'] = $this->url->link('seller/account-profile');
+						if ($this->config->get('msconf_allow_inactive_seller_products')) {
+							$json['redirect'] = $this->url->link('account/account');
+						} else {
+							$json['redirect'] = $this->url->link('seller/account-profile');
+						}
 						break;
 					
 					case MsSeller::MS_SELLER_VALIDATION_NONE:

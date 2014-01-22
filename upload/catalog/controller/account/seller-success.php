@@ -36,8 +36,13 @@ class ControllerAccountSellerSuccess extends Controller {
 		
 		$this->data['button_continue'] = $this->language->get('button_continue');
 		
-		if ($this->cart->hasProducts()) {
+		/*if ($this->cart->hasProducts()) {
 			$this->data['continue'] = $this->url->link('checkout/cart', '', 'SSL');
+		} else {
+			$this->data['continue'] = $this->url->link('seller/account-dashboard', '', 'SSL');
+		}*/
+		if ($this->MsLoader->MsSeller->getStatus() == MsSeller::STATUS_INACTIVE && $this->config->get('msconf_allow_inactive_seller_products')) {
+			$this->data['continue'] = $this->url->link('account/account', '', 'SSL');
 		} else {
 			$this->data['continue'] = $this->url->link('seller/account-dashboard', '', 'SSL');
 		}
