@@ -113,11 +113,13 @@ class MsOrderData extends Model {
 	}
 	*/
 	
-	public function getOrderData($order_id, $data = array()) {
+	public function getOrderData($data = array()) {
 		$sql = "SELECT *
 				FROM " . DB_PREFIX . "ms_order_product_data
-				WHERE order_id = " . (int)$order_id
-				. (isset($data['product_id']) ? " AND product_id =  " .  (int)$data['product_id'] : '');
+				WHERE 1 = 1"
+				. (isset($data['product_id']) ? " AND product_id =  " .  (int)$data['product_id'] : '')
+				. (isset($data['order_id']) ? " AND order_id =  " .  (int)$data['order_id'] : '');
+		
 		$res = $this->db->query($sql);
 
 		return $res->rows;
