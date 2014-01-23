@@ -685,13 +685,13 @@
 							}
 							
 							// Add order data if doesn't exist yet
-							$order_data = $this->MsLoader->MsOrderData->getOrderData(
+							/*$order_data = $this->MsLoader->MsOrderData->getOrderData(
 								array(
 									'product_id' => $order_product['product_id'],
 									'order_id' => $order_product['order_id'],
 								)
 							);
-							if (!$order_data) {
+							if (!$order_data) {*/
 								$this->MsLoader->MsOrderData->addOrderProductData(
 									$order_product['order_id'],
 									$order_product['product_id'],								
@@ -702,7 +702,7 @@
 										'seller_net_amt' => $seller_net_amt									
 									)
 								);
-							}
+							//}
 							
 							$this->MsLoader->MsBalance->addBalanceEntry(
 								$seller_id,
@@ -1247,13 +1247,13 @@
 						}
 						
 						// Add order data if doesn't exist yet
-						$order_data = $this->MsLoader->MsOrderData->getOrderData(
+						/*$order_data = $this->MsLoader->MsOrderData->getOrderData(
 							array(
 								'product_id' => $order_product['product_id'],
 								'order_id' => $order_product['order_id'],
 							)
 						);
-						if (!$order_data) {
+						if (!$order_data) {*/
 							$this->MsLoader->MsOrderData->addOrderProductData(
 								$order_product['order_id'],
 								$order_product['product_id'],								
@@ -1264,7 +1264,7 @@
 									'seller_net_amt' => $seller_net_amt									
 								)
 							);
-						}
+						//}
 						
 						$this->MsLoader->MsBalance->addBalanceEntry(
 							$seller_id,
