@@ -488,9 +488,9 @@ class MsProduct extends Model {
 		
 		$sql = "UPDATE " . DB_PREFIX . "ms_product
 				SET product_status = " . (int)$data['product_status'] . ",
-					product_approved = " . (int)$data['product_approved'] . ",
-					list_until = " . ( (isset($data['list_until']) && $data['list_until'] != NULL ) ? "'" . $this->db->escape($data['list_until']) . "'" : "NULL")  . "
-				WHERE product_id = " . (int)$product_id; 
+					product_approved = " . (int)$data['product_approved']
+					. ( (isset($data['list_until']) && $data['list_until'] != NULL && $data['list_until'] != 0 ) ? ", list_until = '" . $this->db->escape($data['list_until']) . "'" : " ") .
+				"WHERE product_id = " . (int)$product_id; 
 		$this->db->query($sql);
 		
 		$sql = "DELETE FROM " . DB_PREFIX . "product_to_category
