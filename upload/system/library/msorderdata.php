@@ -38,7 +38,8 @@ class MsOrderData extends Model {
 		INNER JOIN `" . DB_PREFIX . "ms_order_product_data` mopd
 		USING (order_id)
 		WHERE seller_id = " . (int)$data['seller_id']
-
+		. (isset($data['order_status']) ? " AND o.order_status_id IN  (" .  $this->db->escape(implode(',', $data['order_status'])) . ")" : '')
+		
 		. $wFilters
 		
 		. " GROUP BY order_id HAVING 1 = 1 "
@@ -47,7 +48,7 @@ class MsOrderData extends Model {
 		
 		. (isset($sort['order_by']) ? " ORDER BY {$sort['order_by']} {$sort['order_way']}" : '')
 		. (isset($sort['limit']) ? " LIMIT ".(int)$sort['offset'].', '.(int)($sort['limit']) : '');
-		
+
 		$res = $this->db->query($sql);
 		$total = $this->db->query("SELECT FOUND_ROWS() as total");
 

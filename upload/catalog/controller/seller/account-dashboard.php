@@ -65,6 +65,7 @@ class ControllerSellerAccountDashboard extends ControllerSellerAccount {
 		$orders = $this->MsLoader->MsOrderData->getOrders(
 			array(
 				'seller_id' => $seller_id,
+				'order_status' => $this->config->get('msconf_credit_order_statuses')
 			),
 			array(
 				'order_by'  => 'date_added',
