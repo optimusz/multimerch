@@ -384,6 +384,10 @@ $_['ms_catalog_sellerinfo_keyword'] = 'SEO keyword';
 $_['ms_catalog_sellerinfo_description'] = 'Description';
 $_['ms_catalog_sellerinfo_company'] = 'Company';
 $_['ms_catalog_sellerinfo_country'] = 'Country';
+$_['ms_catalog_sellerinfo_zone'] = 'Region / State';
+$_['ms_catalog_sellerinfo_zone_select'] = 'Select region/state';
+$_['ms_catalog_sellerinfo_zone_not_selected'] = 'No region/state selected';
+$_['ms_catalog_sellerinfo_zone_note'] = 'Select your region/state from the list.';
 $_['ms_catalog_sellerinfo_sellergroup'] = 'Seller group';
 
 $_['ms_catalog_sellerinfo_country_dont_display'] = 'Do not display country';

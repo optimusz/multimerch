@@ -197,46 +197,6 @@
 	};
 </script>
 
-<script type="text/javascript"><!--
-$('select[name=\'seller\\[country\\]\']').bind('change', function() {
-	$.ajax({
-		url: 'index.php?route=account/register-seller/country&country_id=' + this.value,
-		dataType: 'json',
-		beforeSend: function() {
-			$('select[name=\'seller\\[country\\]\']').after('<span class="wait">&nbsp;<img src="catalog/view/theme/default/image/loading.gif" alt="" /></span>');
-		},
-		complete: function() {
-			$('.wait').remove();
-		},
-		success: function(json) {
-			html = '<option value=""><?php echo $ms_account_sellerinfo_zone_select; ?></option>';
-			
-			if (json['zone'] != '') {
-				for (i = 0; i < json['zone'].length; i++) {
-					html += '<option value="' + json['zone'][i]['zone_id'] + '"';
-					
-					if (json['zone'][i]['zone_id'] == '<?php echo $seller['ms.zone_id']; ?>') {
-						html += ' selected="selected"';
-					}
-	
-					html += '>' + json['zone'][i]['name'] + '</option>';
-				}
-			} else {
-				html += '<option value="0" selected="selected"><?php echo $ms_account_sellerinfo_zone_not_selected; ?></option>';
-			}
-			
-			$('select[name=\'seller\\[zone\\]\']').html(html);
-		},
-		error: function(xhr, ajaxOptions, thrownError) {
-			alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
-		}
-	});
-});
-
-if ($('select[name=\'seller\\[country\\]\']').val()) {
-	$('select[name=\'seller\\[country\\]\']').trigger('change');
-}
-//--></script>
 <?php if ($this->config->get('msconf_avatars_for_sellers') == 1 || $this->config->get('msconf_avatars_for_sellers') == 2) { ?>
 <script type="text/javascript">
 	$('#ms-predefined-avatars').colorbox({

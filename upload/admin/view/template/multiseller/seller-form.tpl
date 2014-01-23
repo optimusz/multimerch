@@ -156,6 +156,15 @@
 		</tr>
 		
 		<tr>
+			<td><?php echo $ms_catalog_sellerinfo_zone; ?></td>
+			<td>
+				<select name="seller[zone]">
+				</select>
+				<p class="ms-note"><?php echo $ms_catalog_sellerinfo_zone_note; ?></p>
+			</td>
+		</tr>
+		
+		<tr>
 			<td><?php echo $ms_catalog_sellerinfo_paypal; ?></td>
 			<td>
 				<input type="text" name="seller[paypal]" value="<?php echo $seller['ms.paypal']; ?>" />
@@ -335,6 +344,43 @@
 				 	}
 			});
 		});
+
+		$("select[name='seller[country]']").bind('change', function() {
+			$.ajax({
+				url: 'index.php?route=sale/customer/country&token=<?php echo $token; ?>&country_id=' + this.value,
+				dataType: 'json',
+				beforeSend: function() {
+					$("select[name='seller[country]']").after('<span class="wait">&nbsp;<img src="view/image/loading.gif" alt="" /></span>');
+				},
+				complete: function() {
+					$('.wait').remove();
+				},
+				success: function(json) {
+					html = '<option value=""><?php echo $ms_catalog_sellerinfo_zone_select; ?></option>';
+					
+					if (json['zone'] != '') {
+						for (i = 0; i < json['zone'].length; i++) {
+							html += '<option value="' + json['zone'][i]['zone_id'] + '"';
+							
+							if (json['zone'][i]['zone_id'] == '<?php echo $seller['ms.zone_id']; ?>') {
+								html += ' selected="selected"';
+							}
+			
+							html += '>' + json['zone'][i]['name'] + '</option>';
+						}
+					} else {
+						html += '<option value="0" selected="selected"><?php echo $ms_catalog_sellerinfo_zone_not_selected; ?></option>';
+					}
+					
+					$("select[name='seller[zone]']").html(html);
+				},
+				error: function(xhr, ajaxOptions, thrownError) {
+					alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+				}
+			});
+		});
+
+		if ($("select[name='seller[country]']").val()) $("select[name='seller[country]']").trigger('change');
 	});
 	</script>
 <?php echo $footer; ?>
