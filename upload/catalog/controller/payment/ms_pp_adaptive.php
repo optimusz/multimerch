@@ -317,8 +317,10 @@ class ControllerPaymentMSPPAdaptive extends Controller {
 		
 		if ($toPay > 0) {
 			if ($this->config->get('msppaconf_debug'))
-				$this->_log->write("This shouldn't have happened.");
-			
+				$this->_log->write("This shouldn't have happened. Amount to pay: " . $toPay);
+				foreach ($receivers as $seller_id => $receiver) {
+					$this->_log->write("Receiver " . $receiver['ms.paypal'] . ": " . $receiver['amount']);
+				}
 			return;
 			
 			$was = $paymentParams["receiverList.receiver(0).amount"];
