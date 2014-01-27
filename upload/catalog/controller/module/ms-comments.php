@@ -4,6 +4,13 @@ class ControllerModuleMsComments extends Controller {
 		parent::__construct($registry);
 		$this->data = array_merge($this->data, $this->load->language('multiseller/multiseller'));
 	}
+	
+	public function captcha() {
+		$this->load->library('captcha');
+		$captcha = new Captcha();
+		$this->session->data['ms_captcha_code'] = $captcha->getCode();
+		$captcha->showImage();
+	}
 
 	public function renderComments() {
         if(isset($this->request->get['product_id'])){
@@ -179,7 +186,7 @@ class ControllerModuleMsComments extends Controller {
 		}
 
 		if (!$this->customer->isLogged() || ($this->customer->isLogged() && $msconf_comments_enable_customer_captcha)) {
-			if (!isset($this->request->post['mc_captcha']) || ($this->session->data['captcha'] != $this->request->post['mc_captcha'])) {
+			if (!isset($this->request->post['mc_captcha']) || ($this->session->data['ms_captcha_code'] != $this->request->post['mc_captcha'])) {
 				$json['errors'][] = $this->language->get('ms_comments_error_captcha');
 			}
 		}

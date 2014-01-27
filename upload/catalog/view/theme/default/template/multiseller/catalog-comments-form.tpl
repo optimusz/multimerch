@@ -15,7 +15,7 @@
 <b><?php echo $ms_comments_captcha; ?></b><br />
 <input type="text" name="mc_captcha" value="" />
 <br />
-<img src="index.php?route=product/product/captcha" alt="" id="mc_captcha" /><br />
+<img src="index.php?route=module/ms-comments/captcha" alt="" id="mc_captcha" /><br />
 <br />
 <?php } ?>
 </form>
