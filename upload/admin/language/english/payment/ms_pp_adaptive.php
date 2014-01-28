@@ -65,6 +65,7 @@ $_['ppa_sort_order'] = 'Sort Order:';
 
 
 $_['ppa_error_secondaryonly'] = 'The fee payer types SECONDARYONLY and PRIMARYRECEIVER can only be used for CHAINED payments';
+$_['ppa_error_senderchained'] = 'The fee payer SENDER cannot be used for CHAINED payments';
 
 $_['ppa_success'] = 'Success: You have modified PayPal account details!';
 $_['ppa_error_permission'] = 'Warning: You do not have permission to modify payment PayPal';

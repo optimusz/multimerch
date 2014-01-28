@@ -161,6 +161,11 @@ class ControllerPaymentMSPPAdaptive extends Controller {
 			$this->errors[] = $this->language->get('ppa_error_secondaryonly');
 		}
 
+		if (($this->request->post['msppaconf_feespayer'] == 'SENDER') && $this->request->post['msppaconf_payment_type'] == 'CHAINED') {
+			$this->errors[] = $this->language->get('ppa_error_senderchained');
+		}
+		
+		
 		if (!isset($this->request->post['msppaconf_receiver']) || empty($this->request->post['msppaconf_receiver'])) {
 			$this->errors[] = $this->language->get('ppa_error_receiver');
 		}

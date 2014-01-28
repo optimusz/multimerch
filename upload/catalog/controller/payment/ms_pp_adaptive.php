@@ -85,6 +85,8 @@ class ControllerPaymentMSPPAdaptive extends Controller {
 						foreach ($paypalResponse['transaction'] as $trn) {
 							$payment = isset($p[strtolower($trn['receiver'])]) ? $p[strtolower($trn['receiver'])] : false; 
 							
+							$this->_log->write('Order debug: ' . print_r($trn, true) . print_r($payment, true));
+							
 							if (!$payment) {
 								$this->_log->write('Payment receiver validation error');
 								$err = true;
@@ -92,6 +94,9 @@ class ControllerPaymentMSPPAdaptive extends Controller {
 							} else {
 								// required since pp returns it as a string
 								preg_match('!\d+(?:\.\d+)?!', $trn['amount'], $matches);
+								$this->_log->write('Amount debug: ' . print_r($matches, true) . print_r($payment, true) . $this->currency->format($payment['amount'], $payment['currency_code'], 1, false));
+								
+								if ($trn['is_primary_receiver'] == 'true') $payment['amount'] = $order_info['total'];
 								if ((float)$matches[0] != $this->currency->format($payment['amount'], $payment['currency_code'], 1, false)) {
 									$this->_log->write('Payment amount validation error');
 									$err = true;
