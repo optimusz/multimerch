@@ -96,7 +96,9 @@ class ControllerPaymentMSPPAdaptive extends Controller {
 								preg_match('!\d+(?:\.\d+)?!', $trn['amount'], $matches);
 								$this->_log->write('Amount debug: ' . print_r($matches, true) . print_r($payment, true) . $this->currency->format($payment['amount'], $payment['currency_code'], 1, false));
 								
+								// primary chained payment must equal order total
 								if ($trn['is_primary_receiver'] == 'true') $payment['amount'] = $order_info['total'];
+								
 								if ((float)$matches[0] != $this->currency->format($payment['amount'], $payment['currency_code'], 1, false)) {
 									$this->_log->write('Payment amount validation error');
 									$err = true;
