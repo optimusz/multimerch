@@ -357,8 +357,8 @@
 				},
 				success: function(json) {
 					html = '<option value=""><?php echo $ms_catalog_sellerinfo_zone_select; ?></option>';
-					
-					if (!json['zone']) {
+
+					if (json['zone']) {
 						for (i = 0; i < json['zone'].length; i++) {
 							html += '<option value="' + json['zone'][i]['zone_id'] + '"';
 							

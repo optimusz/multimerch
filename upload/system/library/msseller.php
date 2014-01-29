@@ -260,6 +260,7 @@ final class MsSeller extends Model {
 					country_id = " . (int)$data['country'] . ",
 					paypal = '" . $this->db->escape($data['paypal']) . "',
 					seller_status = '" .  (int)$data['status'] .  "',
+					zone_id = " . (int)$data['zone'] . ",
 					seller_approved = '" .  (int)$data['approved'] .  "',
 					product_validation = '" .  (int)$data['product_validation'] .  "',
 					commission_id = " . (!is_null($commission_id) ? (int)$commission_id : 'NULL' ) . ",
