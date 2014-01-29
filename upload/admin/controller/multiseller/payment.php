@@ -152,8 +152,9 @@ class ControllerMultisellerPayment extends ControllerMultisellerBase {
 		$json = array();
 		$payment_id = isset($this->request->get['payment_id']) ? $this->request->get['payment_id'] : 0;
 		$payment = $this->MsLoader->MsPayment->getPayments(array('payment_id' => $payment_id, 'single' => 1));
-		if (!$payment || !$payment['amount'] || $payment['amount'] <= 0 || $payment['payment_status'] == MsPayment::STATUS_PAID) return;
+		if (empty($payment['payment_data']) || !filter_var($payment['payment_data'], FILTER_VALIDATE_EMAIL) || !$payment || !$payment['amount'] || $payment['amount'] <= 0 || $payment['payment_status'] == MsPayment::STATUS_PAID) return;
 
+		
 		$seller = $this->MsLoader->MsSeller->getSeller($payment['seller_id']);
 		if (!$seller) return;
 		
@@ -161,7 +162,7 @@ class ControllerMultisellerPayment extends ControllerMultisellerBase {
 		$this->data['payment_data'] = array(
 			'sandbox' => $this->config->get('msconf_paypal_sandbox'),
 			'action' => $this->config->get('msconf_paypal_sandbox') ? "https://www.sandbox.paypal.com/cgi-bin/webscr" : "https://www.paypal.com/cgi-bin/webscr",
-			'business' => $seller['ms.paypal'],
+			'business' => $payment['payment_data'],
 			'item_name' => $payment['mpay.description'] ? $payment['mpay.description'] : sprintf($this->language->get('ms_payment_generic'), $payment['payment_id'], $this->config->get('config_name')),
 			'amount' => $this->currency->format($payment['amount'], $this->config->get('config_currency'), '', FALSE),
 			'currency_code' => $this->config->get('config_currency'),
@@ -258,7 +259,7 @@ class ControllerMultisellerPayment extends ControllerMultisellerBase {
 					$total += abs($result['amount']);
 					$payments[] = array (
 						'nickname' => $result['nickname'],
-						'paypal' => $result['paypal'],
+						'paypal' => $result['payment_data'],
 						'amount' => $this->currency->format(abs($result['amount']), $result['currency_code'], '', false)
 					);
 				}
@@ -309,8 +310,8 @@ class ControllerMultisellerPayment extends ControllerMultisellerBase {
 			);
 			
 			if (!empty($result)) {
-				$paymentParams['L_EMAIL' . $i] = $result['ms.paypal'];
-				$paymentParams['L_AMT' . $i] = abs($result['mw.amount']);
+				$paymentParams['L_EMAIL' . $i] = $result['payment_data'];
+				$paymentParams['L_AMT' . $i] = abs($result['amount']);
 				$i++;
 			}
 		}
@@ -335,14 +336,14 @@ class ControllerMultisellerPayment extends ControllerMultisellerBase {
 			$json['response'] = print_r($response, true);
 			//$mails = array();
 			foreach ($this->request->post['selected'] as $payment_id) {
-				$result = array_shift($this->MsLoader->MsPayment->getPayments(
+				$result = $this->MsLoader->MsPayment->getPayments(
 					array(
 						'payment_id' => $payment_id,
 						'payment_status' => array(MsPayment::STATUS_UNPAID),
 						'payment_type' => array(MsPayment::TYPE_PAYOUT, MsPayment::TYPE_PAYOUT_REQUEST),
 						'single' => 1
 					)
-				));
+				);
 				
 				$this->MsLoader->MsPayment->updatePayment($payment_id,
 					array(

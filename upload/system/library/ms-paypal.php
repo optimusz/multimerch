@@ -107,6 +107,8 @@ class Paypal {
          CURLOPT_POSTFIELDS => $request
       );
 
+      if (!$this->_credentials['APPID']) unset($curlOptions[CURLOPT_HTTPHEADER]);
+
       $ch = curl_init();
       curl_setopt_array($ch,$curlOptions);
 
