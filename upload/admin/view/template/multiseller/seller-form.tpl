@@ -358,7 +358,7 @@
 				success: function(json) {
 					html = '<option value=""><?php echo $ms_catalog_sellerinfo_zone_select; ?></option>';
 					
-					if (json['zone'] != '') {
+					if (!json['zone']) {
 						for (i = 0; i < json['zone'].length; i++) {
 							html += '<option value="' + json['zone'][i]['zone_id'] + '"';
 							
@@ -378,9 +378,7 @@
 					alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
 				}
 			});
-		});
-
-		if ($("select[name='seller[country]']").val()) $("select[name='seller[country]']").trigger('change');
+		}).trigger('change');
 	});
 	</script>
 <?php echo $footer; ?>

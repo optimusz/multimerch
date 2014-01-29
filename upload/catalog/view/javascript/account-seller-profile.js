@@ -136,20 +136,20 @@ $(function() {
 				$('.wait').remove();
 			},
 			success: function(json) {
-				html = '<option value=""><?php echo $ms_account_sellerinfo_zone_select; ?></option>';
-				
-				if (json['zone'] != '') {
+				html = '<option value="">' + msGlobals.zoneSelectError + '</option>';
+
+				if (json['zone']) {
 					for (i = 0; i < json['zone'].length; i++) {
 						html += '<option value="' + json['zone'][i]['zone_id'] + '"';
 						
-						if (json['zone'][i]['zone_id'] == '<?php echo $seller['ms.zone_id']; ?>') {
+						if (json['zone'][i]['zone_id'] == msGlobals.zone_id) {
 							html += ' selected="selected"';
 						}
 		
 						html += '>' + json['zone'][i]['name'] + '</option>';
 					}
 				} else {
-					html += '<option value="0" selected="selected"><?php echo $ms_account_sellerinfo_zone_not_selected; ?></option>';
+					html += '<option value="0" selected="selected">' + msGlobals.zoneNotSelectedError + '</option>';
 				}
 				
 				$("select[name='seller[zone]']").html(html);
@@ -158,7 +158,5 @@ $(function() {
 				alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
 			}
 		});
-	});
-
-	if ($("select[name='seller[country]']").val()) $("select[name='seller[country]']").trigger('change');
+	}).trigger('change');
 });

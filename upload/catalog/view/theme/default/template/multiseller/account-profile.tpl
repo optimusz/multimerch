@@ -192,8 +192,11 @@
 		timestamp: '<?php echo $timestamp; ?>',
 		token : '<?php echo md5($salt . $timestamp); ?>',
 		session_id: '<?php echo session_id(); ?>',
+		zone_id: '<?php echo $seller['ms.zone_id'] ?>',
 		uploadError: '<?php echo htmlspecialchars($ms_error_file_upload_error, ENT_QUOTES, "UTF-8"); ?>',
-		config_enable_rte: '<?php echo $this->config->get('msconf_enable_rte'); ?>'
+		config_enable_rte: '<?php echo $this->config->get('msconf_enable_rte'); ?>',
+		zoneSelectError: '<?php echo htmlspecialchars($ms_account_sellerinfo_zone_select, ENT_QUOTES, "UTF-8"); ?>',
+		zoneNotSelectedError: '<?php echo htmlspecialchars($ms_account_sellerinfo_zone_not_selected, ENT_QUOTES, "UTF-8"); ?>'
 	};
 </script>
 
