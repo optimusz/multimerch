@@ -295,7 +295,7 @@ class MsProduct extends Model {
 				$newFile = $this->MsLoader->MsFile->moveDownload($dl['filename']);
 				$fileMask = substr($newFile,0,strrpos($newFile,'.'));
 				
-				$this->db->query("INSERT INTO " . DB_PREFIX . "download SET remaining = 50, filename = '" . $this->db->escape($newFile) . "', mask = '" . $this->db->escape($fileMask) . "'");
+				$this->db->query("INSERT INTO " . DB_PREFIX . "download SET remaining = 100, filename = '" . $this->db->escape($newFile) . "', mask = '" . $this->db->escape($fileMask) . "'");
 				$download_id = $this->db->getLastId();
 				$this->db->query("INSERT INTO " . DB_PREFIX . "product_to_download SET product_id = '" . (int)$product_id . "', download_id = '" . (int)$download_id . "'");
 				
@@ -549,10 +549,10 @@ class MsProduct extends Model {
 						$newFile = $this->MsLoader->MsFile->moveDownload($dl['filename']);
 						$fileMask = substr($newFile,0,strrpos($newFile,'.'));
 						
-						$this->db->query("UPDATE " . DB_PREFIX . "download SET remaining = 5, filename = '" . $this->db->escape($newFile) . "', mask = '" . $this->db->escape($fileMask) . "' WHERE download_id = '" . (int)$dl['download_id'] . "'");
+						$this->db->query("UPDATE " . DB_PREFIX . "download SET remaining = 100, filename = '" . $this->db->escape($newFile) . "', mask = '" . $this->db->escape($fileMask) . "' WHERE download_id = '" . (int)$dl['download_id'] . "'");
 						
 						if (isset($data['push_downloads'])) {
-							$this->db->query("UPDATE " . DB_PREFIX . "order_download SET remaining = 5, `filename` = '" . $this->db->escape($newFile) . "', mask = '" . $this->db->escape($fileMask) . "', name = '" . $this->db->escape($fileMask) . "' WHERE `filename` = '" . $this->db->escape($old_downloads[$dl['download_id']]['filename']) . "'");
+							$this->db->query("UPDATE " . DB_PREFIX . "order_download SET remaining = 100, `filename` = '" . $this->db->escape($newFile) . "', mask = '" . $this->db->escape($fileMask) . "', name = '" . $this->db->escape($fileMask) . "' WHERE `filename` = '" . $this->db->escape($old_downloads[$dl['download_id']]['filename']) . "'");
 						}
 						
 						foreach ($data['languages'] as $language_id => $language) {
@@ -571,7 +571,7 @@ class MsProduct extends Model {
 					$newFile = $this->MsLoader->MsFile->moveDownload($dl['filename']);
 					$fileMask = substr($newFile,0,strrpos($newFile,'.'));					
 					
-					$this->db->query("INSERT INTO " . DB_PREFIX . "download SET remaining = 5, filename = '" . $this->db->escape($newFile) . "', mask = '" . $this->db->escape($fileMask) . "'");
+					$this->db->query("INSERT INTO " . DB_PREFIX . "download SET remaining = 100, filename = '" . $this->db->escape($newFile) . "', mask = '" . $this->db->escape($fileMask) . "'");
 					$download_id = $this->db->getLastId();
 					$this->db->query("INSERT INTO " . DB_PREFIX . "product_to_download SET product_id = '" . (int)$product_id . "', download_id = '" . (int)$download_id . "'");
 					
@@ -582,7 +582,7 @@ class MsProduct extends Model {
 					if (isset($data['push_downloads'])) {
 						$orders = $this->db->query("SELECT order_product_id, order_id FROM " . DB_PREFIX . "order_product WHERE product_id = '"  . (int)$product_id . "'");
 						foreach ($orders->rows as $row) {
-							$this->db->query("INSERT INTO " . DB_PREFIX . "order_download SET order_id = '" . (int)$row['order_id'] . "', order_product_id = '" . (int)$row['order_product_id'] . "', remaining = 5, `filename` = '" . $this->db->escape($newFile) . "', mask = '" . $this->db->escape($fileMask) . "', name = '" . $this->db->escape($fileMask) . "'");
+							$this->db->query("INSERT INTO " . DB_PREFIX . "order_download SET order_id = '" . (int)$row['order_id'] . "', order_product_id = '" . (int)$row['order_product_id'] . "', remaining = 100, `filename` = '" . $this->db->escape($newFile) . "', mask = '" . $this->db->escape($fileMask) . "', name = '" . $this->db->escape($fileMask) . "'");
 						}
 					}
 				}
