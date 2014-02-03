@@ -257,6 +257,8 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 		$this->response->setOutput(json_encode($json));
 	}	
 	
+	
+	// simple paypal balance payout
 	public function jxPayBalance() {
 		$json = array();
 		$seller_id = isset($this->request->get['seller_id']) ? $this->request->get['seller_id'] : 0;
@@ -273,6 +275,7 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 			'seller_id' => $seller_id,
 			'payment_type' => MsPayment::TYPE_PAYOUT,
 			'payment_status' => MsPayment::STATUS_UNPAID,
+			'payment_data' => $seller['ms.paypal'],
 			'payment_method' => MsPayment::METHOD_PAYPAL,
 			'amount' => $amount,
 			'currency_id' => $this->currency->getId($this->config->get('config_currency')),

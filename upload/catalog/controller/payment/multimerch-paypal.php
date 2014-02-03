@@ -202,7 +202,7 @@ class ControllerPaymentMultiMerchPayPal extends Controller {
 			switch($this->request->post['payment_status']) {
 				case 'Completed':
 					// check receiver
-					if ((strtolower($this->request->post['receiver_email']) != strtolower($this->config->get('msconf_paypal_address'))))
+					if ((strtolower($this->request->post['receiver_email']) != $payment['payment_data']))
 						return $this->log->write("MMERCH PP PAYMENT #$payment_id: IPN receiver email mismatch");
 					
 					// check amount
