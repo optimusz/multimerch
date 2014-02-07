@@ -647,6 +647,8 @@
 				if (in_array($order_status_id, $this->config->get('msconf_credit_order_statuses'))) {
 					$sendmail = false;
 					foreach ($order_product_query->rows as $order_product) {
+						// increment sold counter
+						$this->db->query("UPDATE " . DB_PREFIX . "ms_product SET number_sold  = (number_sold + " . (int)$order_product['quantity'] . ") WHERE product_id = '" . (int)$order_product['product_id'] . "'");
 						$seller_id = $this->MsLoader->MsProduct->getSellerId($order_product['product_id']);
 						if (!$seller_id) continue;
 						
@@ -723,8 +725,11 @@
 				} else if (in_array($order_status_id, $this->config->get('msconf_debit_order_statuses'))) {
 				$sendmail = false;
 				foreach ($order_product_query->rows as $order_product) {
+					// decrement sold counter
+					$this->db->query("UPDATE " . DB_PREFIX . "ms_product SET number_sold  = (number_sold - " . (int)$order_product['quantity'] . ") WHERE product_id = '" . (int)$order_product['product_id'] . "'");
+				
 					$seller_id = $this->MsLoader->MsProduct->getSellerId($order_product['product_id']);
-					if (!$seller_id) continue;				
+					if (!$seller_id) continue;
 					$refund_balance_entry = $this->MsLoader->MsBalance->getBalanceEntry(
 						array(
 							'seller_id' => $seller_id,
@@ -767,16 +772,6 @@
 				}
 			]]></add>
 		</operation>
-			
-		<!-- increment sold counter -->		
-		<operation>
-			<search position="after"><![CDATA[
-				$this->db->query("UPDATE " . DB_PREFIX . "product SET quantity = (quantity - " . (int)$order_product['quantity'] . ") WHERE product_id = '" . (int)$order_product['product_id'] . "' AND subtract = '1'");
-			]]></search>
-			<add><![CDATA[
-				$this->db->query("UPDATE " . DB_PREFIX . "ms_product SET number_sold  = (number_sold + " . (int)$order_product['quantity'] . ") WHERE product_id = '" . (int)$order_product['product_id'] . "'");
-			]]></add>
-		</operation>		
 	</file>
 	
 	<file name="catalog/view/theme/&themeFolder;/template/product/product.tpl">
@@ -1223,6 +1218,9 @@
 			if (in_array($data['order_status_id'], $this->config->get('msconf_credit_order_statuses'))) {
 				$sendmail = false;
 				foreach ($ms_order_product_query->rows as $order_product) {
+					// increment sold counter
+					$this->db->query("UPDATE " . DB_PREFIX . "ms_product SET number_sold  = (number_sold + " . (int)$order_product['quantity'] . ") WHERE product_id = '" . (int)$order_product['product_id'] . "'");
+				
 					$seller_id = $this->MsLoader->MsProduct->getSellerId($order_product['product_id']);
 					if (!$seller_id) continue;
 					
@@ -1286,6 +1284,9 @@
 			} else if (in_array($data['order_status_id'], $this->config->get('msconf_debit_order_statuses'))) {
 			$sendmail = false;
 			foreach ($ms_order_product_query->rows as $order_product) {
+				// decrement sold counter
+				$this->db->query("UPDATE " . DB_PREFIX . "ms_product SET number_sold  = (number_sold - " . (int)$order_product['quantity'] . ") WHERE product_id = '" . (int)$order_product['product_id'] . "'");
+				
 				$seller_id = $this->MsLoader->MsProduct->getSellerId($order_product['product_id']);
 				if (!$seller_id) continue;
 							
