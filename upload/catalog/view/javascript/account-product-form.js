@@ -48,9 +48,19 @@ $(function() {
 			if (!$("input[name='product_quantity']").hasClass("ffUnchangeable")) {
 				$("input[name='product_quantity']").parents("tr").show();
 			}
+			if (typeof msGlobals.downloadsLimitApplication != 'undefined') {
+				if (msGlobals.downloadsLimit > 0 && msGlobals.downloadsLimitApplication == 1) {
+					$("span[name='downloads_required']").hide();
+				}
+			}
 		} else {
 			if (!$("input[name='product_quantity']").hasClass("ffUnchangeable")) {
 				$("input[name='product_quantity']").parents("tr").hide();
+			}
+			if (typeof msGlobals.downloadsLimitApplication != 'undefined') {
+				if (msGlobals.downloadsLimit > 0 && msGlobals.downloadsLimitApplication == 1) {
+					$("span[name='downloads_required']").show();
+				}
 			}
 		}
 	});
