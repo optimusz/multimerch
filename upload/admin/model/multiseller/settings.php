@@ -6,6 +6,13 @@ class ModelMultisellerSettings extends Model {
 	}
 	public function checkDbVersion($version) {
 		switch ($version) {
+			case "4.4":
+				$res = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . "ms_version'");
+				if ($res->num_rows) {
+					$res = $this->db->query("SELECT version FROM `" . DB_PREFIX . "ms_version` WHERE version >= '4.4'");
+				}
+				break;
+							
 			case "4.3":
 				$res = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . "ms_version'");
 				if ($res->num_rows) {
@@ -53,6 +60,10 @@ class ModelMultisellerSettings extends Model {
 	public function update($version) {
 		if (!$this->checkDbVersion($version)) {
 			switch ($version) {
+				case "4.4":
+					$this->db->query("INSERT INTO " . DB_PREFIX . "ms_version (version, distribution) VALUES('4.4','" . $this->MsLoader->dist ."')");
+					break;
+				
 				case "4.3":
 					$this->db->query("INSERT INTO " . DB_PREFIX . "ms_version (version, distribution) VALUES('4.3','" . $this->MsLoader->dist ."')");
 					// Seller Groups

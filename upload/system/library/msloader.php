@@ -1,7 +1,7 @@
 <?php
 
 class MsLoader {
-	public $version = "4.3";
+	public $version = "4.4";
 	public $dist = "standard";	
 	
 	public function __construct($registry) {
