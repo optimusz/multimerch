@@ -277,7 +277,7 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 			'payment_status' => MsPayment::STATUS_UNPAID,
 			'payment_data' => $seller['ms.paypal'],
 			'payment_method' => MsPayment::METHOD_PAYPAL,
-			'amount' => $amount,
+			'amount' => $this->currency->format($amount, $this->config->get('config_currency'), '', FALSE),
 			'currency_id' => $this->currency->getId($this->config->get('config_currency')),
 			'currency_code' => $this->currency->getCode($this->config->get('config_currency')),
 			'description' => sprintf($this->language->get('ms_payment_royalty_payout'), $seller['name'], $this->config->get('config_name'))
@@ -289,7 +289,7 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 			'action' => $this->config->get('msconf_paypal_sandbox') ? "https://www.sandbox.paypal.com/cgi-bin/webscr" : "https://www.paypal.com/cgi-bin/webscr",
 			'business' => $seller['ms.paypal'],
 			'item_name' => sprintf($this->language->get('ms_payment_royalty_payout'), $seller['name'], $this->config->get('config_name')),
-			'amount' => $amount,
+			'amount' => $this->currency->format($amount, $this->config->get('config_currency'), '', FALSE),
 			'currency_code' => $this->config->get('config_currency'),
 			'return' => $this->url->link('multiseller/seller', 'token=' . $this->session->data['token']),
 			'cancel_return' => $this->url->link('multiseller/seller', 'token=' . $this->session->data['token']),
