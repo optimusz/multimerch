@@ -1,64 +1,96 @@
-ffct.cc software license for OpenCart Digital Marketplace Extension
+Multimerch ltd software license for MultiMerch Marketplace
 
-This is a legal agreement between you and ffct.cc software.
-
+This license agreement (hereinafter referred to as the "Agreement") constitutes a contract between Multimerch ltd who bears the authorship of and the owns the exclusive right to the Multimerch (hereinafter referred to as the "Copyright Owner"), and you (hereinafter referred to as the "User").This Agreement contains definitions and conditions under which the User can use MultiMerch Marketplace (hereinafter referred to as the "Software").
 
 1. Definitions
 
-1.1. 'ffct.cc software' means ffct.cc software and its licensors, if any. 
+1.1. 'Multimerch ltd software' means Multimerch software and its licensees, if any and all related printed materials, help and online documentation as well as all copies and all derivative works related to this software, including but not limited to, updates and modifications.
 
-1.2. 'Software' means the OpenCart Digital Marketplace Extension
-software program and any third party software programs contained therein, in each
-case supplied by ffct.cc software herewith, and corresponding documentation
-and all updates or upgrades of the above that are provided to you. 
+1.2. 'Software' means the MultiMerch Marketplace software program and any third party software programs contained therein, in each case supplied by Multimerch ltd software herewith, and corresponding documentation and all updates or upgrades of the above that are provided to you.
 
+1.3. 'Use of the Program' means any actions related to operation of the Program according to its purpose.
 
-2. Permissions
+1.4. 'Domain Name' means a unique alphanumeric name intended to identify a resource on the Internet.
 
-2.1. You may use the Software in both freeware and commercial
-projects.
+1.5. 'Website' means a resource available on the Internet through a common Domain Name.
 
-2.2. You may alter, merge, modify, adapt or translate the Software.
-
-2.3. You may modify the Software or create derivative works based 
-upon the Software to adapt it for your needs.
-
-2.4. You may use the Software with one OpenCart installation. If you intend to
-use the Software in multiple projects, you must purchase additional copies of 
-the Software for every project you use the Software in.
+1.6. 'License' means means the right to Use the Program (one copy) on one Website provided by the Copyright Owner to the User for one (1) year from the date the right has been purchased.
 
 
-3. Restrictions
+2. General provisions
 
-3.1. You may not distribute copies or derivative works of the Software.
+The User shall Use the Program solely within the bounds of this Agreement. By Using the Program, the User thus consents to the conditions set in this Agreement. 
 
-3.2. You may not sell, rent, lease, or sublicense the Software or any
-derivative works or modifications of the Software to another person,
-company or other entity.
+Shall the User disagree with the provisions of this Agreement, he has the right to stop Using the Software. The Copyright Owner notifies the User that the Program is not sold to the User, but, in accordance with this Agreement,  the User gains the right to Use the Program (within the period stipulated License) under a simple non-exclusive license.
 
-
-4. Ownership
-
-The foregoing license gives you limited rights to use the Software.
-ffct.cc software and its partners retain all right, title and interest
-to the Software and all copies thereof. All rights not specifically
-granted in this license are reserved by ffct.cc software and its partners.
+Every Use of the Program is subject to this Agreement. Any Use of the Program or any of its parts, which contradicts the conditions of this Agreement, is prohibited. If the law of the User's country makes a provision for a different order of using similar products, the User has the right to Use the Program only in the way and within the provisions stipulated by this Agreement.
 
 
-5. Warranty disclaimer
+3. Provision of the License
 
-5.1. ffct.cc software and its partners disclaim all warranties and
-representations, whether express, implied, or otherwise, including
-the warranties of merchantability or fitness for a particular purpose.
-ffct.cc software does not warrant that the software is error-free
-or will operate without interruption.
-
-5.2. ffct.cc software shall have no responsibility if the Software
-has been altered in any way, or for any failure that arises out of 
-use of the Software that has been altered in any way.
+The Copyright Owner provides the User with the License under a simple non-exclusive license for the term of 1 year from the moment the User pays the compensation on the site http://multimerch.com provided that the Program may be available on the Internet only through one License Domain Name. The User shall, upon expiration of the term granted by the License, purchase the License repeatedly on the Website http://multimerch.com or from the Reseller, or remove the Program both from the Website on which Domain Name the Program is used and from other media, if any.
 
 
---------------------------------
-e4505c41635d620dff0e3b7bd5c8f4cf
-1035f6e3fc4062dd8c3f84bf255b5b45
+4. Permissions
 
+4.1. User may use the Software in both freeware and commercial projects for one Domain Name only.
+
+4.2. User may alter, merge, modify, adapt or translate the Software.
+
+4.3. User may modify the Software or create derivative works based upon the Software to adapt it for his/her needs.
+
+4.4. User may use the Software with one installation. Shall user intend to use the Software in multiple projects, additional copies of the Software must be purchased for every project the Software is built in.
+
+4.5. User may promote and recommend Software on his resource and may also apply to affiliate program found on the website http://multimerch.com.
+
+
+5. Restrictions
+
+5.1. User may not distribute copies or derivative works of the Software in any form whatsoever.
+
+5.2. User may not sell, rent, lease, or sublicense the Software or any derivative works or modifications of the Software to another person, company or other entity. 
+
+5.3. User may not remove, hide, modify or make barely visible any copyright, trademark or other proprietary notices contained within any part of the Program without a prior written consent of the Copyright Owner.
+ 
+5.4. User may not Use the Program after the License period expires.  
+
+5.5. User may not prevent the Copyright Owner from obtaining information about the Use of the Software.
+
+5.6. The User may not remove, disable or modify the part of the Software source code that verifies the Program authenticity and ascertains whether the User has the License to use the Software.
+
+
+6. Ownership
+
+The foregoing license gives you limited rights to use the Software. Multimerch ltd software and its partners retain all right, title and interest to the Software and all copies thereof. All rights not specifically granted in this license are reserved by Multimerch ltd software and its partners.
+
+
+7. Warranty disclaimer
+
+The Program is provided "AS IS" with all possible malfunction and in the state that is actual by the time the Copyright Owner provides the User with the License. Multimerch ltd and its partners disclaim all warranties and representations, whether express, implied, or otherwise, including the warranties of merchantability or fitness for a particular purpose. Multimerch software does not warrant that the software is error-free or will operate without interruption. Multimerch ltd shall have no responsibility if the Software has been altered in any way, or for any failure that arises out of use of the Software that has been altered in any way.
+
+
+8. Liability
+
+The User assumes all the risks related to the performance and the Use of the Software, including and not limited to the risk of not getting the expected profit and the risk of a software failure after the Program is installed. Multimerch under no circumstances whatsoever is liable to the User for any damages (including, but not limited to, any loss of profits and confidential or other information, the damages caused by an interruption of the business, loss of revenue, turnover, business reputation or data, neglected business opportunities, any indirect, incidental, special, punitive or consequential damages) related to the Use of the Program or impossibility to Use the Software.
+
+
+9. Termination of the license and agreement
+
+The Agreement stays effective until terminated. The Agreement is terminated after the License expires. The License expires 1 year (365 days) after the purchase of the Software. The Agreement is also terminated, and the License expires immediately after the User violates any part of this Agreement without any additional notice, prior or anterior, from the Copyright Owner. The User hereby consents to immediately remove the Software together with all copies, modifications and upgrades, or any Software-based Derivatives.
+
+The Agreement shall be effective for the entire world. The User has the right to terminate the License, at any time by discontinuing the Agreement and removing the Program together with all copies, modifications and upgrades, or Software-based Derivatives, along with sending an appropriate notification to the Copyright Owner.
+
+The Agreement will be deemed terminated from the moment the Copyright Owner receives the notification from the User.
+
+
+10. Final provisions
+
+This Agreement is in compliance with the effective Laws of the Republic of Latvia as well as with international agreements on copyright and intellectual property. This Agreement shall be governed by and construed in accordance with the laws of the Republic of Latvia, without reference to principles of conflict of laws.
+
+The User acknowledges that he has read this Agreement carefully and understood it completely, and agrees to accept its terms and conditions. Any dispute arising out or in connection with this agreement, including any question regarding its interpretation, validity or termination, shall be referred to and finally resolved by the Latvian Court of Arbitration, or the appropriate court of common law on the territory of Latvia (the competent court) at the location of the Copyright Owner.
+
+The Copyright Owner may unilaterally change this Agreement, without prior notice to the User, at its sole discretion. The User is notified of the changes through information on the website http://multimerch.com where the text of the changes is published.
+
+The changes in the conditions of the Agreement shall come into force on the date of publishing on the site http://multimerch.com unless otherwise is specified in the publication, and become mandatory for acceptance and satisfaction by the User for further Use of the Software.
+
+The User acknowledges that the Copyright Owner may suffer damage if the conditions of this Agreement are not respected, and therefore the User agrees that the Copyright Owner has the right to use any form of protecting the violated rights and legitimate interests, including the direct appeal to the appropriate court without a necessity to comply with the claim settlement procedure.
