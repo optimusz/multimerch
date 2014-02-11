@@ -58,7 +58,11 @@ class ControllerAccountMSConversation extends Controller {
 			$conversation_with = $this->MsLoader->MsConversation->getWith($conversation['conversation_id'], array('participant_id' => $customer_id));
 			$this->load->model('account/customer');
 			$customer = $this->model_account_customer->getCustomer($conversation_with);
-			$customer_name = $customer['firstname'] . ' ' . $customer['lastname'];
+			if ($customer) {
+				$customer_name = $customer['firstname'] . ' ' . $customer['lastname'];
+			} else {
+				$customer_name = $this->language->get('ms_customer_does_not_exist');
+			}
 			
 			$columns[] = array_merge(
 				$conversation,

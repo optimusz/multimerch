@@ -473,6 +473,7 @@ $_['ms_account_messages_breadcrumbs'] = 'Messages';
 $_['ms_message_text'] = 'Your message';
 $_['ms_post_message'] = 'Send message';
 
+$_['ms_customer_does_not_exist'] = 'Customer account deleted';
 $_['ms_error_empty_message'] = 'Message cannot be left empty';
 
 $_['ms_mail_subject_private_message'] = 'New private message received';
