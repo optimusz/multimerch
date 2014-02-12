@@ -44,7 +44,7 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 				if (!empty($result['ms.paypal']) && filter_var($result['ms.paypal'], FILTER_VALIDATE_EMAIL)) {
 					$actions .= "<a class='ms-button ms-button-paypal' title='" . $this->language->get('ms_catalog_sellers_balance_paypal') . "'></a>";
 				} else {
-					$actions .= "<a class='ms-button ms-button-paypal-bw' title='".$this->language->get('ms_catalog_sellers_balance_invalid') . "'></a>";
+					$actions .= "<a class='ms-button ms-button-paypal-bw' title='".$this->language->get('ms_payment_payout_paypal_invalid') . "'></a>";
 				}
 			}
 			$actions .= "<a class='ms-button ms-button-edit' href='" . $this->url->link('multiseller/seller/update', 'token=' . $this->session->data['token'] . '&seller_id=' . $result['seller_id'], 'SSL') . "' title='".$this->language->get('text_edit')."'></a>";
