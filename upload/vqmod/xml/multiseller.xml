@@ -634,19 +634,19 @@
 				$this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int)$order_status_id . "', date_modified = NOW() WHERE order_id = '" . (int)$order_id . "'");
 			]]></search>
 			<add><![CDATA[
-				$order_product_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int)$order_id . "'");
+				$ms_order_product_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int)$order_id . "'");
 			]]></add>
 		</operation>
 			
 		<operation>
 			<search position="after"><![CDATA[
-				$order_product_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int)$order_id . "'");
+				$ms_order_product_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int)$order_id . "'");
 			]]></search>
 			<add><![CDATA[
 				$this->language->load('multiseller/multiseller');
 				if (in_array($order_status_id, $this->config->get('msconf_credit_order_statuses'))) {
 					$sendmail = false;
-					foreach ($order_product_query->rows as $order_product) {
+					foreach ($ms_order_product_query->rows as $order_product) {
 						// increment sold counter
 						$this->db->query("UPDATE " . DB_PREFIX . "ms_product SET number_sold  = (number_sold + " . (int)$order_product['quantity'] . ") WHERE product_id = '" . (int)$order_product['product_id'] . "'");
 						$seller_id = $this->MsLoader->MsProduct->getSellerId($order_product['product_id']);
@@ -724,7 +724,7 @@
 					if ($sendmail) $this->MsLoader->MsMail->sendOrderMails($order_id);
 				} else if (in_array($order_status_id, $this->config->get('msconf_debit_order_statuses'))) {
 				$sendmail = false;
-				foreach ($order_product_query->rows as $order_product) {
+				foreach ($ms_order_product_query->rows as $order_product) {
 					// decrement sold counter
 					$this->db->query("UPDATE " . DB_PREFIX . "ms_product SET number_sold  = (number_sold - " . (int)$order_product['quantity'] . ") WHERE product_id = '" . (int)$order_product['product_id'] . "'");
 				
