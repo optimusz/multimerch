@@ -322,6 +322,9 @@ class MsFile extends Model {
 			return;
 		}
 
+		$size = getimagesize(DIR_IMAGE . $filename);
+		//list($width, $height, $type, $attr) = getimagesize($file["tmp_name"]);
+		
 		$info = pathinfo($filename);
 		$extension = $info['extension'];
 
