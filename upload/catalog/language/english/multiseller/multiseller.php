@@ -167,6 +167,11 @@ $_['ms_mail_transaction_performed'] = <<<EOT
 New transaction has been added to your account at %s.
 EOT;
 
+$_['ms_mail_subject_remind_listing'] = 'Product listing has finished';
+$_['ms_mail_seller_remind_listing'] = <<<EOT
+Your product's %s listing has finished. Go to your account seller area if you would like to re-list the product.
+EOT;
+
 // *********
 // * Admin *
 // *********

@@ -229,6 +229,15 @@
 					foreach ($res_disable->rows as $product) {
 						$this->MsLoader->MsProduct->changeStatus((int)$product['product_id'], MsProduct::STATUS_DISABLED);
 						$this->MsLoader->MsProduct->disapprove((int)$product['product_id']);
+						
+						$seller_id = $this->MsLoader->MsProduct->getSellerId((int)$product['product_id']);
+						$mail = array(
+							'recipients' => $this->MsLoader->MsSeller->getSellerEmail($seller_id),
+							'addressee' => $this->MsLoader->MsSeller->getSellerName($seller_id),
+							'seller_id' => $seller_id,
+							'product_id' => (int)$product['product_id']
+						);
+						$this->MsLoader->MsMail->sendMail(MsMail::SMT_REMIND_LISTING, $mail);
 					}
 				}
 			]]></add>
