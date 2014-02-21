@@ -318,7 +318,7 @@ class MsFile extends Model {
 
 	public function resizeImage($filename, $width, $height) {
 		// todo consider using default cache folder
-		if (!file_exists(DIR_IMAGE . $filename) || !$filename) {
+		if (!file_exists(DIR_IMAGE . $filename) || !$filename || !filesize(DIR_IMAGE . $filename)) {
 			return;
 		}
 

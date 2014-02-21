@@ -40,7 +40,7 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 		foreach ($results as $result) {
 			// actions
 			$actions = "";
-			if ($this->MsLoader->MsBalance->getSellerBalance($result['seller_id']) - $this->MsLoader->MsBalance->getReservedSellerFunds($result['seller_id']) > 0) {
+			if ($this->currency->format($this->MsLoader->MsBalance->getSellerBalance($result['seller_id']) - $this->MsLoader->MsBalance->getReservedSellerFunds($result['seller_id'], $this->config->get('config_currency'), '', FALSE)) > 0) {
 				if (!empty($result['ms.paypal']) && filter_var($result['ms.paypal'], FILTER_VALIDATE_EMAIL)) {
 					$actions .= "<a class='ms-button ms-button-paypal' title='" . $this->language->get('ms_catalog_sellers_balance_paypal') . "'></a>";
 				} else {

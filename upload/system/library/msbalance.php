@@ -164,7 +164,7 @@ class MsBalance extends Model {
 					product_id = " . (isset($data['product_id']) ? (int)$data['product_id'] : 'NULL') . ",
 					withdrawal_id = " . (isset($data['withdrawal_id']) ? (int)$data['withdrawal_id'] : 'NULL') . ",
 					balance_type = " . (int)$data['balance_type'] . ",
-					amount = ". (float)$data['amount'] . ",
+					amount = ". (float)$this->currency->format($data['amount'], $this->config->get('config_currency'), '', FALSE) . ",
 					balance = amount + (
 						SELECT balance FROM (
 							SELECT COALESCE(
