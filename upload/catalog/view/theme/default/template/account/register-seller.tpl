@@ -311,33 +311,33 @@
 	
 	<!-- Common part -->
 	
-    <!--<h2><?php echo $text_newsletter; ?></h2>
+    <!--<h2><?php //echo $text_newsletter; ?></h2>
     <div class="content">
       <table class="form">
         <tr>
-          <td><?php echo $entry_newsletter; ?></td>
-          <td><?php if ($newsletter) { ?>
+          <td><?php //echo $entry_newsletter; ?></td>
+          <td><?php //if ($newsletter) { ?>
             <input type="radio" name="newsletter" value="1" checked="checked" />
-            <?php echo $text_yes; ?>
+            <?php //echo $text_yes; ?>
             <input type="radio" name="newsletter" value="0" />
-            <?php echo $text_no; ?>
-            <?php } else { ?>
+            <?php //echo $text_no; ?>
+            <?php //} else { ?>
             <input type="radio" name="newsletter" value="1" />
-            <?php echo $text_yes; ?>
+            <?php //echo $text_yes; ?>
             <input type="radio" name="newsletter" value="0" checked="checked" />
-            <?php echo $text_no; ?>
-            <?php } ?></td>
+            <?php //echo $text_no; ?>
+            <?php //} ?></td>
         </tr>
       </table>
     </div>-->
     <?php if ($text_agree) { ?>
     <div class="buttons">
       <!--<div class="right"><?php echo $text_agree; ?>
-        <?php if ($agree) { ?>
+        <?php //if ($agree) { ?>
         <input type="checkbox" name="agree" value="1" checked="checked" />
-        <?php } else { ?>
+        <?php //} else { ?>
         <input type="checkbox" name="agree" value="1" />
-        <?php } ?>-->
+        <?php //} ?>-->
         <a class="button" id="ms-submit-button" value="<?php echo $button_continue; ?>"><span><?php echo $ms_button_save; ?></span></a>
       </div>
     </div>
