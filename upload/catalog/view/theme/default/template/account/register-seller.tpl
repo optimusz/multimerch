@@ -330,24 +330,24 @@
         </tr>
       </table>
     </div>-->
-    <?php if ($text_agree) { ?>
-    <div class="buttons">
-      <!--<div class="right"><?php echo $text_agree; ?>
+    <?php //if ($text_agree) { ?>
+    <!--<div class="buttons">
+      <div class="right">--><?php //echo $text_agree; ?>
         <?php //if ($agree) { ?>
-        <input type="checkbox" name="agree" value="1" checked="checked" />
+        <!--<input type="checkbox" name="agree" value="1" checked="checked" />-->
         <?php //} else { ?>
-        <input type="checkbox" name="agree" value="1" />
-        <?php //} ?>-->
-        <a class="button" id="ms-submit-button" value="<?php echo $button_continue; ?>"><span><?php echo $ms_button_save; ?></span></a>
+        <!--<input type="checkbox" name="agree" value="1" />-->
+        <?php //} ?>
+        <!--<a class="button" id="ms-submit-button" value="<?php //echo $button_continue; ?>"><span><?php //echo $ms_button_save; ?></span></a>
       </div>
-    </div>
-    <?php } else { ?>
+    </div>-->
+    <?php //} else { ?>
     <div class="buttons">
       <div class="right">
         <a class="button" id="ms-submit-button" value="<?php echo $button_continue; ?>"><span><?php echo $ms_button_save; ?></span></a>
       </div>
     </div>
-    <?php } ?>
+    <?php //} ?>
   </form>
   
   <!-- Payment Form -->

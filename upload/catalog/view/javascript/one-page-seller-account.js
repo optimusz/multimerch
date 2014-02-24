@@ -28,7 +28,7 @@ $(function() {
 					//$(".warning.main").text(msGlobals.formError).show();
 					window.scrollTo(0,0);
 				}
-				if (jqXHR.responseText.indexOf("<html>") >= 0) {
+				if (jqXHR.responseText.indexOf("<html") >= 0) {
 					var newDoc = document.open("text/html", "replace");
 					newDoc.write(jqXHR.responseText);
 					newDoc.close();
