@@ -748,6 +748,11 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 								foreach ($mails as $key => $value) {
 									if ($value['type'] == SMT_PRODUCT_AWAITING_MODERATION) unset($mails[$key]);
 								}
+								// Send product edited emails
+								foreach ($mails as &$mail) {
+									$mail['data']['product_id'] = $product_id;
+								}
+								$this->MsLoader->MsMail->sendMails($mails);
 								
 								// check if payment exists
 								$payment = $this->MsLoader->MsPayment->getPayments(array(
