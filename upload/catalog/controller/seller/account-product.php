@@ -579,13 +579,11 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 			}
 
 			// set attributes
-			if (isset($data['product_attributes'][$attribute_id])) {
-				$data['product_attributes'][$attribute_id] = array(
-					'attribute_type' => $attribute['attribute_type'],
-					'value' => $product_attributes[$attribute_id]['value'],
-					'value_id' => $product_attributes[$attribute_id]['value_id'],
-				);
-			}
+			$data['product_attributes'][$attribute_id] = array(
+				'attribute_type' => $attribute['attribute_type'],
+				'value' => $product_attributes[$attribute_id]['value'],
+				'value_id' => $product_attributes[$attribute_id]['value_id'],
+			);
 		}
 		
         if(!isset($data['product_subtract'])){
