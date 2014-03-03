@@ -1353,7 +1353,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 			$product_id = 0;
 		}
 		
-		if (!$this->MsLoader->MsProduct->hasDownload($product_id,$download_id))
+		if (!$this->MsLoader->MsProduct->hasDownload($product_id,$download_id) || !$this->MsLoader->MsProduct->productOwnedBySeller($product_id,$this->customer->getId()))
 			$this->redirect($this->url->link('seller/account-product', '', 'SSL'));
 			
 		$download_info = $this->MsLoader->MsProduct->getDownload($download_id);
