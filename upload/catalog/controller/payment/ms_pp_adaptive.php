@@ -322,6 +322,8 @@ class ControllerPaymentMSPPAdaptive extends Controller {
 			// SIMPLE
 		}
 		
+		$toPay = $this->currency->format($toPay, $order_info['currency_code'], 1, false);
+		
 		if ($toPay > 0) {
 			if ($this->config->get('msppaconf_debug'))
 				$this->_log->write("This shouldn't have happened. Amount to pay: " . $toPay);
