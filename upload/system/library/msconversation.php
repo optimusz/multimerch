@@ -25,7 +25,7 @@ class MsConversation extends Model {
 	public function getConversations($data = array(), $sort = array(), $cols = array()) {
 		$hFilters = $wFilters = '';
 		if(isset($sort['filters'])) {
-			array_push($cols, "last_message_date");
+			$cols = array_merge($cols, array("last_message_date" => 1));
 			foreach($sort['filters'] as $k => $v) {
 				if (!isset($cols[$k])) {
 					$wFilters .= " AND {$k} LIKE '%" . $this->db->escape($v) . "%'";

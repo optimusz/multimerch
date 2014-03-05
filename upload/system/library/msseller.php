@@ -327,7 +327,7 @@ final class MsSeller extends Model {
 	public function getSellers($data = array(), $sort = array(), $cols = array()) {
 		$hFilters = $wFilters = '';
 		if(isset($sort['filters'])) {
-			array_push($cols, "c.name", "total_sales");
+			$cols = array_merge($cols, array("`c.name`" => 1, "total_sales" => 1, "`ms.date_created`" => 1));
 			foreach($sort['filters'] as $k => $v) {
 				if (!isset($cols[$k])) {
 					$wFilters .= " AND {$k} LIKE '%" . $this->db->escape($v) . "%'";

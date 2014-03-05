@@ -799,6 +799,7 @@ class MsProduct extends Model {
 		$hFilters = $wFilters = '';
 
 		if(isset($sort['filters'])) {
+			$cols = array_merge($cols, array("`p.date_created`" => 1));
 			foreach($sort['filters'] as $k => $v) {
 				if (!isset($cols[$k])) {
 					$wFilters .= " AND {$k} LIKE '%" . $this->db->escape($v) . "%'";
