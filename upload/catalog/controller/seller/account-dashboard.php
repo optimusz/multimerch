@@ -100,8 +100,13 @@ class ControllerSellerAccountDashboard extends ControllerSellerAccount {
 		
 		foreach ($comments as $result) {
 			$product = $this->MsLoader->MsProduct->getProduct($result['product_id']);
+			if (!$this->config->get('msconf_hide_customer_email')) {
+				$customer_name = $result['name'];
+			} else {
+				$customer_name = "{$result['name']} ({$result['email']})";
+			}
 			$this->data['comments'][] = array(
-				'name' => "{$result['name']} ({$result['email']})",
+				'name' => $customer_name,
 				'product_id' => $result['product_id'],
 				'product_name' => $product['languages'][$this->config->get('config_language_id')]['name'],
 				'comment' => (mb_strlen($result['comment']) > 80 ? mb_substr($result['comment'], 0, 80) . '...' : $result['comment']),
