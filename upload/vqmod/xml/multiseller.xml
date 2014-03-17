@@ -246,6 +246,20 @@
 		</operation>
 	</file>
 	
+	<!-- Add manufacturer filter to the model -->
+	<file name="catalog/model/catalog/manufacturer.php">
+		<operation error="log">
+			<search position="after"><![CDATA[
+				$sql = "SELECT * FROM " . DB_PREFIX . "manufacturer m LEFT JOIN " . DB_PREFIX . "manufacturer_to_store m2s ON (m.manufacturer_id = m2s.manufacturer_id) WHERE m2s.store_id = '" . (int)$this->config->get('config_store_id') . "'";
+			]]></search>
+			<add><![CDATA[
+				if (!empty($data['filter_name'])) {
+					$sql .= " AND name LIKE '" . $this->db->escape($data['filter_name']) . "%'";
+				}
+			]]></add>
+		</operation>
+	</file>
+	
 	<!-- Redirect sellers to the seller dashboard after login -->
 	<file name="catalog/controller/account/login.php">
 		<operation error="log">
