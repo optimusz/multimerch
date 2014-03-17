@@ -221,6 +221,8 @@
 					$sql_disable .= " AND p.manufacturer_id = '" . (int)$data['filter_manufacturer_id'] . "'";
 				}
 				
+				$this->language->load('multiseller/multiseller');
+				
 				$sql_disable .= " AND mp.list_until < NOW() AND p.status = 1";
 				
 				$res_disable = $this->db->query($sql_disable);
