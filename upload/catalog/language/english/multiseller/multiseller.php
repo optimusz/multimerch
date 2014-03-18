@@ -537,6 +537,7 @@ $_['ms_account_dashboard_overview'] = 'Overview';
 $_['ms_account_dashboard_seller_group'] = 'Seller group';
 $_['ms_account_dashboard_listing'] = 'Listing fee';
 $_['ms_account_dashboard_sale'] = 'Sale fee';
+$_['ms_account_dashboard_royalty'] = 'Royalty';
 $_['ms_account_dashboard_stats'] = 'Stats';
 $_['ms_account_dashboard_balance'] = 'Current balance';
 $_['ms_account_dashboard_total_sales'] = 'Total sales';
