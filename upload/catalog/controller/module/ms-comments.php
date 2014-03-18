@@ -69,7 +69,7 @@ class ControllerModuleMsComments extends Controller {
         $pagination->page = $page;
         $pagination->limit = $comments_per_page;
         $pagination->text = $this->language->get('text_pagination');
-        $pagination->url = $this->url->link('module/productcomments/renderComments', $pagination_url);
+        $pagination->url = $this->url->link('module/ms-comments/renderComments', $pagination_url);
         $this->data['pagination'] = $pagination->render();
 
         list($this->template, $this->children) = $this->MsLoader->MsHelper->loadTemplate($comments_template, array());
