@@ -579,11 +579,13 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 			}
 
 			// set attributes
-			$data['product_attributes'][$attribute_id] = array(
-				'attribute_type' => $attribute['attribute_type'],
-				'value' => $product_attributes[$attribute_id]['value'],
-				'value_id' => $product_attributes[$attribute_id]['value_id'],
-			);
+			if (isset($data['product_attributes'][$attribute_id])) {
+				$data['product_attributes'][$attribute_id] = array(
+					'attribute_type' => $attribute['attribute_type'],
+					'value' => $product_attributes[$attribute_id]['value'],
+					'value_id' => $product_attributes[$attribute_id]['value_id'],
+				);
+			}
 		}
 		
         if(!isset($data['product_subtract'])){
@@ -638,7 +640,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 			$data['product_quantity'] = 999;
 		}
 		
-		// SEO urls generation for products		
+		// SEO urls generation for products
 		if ($this->config->get('msconf_enable_seo_urls_product')) {
 			$latin_check = '/[^\x{0030}-\x{007f}]/u';
 			$product_name = $data['languages'][$default]['product_name'];
