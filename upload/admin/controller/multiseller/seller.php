@@ -356,7 +356,7 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 		$this->load->model('localisation/country');
 		$this->load->model('tool/image');
     	$this->data['countries'] = $this->model_localisation_country->getCountries();
-		$this->data['customers'] = $this->MsLoader->MsSeller->getCustomers(array('seller_id' => 'NULL'));
+		$this->data['customers'] = $this->MsLoader->MsSeller->getCustomers();
 		$this->data['seller_groups'] =$this->MsLoader->MsSellerGroup->getSellerGroups();  
 		$this->data['seller'] = FALSE;
 

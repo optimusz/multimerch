@@ -411,7 +411,7 @@ final class MsSeller extends Model {
 		return $res->rows;
 	}
 	
-	public function getCustomers($data = array(), $sort = array()) {
+	public function getCustomers($sort = array()) {
 		$sql = "SELECT  CONCAT(c.firstname, ' ', c.lastname) as 'c.name',
 						c.email as 'c.email',
 						c.customer_id as 'c.customer_id',
@@ -419,16 +419,14 @@ final class MsSeller extends Model {
 				FROM `" . DB_PREFIX . "customer` c
 				LEFT JOIN `" . DB_PREFIX . "ms_seller` ms
 					ON (c.customer_id = ms.seller_id)
-				WHERE 1 = 1 "
-				. (isset($data['seller_id']) ? " AND ms.seller_id IS NULL" : "")
-				. " GROUP BY ms.seller_id"
+				WHERE ms.seller_id IS NULL"
 				. (isset($sort['order_by']) ? " ORDER BY {$sort['order_by']} {$sort['order_way']}" : '')
     			. (isset($sort['limit']) ? " LIMIT ".(int)$sort['offset'].', '.(int)($sort['limit']) : '');
 
 		$res = $this->db->query($sql);
 		
 		return $res->rows;
-	}	
+	}
 	
 	public function getTotalEarnings($seller_id, $data = array()) {
 		// note: update getSellers() if updating this
