@@ -218,6 +218,12 @@ class MsHelper extends Model {
             return $tax_class_data;
         }
     }
+	
+	public function isUnsignedFloat($val) {
+		$val=str_replace(" ","",trim($val));
+		//return eregi("^([0-9])+([\.|,]([0-9])*)?$", $val);
+		return preg_match("/^([0-9])+([\.|,]([0-9])*)?$/", $val);
+	}
 }
 
 ?>
