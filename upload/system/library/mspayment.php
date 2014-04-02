@@ -23,7 +23,7 @@ class MsPayment extends Model {
 					payment_status = " . (int)$data['payment_status'] . ",
 					payment_method = " . (int)$data['payment_method'] . ",
 					payment_data = '" . (isset($data['payment_data']) ? $this->db->escape($data['payment_data']) : '') . "',
-					amount = ". (float)$data['amount'] . ",
+					amount = ". (float)$this->MsLoader->MsHelper->uniformDecimalPoint($data['amount']) . ",
 					currency_id = " . (int)$data['currency_id'] . ",
 					currency_code = '" . $this->db->escape($data['currency_code']) . "',
 					description = '" . (isset($data['description']) ? $this->db->escape($data['description']) : '') . "',
@@ -43,7 +43,7 @@ class MsPayment extends Model {
 					. (isset($data['payment_status']) ? ", payment_status = " . (int)$data['payment_status'] : '')
 					. (isset($data['payment_method']) ? ", payment_method = " . (int)$data['payment_method'] : '')
 					. (isset($data['payment_data']) ? ", payment_data = '" . $this->db->escape($data['payment_data']) . "'" : '')
-					. (isset($data['amount']) ? ", amount = " . (float)$data['amount'] : '')
+					. (isset($data['amount']) ? ", amount = " . (float)$this->MsLoader->MsHelper->uniformDecimalPoint($data['amount']) : '')
 					. (isset($data['currency_id']) ? ", currency_id = " . (int)$data['currency_id'] : '')
 					. (isset($data['currency_code']) ? ", currency_code = " . $this->db->escape($data['currency_code']) : '')
 					. (isset($data['description']) ? ", description = '" . $this->db->escape($data['description']) . "'" : '')

@@ -224,6 +224,10 @@ class MsHelper extends Model {
 		//return eregi("^([0-9])+([\.|,]([0-9])*)?$", $val);
 		return preg_match("/^([0-9])+([\.|,]([0-9])*)?$/", $val);
 	}
+	
+	public function uniformDecimalPoint($number) {
+		return (float)(str_replace(',', '.', $number));
+	}
 }
 
 ?>
