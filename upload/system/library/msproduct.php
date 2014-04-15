@@ -183,7 +183,7 @@ class MsProduct extends Model {
         $jan = isset($data['product_jan']) ? $data['product_jan'] : '';
         $isbn = isset($data['product_isbn']) ? $data['product_isbn'] : '';
         $mpn = isset($data['product_mpn']) ? $data['product_mpn'] : '';
-        $manufacturer_id = isset($data['manufacturer_id']) ? $data['manufacturer_id'] : 0;
+        $manufacturer_id = isset($data['product_manufacturer_id']) ? $data['product_manufacturer_id'] : 0;
         $tax_class_id = isset($data['product_tax_class_id']) ? $data['product_tax_class_id'] : 0;
         $stock_status_id = isset($data['product_stock_status_id']) ? $data['product_stock_status_id'] : $this->config->get('config_stock_status_id');
         $date_available = isset($data['product_date_available']) ? $data['product_date_available'] : date('Y-m-d', time() - 86400);
