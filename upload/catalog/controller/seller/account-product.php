@@ -365,7 +365,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 			if (isset($language['product_attributes'])) {
 				$product_attributes = $language['product_attributes'];
 				unset($data['languages'][$language_id]['product_attributes']);
-							
+				
 				foreach ($attributes as $attribute_id => $attribute) {
 					// required attributes empty, errors, for first language only
 					if ($i == 0 && $attribute['required'] && (!isset($product_attributes[$attribute_id]) || empty($product_attributes[$attribute_id]) || empty($product_attributes[$attribute_id]['value']))) {
@@ -521,7 +521,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 			$attributes[$attribute['attribute_id']] = $attribute;
 			$attributes[$attribute['attribute_id']]['values'] = $this->MsLoader->MsAttribute->getAttributeValues($attribute['attribute_id']);
 		}
-
+		
 		foreach ($attributes as $attribute_id => $attribute) {
 			// attributes with no values defined, skip
 			if (empty($attribute['values']) && in_array($attribute['attribute_type'], array(MsAttribute::TYPE_CHECKBOX, MsAttribute::TYPE_SELECT, MsAttribute::TYPE_RADIO)))
@@ -579,13 +579,13 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 			}
 
 			// set attributes
-			if (isset($data['product_attributes'][$attribute_id])) {
+			//if (isset($data['product_attributes'][$attribute_id])) { ?
 				$data['product_attributes'][$attribute_id] = array(
 					'attribute_type' => $attribute['attribute_type'],
 					'value' => $product_attributes[$attribute_id]['value'],
 					'value_id' => $product_attributes[$attribute_id]['value_id'],
 				);
-			}
+			//}
 		}
 		
         if(!isset($data['product_subtract'])){
