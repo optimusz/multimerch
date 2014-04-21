@@ -15,6 +15,7 @@
     <div class="heading">
       <h1><img src="view/image/multiseller/ms-dollar.png" alt="" /> <?php echo $ms_payment_heading; ?></h1>
       <div class="buttons">
+      	<a onclick="location = '<?php echo $this->url->link('multiseller/payment/create', 'token=' . $this->session->data['token'], 'SSL'); ?>'" class="button"><?php echo $ms_payment_new; ?></a>
       	<a id="ms-pay" class="button"><?php echo $ms_button_pay_masspay; ?></a>
       </div>
     </div>

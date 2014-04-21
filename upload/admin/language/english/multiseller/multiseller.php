@@ -18,6 +18,7 @@ $_['ms_type_time'] = 'Time';
 $_['text_image_manager'] = 'Image Manager';
 $_['text_browse'] = 'Browse';
 $_['text_clear'] = 'Clear';
+$_['ms_store'] = 'Store';
 $_['ms_id'] = '#';
 
 $_['ms_error_directory'] = "Warning: Could not create directory: %s. Please create it manually and make it server-writable before proceeding. <br />";
@@ -466,7 +467,9 @@ $_['ms_payment_breadcrumbs'] = 'Payments';
 $_['ms_payment_payout_requests'] = 'Payout requests';
 $_['ms_payment_payouts'] = 'Manual payouts';
 $_['ms_payment_pending'] = 'Pending';
+$_['ms_payment_new'] = 'New payment';
 $_['ms_payment_paid'] = 'Paid';
+$_['ms_payment_deduct'] = 'Deduct from balance';
 $_['ms_payment_payout_paypal'] = 'Pay out via PayPal';
 $_['ms_payment_payout_paypal_invalid'] = 'PayPal address not specified or invalid';
 $_['ms_payment_mark'] = 'Mark as paid';
@@ -486,6 +489,12 @@ $_['ms_payment_type_' . MsPayment::TYPE_SALE] = 'Sale';
 
 $_['ms_payment_status_' . MsPayment::STATUS_UNPAID] = 'Unpaid';
 $_['ms_payment_status_' . MsPayment::STATUS_PAID] = 'Paid';
+
+$_['ms_error_payment_fromto'] = 'Only store to seller and seller to store payments are supported.';
+$_['ms_error_payment_fromstore'] = 'Outgoing payments (store to seller) can only be of types Payout or Payout request';
+$_['ms_error_payment_tostore'] = 'Incoming payments (seller to store) can not be of types Payout or Payout request';
+$_['ms_error_payment_amount'] = 'Please specify a valid payment amount';
+$_['ms_success_payment_created'] = 'Payment successfully created';
 
 // Finances - Transactions
 $_['ms_transactions_heading'] = 'Transactions';

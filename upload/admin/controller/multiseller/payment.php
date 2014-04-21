@@ -147,6 +147,126 @@ class ControllerMultisellerPayment extends ControllerMultisellerBase {
 		$this->response->setOutput($this->render());
 	}
 	
+	public function create() {
+		$results = $this->MsLoader->MsSeller->getSellers(
+			array(),
+			array(
+				'order_by'  => 'ms.nickname',
+				'order_way' => 'ASC',
+			)
+		);
+	
+		foreach ($results as $r) {
+			$this->data['sellers'][] = array(
+				'name' => "{$r['ms.nickname']} ({$r['c.name']})",
+				'seller_id' => $r['seller_id']
+				);
+		}
+	
+		$msPayment = new ReflectionClass('MsPayment');
+		foreach ($msPayment->getConstants() as $cname => $cval) {
+			if (strpos($cname, 'TYPE_') !== FALSE && !in_array($cname, array('TYPE_RECURRING', 'TYPE_SALE'))) {
+				$this->data['payment_types'][$cval] = $this->language->get('ms_payment_type_' . $cval);
+			}
+		}
+
+		$this->data['token'] = $this->session->data['token'];
+		$this->data['heading'] = $this->language->get('ms_payment_new');
+		$this->document->setTitle($this->language->get('ms_payment_new'));
+	
+		$this->load->model('setting/setting');
+		$store_info = $this->model_setting_setting->getSetting('config', 0);
+		$this->data['store_name'] = $store_info['config_name'];
+		
+		$this->data['breadcrumbs'] = $this->MsLoader->MsHelper->admSetBreadcrumbs(array(
+			array(
+				'text' => $this->language->get('ms_menu_multiseller'),
+				'href' => $this->url->link('multiseller/dashboard', '', 'SSL'),
+			),
+			array(
+				'text' => $this->language->get('ms_payment_breadcrumbs'),
+				'href' => $this->url->link('multiseller/transaction', '', 'SSL'),
+			),
+			array(
+				'text' => $this->language->get('ms_payment_new'),
+				'href' => $this->url->link('multiseller/transaction', '', 'SSL'),
+			)
+		));
+	
+		list($this->template, $this->children) = $this->MsLoader->MsHelper->admLoadTemplate('payment-form');
+		$this->response->setOutput($this->render());
+	}
+	
+	public function jxSave() {
+		$json = array();
+		$data = $this->request->post['payment'];
+		
+		if ((!$data['from'] && !$data['to']) || ($data['from'] && $data['to'])) {
+			$json['errors']['payment[from]'] = $this->language->get('ms_error_payment_fromto');
+			$json['errors']['payment[to]'] = $this->language->get('ms_error_payment_fromto');
+		}
+
+		if (!$data['from'] && !in_array($data['type'], array(MsPayment::TYPE_PAYOUT, MsPayment::TYPE_PAYOUT_REQUEST))) {
+			$json['errors']['payment[type]'] = $this->language->get('ms_error_payment_fromstore');
+		} else if ($data['from'] && in_array($data['type'], array(MsPayment::TYPE_PAYOUT, MsPayment::TYPE_PAYOUT_REQUEST))) {
+			$json['errors']['payment[type]'] = $this->language->get('ms_error_payment_tostore');
+		}
+		
+		if ((float)$data['amount'] <= 0) {
+			$json['errors']['payment[amount]'] = $this->language->get('ms_error_payment_amount');
+		}
+	
+		if (empty($json['errors'])) {
+			$payment_id = $this->MsLoader->MsPayment->createPayment(array(
+				'seller_id' => ($data['from'] ? $data['from'] : $data['to']),
+				'payment_type' => $data['type'],
+				'payment_status' => (isset($data['paid']) && $data['paid'] ? 2 : 1),
+				'payment_method' => $data['method'],
+				'amount' => $data['amount'],
+				'currency_id' => $this->currency->getId($this->config->get('config_currency')),
+				'currency_code' => $this->currency->getCode($this->config->get('config_currency')),
+				'description' => $data['description']
+			));
+
+			if (isset($data['paid']) && $data['paid']) {
+				$this->MsLoader->MsPayment->updatePayment($payment_id, array(
+					'date_paid' => date( 'Y-m-d H:i:s')
+				));
+			}
+			
+			if (isset($data['deduct']) && $data['deduct']) {
+				switch ($data['type']) {
+					case MsPayment::TYPE_SIGNUP:
+						$balance_type = MsBalance::MS_BALANCE_TYPE_SIGNUP;
+						break;
+						
+					case MsPayment::TYPE_LISTING:
+						$balance_type = MsBalance::MS_BALANCE_TYPE_LISTING;
+						break;
+						
+					case MsPayment::TYPE_PAYOUT:
+					case MsPayment::TYPE_PAYOUT_REQUEST:
+						$balance_type = MsBalance::MS_BALANCE_TYPE_WITHDRAWAL;
+						break;
+						
+					default: 
+						$balance_type = MsBalance::MS_BALANCE_TYPE_GENERIC;
+				}
+				
+				$this->MsLoader->MsBalance->addBalanceEntry($data['from'] ? $data['from'] : $data['to'], array(
+					'balance_type' => $balance_type,
+					'amount' => -$data['amount'],
+					'description' => $data['description']
+				));
+			}
+			
+			$this->session->data['success'] = $this->language->get('ms_success_payment_created');
+		} else {
+		}
+	
+		$this->response->setOutput(json_encode($json));
+	}
+	
 	// todo
 	public function jxPay() {
 		$json = array();
