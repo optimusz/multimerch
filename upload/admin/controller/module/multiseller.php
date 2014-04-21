@@ -110,6 +110,8 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		"msconf_product_seller_profile_image_height" => 100,
 		"msconf_product_seller_products_image_width" => 100,
 		"msconf_product_seller_products_image_height" => 100,
+		"msconf_product_seller_product_list_seller_area_image_width" => 40,
+		"msconf_product_seller_product_list_seller_area_image_height" => 40,
 		"msconf_badge_width" => 30,
 		"msconf_badge_height" => 30,
 		

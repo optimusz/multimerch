@@ -287,7 +287,8 @@ $_['ms_config_image_preview_size_product_image'] = 'Product image';
 
 $_['ms_config_product_image_size'] = 'Product image size';
 $_['ms_config_product_image_size_seller_profile'] = 'Seller profile';
-$_['ms_config_product_image_size_seller_products_list'] = 'Seller products list';
+$_['ms_config_product_image_size_seller_products_list'] = 'Seller products list in catalog';
+$_['ms_config_product_image_size_seller_products_list_account'] = 'Seller products list in seller account area';
 
 $_['ms_config_badge_size'] = 'Badge size';
 

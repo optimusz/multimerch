@@ -22,6 +22,7 @@
 	<table class="list" id="list-products">
 	<thead>
 	<tr>
+		<td><?php echo $ms_account_products_image; ?></td>
 		<td><?php echo $ms_account_products_product; ?></td>
 		<td><?php echo $ms_account_product_price; ?></td>
 		<td><?php echo $ms_account_products_sales; ?></td>
@@ -56,6 +57,7 @@
 		$('#list-products').dataTable( {
 			"sAjaxSource": "index.php?route=seller/account-product/getTableData",
 			"aoColumns": [
+				{ "mData": "image" },
 				{ "mData": "product_name" },
 				{ "mData": "product_price" },
 				{ "mData": "number_sold" },

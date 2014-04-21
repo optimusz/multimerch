@@ -58,11 +58,11 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 				$price = $product['p.price'];
 			}
 
-			// image
+			// Product Image
 			if ($product['p.image'] && file_exists(DIR_IMAGE . $product['p.image'])) {
-				$image = $this->MsLoader->MsFile->resizeImage($product['p.image'], 40, 40);
+				$image = $this->MsLoader->MsFile->resizeImage($product['p.image'], $this->config->get('msconf_product_seller_product_list_seller_area_image_width'), $this->config->get('msconf_product_seller_product_list_seller_area_image_height'));
 			} else {
-				$image = $this->MsLoader->MsFile->resizeImage('no_image.jpg', 40, 40);
+				$image = $this->MsLoader->MsFile->resizeImage('no_image.jpg', $this->config->get('msconf_product_seller_product_list_seller_area_image_width'), $this->config->get('msconf_product_seller_product_list_seller_area_image_height'));
 			}
 			
 			// actions

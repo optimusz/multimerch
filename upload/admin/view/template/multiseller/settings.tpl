@@ -1350,6 +1350,11 @@
 							<input type="text" name="msconf_product_seller_products_image_width" value="<?php echo $msconf_product_seller_products_image_width; ?>" size="3" />
 							x
 							<input type="text" name="msconf_product_seller_products_image_height" value="<?php echo $msconf_product_seller_products_image_height; ?>" size="3" />
+							&nbsp
+							<span><?php echo $ms_config_product_image_size_seller_products_list_account; ?></span>
+							<input type="text" name="msconf_product_seller_product_list_seller_area_image_width" value="<?php echo $msconf_product_seller_product_list_seller_area_image_width; ?>" size="3" />
+							x
+							<input type="text" name="msconf_product_seller_product_list_seller_area_image_height" value="<?php echo $msconf_product_seller_product_list_seller_area_image_height; ?>" size="3" />
 						</td>
 					</tr>
 					

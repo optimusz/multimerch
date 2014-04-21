@@ -419,6 +419,7 @@ $_['ms_seller_status_' . MsSeller::STATUS_UNPAID] = 'Unpaid signup fee';
 // Account - Products
 $_['ms_account_products_heading'] = 'Your Products';
 $_['ms_account_products_breadcrumbs'] = 'Your Products';
+$_['ms_account_products_image'] = 'Image';
 $_['ms_account_products_product'] = 'Product';
 $_['ms_account_products_sales'] = 'Sales';
 $_['ms_account_products_earnings'] = 'Earnings';
