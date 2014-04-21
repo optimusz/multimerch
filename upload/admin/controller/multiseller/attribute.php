@@ -188,11 +188,13 @@ class ControllerMultisellerAttribute extends ControllerMultisellerBase {
 			}
 		}
 
-		if (($data['attribute_type'] == MsAttribute::TYPE_SELECT || $data['attribute_type'] == MsAttribute::TYPE_RADIO || $data['attribute_type'] == MsAttribute::TYPE_CHECKBOX || $data['attribute_type'] == MsAttribute::TYPE_IMAGE)) {
+		if ($data['attribute_type'] == MsAttribute::TYPE_SELECT || $data['attribute_type'] == MsAttribute::TYPE_RADIO || $data['attribute_type'] == MsAttribute::TYPE_CHECKBOX || $data['attribute_type'] == MsAttribute::TYPE_IMAGE) {
 			if (empty($data['attribute_value'])) {
 				$json['errors']['attribute_type'] = $this->language->get('ms_error_attribute_type');
 			}
-		} else if (($data['attribute_type'] != MsAttribute::TYPE_TEXT && $data['attribute_type'] != MsAttribute::TYPE_TEXTAREA)) {
+		}
+
+		if ($data['attribute_type'] != MsAttribute::TYPE_TEXT && $data['attribute_type'] != MsAttribute::TYPE_TEXTAREA) {
 			unset($data['text_type']);
 			unset($data['attribute_value']);
 		}

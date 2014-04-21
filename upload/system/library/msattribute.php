@@ -52,7 +52,7 @@ class MsAttribute extends Model {
 				SET attribute_type = " . (int)$data['attribute_type'] . ",
 					sort_order = " . (int)$data['sort_order'] . ",
 					number = " . (isset($data['number']) && $data['text_type'] == 'number' ? 1 : 0) . ",
-					multilang = " . (isset($data['multilang']) && $data['text_type'] == 'multilang' ? 1 : 0) . ",
+					multilang = " . (isset($data['text_type']) && $data['text_type'] == 'multilang' ? 1 : 0) . ",
 					tab_display = " . (isset($data['tab_display']) && $data['tab_display'] == '1' ? 1 : 0) . ",
 					enabled = " . (isset($data['enabled']) ? 1 : 0) . ",
 					required = " . (isset($data['required']) ? 1 : 0);
