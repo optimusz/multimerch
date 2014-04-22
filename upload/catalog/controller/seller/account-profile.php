@@ -186,7 +186,7 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 						$data['seller']['keyword'] = implode("-", str_replace("-", "", explode(" ", strtolower($data['seller']['nickname']))));
 					}
 					else {
-						$data['seller']['keyword'] = implode("-", str_replace("-", "", explode(" ", preg_replace("/[^A-Za-z0-9 ]/", '', strtolower($data['seller']['nickname'])))));
+						$this->session->data['seller']['keyword'] = trim(implode("-", str_replace("-", "", explode(" ", preg_replace("/[^A-Za-z0-9 ]/", '', strtolower($this->session->data['seller']['nickname']))))), "-");
 					}
 				}
 				

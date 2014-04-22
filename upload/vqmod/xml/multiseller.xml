@@ -463,10 +463,39 @@
 			]]></add>
 		</operation>
 	</file>
-
+	
+	<!-- ****************************************** -->
+	<!-- * Multiple order comments to each seller * -->
+	<!-- ****************************************** -->
+	
+	<!-- Controller -->
+	<!--<file name="catalog/controller/checkout/payment_method.php">
+		<operation>
+			<search position="after"><![CDATA[
+				
+			]]></search>
+			<add><![CDATA[
+				
+			]]></add>
+		</operation>
+	</file>-->
+	
+	<!-- Template -->
+	<!--<file name="catalog/view/theme/&themeFolder;/template/checkout/payment_method.tpl">
+		<operation>
+			<search position="after"><![CDATA[
+				
+			]]></search>
+			<add><![CDATA[
+				
+			]]></add>
+		</operation>
+	</file>-->
+	
 	<!-- ***************************** -->
 	<!-- * Seller account area links * -->
 	<!-- ***************************** -->
+	
 	<file name="catalog/view/theme/&themeFolder;/template/account/account.tpl">
 		<operation>
 			<search position="before"><![CDATA[
