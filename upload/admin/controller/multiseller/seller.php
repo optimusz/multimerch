@@ -40,7 +40,7 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 		foreach ($results as $result) {
 			// actions
 			$actions = "";
-			if ($this->currency->format($this->MsLoader->MsBalance->getSellerBalance($result['seller_id']) - $this->MsLoader->MsBalance->getReservedSellerFunds($result['seller_id'], $this->config->get('config_currency'), '', FALSE)) > 0) {
+			if ($this->currency->format($this->MsLoader->MsBalance->getSellerBalance($result['seller_id']) - $this->MsLoader->MsBalance->getReservedSellerFunds($result['seller_id']), $this->config->get('config_currency'), '', FALSE) > 0) {
 				if (!empty($result['ms.paypal']) && filter_var($result['ms.paypal'], FILTER_VALIDATE_EMAIL)) {
 					$actions .= "<a class='ms-button ms-button-paypal' title='" . $this->language->get('ms_catalog_sellers_balance_paypal') . "'></a>";
 				} else {
@@ -56,7 +56,8 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 			$columns[] = array_merge(
 				$result,
 				array(
-					'seller' => "<input type='hidden' value='{$result['seller_id']}' /><a href='".$this->url->link('sale/customer/update', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['seller_id'], 'SSL')."'>{$result['c.name']}({$result['ms.nickname']})</a>",
+					'checkbox' => "<input type='checkbox' name='selected[]' value='{$result['seller_id']}' />",
+					'seller' => "<a href='".$this->url->link('sale/customer/update', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['seller_id'], 'SSL')."'>{$result['c.name']}({$result['ms.nickname']})</a>",
 					'email' => $result['c.email'],
 					'total_earnings' => $this->currency->format($this->MsLoader->MsSeller->getTotalEarnings($result['seller_id']), $this->config->get('config_currency')),
 					'balance' => $this->currency->format($this->MsLoader->MsBalance->getSellerBalance($result['seller_id']), $this->config->get('config_currency')) . '/' . $this->currency->format($available > 0 ? $available : 0, $this->config->get('config_currency')),
@@ -303,6 +304,142 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 		$json['success'] = 1;
 		$this->response->setOutput(json_encode($json));
 	}
+	
+	public function jxConfirmMasspay() {
+		$this->validate(__FUNCTION__);
+		$json = array();
+		
+		//var_dump($this->request->post);
+		
+		if (isset($this->request->post['selected'])) {
+			$payments = array();
+			$total = $this->currency->format(0, $this->config->get('config_currency'), 1, false);
+			foreach ($this->request->post['selected'] as $seller_id) {
+				$seller = $this->MsLoader->MsSeller->getSeller($seller_id);
+				if (!$seller || !$seller['ms.paypal']) continue;
+				$amount = $this->MsLoader->MsBalance->getSellerBalance($seller_id) - $this->MsLoader->MsBalance->getReservedSellerFunds($seller_id);
+				if ($amount <= 0) continue;
+				
+				$total += abs($amount);
+				$payments[] = array (
+					'nickname' => $seller['ms.nickname'],
+					'paypal' => $seller['ms.paypal'],
+					'amount' => $this->currency->format(abs($amount), $this->config->get('config_currency'), '', false)
+				);
+			}
+				
+			if ($payments) {
+				$this->data['total_amount'] = $this->currency->format($total, $this->config->get('config_currency'), '', false);
+				$this->data['payments'] = $payments;
+				list($this->template, $this->children) = $this->MsLoader->MsHelper->admLoadTemplate('dialog-withdrawal-masspay');
+				$json['html'] = $this->render();
+			} else {
+				$json['error'] = $this->language->get('ms_error_payment_norequests');
+			}
+		} else {
+			$json['error'] = $this->language->get('ms_error_payment_norequests');
+		}
+		return $this->response->setOutput(json_encode($json));
+	}
+	
+	public function jxCompleteMasspay() {
+		$this->validate(__FUNCTION__);
+		$json = array();
+
+		if (!isset($this->request->post['selected'])) {
+			$json['error'] = $this->language->get('ms_error_payment_norequests');
+			$this->response->setOutput(json_encode($json));
+			return;
+		}
+	
+		require_once(DIR_SYSTEM . 'library/ms-paypal.php');
+	
+		$requestParams = array(
+			'RECEIVERTYPE' => 'EmailAddress',
+			'CURRENCYCODE' => $this->config->get('config_currency')
+		);
+	
+		$paymentParams = array();
+	
+		$i = 0;
+		
+		foreach ($this->request->post['selected'] as $seller_id) {
+			$seller = $this->MsLoader->MsSeller->getSeller($seller_id);
+			if (!$seller || !$seller['ms.paypal']) continue;
+			$amount = $this->MsLoader->MsBalance->getSellerBalance($seller_id) - $this->MsLoader->MsBalance->getReservedSellerFunds($seller_id);
+			if ($amount <= 0) continue;
+		
+			//create payment
+			$payment_id = $this->MsLoader->MsPayment->createPayment(array(
+				'seller_id' => $seller_id,
+				'payment_type' => MsPayment::TYPE_PAYOUT,
+				'payment_status' => MsPayment::STATUS_UNPAID,
+				'payment_data' => $seller['ms.paypal'],
+				'payment_method' => MsPayment::METHOD_PAYPAL,
+				'amount' => $this->currency->format($amount, $this->config->get('config_currency'), '', FALSE),
+				'currency_id' => $this->currency->getId($this->config->get('config_currency')),
+				'currency_code' => $this->currency->getCode($this->config->get('config_currency')),
+				'description' => sprintf($this->language->get('ms_payment_royalty_payout'), $seller['name'], $this->config->get('config_name'))
+			));			
+			
+			if (!empty($payment_id)) {
+				$paymentParams['L_EMAIL' . $i] = $seller['ms.paypal'];
+				$paymentParams['L_AMT' . $i] = abs($amount);
+				$i++;
+			}
+		}
+	
+		if (empty($paymentParams)) {
+			$json['error'] = $this->language->get('ms_error_payment_norequests');
+			$this->response->setOutput(json_encode($json));
+			return;
+		}
+	
+		$paypal = new PayPal($this->config->get('msconf_paypal_api_username'), $this->config->get('msconf_paypal_api_password'), $this->config->get('msconf_paypal_api_signature'), $this->config->get('msconf_paypal_sandbox'));
+		$response = $paypal->request('MassPay',$requestParams + $paymentParams);
+	
+		if (!$response) {
+			$json['error'] = $this->language->get('ms_error_withdraw_response');
+			$json['response'] = print_r($paypal->getErrors(), true);
+		} else if ($response['ACK'] != 'Success') {
+			$json['error'] = $this->language->get('ms_error_withdraw_status');
+			$json['response'] = print_r($response, true);
+		} else {
+			$json['success'] = $this->language->get('ms_success_transactions');
+			$json['response'] = print_r($response, true);
+			//$mails = array();
+			foreach ($this->request->post['selected'] as $seller_id) {
+				$result = $this->MsLoader->MsPayment->getPayments(
+					array(
+						'seller_id' => $seller_id,
+						'payment_status' => array(MsPayment::STATUS_UNPAID),
+						'payment_type' => array(MsPayment::TYPE_PAYOUT),
+						'single' => 1
+					)
+				);
+	
+				$this->MsLoader->MsPayment->updatePayment($result['payment_id'],
+					array(
+						'payment_status' => MsPayment::STATUS_PAID,
+						'description' => 'Paid',
+						'date_paid' => date( 'Y-m-d H:i:s')
+					)
+				);
+	
+				$this->MsLoader->MsBalance->addBalanceEntry(
+					$result['seller_id'],
+					array(
+						'payment_id' => $result['payment_id'],
+						'balance_type' => MsBalance::MS_BALANCE_TYPE_WITHDRAWAL,
+						'amount' => -$result['amount'],
+						'description' => 'Payout'
+					)
+				);
+			}
+		}
+	
+		return $this->response->setOutput(json_encode($json));
+	}	
 	
 	public function delete() {
 		$seller_id = isset($this->request->get['seller_id']) ? $this->request->get['seller_id'] : 0;

@@ -494,6 +494,7 @@ $_['ms_error_payment_fromto'] = 'Only store to seller and seller to store paymen
 $_['ms_error_payment_fromstore'] = 'Outgoing payments (store to seller) can only be of types Payout or Payout request';
 $_['ms_error_payment_tostore'] = 'Incoming payments (seller to store) can not be of types Payout or Payout request';
 $_['ms_error_payment_amount'] = 'Please specify a valid payment amount';
+$_['ms_error_payment_norequests'] = 'Error: no valid payouts to process. Please make sure the sellers have enough funds and valid PayPal addresses specified';
 $_['ms_success_payment_created'] = 'Payment successfully created';
 
 // Finances - Transactions
