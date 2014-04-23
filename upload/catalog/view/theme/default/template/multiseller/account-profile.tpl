@@ -31,7 +31,7 @@
 			<?php } ?>
 			<table class="ms-product">
 				<tr>
-					<?php if (!empty($seller['ms.nickname'])) { ?>
+					<?php if (!$this->config->get('msconf_change_seller_nickname') && !empty($seller['ms.nickname'])) { ?>
 						<td><?php echo $ms_account_sellerinfo_nickname; ?></td>
 						<td style="padding-top: 5px">
 							<b><?php echo $seller['ms.nickname']; ?></b>

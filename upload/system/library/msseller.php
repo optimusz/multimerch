@@ -153,6 +153,7 @@ final class MsSeller extends Model {
 		$sql = "UPDATE " . DB_PREFIX . "ms_seller
 				SET description = '" . $this->db->escape($data['description']) . "',
 					company = '" . $this->db->escape($data['company']) . "',
+					nickname = '" . $this->db->escape($data['nickname']) . "',
 					country_id = " . (int)$data['country'] . ",
 					zone_id = " . (int)$data['zone'] . ","
 					. (isset($data['status']) ? "seller_status=  " .  (int)$data['status'] . "," : '')
@@ -162,6 +163,18 @@ final class MsSeller extends Model {
 				WHERE seller_id = " . (int)$seller_id;
 		
 		$this->db->query($sql);
+		
+		$this->db->query("DELETE FROM " . DB_PREFIX . "url_alias WHERE query = 'seller_id=" . (int)$seller_id. "'");
+		if (isset($data['keyword'])) {
+			$similarity_query = $this->db->query("SELECT * FROM ". DB_PREFIX . "url_alias WHERE keyword LIKE '" . $this->db->escape($data['keyword']) . "%'");
+			$number = $similarity_query->num_rows;
+			
+			if ($number > 0) {
+				$data['keyword'] = $data['keyword'] . "-" . $number;
+			}
+			
+			$this->db->query("INSERT INTO " . DB_PREFIX . "url_alias SET query = 'seller_id=" . (int)$seller_id . "', keyword = '" . $this->db->escape($data['keyword']) . "'");
+		}
 	}		
 		
 	public function getSellerAvatar($seller_id) {

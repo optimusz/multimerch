@@ -327,22 +327,29 @@ $_['ms_config_hide_customer_email_note'] = 'Hides customer email address in the 
 $_['ms_config_hide_email_in_email'] = 'Hide email addresses in emails';
 $_['ms_config_hide_email_in_email_note'] = 'Hides customer and seller email addresses in the emails sent by MultiMerch';
 
-$_['ms_config_other'] = 'Other';
-$_['ms_config_hide_sellers_product_count'] = 'Hide count of sellers and products in the header';
-$_['ms_config_hide_sellers_product_count_note'] = 'Hides line, which contains count of sellers and products in the header';
+$_['ms_config_seller'] = 'Sellers';
 
+// Change Seller Nickname
+$_['ms_config_seller_change_nickname'] = 'Allow nickname change';
+$_['ms_config_seller_change_nickname_note'] = 'Allow sellers to change nickname/shop name';
+
+// Seller Nickname Rules
 $_['ms_config_nickname_rules'] = 'Seller nickname rules';
 $_['ms_config_nickname_rules_note'] = 'Character sets allowed in seller nicknames';
 $_['ms_config_nickname_rules_alnum'] = 'Alphanumeric';
 $_['ms_config_nickname_rules_ext'] = 'Extended latin';
 $_['ms_config_nickname_rules_utf'] = 'Full UTF-8';
 
-// Avatars
+// Seller Avatars
 $_['ms_config_avatars_for_sellers'] = 'Avatars for sellers';
 $_['ms_config_avatars_for_sellers_note'] = 'Define the way seller avatars work';
 $_['ms_config_avatars_manually'] = 'Uploaded manually by seller';
 $_['ms_config_avatars_both'] = 'Both uploaded by seller and pre-defined';
 $_['ms_config_avatars_predefined'] = 'Only pre-defined';
+
+$_['ms_config_other'] = 'Other';
+$_['ms_config_hide_sellers_product_count'] = 'Hide count of sellers and products in the header';
+$_['ms_config_hide_sellers_product_count_note'] = 'Hides line, which contains count of sellers and products in the header';
 
 // Seller - List
 $_['ms_catalog_sellers_heading'] = 'Sellers';

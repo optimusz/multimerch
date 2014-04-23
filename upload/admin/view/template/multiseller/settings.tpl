@@ -1514,6 +1514,51 @@
 						</td>
 					</tr>
 					
+					<tr><td colspan="2"><h2><?php echo $ms_config_seller; ?></h2></td></tr>
+					
+					<tr>
+						<td>
+							<span><?php echo $ms_config_seller_change_nickname; ?></span>
+							<span class="help"><?php echo $ms_config_seller_change_nickname_note; ?></span>
+						</td>
+						<td>
+							<input type="radio" name="msconf_change_seller_nickname" value="1" <?php if ($msconf_change_seller_nickname == 1) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_yes; ?>
+							<input type="radio" name="msconf_change_seller_nickname" value="0" <?php if ($msconf_change_seller_nickname == 0) { ?> checked="checked" <?php } ?>  />
+							<?php echo $text_no; ?>
+					  	</td>
+					</tr>
+					
+					<tr>
+						<td>
+							<span><?php echo $ms_config_nickname_rules; ?></span>
+							<span class="help"><?php echo $ms_config_nickname_rules_note; ?></span>
+						</td>
+						<td>
+							<input type="radio" name="msconf_nickname_rules" value="0" <?php if ($msconf_nickname_rules == 0) { ?> checked="checked" <?php } ?>  />
+							<?php echo $ms_config_nickname_rules_alnum; ?>
+							<input type="radio" name="msconf_nickname_rules" value="1" <?php if ($msconf_nickname_rules == 1) { ?> checked="checked" <?php } ?>  />
+							<?php echo $ms_config_nickname_rules_ext; ?>
+							<input type="radio" name="msconf_nickname_rules" value="2" <?php if ($msconf_nickname_rules == 2) { ?> checked="checked" <?php } ?>  />
+							<?php echo $ms_config_nickname_rules_utf; ?>
+					  	</td>
+					</tr>
+					
+					<tr>
+						<td>
+							<span><?php echo $ms_config_avatars_for_sellers; ?></span>
+							<span class="help"><?php echo $ms_config_avatars_for_sellers_note; ?></span>
+						</td>
+						<td>
+							<input type="radio" name="msconf_avatars_for_sellers" value="0" <?php if ($msconf_avatars_for_sellers == 0) { ?> checked="checked" <?php } ?>  />
+							<?php echo $ms_config_avatars_manually; ?>
+							<input type="radio" name="msconf_avatars_for_sellers" value="1" <?php if ($msconf_avatars_for_sellers == 1) { ?> checked="checked" <?php } ?>  />
+							<?php echo $ms_config_avatars_both; ?>
+							<input type="radio" name="msconf_avatars_for_sellers" value="2" <?php if ($msconf_avatars_for_sellers == 2) { ?> checked="checked" <?php } ?>  />
+							<?php echo $ms_config_avatars_predefined; ?>
+						</td>
+					</tr>
+					
 					<tr><td colspan="2"><h2><?php echo $ms_config_other; ?></h2></td></tr>
 					<tr>
 						<td>
@@ -1525,35 +1570,6 @@
 							<?php echo $text_yes; ?>
 							<input type="radio" name="msconf_hide_sellers_product_count" value="0" <?php if($msconf_hide_sellers_product_count == 0) { ?> checked="checked" <?php } ?>  />
 							<?php echo $text_no; ?>
-						</td>
-					</tr>
-					
-					<tr>
-						<td>
-							<span><?php echo $ms_config_nickname_rules; ?></span>
-							<span class="help"><?php echo $ms_config_nickname_rules_note; ?></span>
-						</td>
-						<td>
-							<input type="radio" name="msconf_nickname_rules" value="0" <?php if($msconf_nickname_rules == 0) { ?> checked="checked" <?php } ?>  />
-							<?php echo $ms_config_nickname_rules_alnum; ?>
-							<input type="radio" name="msconf_nickname_rules" value="1" <?php if($msconf_nickname_rules == 1) { ?> checked="checked" <?php } ?>  />
-							<?php echo $ms_config_nickname_rules_ext; ?>
-							<input type="radio" name="msconf_nickname_rules" value="2" <?php if($msconf_nickname_rules == 2) { ?> checked="checked" <?php } ?>  />
-							<?php echo $ms_config_nickname_rules_utf; ?>
-					  	</td>
-					</tr>
-					<tr>
-						<td>
-							<span><?php echo $ms_config_avatars_for_sellers; ?></span>
-							<span class="help"><?php echo $ms_config_avatars_for_sellers_note; ?></span>
-						</td>
-						<td>
-							<input type="radio" name="msconf_avatars_for_sellers" value="0" <?php if($msconf_avatars_for_sellers == 0) { ?> checked="checked" <?php } ?>  />
-							<?php echo $ms_config_avatars_manually; ?>
-							<input type="radio" name="msconf_avatars_for_sellers" value="1" <?php if($msconf_avatars_for_sellers == 1) { ?> checked="checked" <?php } ?>  />
-							<?php echo $ms_config_avatars_both; ?>
-							<input type="radio" name="msconf_avatars_for_sellers" value="2" <?php if($msconf_avatars_for_sellers == 2) { ?> checked="checked" <?php } ?>  />
-							<?php echo $ms_config_avatars_predefined; ?>
 						</td>
 					</tr>
 				</table>

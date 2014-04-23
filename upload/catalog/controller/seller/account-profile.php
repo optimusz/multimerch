@@ -39,13 +39,13 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 			return $this->response->setOutput(json_encode($json));
 		}
 		
-		if (empty($seller)) {
+		if ($this->config->get('msconf_change_seller_nickname') || empty($seller)) {
 			// seller doesn't exist yet
 			if (empty($data['seller']['nickname'])) {
 				$json['errors']['seller[nickname]'] = $this->language->get('ms_error_sellerinfo_nickname_empty'); 
 			} else if (mb_strlen($data['seller']['nickname']) < 4 || mb_strlen($data['seller']['nickname']) > 128 ) {
 				$json['errors']['seller[nickname]'] = $this->language->get('ms_error_sellerinfo_nickname_length');			
-			} else if ($this->MsLoader->MsSeller->nicknameTaken($data['seller']['nickname'])) {
+			} else if ( ($data['seller']['nickname'] != $seller['ms.nickname']) && ($this->MsLoader->MsSeller->nicknameTaken($data['seller']['nickname'])) ) {
 				$json['errors']['seller[nickname]'] = $this->language->get('ms_error_sellerinfo_nickname_taken');
 			} else {
 				switch($this->config->get('msconf_nickname_rules')) {
@@ -72,7 +72,11 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 						break;
 				}
 			}
-			
+		} else {
+			$data['seller']['nickname'] = $seller['ms.nickname'];
+		}
+		
+		if (empty($seller)) {
 			if ($this->config->get('msconf_seller_terms_page')) {
 				$this->load->model('catalog/information');
 				$information_info = $this->model_catalog_information->getInformation($this->config->get('msconf_seller_terms_page'));
@@ -129,6 +133,21 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 		if (empty($json['errors'])) {
 			$mails = array();
 			unset($data['seller']['commission']);
+			
+			if ($this->config->get('msconf_change_seller_nickname') || empty($seller)) {
+				// SEO urls generation for sellers
+				if ($this->config->get('msconf_enable_seo_urls_seller')) {
+					$latin_check = '/[^\x{0030}-\x{007f}]/u';
+					$non_latin_chars = preg_match($latin_check, $data['seller']['nickname']);
+					if ($this->config->get('msconf_enable_non_alphanumeric_seo') && $non_latin_chars) {
+						$data['seller']['keyword'] = implode("-", str_replace("-", "", explode(" ", strtolower($data['seller']['nickname']))));
+					}
+					else {
+						$data['seller']['keyword'] = trim(implode("-", str_replace("-", "", explode(" ", preg_replace("/[^A-Za-z0-9 ]/", '', strtolower($data['seller']['nickname']))))), "-");
+					}
+				}
+			}
+			
 			if (empty($seller)) {
 				$data['seller']['approved'] = 0;
 				// create new seller
@@ -176,18 +195,6 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 						$data['seller']['status'] = MsSeller::STATUS_ACTIVE;
 						$data['seller']['approved'] = 1;
 						break;
-				}
-				
-				// SEO urls generation for sellers
-				if ($this->config->get('msconf_enable_seo_urls_seller')) {
-					$latin_check = '/[^\x{0030}-\x{007f}]/u';
-					$non_latin_chars = preg_match($latin_check, $data['seller']['nickname']);
-					if ($this->config->get('msconf_enable_non_alphanumeric_seo') && $non_latin_chars) {
-						$data['seller']['keyword'] = implode("-", str_replace("-", "", explode(" ", strtolower($data['seller']['nickname']))));
-					}
-					else {
-						$this->session->data['seller']['keyword'] = trim(implode("-", str_replace("-", "", explode(" ", preg_replace("/[^A-Za-z0-9 ]/", '', strtolower($this->session->data['seller']['nickname']))))), "-");
-					}
 				}
 				
 				$data['seller']['seller_id'] = $this->customer->getId();
