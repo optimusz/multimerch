@@ -49,7 +49,34 @@
 			]]></add>
 		</operation>
 	</file>
-
+	
+	<!-- Disallow seller to buy his own products -->
+	<file name="system/library/cart.php">
+		<operation>
+			<search position="after"><![CDATA[
+				public function add($product_id, $qty = 1, $option, $profile_id = '') {
+			]]></search>
+			<add><![CDATA[
+				$sql = "SELECT seller_id FROM " . DB_PREFIX . "ms_product WHERE product_id = " . (int)$product_id;
+				$res = $this->db->query($sql);
+				if (isset($res->row['seller_id'])) {
+					$seller_id = (int)$res->row['seller_id'];
+				} else {
+					$seller_id = (int)0;
+				}
+				if ( ($seller_id != (int)$this->customer->getId()) || ($seller_id == 0) || (!$this->customer->isLogged()) ) {
+			]]></add>
+		</operation>
+		
+		<operation>
+			<search position="after" index="1"><![CDATA[
+				$this->data = array();
+			]]></search>
+			<add><![CDATA[
+				}
+			]]></add>
+		</operation>
+	</file>
 	
 	<!-- ************************ -->
 	<!-- ************************ -->
