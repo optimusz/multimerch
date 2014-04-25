@@ -491,16 +491,20 @@
                 <?php } ?>
             </table>
         </div>
-		<!-- specials tab -->
+		
+		<!-- Specials tab -->
 		<?php if ($this->config->get('msconf_allow_specials')) { ?>
 		<div id="tab-specials">
+			<h3><?php echo $ms_account_product_tab_specials; ?></h3>
+			<p class="error" id="error_specials"></p>
+			
 			<table class="list">
 				<thead>
 				<tr>
-					<td><?php echo $ms_account_product_priority; ?></td>
-					<td><?php echo $ms_account_product_price; ?></td>
-					<td><?php echo $ms_account_product_date_start; ?></td>
-					<td><?php echo $ms_account_product_date_end; ?></td>
+					<td><span class="required">*</span><?php echo $ms_account_product_priority; ?></td>
+					<td><span class="required">*</span><?php echo $ms_account_product_price; ?></td>
+					<td><span class="required">*</span><?php echo $ms_account_product_date_start; ?></td>
+					<td><span class="required">*</span><?php echo $ms_account_product_date_end; ?></td>
 					<td></td>
 				</tr>
 				</thead>
@@ -540,17 +544,20 @@
 		</div>
 		<?php } ?>
 		
-		<!-- discounts tab -->
+		<!-- Quantity Discounts tab -->
 		<?php if ($this->config->get('msconf_allow_discounts')) { ?>
 		<div id="tab-discounts">
+			<h3><?php echo $ms_account_product_tab_discounts; ?></h3>
+			<p class="error" id="error_quantity_discounts"></p>
+			
 			<table class="list">
 				<thead>
 				<tr>
-					<td><?php echo $ms_account_product_priority; ?></td>
-					<td><?php echo $ms_account_product_quantity; ?></td>
-					<td><?php echo $ms_account_product_price; ?></td>
-					<td><?php echo $ms_account_product_date_start; ?></td>
-					<td><?php echo $ms_account_product_date_end; ?></td>
+					<td><span class="required">*</span><?php echo $ms_account_product_priority; ?></td>
+					<td><span class="required">*</span><?php echo $ms_account_product_quantity; ?></td>
+					<td><span class="required">*</span><?php echo $ms_account_product_price; ?></td>
+					<td><span class="required">*</span><?php echo $ms_account_product_date_start; ?></td>
+					<td><span class="required">*</span><?php echo $ms_account_product_date_end; ?></td>
 					<td></td>
 				</tr>
 				</thead>

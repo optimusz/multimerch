@@ -272,6 +272,13 @@ $_['ms_error_contact_email'] = 'Please specify a valid email address';
 $_['ms_error_contact_captcha'] = 'Invalid captcha code';
 $_['ms_error_contact_text'] = 'Message cannot be longer than 2000 characters';
 $_['ms_error_contact_allfields'] = 'Please fill in all fields';
+$_['ms_error_invalid_quantity_discount_priority'] = 'Error in priority field - please enter correct value';
+$_['ms_error_invalid_quantity_discount_quantity'] = 'Quantity should be 2 or greater';
+$_['ms_error_invalid_quantity_discount_price'] = 'Invalid quantity discount price entered';
+$_['ms_error_invalid_quantity_discount_dates'] = 'Date fields for quantity discounts must be filled in';
+$_['ms_error_invalid_special_price_priority'] = 'Error in priority field - please enter correct value';
+$_['ms_error_invalid_special_price_price'] = 'Invalid special price entered';
+$_['ms_error_invalid_special_price_dates'] = 'Date fields for special prices must be filled in';
 
 // Account - General 
 $_['ms_account_register_seller'] = 'Register Seller Account';

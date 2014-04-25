@@ -467,8 +467,44 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		
 		if (!empty($data['product_message']) && mb_strlen($data['product_message']) > 1000) {
 			$json['errors']['product_message'] = $this->language->get('ms_error_product_message_length');			
-		}		
+		}
 		
+		// Special Prices
+		unset($data['product_specials'][0]); // Remove sample row
+		if (isset($data['product_specials']) && is_array($data['product_specials'])) {
+			$product_specials = $data['product_specials'];
+			foreach ($product_specials as $product_special) {
+				if (!isset($product_special['priority']) || $product_special['priority'] == null || $product_special['priority'] == "") {
+					$json['errors']['specials'] = $this->language->get('ms_error_invalid_special_price_priority');
+				}
+				if ((!$this->MsLoader->MsHelper->isUnsignedFloat($product_special['price'])) || ((float)$product_special['price'] < (float)0)) {
+					$json['errors']['specials'] = $this->language->get('ms_error_invalid_special_price_price');
+				}
+				if ( !isset($product_special['date_start']) || ($product_special['date_start'] == NULL) || (!isset($product_special['date_end']) || $product_special['date_end'] == NULL) ) {
+					$json['errors']['specials'] = $this->language->get('ms_error_invalid_special_price_dates');
+				}
+			}
+		}
+		
+		// Quantity Discounts
+		unset($data['product_discounts'][0]); // Remove sample row
+		if (isset($data['product_discounts']) && is_array($data['product_discounts'])) {
+			$product_discounts = $data['product_discounts'];
+			foreach ($product_discounts as $product_discount) {
+				if (!isset($product_discount['priority']) || $product_discount['priority'] == null || $product_discount['priority'] == "") {
+					$json['errors']['quantity_discounts'] = $this->language->get('ms_error_invalid_quantity_discount_priority');
+				}
+				if ((int)$product_discount['quantity'] < (int)2) {
+					$json['errors']['quantity_discounts'] = $this->language->get('ms_error_invalid_quantity_discount_quantity');
+				}
+				if ((!$this->MsLoader->MsHelper->isUnsignedFloat($product_discount['price'])) || ((float)$product_discount['price'] < (float)0)) {
+					$json['errors']['quantity_discounts'] = $this->language->get('ms_error_invalid_quantity_discount_price');
+				}
+				if ( !isset($product_discount['date_start']) || ($product_discount['date_start'] == NULL) || (!isset($product_discount['date_end']) || $product_discount['date_end'] == NULL) ) {
+					$json['errors']['quantity_discounts'] = $this->language->get('ms_error_invalid_quantity_discount_dates');
+				}
+			}
+		}
 		
 		// uncomment to enable RTE for message field 
 		/*
@@ -652,10 +688,6 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 				$data['keyword'] = implode("-", str_replace("-", "", explode(" ", preg_replace("/[^A-Za-z0-9 ]/", '', strtolower($product_name)))));
 			}
 		}
-
-		// sample rows
-		unset($data['product_specials'][0]);
-		unset($data['product_discounts'][0]);
 		
 		// Listing until
 		if (!isset($data['listing_until']) || $data['listing_until'] == "") {
