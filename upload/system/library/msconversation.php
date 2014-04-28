@@ -45,9 +45,9 @@ class MsConversation extends Model {
 			(SELECT date_created FROM `" . DB_PREFIX . "ms_message` WHERE conversation_id = mconv.conversation_id ORDER BY message_id DESC LIMIT 1) as last_message_date
 			FROM `" . DB_PREFIX . "ms_conversation` mconv
 			WHERE 1 = 1 "
-			. (isset($data['product_id']) ? " AND product_id =  " .  (int)$data['product_id'] : '')
-			. (isset($data['order_id']) ? " AND order_id =  " .  (int)$data['order_id'] : '')
-			. (isset($data['conversation_id']) ? " AND conversation_id =  " .  (int)$data['conversation_id'] : '')
+			. (isset($data['product_id']) ? " AND product_id =  " . (int)$data['product_id'] : '')
+			. (isset($data['order_id']) ? " AND order_id =  " . (int)$data['order_id'] : '')
+			. (isset($data['conversation_id']) ? " AND conversation_id =  " . (int)$data['conversation_id'] : '')
 
 			. (isset($data['participant_id']) ? " AND conversation_id IN (SELECT conversation_id FROM `" . DB_PREFIX . "ms_message` WHERE `from` = " .  (int)$data['participant_id'] . " OR `to` = " .  (int)$data['participant_id'] . ")" : '')
 
@@ -81,6 +81,14 @@ class MsConversation extends Model {
 			return 1;
 		else
 			return $res->rows[0]['read'];
+	}
+	
+	public function unreadMessages($user_id) {
+		$sql = "SELECT * FROM `" . DB_PREFIX . "ms_message`
+		WHERE `to` = " . (int)$user_id . " AND `read` = 0";
+		
+		$res = $this->db->query($sql);
+		return $res->num_rows;
 	}
 	
 	public function markRead($conversation_id, $data = array()) {

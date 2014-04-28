@@ -707,7 +707,31 @@
 			]]></add>
 		</operation>
 	</file>
-
+	
+	<!-- **************************************** -->
+	<!-- * Unread private message notifications * -->
+	<!-- **************************************** -->
+	
+	<file name="catalog/view/theme/&themeFolder;/template/account/account.tpl">
+		<operation>
+			<search position="after"><![CDATA[
+				<h1><?php echo $heading_title; ?></h1>
+			]]></search>
+			<add><![CDATA[
+				<?php $unread_messages = (int)$this->MsLoader->MsConversation->unreadMessages($this->customer->getId()); ?>
+				<?php if ($unread_messages) { ?>
+					<p class="attention">
+						<?php if ($unread_messages == 1) {
+							echo $ms_account_unread_pm;
+						} else {
+							echo sprintf($ms_account_unread_pms, $unread_messages);
+						}?>
+					</p>
+				<?php } ?>
+			]]></add>
+		</operation>
+	</file>
+	
 	<!-- transactions for order -->
 	<file name="catalog/model/checkout/order.php">
 		<operation>

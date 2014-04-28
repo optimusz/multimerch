@@ -280,7 +280,9 @@ $_['ms_error_invalid_special_price_priority'] = 'Error in priority field - pleas
 $_['ms_error_invalid_special_price_price'] = 'Invalid special price entered';
 $_['ms_error_invalid_special_price_dates'] = 'Date fields for special prices must be filled in';
 
-// Account - General 
+// Account - General
+$_['ms_account_unread_pm'] = 'You have unread private message';
+$_['ms_account_unread_pms'] = 'You have %s unread private messages';
 $_['ms_account_register_seller'] = 'Register Seller Account';
 $_['ms_account_register_seller_success_heading'] = 'Your Seller Account Has Been Created!';
 $_['ms_account_register_seller_success_message']  = '<p>Welcome to %s!</p> <p>Congratulations! Your new seller account has been successfully created!</p> <p>You can now take advantage of seller privileges and start selling your products with us.</p> <p>If you have any problems, <a href="%s">contact us</a>.</p>';
