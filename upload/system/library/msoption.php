@@ -4,7 +4,7 @@ class MsOption extends Model {
 		$sql = "SELECT
 					SQL_CALC_FOUND_ROWS
 					*
-				FROM " . DB_PREFIX . "option o
+				FROM `" . DB_PREFIX . "option` o
 				LEFT JOIN " . DB_PREFIX . "option_description od
 					ON (o.option_id = od.option_id)
 				WHERE 1 = 1 "
