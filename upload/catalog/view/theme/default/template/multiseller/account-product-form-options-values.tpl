@@ -3,7 +3,6 @@
 	<input type="hidden" name="product_option[<?php echo $option_index; ?>][required]" value="1"></td>
 	<div class="o-heading"><span class="option_required <?php echo isset($option['required']) && !$option['required'] ? "bw" : ""; ?>" title="<?php echo $ms_options_required; ?>"></span><?php echo $option['name']; ?><a class="ms-button-delete option_delete" title="<?php echo $ms_delete; ?>"></a></div>
 	
-	
 	<?php if (!empty($values)) { ?>
 	<div class="o-content">
 		<div class="option_values mmCtr">
@@ -31,7 +30,7 @@
 					<span class="option_price_prefix <?php echo ($value['price_prefix'] == '+' ? "plus" : "minus"); ?>" title="<?php echo $ms_options_price_prefix; ?>"></span>
 					<span class="option_price">
 						<?php echo $this->currency->getSymbolLeft(); ?>
-						<input type="text" placeholder="<?php echo $ms_options_price; ?>" name="product_option[<?php echo $option_index; ?>][product_option_value][<?php echo $i; ?>][price]" value="<?php echo $value['price']; ?>" size="5"></td>
+						<input type="text" placeholder="<?php echo $ms_options_price; ?>" name="product_option[<?php echo $option_index; ?>][product_option_value][<?php echo $i; ?>][price]" value="<?php echo $this->MsLoader->MsHelper->trueCurrencyFormat($value['price']); ?>" size="5"></td>
 						<?php echo $this->currency->getSymbolRight(); ?>
 					</span>
 					<input class="option_quantity" type="text" placeholder="<?php echo $ms_options_quantity; ?>" name="product_option[<?php echo $option_index; ?>][product_option_value][<?php echo $i; ?>][quantity]" value="<?php echo $value['quantity']; ?>" size="5"></td>

@@ -228,6 +228,15 @@ class MsHelper extends Model {
 	public function uniformDecimalPoint($number) {
 		return (float)(str_replace(',', '.', $number));
 	}
+	
+	public function trueCurrencyFormat($number) {
+		$this->load->model('localisation/currency');
+		$currencies = $this->model_localisation_currency->getCurrencies();
+		$decimal_place = $currencies[$this->config->get('config_currency')]['decimal_place'];
+		$decimal_point = $this->language->get('decimal_point');
+		$thousand_point = $this->language->get('thousand_point');
+		return number_format(round($number, (int)$decimal_place), (int)$decimal_place, $decimal_point, '');
+	}
 }
 
 ?>

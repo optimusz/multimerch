@@ -376,6 +376,4 @@ return;
 		CKEDITOR.config.enterMode = CKEDITOR.ENTER_BR;
 		CKEDITOR.replaceClass = 'ckeditor';
 	}
-
-	$('#tab-options').load('index.php?route=seller/account-product/jxRenderOptions&product_id=' + msGlobals.product_id);
 });

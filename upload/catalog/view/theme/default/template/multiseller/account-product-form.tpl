@@ -530,7 +530,7 @@
 				<?php foreach ($product['specials'] as $product_special) { ?>
 				<tr>
 					<td><input type="text" name="product_specials[<?php echo $special_row; ?>][priority]" value="<?php echo $product_special['priority']; ?>" size="2" /></td>
-					<td><input type="text" name="product_specials[<?php echo $special_row; ?>][price]" value="<?php echo $product_special['price']; ?>" /></td>
+					<td><input type="text" name="product_specials[<?php echo $special_row; ?>][price]" value="<?php echo $this->MsLoader->MsHelper->uniformDecimalPoint($product_special['price']); ?>" /></td>
 					<td><input type="text" name="product_specials[<?php echo $special_row; ?>][date_start]" value="<?php echo $product_special['date_start']; ?>" class="date" /></td>
 					<td><input type="text" name="product_specials[<?php echo $special_row; ?>][date_end]" value="<?php echo $product_special['date_end']; ?>" class="date" /></td>
 					<td><a class="ms-button-delete" title="<?php echo $ms_delete; ?>"></a></td>
@@ -585,7 +585,7 @@
 				<tr>
 					<td><input type="text" name="product_discounts[<?php echo $discount_row; ?>][priority]" value="<?php echo $product_discount['priority']; ?>" size="2" /></td>
 					<td><input type="text" name="product_discounts[<?php echo $discount_row; ?>][quantity]" value="<?php echo $product_discount['quantity']; ?>" size="2" /></td>
-					<td><input type="text" name="product_discounts[<?php echo $discount_row; ?>][price]" value="<?php echo $product_discount['price']; ?>" /></td>
+					<td><input type="text" name="product_discounts[<?php echo $discount_row; ?>][price]" value="<?php echo $this->MsLoader->MsHelper->uniformDecimalPoint($product_discount['price']); ?>" /></td>
 					<td><input type="text" name="product_discounts[<?php echo $discount_row; ?>][date_start]" value="<?php echo $product_discount['date_start']; ?>" class="date" /></td>
 					<td><input type="text" name="product_discounts[<?php echo $discount_row; ?>][date_end]" value="<?php echo $product_discount['date_end']; ?>" class="date" /></td>
 					<td><a class="ms-button-delete" title="<?php echo $ms_delete; ?>"></a></td>
