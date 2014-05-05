@@ -30,7 +30,7 @@
      		<a href="#tab-data"><?php echo $ms_account_product_tab_data; ?></a>
      		<?php } ?>
 
-     		<a href="#tab-options">Options/combinations</a>
+     		<a href="#tab-options"><?php echo $ms_account_product_tab_options; ?></a>
      		
             <?php if ($this->config->get('msconf_allow_specials')) { ?>
      		<a href="#tab-specials"><?php echo $ms_account_product_tab_specials; ?></a>

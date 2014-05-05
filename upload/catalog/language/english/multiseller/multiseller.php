@@ -367,11 +367,30 @@ $_['ms_account_product_stock_status'] = 'Out Of Stock Status';
 $_['ms_account_product_stock_status_note'] = 'Status shown when a product is out of stock';
 $_['ms_account_product_subtract'] = 'Subtract Stock';
 
+// Options
+$_['ms_account_product_tab_options'] = 'Options';
+$_['ms_options_add'] = '+ Add option';
+$_['ms_options_add_value'] = '+ Add value';
+$_['ms_options_required'] = 'Make option required';
+$_['ms_options_price_prefix'] = 'Change price prefix';
+$_['ms_options_price'] = 'Price...';
+$_['ms_options_quantity'] = 'Quantity...';
+
+
+$_['ms_account_product_manufacturer'] = 'Manufacturer';
+$_['ms_account_product_manufacturer_note'] = '(Autocomplete)';
+$_['ms_account_product_tax_class'] = 'Tax Class';
+$_['ms_account_product_date_available'] = 'Date Available';
+$_['ms_account_product_stock_status'] = 'Out Of Stock Status';
+$_['ms_account_product_stock_status_note'] = 'Status shown when a product is out of stock';
+$_['ms_account_product_subtract'] = 'Subtract Stock';
 
 $_['ms_account_product_priority'] = 'Priority';
 $_['ms_account_product_date_start'] = 'Start date';
 $_['ms_account_product_date_end'] = 'End date';
 $_['ms_account_product_sandbox'] = 'Warning: The payment gateway is in \'Sandbox Mode\'. Your account will not be charged.';
+
+
 
 // Account - Edit product
 $_['ms_account_editproduct_heading'] = 'Edit Product';
