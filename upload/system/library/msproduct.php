@@ -354,6 +354,37 @@ class MsProduct extends Model {
 			}
 		}
 
+		// options
+		if (isset($data['product_option'])) {
+			foreach ($data['product_option'] as $product_option) {
+				// unset sample
+				if (isset($product_option['product_option_value'][0])) unset($product_option['product_option_value'][0]);
+				
+				// get type 
+				$o = $this->MsLoader->MsOption->getOptions(array('option_id' => $product_option['option_id'], 'single' => 1));
+				if (!$o) continue; else { $product_option['type'] = $o['type']; }
+				
+				if ($product_option['type'] == 'select' || $product_option['type'] == 'radio' || $product_option['type'] == 'checkbox' || $product_option['type'] == 'image') {
+					$this->db->query("INSERT INTO " . DB_PREFIX . "product_option SET product_id = '" . (int)$product_id . "', option_id = '" . (int)$product_option['option_id'] . "', required = '" . (int)$product_option['required'] . "'");
+		
+					$product_option_id = $this->db->getLastId();
+		
+					if (isset($product_option['product_option_value']) && count($product_option['product_option_value']) > 0 ) {
+						foreach ($product_option['product_option_value'] as $product_option_value) {
+							$product_option_value['price_prefix'] = ($product_option_value['price_prefix'] == '-' ? '-' : '+'); 
+							//$this->db->query("INSERT INTO " . DB_PREFIX . "product_option_value SET product_option_id = '" . (int)$product_option_id . "', product_id = '" . (int)$product_id . "', option_id = '" . (int)$product_option['option_id'] . "', option_value_id = '" . (int)$product_option_value['option_value_id'] . "', quantity = '" . (int)$product_option_value['quantity'] . "', subtract = '" . (int)$product_option_value['subtract'] . "', price = '" . (float)$product_option_value['price'] . "', price_prefix = '" . $this->db->escape($product_option_value['price_prefix']) . "', points = '" . (int)$product_option_value['points'] . "', points_prefix = '" . $this->db->escape($product_option_value['points_prefix']) . "', weight = '" . (float)$product_option_value['weight'] . "', weight_prefix = '" . $this->db->escape($product_option_value['weight_prefix']) . "'");
+							$this->db->query("INSERT INTO " . DB_PREFIX . "product_option_value SET product_option_id = '" . (int)$product_option_id . "', product_id = '" . (int)$product_id . "', option_id = '" . (int)$product_option['option_id'] . "', option_value_id = '" . (int)$product_option_value['option_value_id'] . "', quantity = '" . (int)$product_option_value['quantity'] . "', price = '" . (float)$product_option_value['price'] . "', price_prefix = '" . $this->db->escape($product_option_value['price_prefix']) . "'");
+						}
+					}else{
+						$this->db->query("DELETE FROM " . DB_PREFIX . "product_option WHERE product_option_id = '".$product_option_id."'");
+					}
+				} else {
+					//$this->db->query("INSERT INTO " . DB_PREFIX . "product_option SET product_id = '" . (int)$product_id . "', option_id = '" . (int)$product_option['option_id'] . "', option_value = '" . $this->db->escape($product_option['option_value']) . "', required = '" . (int)$product_option['required'] . "'");
+					$this->db->query("INSERT INTO " . DB_PREFIX . "product_option SET product_id = '" . (int)$product_id . "', option_id = '" . (int)$product_option['option_id'] . "', option_value = '', required = '" . (int)0 . "'");
+				}
+			}
+		}
+		
 		// specials
 		if (isset($data['product_specials'])) {
 			foreach ($data['product_specials'] as $product_special) {
@@ -656,6 +687,41 @@ class MsProduct extends Model {
 				}
 			}
 		}
+		
+		// options
+		$this->db->query("DELETE FROM " . DB_PREFIX . "product_option WHERE product_id = '" . (int)$product_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "product_option_value WHERE product_id = '" . (int)$product_id . "'");		
+
+		if (isset($data['product_option'])) {
+			foreach ($data['product_option'] as $product_option) {
+				// unset sample
+				if (isset($product_option['product_option_value'][0])) unset($product_option['product_option_value'][0]);
+		
+				// get type
+				$o = $this->MsLoader->MsOption->getOptions(array('option_id' => $product_option['option_id'], 'single' => 1));
+				if (!$o) continue; else { $product_option['type'] = $o['type'];
+				}
+		
+				if ($product_option['type'] == 'select' || $product_option['type'] == 'radio' || $product_option['type'] == 'checkbox' || $product_option['type'] == 'image') {
+					$this->db->query("INSERT INTO " . DB_PREFIX . "product_option SET product_id = '" . (int)$product_id . "', option_id = '" . (int)$product_option['option_id'] . "', required = '" . (int)$product_option['required'] . "'");
+		
+					$product_option_id = $this->db->getLastId();
+		
+					if (isset($product_option['product_option_value']) && count($product_option['product_option_value']) > 0 ) {
+						foreach ($product_option['product_option_value'] as $product_option_value) {
+							$product_option_value['price_prefix'] = ($product_option_value['price_prefix'] == '-' ? '-' : '+');
+							//$this->db->query("INSERT INTO " . DB_PREFIX . "product_option_value SET product_option_id = '" . (int)$product_option_id . "', product_id = '" . (int)$product_id . "', option_id = '" . (int)$product_option['option_id'] . "', option_value_id = '" . (int)$product_option_value['option_value_id'] . "', quantity = '" . (int)$product_option_value['quantity'] . "', subtract = '" . (int)$product_option_value['subtract'] . "', price = '" . (float)$product_option_value['price'] . "', price_prefix = '" . $this->db->escape($product_option_value['price_prefix']) . "', points = '" . (int)$product_option_value['points'] . "', points_prefix = '" . $this->db->escape($product_option_value['points_prefix']) . "', weight = '" . (float)$product_option_value['weight'] . "', weight_prefix = '" . $this->db->escape($product_option_value['weight_prefix']) . "'");
+							$this->db->query("INSERT INTO " . DB_PREFIX . "product_option_value SET product_option_id = '" . (int)$product_option_id . "', product_id = '" . (int)$product_id . "', option_id = '" . (int)$product_option['option_id'] . "', option_value_id = '" . (int)$product_option_value['option_value_id'] . "', quantity = '" . (int)$product_option_value['quantity'] . "', price = '" . (float)$product_option_value['price'] . "', price_prefix = '" . $this->db->escape($product_option_value['price_prefix']) . "'");
+						}
+					}else{
+						$this->db->query("DELETE FROM " . DB_PREFIX . "product_option WHERE product_option_id = '".$product_option_id."'");
+					}
+				} else {
+					//$this->db->query("INSERT INTO " . DB_PREFIX . "product_option SET product_id = '" . (int)$product_id . "', option_id = '" . (int)$product_option['option_id'] . "', option_value = '" . $this->db->escape($product_option['option_value']) . "', required = '" . (int)$product_option['required'] . "'");
+					$this->db->query("INSERT INTO " . DB_PREFIX . "product_option SET product_id = '" . (int)$product_id . "', option_id = '" . (int)$product_option['option_id'] . "', option_value = '', required = '" . (int)0 . "'");
+				}
+			}
+		}		
 		
 		// specials
 		$this->db->query("DELETE FROM " . DB_PREFIX . "product_special WHERE product_id = '" . (int)$product_id . "'");

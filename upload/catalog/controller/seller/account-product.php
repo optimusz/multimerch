@@ -624,6 +624,9 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 			//}
 		}
 		
+		// options
+		//unset($data['product_option'][0]); // Remove sample row		
+		
         if(!isset($data['product_subtract'])){
             $data['product_subtract'] = 0;
         }
@@ -694,6 +697,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 			$data['listing_until'] = NULL;
 		}
 
+		// post-validation
 		if (empty($json['errors'])) {
 			$mails = array();
 			
@@ -930,7 +934,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
   	
   	public function jxRenderPdfgenDialog() {
 		if (!$this->config->get('msconf_enable_pdf_generator') || !extension_loaded('imagick'))
-			return;  		
+			return;
   		
   		if (!empty($this->request->post['fileName'])) {
   			$fileName = $this->request->post['fileName'];
@@ -949,9 +953,70 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 
 		list($this->template, $this->children) = $this->MsLoader->MsHelper->loadTemplate('dialog-pdf');
 		return $this->response->setOutput($this->render());
-  	}
+	}
 
-    public function jxAutocomplete() {
+	public function jxRenderOptions() {
+		$this->data['options'] = $this->MsLoader->MsOption->getOptions();
+		foreach ($this->data['options'] as &$option) {
+			$option['values'] = $this->MsLoader->MsOption->getOptionValues($option['option_id']);
+		}
+		
+		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/multiseller/account-product-form-options.tpl')) {
+			$this->template = $this->config->get('config_template') . '/template/multiseller/account-product-form-options.tpl';
+		} else {
+			$this->template = 'default/template/multiseller/account-product-form-options.tpl';
+		}
+		
+		$this->response->setOutput($this->render(TRUE), $this->config->get('config_compression'));
+	}
+	
+	public function jxRenderOptionValues() {
+		$this->data['option'] = $this->MsLoader->MsOption->getOptions(
+			array(
+				'option_id' => 	$this->request->get['option_id'],
+				'single' => 1
+			)
+		);
+		
+		$this->data['values'] = $this->MsLoader->MsOption->getOptionValues($this->request->get['option_id']);
+		$this->data['option_index'] = 0;
+		
+		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/multiseller/account-product-form-options-values.tpl')) {
+			$this->template = $this->config->get('config_template') . '/template/multiseller/account-product-form-options-values.tpl';
+		} else {
+			$this->template = 'default/template/multiseller/account-product-form-options-values.tpl';
+		}
+	
+		$this->response->setOutput($this->render(TRUE), $this->config->get('config_compression'));
+	}
+	
+	public function jxRenderProductOptions() {
+		$this->load->model('catalog/product');
+		$options = $this->model_catalog_product->getProductOptions($this->request->get['product_id']);
+		
+		$output = '';
+		if ($options) {
+			$this->data['option_index'] = 0;
+			foreach ($options as $o) {
+				$this->data['option'] = $o;
+				$this->data['product_option_values'] = $o['option_value'];
+				$this->data['values'] = $this->MsLoader->MsOption->getOptionValues($o['option_id']);
+				
+				if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/multiseller/account-product-form-options-values.tpl')) {
+					$this->template = $this->config->get('config_template') . '/template/multiseller/account-product-form-options-values.tpl';
+				} else {
+					$this->template = 'default/template/multiseller/account-product-form-options-values.tpl';
+				}
+				
+				$output .= $this->render();
+				$this->data['option_index']++;
+			}
+		}
+	
+		$this->response->setOutput($output);
+	}	
+	
+	public function jxAutocomplete() {
         $data = $this->request->post;
         $json = array();
 
@@ -1028,7 +1093,11 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		$this->document->addScript('catalog/view/javascript/plupload/jquery.plupload.queue/jquery.plupload.queue.js');
 		$this->document->addScript('catalog/view/javascript/jquery/ui/jquery-ui-timepicker-addon.js');
 		$this->document->addScript('catalog/view/javascript/account-product-form.js');
+		$this->document->addScript('catalog/view/javascript/multimerch/account-product-form-options.js');
 		$this->document->addScript('catalog/view/javascript/jquery/tabs.js');
+		$this->document->addScript('catalog/view/javascript/multimerch/chosen/chosen.jquery.js');
+		
+		$this->document->addStyle('catalog/view/javascript/multimerch/chosen/chosen.css');
 		
 		// ckeditor
 		if($this->config->get('msconf_enable_rte'))

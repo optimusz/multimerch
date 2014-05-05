@@ -54,17 +54,12 @@
 	<file name="system/library/cart.php">
 		<operation>
 			<search position="after"><![CDATA[
-				public function add($product_id, $qty = 1, $option, $profile_id = '') {
+				public function add
 			]]></search>
 			<add><![CDATA[
-				$sql = "SELECT seller_id FROM " . DB_PREFIX . "ms_product WHERE product_id = " . (int)$product_id;
-				$res = $this->db->query($sql);
-				if (isset($res->row['seller_id'])) {
-					$seller_id = (int)$res->row['seller_id'];
-				} else {
-					$seller_id = (int)0;
-				}
-				if ( ($seller_id != (int)$this->customer->getId()) || ($seller_id == 0) || (!$this->customer->isLogged()) ) {
+				$res = $this->db->query("SELECT seller_id FROM " . DB_PREFIX . "ms_product WHERE product_id = " . (int)$product_id);
+				$seller_id = isset($res->row['seller_id']) ? (int)$res->row['seller_id'] : 0;
+				if (!$seller_id || $seller_id != (int)$this->customer->getId() || !$this->customer->isLogged()) {
 			]]></add>
 		</operation>
 		

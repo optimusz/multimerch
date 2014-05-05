@@ -169,11 +169,94 @@ table.list tbody td, table.list thead td  {
 	line-height:30px;
 }
 
-.ms-account-product-form #tab-specials .ms-button-delete,
-.ms-account-product-form #tab-discounts .ms-button-delete {
+.ms-account-product-form .ms-button-delete {
 	width: 32px;
 	height: 32px;
 	display: inline-block;
+}
+
+.ms-account-product-form .plus {
+	background-image: url(../image/ms-plus-blue.png);
+}
+
+.ms-account-product-form .minus {
+	background-image: url(../image/ms-minus-blue.png);
+}
+
+.ms-account-product-form .option_required {
+	background-image: url(../image/ms-tick.png);
+}
+
+.ms-account-product-form .option_required.bw {
+	background-image: url(../image/ms-tick-bw.png);
+}
+
+.ms-account-product-form .option {
+	width:100%;
+	display: block;
+	margin-bottom: 10px;
+}
+
+.o-heading {
+	text-align: center;
+	position: relative;
+	margin-bottom: 0px;
+	padding: 10px 0;
+	color: #555555;
+	border: 1px solid #EEEEEE;
+	background: #EEEEEE;
+	font-weight: bold;
+}
+
+.o-heading.loading {
+	background-image: url(view/image/loading.gif);
+	background-position: center;
+	background-repeat: no-repeat;
+}
+
+.o-heading .ms-button-delete {
+	position: absolute;
+	top: 50%;
+	margin-top: -8px;
+	right: 8px;
+	background-size: 16px 16px;
+	height: 16px;
+	width: 16px;	
+}
+
+.o-heading .option_required {
+	position: absolute;
+	top: 50%;
+	margin-top: -12px;
+	left: 12px;
+}
+
+.o-content {
+	padding: 10px;
+	border: 1px solid #DDDDDD;
+	border-top: none;
+}
+
+.option_name {
+	display: inline-block;
+	width: 125px;
+}
+
+span.option_price,
+input.option_quantity {
+	margin-right: 25px;
+}
+
+.option_value .ms-button-delete,
+.option_price_prefix,
+.option_required {
+	background-size: 24px 24px;
+	width: 24px;
+	height: 24px;
+	vertical-align: middle;
+	padding-bottom: 1px;
+	display: inline-block;
+	cursor: pointer;
 }
 
 .ms-product .ms-download .ms-buttons {

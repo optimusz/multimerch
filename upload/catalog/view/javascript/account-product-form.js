@@ -23,24 +23,27 @@ $(function() {
 		$(this).timepicker({timeFormat: 'h:m'});
 	});
 	
-	$('body').delegate("a.ms-button-delete", "click", function() {	
+	$('body').delegate("a.ms-button-delete", "click", function() {
+		console.log($(this));
+return;
+		
 		$(this).parents('tr').remove();
 	});
 	
 	$('body').delegate("a.ffClone", "click", function() {
-		var lastRow = $(this).parents('table').find('tbody tr:last input:last').attr('name');
+		var lastRow = $(this).closest('table').find('tbody tr:last input:last').attr('name');
 		if (typeof lastRow == "undefined") {
 			var newRowNum = 1;
 		} else {
 			var newRowNum = parseInt(lastRow.match(/[0-9]+/)) + 1;
 		}
 
-		var newRow = $(this).parents('table').find('tbody tr.ffSample').clone();
+		var newRow = $(this).closest('table').find('tbody tr.ffSample').clone();
 		newRow.find('input,select').attr('name', function(i,name) {
 			return name.replace('[0]','[' + newRowNum + ']');
 		});
 		
-		$(this).parents('table').find('tbody').append(newRow.removeAttr('class'));
+		$(this).closest('table').find('tbody').append(newRow.removeAttr('class'));
 	});
 	
 	$("input[name='product_enable_shipping']").live('change', function() {
@@ -373,4 +376,6 @@ $(function() {
 		CKEDITOR.config.enterMode = CKEDITOR.ENTER_BR;
 		CKEDITOR.replaceClass = 'ckeditor';
 	}
+
+	$('#tab-options').load('index.php?route=seller/account-product/jxRenderOptions&product_id=' + msGlobals.product_id);
 });
