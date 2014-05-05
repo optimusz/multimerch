@@ -1095,9 +1095,6 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		$this->document->addScript('catalog/view/javascript/account-product-form.js');
 		$this->document->addScript('catalog/view/javascript/multimerch/account-product-form-options.js');
 		$this->document->addScript('catalog/view/javascript/jquery/tabs.js');
-		$this->document->addScript('catalog/view/javascript/multimerch/chosen/chosen.jquery.js');
-		
-		$this->document->addStyle('catalog/view/javascript/multimerch/chosen/chosen.css');
 		
 		// ckeditor
 		if($this->config->get('msconf_enable_rte'))
