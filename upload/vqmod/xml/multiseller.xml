@@ -1224,7 +1224,6 @@
 	<!-- ************************ -->	
 	<!-- ************************ -->
 	
-	
 	<file name="&adminFolder;/model/localisation/language.php">
 		<operation>
 			<search position="after"><![CDATA[
@@ -1697,57 +1696,56 @@
 		</operation>		
 	</file>
 	
-<!-- Contact All Sellers in the Backend -->
+	<!-- Contact All Sellers in the Backend -->
+	<file name="&adminFolder;/view/template/sale/contact.tpl">
+		<operation>
+			<search position="after"><![CDATA[
+				<option value="affiliate"><?php echo $text_affiliate; ?></option>
+			]]></search>
+			<add><![CDATA[
+				<option value="seller_all"><?php echo $text_seller_all; ?></option>
+			]]></add>
+		</operation>
+	</file>
+	
+	<file name="&adminFolder;/controller/sale/contact.php">
+		<operation>
+			<search position="after"><![CDATA[
+				$this->data['cancel'] = $this->url->link('sale/contact', 'token=' . $this->session->data['token'], 'SSL');
+			]]></search>
+			<add><![CDATA[
+				$this->language->load('multiseller/multiseller');
+				$this->data['text_seller_all'] = $this->language->get('ms_all_sellers');
+			]]></add>
+		</operation>
 
-<file name="&adminFolder;/view/template/sale/contact.tpl">
-	<operation>
-		<search position="after"><![CDATA[
-			<option value="affiliate"><?php echo $text_affiliate; ?></option>
-		]]></search>
-		<add><![CDATA[
-			<option value="seller_all"><?php echo $text_seller_all; ?></option>
-		]]></add>
-	</operation>
-</file>
-			
-<file name="&adminFolder;/controller/sale/contact.php">
-	<operation>
-		<search position="after"><![CDATA[
-			$this->data['cancel'] = $this->url->link('sale/contact', 'token=' . $this->session->data['token'], 'SSL');
-		]]></search>
-		<add><![CDATA[
-			$this->language->load('multiseller/multiseller');
-			$this->data['text_seller_all'] = $this->language->get('ms_all_sellers');
-		]]></add>
-	</operation>
-
-	<operation>
-		<search position="before"><![CDATA[
-			case 'product':
-		]]></search>
-		<add><![CDATA[
-			case 'seller_all':
-				$email_total = $this->MsLoader->MsSeller->getTotalSellers(array(
-					'seller_status' => array(MsSeller::STATUS_ACTIVE)
-				));
-				
-				$results = $this->MsLoader->MsSeller->getSellers(
-					array(
+		<operation>
+			<search position="before"><![CDATA[
+				case 'product':
+			]]></search>
+			<add><![CDATA[
+				case 'seller_all':
+					$email_total = $this->MsLoader->MsSeller->getTotalSellers(array(
 						'seller_status' => array(MsSeller::STATUS_ACTIVE)
-					),
-					array(
-						'order_by'	=> 'ms.nickname',
-						'order_way'	=> 'ASC',
-						'offset'		=> ($page - 1) * 10,
-						'limit'		=> 10,
-					)
-				);
-				
-				foreach ($results as $result) {
-					$emails[] = $result['c.email'];
-				}
-				break;
-		]]></add>
-	</operation>
-</file>
+					));
+					
+					$results = $this->MsLoader->MsSeller->getSellers(
+						array(
+							'seller_status' => array(MsSeller::STATUS_ACTIVE)
+						),
+						array(
+							'order_by'	=> 'ms.nickname',
+							'order_way'	=> 'ASC',
+							'offset'		=> ($page - 1) * 10,
+							'limit'		=> 10,
+						)
+					);
+					
+					foreach ($results as $result) {
+						$emails[] = $result['c.email'];
+					}
+					break;
+			]]></add>
+		</operation>
+	</file>
 </modification>
