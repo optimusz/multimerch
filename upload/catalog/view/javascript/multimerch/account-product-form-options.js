@@ -22,20 +22,17 @@ $(function() {
 	// add
 	$('body').delegate(".select_option", "change", function() {
 		$(this).children(':selected').attr('disabled', 'disabled');
+		var option_id = $(this).children(':selected').val();
 		var select = this;
-		$.get('index.php?route=seller/account-product/jxRenderOptionValues&option_id=' + $(this).val(), function(data) {
+		
+		$.get('index.php?route=seller/account-product/jxRenderOptionValues&option_id=' + option_id, function(data) {
 			var lastRow = $(select).parents('.ms-options').find('.option:last input:last').attr('name');
 
-			console.log(lastRow);
 			if (typeof lastRow == "undefined") {
 				var newRowNum = 1;
 			} else {
-				console.log(lastRow.match(/[0-9]+/g).shift());
 				var newRowNum = parseInt(lastRow.match(/[0-9]+/g).shift()) + 1;
-				console.log(newRowNum);
 			}
-
-			
 			
 			var data = $(data);
 			data.find('input,select').attr('name', function(i,name) {

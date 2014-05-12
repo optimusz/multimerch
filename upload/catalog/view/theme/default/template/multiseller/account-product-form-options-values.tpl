@@ -17,7 +17,7 @@
 					<?php echo $this->currency->getSymbolRight(); ?>
 				</span>
 				<input class="option_quantity" type="text" placeholder="<?php echo $ms_options_quantity; ?>" name="product_option[<?php echo $option_index; ?>][product_option_value][0][quantity]" value="" size="5"></td>
-				<a class="ms-button-delete" title="<?php echo $ms_delete; ?>"></a>
+				<a class="ms-button-delete option_value_delete" title="<?php echo $ms_delete; ?>"></a>
 			</div>
 			
 			<?php if (!empty($product_option_values)) { ?>

@@ -24,9 +24,6 @@ $(function() {
 	});
 	
 	$('body').delegate("a.ms-button-delete", "click", function() {
-		console.log($(this));
-return;
-		
 		$(this).parents('tr').remove();
 	});
 	
