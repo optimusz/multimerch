@@ -65,7 +65,7 @@ $(function() {
 
 		var newRow = $(this).clone();
 		newRow.find('input,select').attr('name', function(i,name) {
-			return name.replace('[0]','[' + newRowNum + ']');
+			return name.replace('[product_option_value][0]','[product_option_value][' + newRowNum + ']');
 		});
 
 		$(this).closest('div.mmCtr').append(newRow.removeClass('ffSample'));
