@@ -313,6 +313,7 @@ input.option_quantity {
 
 .ms-product .ms-download .ms-button-pdf {
 	background-image: url(../image/ms-pdf.png);
+	background-repeat: no-repeat;
 }
 
 .ms-product .ms-download .ms-button-download {

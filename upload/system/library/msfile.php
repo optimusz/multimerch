@@ -304,7 +304,7 @@ class MsFile extends Model {
 					$pathinfo = pathinfo($pagePreview);
 					$this->session->data['multiseller']['files'][] = $pathinfo['basename'];
 
-					$thumb = $this->resizeImage($this->config->get('msconf_temp_image_path') . $pathinfo['basename'], $this->config->get('msconf_image_preview_width'), $this->config->get('msconf_image_preview_height'));
+					$thumb = $this->resizeImage($this->config->get('msconf_temp_image_path') . $pathinfo['basename'], $this->config->get('msconf_preview_product_image_width'), $this->config->get('msconf_preview_product_image_height'));
 					$json['images'][] = array(
 						'name' => $pathinfo['basename'],
 						'thumb' => $thumb

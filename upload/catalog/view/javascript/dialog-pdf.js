@@ -1,5 +1,5 @@
 $(function() {
-	$("#product_download_files").delegate(".ms-button-pdf", "click", function() {
+	$(".product_download_files").delegate(".ms-button-pdf", "click", function() {
 		var url = this.href;
 		var title = this.title;
 	    var dialog = $("#ms-pdfgen-dialog-div");
@@ -53,7 +53,7 @@ $(function() {
             							$('.ms-pdfgen-dialog .ui-dialog-buttonpane').before('<p class="warning" style="clear:both">' + errortext + '</div>');
             						} else {
 	            						if (data.images) {
-            								$('#product_image_files input[value^="'+data.token+'"]').parent().remove();
+            								$('.product_image_files input[value^="'+data.token+'"]').parent().remove();
 	            							for(var i=0; i<data.images.length; i++) {
 	            								var imageTag = 
 	            									'<div class="ms-image ms-pdf">' +
@@ -62,10 +62,10 @@ $(function() {
 	            									'<span class="ms-remove"></span>' +
 	            									'</div>';
 	            							
-	            								$("#product_image_files").append(imageTag).children(':last').hide().fadeIn(1000);
+	            								$(".product_image_files").append(imageTag).children(':last').hide().fadeIn(1000);
 	            							}
 	            						}
-	            						$("html").scrollTop($("#product_image_files").scrollTop() + 100);
+	            						$("html").scrollTop($(".product_image_files").scrollTop() + 100);
 	            						dialog.dialog("close");
             						}
             					}
