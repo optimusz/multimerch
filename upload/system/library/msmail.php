@@ -194,12 +194,31 @@ class MsMail extends Model {
 			
 			case self::SMT_PRODUCT_PURCHASED:
 				$order_products = $this->MsLoader->MsOrderData->getOrderProducts(array('order_id' => $data['order_id'], 'seller_id' => $data['seller_id']));
-			
+
+                $this->load->model('account/order');
 				$products = '';
 				foreach ($order_products as $p) {
 					if ($p['quantity'] > 1) $products .= "{$p['quantity']} x "; 
 					$products .= "{$p['name']}\t" . $this->currency->format($p['seller_net_amt'], $this->config->get('config_currency')) . "\n";
-				}
+
+                    $options   = $this->model_account_order->getOrderOptions($data['order_id'], $p['order_product_id']);
+
+                    foreach ($options as $option)
+                    {
+                        if ($option['type'] != 'file') {
+                            $value = $option['value'];
+                        } else {
+                            $value = utf8_substr($option['value'], 0, utf8_strrpos($option['value'], '.'));
+                        }
+
+                        $option['value']	=  utf8_strlen($value) > 20 ? utf8_substr($value, 0, 20) . '..' : $value;
+
+                        $products .= "\r\n";
+                        $products .= "- {$option['name']} : {$option['value']}";
+                    }
+
+                    $products .= "\n";
+                }
 			
 				$total = $this->currency->format($this->MsLoader->MsOrderData->getOrderTotal($data['order_id'], array('seller_id' => $data['seller_id'])), $this->config->get('config_currency'));
 			

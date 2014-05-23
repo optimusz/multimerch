@@ -14,6 +14,8 @@ class ControllerSellerAccountOrder extends ControllerSellerAccount {
 		$filterParams = $this->MsLoader->MsHelper->getFilterParams($filters, $colMap);
 		
 		$seller_id = $this->customer->getId();
+        $this->load->model('account/order');
+
 		$orders = $this->MsLoader->MsOrderData->getOrders(
 			array(
 				'seller_id' => $seller_id,
@@ -46,9 +48,26 @@ class ControllerSellerAccountOrder extends ControllerSellerAccount {
 			
 			$products = "";
 			foreach ($order_products as $p) {
-				$products .= "<p>";
-					$products .= "<span class='name'>" . ($p['quantity'] > 1 ? "{$p['quantity']} x " : "") . "<a href='" . $this->url->link('product/product', 'product_id=' . $p['product_id'], 'SSL') . "'>{$p['name']}</a></span>";
-					$products .= "<span class='total'>" . $this->currency->format($p['seller_net_amt'], $this->config->get('config_currency')) . "</span>";
+                $products .= "<p style='text-align:left'>";
+				$products .= "<span class='name'>" . ($p['quantity'] > 1 ? "{$p['quantity']} x " : "") . "<a href='" . $this->url->link('product/product', 'product_id=' . $p['product_id'], 'SSL') . "'>{$p['name']}</a></span>";
+
+                $options   = $this->model_account_order->getOrderOptions($order['order_id'], $p['order_product_id']);
+
+                foreach ($options as $option)
+                {
+                    if ($option['type'] != 'file') {
+                        $value = $option['value'];
+                    } else {
+                        $value = utf8_substr($option['value'], 0, utf8_strrpos($option['value'], '.'));
+                    }
+
+                    $option['value']	=  utf8_strlen($value) > 20 ? utf8_substr($value, 0, 20) . '..' : $value;
+
+                    $products .= "<br />";
+                    $products .= "<small> - {$option['name']} : {$option['value']} </small>";
+                }
+
+                $products .= "<span class='total'>" . $this->currency->format($p['seller_net_amt'], $this->config->get('config_currency')) . "</span>";
 				$products .= "</p>";
 			}
 			

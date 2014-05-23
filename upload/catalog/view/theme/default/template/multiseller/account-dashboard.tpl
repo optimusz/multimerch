@@ -137,7 +137,11 @@
 				<?php foreach ($order['products'] as $p) { ?>
 				<p>
 					<span class="name"><?php if ($p['quantity'] > 1) { echo "{$p['quantity']} x "; } ?> <a href="<?php echo $this->url->link('product/product', 'product_id=' . $p['product_id'], 'SSL'); ?>"><?php echo $p['name']; ?></a></span>
-					<span class="total"><?php echo $this->currency->format($p['seller_net_amt'], $this->config->get('config_currency')); ?></span>
+                    <?php foreach ($p['options'] as $option) { ?>
+                    <br />
+                    &nbsp;<small> - <?php echo $option['name']; ?>:<?php echo $option['value']; ?></small>
+                    <?php } ?>
+                    <span class="total"><?php echo $this->currency->format($p['seller_net_amt'], $this->config->get('config_currency')); ?></span>
 				</p>
 				<?php } ?>
 				</td>

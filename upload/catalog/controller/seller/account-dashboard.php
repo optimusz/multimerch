@@ -9,6 +9,7 @@ class ControllerSellerAccountDashboard extends ControllerSellerAccount {
 		
 		$this->load->model('catalog/product');
 		$this->load->model('tool/image');
+        $this->load->model('account/order');
 		
 		$seller_id = $this->customer->getId();
 		
@@ -76,10 +77,16 @@ class ControllerSellerAccountDashboard extends ControllerSellerAccount {
 		);		
 		
     	foreach ($orders as $order) {
+
+            $products	=	$this->MsLoader->MsOrderData->getOrderProducts(array('order_id' => $order['order_id'], 'seller_id' => $seller_id));
+
+            foreach($products as $key=>$p)
+                $products[$key]['options']	=  $this->model_account_order->getOrderOptions($order['order_id'], $p['order_product_id']);
+
     		$this->data['orders'][] = array(
     			'order_id' => $order['order_id'],
     			'customer' => "{$order['firstname']} {$order['lastname']} ({$order['email']})",
-    			'products' => $this->MsLoader->MsOrderData->getOrderProducts(array('order_id' => $order['order_id'], 'seller_id' => $seller_id)),
+    			'products' => $products,
     			'date_created' => date($this->language->get('date_format_short'), strtotime($order['date_added'])),
    				'total' => $this->currency->format($this->MsLoader->MsOrderData->getOrderTotal($order['order_id'], array('seller_id' => $seller_id)), $this->config->get('config_currency'))
    			);
