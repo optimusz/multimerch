@@ -63,6 +63,7 @@ $(document).ready(function() {
 			{ "mData": "date_created" },
 			{ "mData": "actions", "bSortable": false, "sClass": "right" }
 		],
+        "aaSorting":  [[5,'desc']]
 	});
 	
 	$(document).on('click', '.ms-button-delete', function() {

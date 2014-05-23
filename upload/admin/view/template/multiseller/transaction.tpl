@@ -58,6 +58,7 @@ $(document).ready(function() {
 			{ "mData": "description" },
 			{ "mData": "date_created" },
 		],
+        "aaSorting":  [[4,'desc']]
 	});
 });
 </script>

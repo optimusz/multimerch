@@ -94,6 +94,7 @@ $(function() {
 			{ "mData": "description", "bSortable": false },
 			{ "mData": "date_created" }
 		],
+        "aaSorting":  [[3,'desc']]
 	});
 
 	$('#list-payments').dataTable( {
@@ -106,6 +107,7 @@ $(function() {
 			{ "mData": "payment_status" },
 			{ "mData": "date_created" },
 		],
+        "aaSorting":  [[5,'desc']]
 	});
 });
 </script>

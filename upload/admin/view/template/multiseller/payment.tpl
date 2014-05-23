@@ -76,6 +76,7 @@ $(document).ready(function() {
 			{ "mData": "date_paid" },
 			{ "mData": "actions", "bSortable": false, "sClass": "right" }
 		],
+        "aaSorting":  [[6,'desc']]
 	});
 
 	

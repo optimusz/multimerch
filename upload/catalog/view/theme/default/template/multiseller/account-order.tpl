@@ -54,6 +54,7 @@
 				{ "mData": "date_created" },
 				{ "mData": "total_amount" }
 			],
+            "aaSorting":  [[4,'desc']]
 		});
 	});
 </script>
