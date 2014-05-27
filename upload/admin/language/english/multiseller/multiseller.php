@@ -82,7 +82,7 @@ $_['ms_edit'] = 'Edit';
 $_['ms_delete'] = 'Delete';
 
 $_['ms_button_pay_masspay'] = 'Pay via MassPay';
-
+$_['ms_button_pay_masspay_all'] = 'All Pay via MassPay';
 // Menu
 $_['ms_menu_multiseller'] = 'MultiMerch';
 $_['ms_menu_sellers'] = 'Sellers';

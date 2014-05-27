@@ -55,6 +55,14 @@ table.list td.comment {
 	background-image: url(../../image/multiseller/ms-paypal.png);
 }
 
+.ms-button-paypal-top {
+    background-image: url(../../image/multiseller/ms-paypal.png);
+}
+
+.ms-button-profile {
+    background-image: url(../../image/multiseller/ms-profile.png);
+}
+
 .ms-button-paypal-bw {
 	background-image: url(../../image/multiseller/ms-paypal-bw.png);
 	cursor: default;
@@ -177,4 +185,9 @@ table.list thead td.right {
 
 .dataTables_wrapper .paging_full_numbers .paginate_button_disabled {
 	display: none;
+}
+
+.v-top
+{
+    vertical-align: top;
 }

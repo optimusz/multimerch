@@ -311,10 +311,20 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 		
 		//var_dump($this->request->post);
 		
-		if (isset($this->request->post['selected'])) {
+		if (isset($this->request->post['selected']) || isset($this->request->post['all'])) {
 			$payments = array();
 			$total = $this->currency->format(0, $this->config->get('config_currency'), 1, false);
-			foreach ($this->request->post['selected'] as $seller_id) {
+
+            if($this->request->post['all'] == 'true')
+                $sellers_id =   $this->MsLoader->MsSeller->getSellers();
+            else
+                $sellers_id =   $this->request->post['selected'];
+
+			foreach ($sellers_id as $seller_id) {
+
+                if($this->request->post['all'] == 'true')
+                $seller_id  =   $seller_id['seller_id'];
+
 				$seller = $this->MsLoader->MsSeller->getSeller($seller_id);
 				if (!$seller || !$seller['ms.paypal']) continue;
 				$amount = $this->MsLoader->MsBalance->getSellerBalance($seller_id) - $this->MsLoader->MsBalance->getReservedSellerFunds($seller_id);
@@ -346,7 +356,7 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 		$this->validate(__FUNCTION__);
 		$json = array();
 
-		if (!isset($this->request->post['selected'])) {
+		if (!isset($this->request->post['selected']) && !isset($this->request->post['all'])) {
 			$json['error'] = $this->language->get('ms_error_payment_norequests');
 			$this->response->setOutput(json_encode($json));
 			return;
@@ -362,8 +372,17 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 		$paymentParams = array();
 	
 		$i = 0;
+
+        if($this->request->post['all'] == 'true')
+            $sellers_id =   $this->MsLoader->MsSeller->getSellers();
+        else
+            $sellers_id =   $this->request->post['selected'];
 		
-		foreach ($this->request->post['selected'] as $seller_id) {
+		foreach ($sellers_id as $seller_id) {
+
+            if($this->request->post['all'] == 'true')
+            $seller_id  =   $seller_id['seller_id'];
+
 			$seller = $this->MsLoader->MsSeller->getSeller($seller_id);
 			if (!$seller || !$seller['ms.paypal']) continue;
 			$amount = $this->MsLoader->MsBalance->getSellerBalance($seller_id) - $this->MsLoader->MsBalance->getReservedSellerFunds($seller_id);
