@@ -45,6 +45,7 @@ $(function() {
 	
 	$("input[name='product_enable_shipping']").live('change', function() {
 		if ($(this).val() == 1) {
+            ProductShippingCategories(1)
 			if (!$("input[name='product_quantity']").hasClass("ffUnchangeable")) {
 				$("input[name='product_quantity']").parents("tr").show();
 			}
@@ -54,6 +55,7 @@ $(function() {
 				}
 			}
 		} else {
+            ProductShippingCategories(0)
 			if (!$("input[name='product_quantity']").hasClass("ffUnchangeable")) {
 				$("input[name='product_quantity']").parents("tr").hide();
 			}
@@ -64,6 +66,22 @@ $(function() {
 			}
 		}
 	});
+
+
+    function ProductShippingCategories(type)
+    {
+        var product_id  =   $('input[name=product_id]').val();
+
+        $.ajax({
+            type: "POST",
+            url: 'index.php?route=seller/account-product/jxshippingcategories',
+            data: {'type':type,'product_id':product_id},
+            success: function(out)
+            {
+                $('#product_category_block').html(out);
+            }
+        });
+    }
 
     // Manufacturer
     $('input[name=\'product_manufacturer\']').autocomplete({

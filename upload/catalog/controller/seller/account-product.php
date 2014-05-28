@@ -1052,6 +1052,40 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
         $this->response->setOutput(json_encode($json));
     }
 
+    public function jxShippingCategories()
+    {
+        $this->load->model('catalog/category');
+        $this->load->model('catalog/product');
+
+        $product_id = empty($this->request->post['product_id']) ? 0 : $this->request->post['product_id'];
+        $seller_id  = $this->customer->getId();
+        $product    = NULL;
+
+        if(!empty($product_id))
+        {
+            if($this->MsLoader->MsProduct->productOwnedBySeller($product_id, $seller_id))
+            {
+                $product = $this->MsLoader->MsProduct->getProduct($product_id);
+            }
+            else
+                $product = NULL;
+        }
+
+        $this->data['product'] = $product;
+        $this->data['product']['category_id'] = $this->MsLoader->MsProduct->getProductCategories($product_id);
+        $this->data['product']['shipping'] = $this->request->post['type'];
+        $this->data['categories'] = $this->MsLoader->MsProduct->getCategories();
+        $this->data['msconf_allow_multiple_categories'] = $this->config->get('msconf_allow_multiple_categories');
+        $this->data['msconf_enable_shipping'] = $this->config->get('msconf_enable_shipping');
+        $this->data['msconf_enable_categories'] = $this->config->get('msconf_enable_categories');
+        $this->data['msconf_physical_product_categories'] = $this->config->get('msconf_physical_product_categories');
+        $this->data['msconf_digital_product_categories'] = $this->config->get('msconf_digital_product_categories');
+
+        $this->template = 'default/template/multiseller/account-product-form-shipping-categories.tpl';
+
+        $this->response->setOutput($this->render(TRUE), $this->config->get('config_compression'));
+    }
+
     public function index() {
 		// paypal listing payment confirmation
 		if (isset($this->request->post['payment_status']) && strtolower($this->request->post['payment_status']) == 'completed') {
@@ -1184,8 +1218,11 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		$this->data['msconf_images_limits'] = $this->config->get('msconf_images_limits');
 		$this->data['msconf_downloads_limits'] = $this->config->get('msconf_downloads_limits');
 		$this->data['msconf_enable_quantities'] = $this->config->get('msconf_enable_quantities');
-		$this->data['ms_account_product_download_note'] = sprintf($this->language->get('ms_account_product_download_note'), $this->config->get('msconf_allowed_download_types'));
-		$this->data['ms_account_product_image_note'] = sprintf($this->language->get('ms_account_product_image_note'), $this->config->get('msconf_allowed_image_types'));		
+        $this->data['msconf_enable_categories'] = $this->config->get('msconf_enable_categories');
+        $this->data['msconf_physical_product_categories'] = $this->config->get('msconf_physical_product_categories');
+        $this->data['msconf_digital_product_categories'] = $this->config->get('msconf_digital_product_categories');
+        $this->data['ms_account_product_download_note'] = sprintf($this->language->get('ms_account_product_download_note'), $this->config->get('msconf_allowed_download_types'));
+		$this->data['ms_account_product_image_note'] = sprintf($this->language->get('ms_account_product_image_note'), $this->config->get('msconf_allowed_image_types'));
 		$this->data['back'] = $this->url->link('seller/account-product', '', 'SSL');
 	}
 	

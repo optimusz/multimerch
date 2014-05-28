@@ -54,7 +54,10 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		"msconf_enable_shipping" => 0, // 0 - no, 1 - yes, 2 - seller select
 		"msconf_provide_buyerinfo" => 0, // 0 - no, 1 - yes, 2 - shipping dependent
 		"msconf_enable_quantities" => 0, // 0 - no, 1 - yes, 2 - shipping dependent
-		
+        "msconf_enable_categories" => 0, // 0 - no, 1 - yes
+        "msconf_physical_product_categories" => array(),
+        "msconf_digital_product_categories" => array(),
+
 		"msconf_disable_product_after_quantity_depleted" => 0,
 		"msconf_allow_relisting" => 0,
 		
