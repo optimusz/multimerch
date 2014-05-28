@@ -349,7 +349,7 @@
 						<?php foreach ($product['downloads'] as $download) { ?>
 							<div class="ms-download">
 								<input type="hidden" name="product_downloads[<?php echo $i; ?>][download_id]" value="<?php echo $download['id']; ?>" />
-								<input type="hidden" name="product_downloads[<?php echo $i; ?>][filename]" value="<?php echo $download['src']; ?>" />
+								<input type="hidden" name="product_downloads[<?php echo $i; ?>][filename]" value="" />
 								<span class="ms-download-name"><?php echo $download['name']; ?></span>
 								<div class="ms-buttons">
 									<a href="<?php echo $download['href']; ?>" class="ms-button-download" title="<?php echo $ms_download; ?>"></a>

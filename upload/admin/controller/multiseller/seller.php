@@ -120,17 +120,17 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 				// creating new customer
 				$this->language->load('sale/customer');
 
-		    	if ((mb_strlen($data['customer']['firstname']) < 1) || (mb_strlen($data['customer']['firstname']) > 32)) {
-		      		$json['errors']['customer[firstname]'] = $this->language->get('error_firstname');
-		    	}
+				if ((mb_strlen($data['customer']['firstname']) < 1) || (mb_strlen($data['customer']['firstname']) > 32)) {
+			  		$json['errors']['customer[firstname]'] = $this->language->get('error_firstname');
+				}
 		
-		    	if ((mb_strlen($data['customer']['lastname']) < 1) || (mb_strlen($data['customer']['lastname']) > 32)) {
-		      		$json['errors']['customer[lastname]'] = $this->language->get('error_lastname');
-		    	}
+				if ((mb_strlen($data['customer']['lastname']) < 1) || (mb_strlen($data['customer']['lastname']) > 32)) {
+			  		$json['errors']['customer[lastname]'] = $this->language->get('error_lastname');
+				}
 		
 				if ((mb_strlen($data['customer']['email']) > 96) || !preg_match('/^[^\@]+@.*\.[a-z]{2,6}$/i', $data['customer']['email'])) {
-		      		$json['errors']['customer[email]'] = $this->language->get('error_email');
-		    	}
+			  		$json['errors']['customer[email]'] = $this->language->get('error_email');
+				}
 				
 				$customer_info = $this->model_sale_customer->getCustomerByEmail($data['customer']['email']);
 				
@@ -144,15 +144,15 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 					}
 				}
 				
-		    	if ($data['customer']['password'] || (!isset($this->request->get['customer_id']))) {
-		      		if ((mb_strlen($data['customer']['password']) < 4) || (mb_strlen($data['customer']['password']) > 20)) {
-		        		$json['errors']['customer[password]'] = $this->language->get('error_password');
-		      		}
+				if ($data['customer']['password'] || (!isset($this->request->get['customer_id']))) {
+			  		if ((mb_strlen($data['customer']['password']) < 4) || (mb_strlen($data['customer']['password']) > 20)) {
+						$json['errors']['customer[password]'] = $this->language->get('error_password');
+			  		}
 			
 			  		if ($data['customer']['password'] != $data['customer']['password_confirm']) {
-			    		$json['errors']['customer[password_confirm]'] = $this->language->get('error_confirm');
+						$json['errors']['customer[password_confirm]'] = $this->language->get('error_confirm');
 			  		}
-		    	}				
+				}				
 			}
 		}
 		
@@ -309,21 +309,17 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 		$this->validate(__FUNCTION__);
 		$json = array();
 		
-		//var_dump($this->request->post);
-		
-		if (isset($this->request->post['selected']) || isset($this->request->post['all'])) {
+		if (isset($this->request->post['selected']) || isset($this->request->post['ms-pay-all'])) {
 			$payments = array();
 			$total = $this->currency->format(0, $this->config->get('config_currency'), 1, false);
 
-            if($this->request->post['all'] == 'true')
-                $sellers_id =   $this->MsLoader->MsSeller->getSellers();
-            else
-                $sellers_id =   $this->request->post['selected'];
+			if(isset($this->request->post['ms-pay-all']))
+				$sellers_id = $this->MsLoader->MsSeller->getSellers();
+			else
+				$sellers_id = $this->request->post['selected'];
 
 			foreach ($sellers_id as $seller_id) {
-
-                if($this->request->post['all'] == 'true')
-                $seller_id  =   $seller_id['seller_id'];
+				if(isset($this->request->post['ms-pay-all'])) $seller_id = $seller_id['seller_id'];
 
 				$seller = $this->MsLoader->MsSeller->getSeller($seller_id);
 				if (!$seller || !$seller['ms.paypal']) continue;
@@ -356,7 +352,7 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 		$this->validate(__FUNCTION__);
 		$json = array();
 
-		if (!isset($this->request->post['selected']) && !isset($this->request->post['all'])) {
+		if (!isset($this->request->post['selected']) && !isset($this->request->post['ms-pay-all'])) {
 			$json['error'] = $this->language->get('ms_error_payment_norequests');
 			$this->response->setOutput(json_encode($json));
 			return;
@@ -373,15 +369,13 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 	
 		$i = 0;
 
-        if($this->request->post['all'] == 'true')
-            $sellers_id =   $this->MsLoader->MsSeller->getSellers();
-        else
-            $sellers_id =   $this->request->post['selected'];
+		if(isset($this->request->post['ms-pay-all']))
+			$sellers_id = $this->MsLoader->MsSeller->getSellers();
+		else
+			$sellers_id = $this->request->post['selected'];
 		
 		foreach ($sellers_id as $seller_id) {
-
-            if($this->request->post['all'] == 'true')
-            $seller_id  =   $seller_id['seller_id'];
+			if(isset($this->request->post['ms-pay-all'])) $seller_id = $seller_id['seller_id'];
 
 			$seller = $this->MsLoader->MsSeller->getSeller($seller_id);
 			if (!$seller || !$seller['ms.paypal']) continue;
@@ -511,7 +505,7 @@ class ControllerMultisellerSeller extends ControllerMultisellerBase {
 		$this->validate(__FUNCTION__);
 		$this->load->model('localisation/country');
 		$this->load->model('tool/image');
-    	$this->data['countries'] = $this->model_localisation_country->getCountries();
+		$this->data['countries'] = $this->model_localisation_country->getCountries();
 		$this->data['customers'] = $this->MsLoader->MsSeller->getCustomers();
 		$this->data['seller_groups'] =$this->MsLoader->MsSellerGroup->getSellerGroups();  
 		$this->data['seller'] = FALSE;
