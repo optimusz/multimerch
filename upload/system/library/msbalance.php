@@ -180,7 +180,7 @@ class MsBalance extends Model {
 
 		$this->db->query($sql);
 		
-		$balance_id = mysql_insert_id();
+		$balance_id = $this->db->getLastId();
 		return $balance_id;
 	}
 }

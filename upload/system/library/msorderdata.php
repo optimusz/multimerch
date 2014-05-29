@@ -177,7 +177,7 @@ class MsOrderData extends Model {
              	
 		$this->db->query($sql);
 		
-		$order_product_data_id = mysql_insert_id();
+		$order_product_data_id = $this->db->getLastId();
 		return $order_product_data_id;
 	}
 	
