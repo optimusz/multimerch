@@ -179,7 +179,7 @@ class ControllerMultisellerAttribute extends ControllerMultisellerBase {
 
 	public function jxSubmitAttribute() {
 		$json = array();
-		$data = $this->request->post; 
+		$data = $this->request->post;
 		unset($data['attribute_value'][0]);
 		
 		foreach ($data['attribute_description'] as $language_id => $value) {
@@ -188,17 +188,15 @@ class ControllerMultisellerAttribute extends ControllerMultisellerBase {
 			}
 		}
 
-		if ($data['attribute_type'] == MsAttribute::TYPE_SELECT || $data['attribute_type'] == MsAttribute::TYPE_RADIO || $data['attribute_type'] == MsAttribute::TYPE_CHECKBOX || $data['attribute_type'] == MsAttribute::TYPE_IMAGE) {
+		if (($data['attribute_type'] == MsAttribute::TYPE_SELECT || $data['attribute_type'] == MsAttribute::TYPE_RADIO || $data['attribute_type'] == MsAttribute::TYPE_CHECKBOX || $data['attribute_type'] == MsAttribute::TYPE_IMAGE)) {
 			if (empty($data['attribute_value'])) {
 				$json['errors']['attribute_type'] = $this->language->get('ms_error_attribute_type');
 			}
-		}
-
-		if ($data['attribute_type'] != MsAttribute::TYPE_TEXT && $data['attribute_type'] != MsAttribute::TYPE_TEXTAREA) {
+		} else if (($data['attribute_type'] != MsAttribute::TYPE_TEXT && $data['attribute_type'] != MsAttribute::TYPE_TEXTAREA)) {
 			unset($data['text_type']);
 			unset($data['attribute_value']);
 		}
-
+		
 		if (isset($data['attribute_value'])) {
 			foreach ($data['attribute_value'] as $attribute_value_id => $attribute_value) {
 				foreach ($attribute_value['attribute_value_description'] as $language_id => $attribute_value_description) {

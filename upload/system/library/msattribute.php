@@ -60,7 +60,7 @@ class MsAttribute extends Model {
 		$attribute_id = $this->db->getLastId();
 
 		// oc attribute
-		$this->db->query("INSERT INTO " . DB_PREFIX . "attribute SET sort_order = '" . (int)$data['sort_order'] . "', attribute_group_id = " . (int)$data['attribute_group_id']);
+		$this->db->query("INSERT INTO " . DB_PREFIX . "attribute SET sort_order = '" . (isset($data['sort_order']) ? (int)$data['sort_order'] : 0) . "', attribute_group_id = " . (int)$data['attribute_group_id']);
 		$oc_attribute_id = $this->db->getLastId();
 
 		// attribute attribute
@@ -82,11 +82,12 @@ class MsAttribute extends Model {
 		}
 
 		if (isset($data['attribute_value'])) {
-				foreach ($data['attribute_value'] as $attribute_value) {
+			foreach ($data['attribute_value'] as $attribute_value) {
 				$sql = "INSERT INTO " . DB_PREFIX . "ms_attribute_value
 						SET attribute_id = " . (int)$attribute_id . ",
 							image = '" . $this->db->escape(html_entity_decode($attribute_value['image'], ENT_QUOTES, 'UTF-8')) . "',
-							sort_order = " . (int)$data['sort_order'];
+							sort_order = '" . (isset($attribute_value['sort_order']) ? (int)$attribute_value['sort_order'] : 0) . "'";
+				
 				$this->db->query($sql);
 				$attribute_value_id = $this->db->getLastId();
 
@@ -145,9 +146,16 @@ class MsAttribute extends Model {
 			if (isset($data['attribute_value'])) {
 				foreach ($data['attribute_value'] as $attribute_value) {
 					if (isset($attribute_value['attribute_value_id'])) {
-						$sql ="INSERT INTO " . DB_PREFIX . "ms_attribute_value SET attribute_value_id = '" . (int)$attribute_value['attribute_value_id'] . "', attribute_id = '" . (int)$attribute_id . "', image = '" . $this->db->escape(html_entity_decode($attribute_value['image'], ENT_QUOTES, 'UTF-8')) . "', sort_order = '" . (int)$attribute_value['sort_order'] . "'";
+						$sql ="INSERT INTO " . DB_PREFIX . "ms_attribute_value 
+								SET attribute_value_id = '" . (int)$attribute_value['attribute_value_id'] . "', 
+									attribute_id = '" . (int)$attribute_id . "', 
+									image = '" . $this->db->escape(html_entity_decode($attribute_value['image'], ENT_QUOTES, 'UTF-8')) . "', 
+									sort_order = '" . (isset($attribute_value['sort_order']) ? (int)$attribute_value['sort_order'] : 0) . "'";
 					} else {
-						$sql = "INSERT INTO " . DB_PREFIX . "ms_attribute_value SET attribute_id = '" . (int)$attribute_id . "', image = '" . $this->db->escape(html_entity_decode($attribute_value['image'], ENT_QUOTES, 'UTF-8')) . "', sort_order = '" . (int)$attribute_value['sort_order'] . "'";
+						$sql = "INSERT INTO " . DB_PREFIX . "ms_attribute_value 
+								SET attribute_id = '" . (int)$attribute_id . "', 
+									image = '" . $this->db->escape(html_entity_decode($attribute_value['image'], ENT_QUOTES, 'UTF-8')) . "', 
+									sort_order = '" . (isset($attribute_value['sort_order']) ? (int)$attribute_value['sort_order'] : 0) . "'";
 					}
 					$this->db->query($sql);
 					$attribute_value_id = $this->db->getLastId();
