@@ -40,8 +40,8 @@ class MsMail extends Model {
 	const AMT_WITHDRAW_REQUEST_SUBMITTED = 107;
 	const AMT_WITHDRAW_REQUEST_COMPLETED = 108;
 	
-  	public function __construct($registry) {
-  		parent::__construct($registry);
+	public function __construct($registry) {
+		parent::__construct($registry);
 		$this->errors = array();
 	}
 
@@ -132,7 +132,7 @@ class MsMail extends Model {
 		if (isset($data['seller_id'])) {
 			$seller = $this->MsLoader->MsSeller->getSeller($data['seller_id']);
 		}		
-		
+
 		//$message .= sprintf($this->language->get('ms_mail_regards'), HTTP_SERVER) . "\n" . $this->config->get('config_name');
 
 		$mail = new Mail();
@@ -195,30 +195,30 @@ class MsMail extends Model {
 			case self::SMT_PRODUCT_PURCHASED:
 				$order_products = $this->MsLoader->MsOrderData->getOrderProducts(array('order_id' => $data['order_id'], 'seller_id' => $data['seller_id']));
 
-                $this->load->model('account/order');
+				$this->load->model('account/order');
 				$products = '';
 				foreach ($order_products as $p) {
 					if ($p['quantity'] > 1) $products .= "{$p['quantity']} x "; 
 					$products .= "{$p['name']}\t" . $this->currency->format($p['seller_net_amt'], $this->config->get('config_currency')) . "\n";
 
-                    $options   = $this->model_account_order->getOrderOptions($data['order_id'], $p['order_product_id']);
+					$options   = $this->model_account_order->getOrderOptions($data['order_id'], $p['order_product_id']);
 
-                    foreach ($options as $option)
-                    {
-                        if ($option['type'] != 'file') {
-                            $value = $option['value'];
-                        } else {
-                            $value = utf8_substr($option['value'], 0, utf8_strrpos($option['value'], '.'));
-                        }
+					foreach ($options as $option)
+					{
+						if ($option['type'] != 'file') {
+							$value = $option['value'];
+						} else {
+							$value = utf8_substr($option['value'], 0, utf8_strrpos($option['value'], '.'));
+						}
 
-                        $option['value']	=  utf8_strlen($value) > 20 ? utf8_substr($value, 0, 20) . '..' : $value;
+						$option['value']	=  utf8_strlen($value) > 20 ? utf8_substr($value, 0, 20) . '..' : $value;
 
-                        $products .= "\r\n";
-                        $products .= "- {$option['name']} : {$option['value']}";
-                    }
+						$products .= "\r\n";
+						$products .= "- {$option['name']} : {$option['value']}";
+					}
 
-                    $products .= "\n";
-                }
+					$products .= "\n";
+				}
 			
 				$total = $this->currency->format($this->MsLoader->MsOrderData->getOrderTotal($data['order_id'], array('seller_id' => $data['seller_id'])), $this->config->get('config_currency'));
 			
@@ -229,13 +229,14 @@ class MsMail extends Model {
 					$mail_text .= sprintf($this->language->get('ms_mail_product_purchased_no_email'), $this->config->get('config_name'), $order_info['firstname'] . ' ' . $order_info['lastname'], $products, $total);
 				}
 
+				$order_info['comment'] = $this->MsLoader->MsOrderData->getOrderComment(array('order_id' => $data['order_id'], 'seller_id' => $data['seller_id']));
+				if ($order_info['comment']) {
+					$mail_text .= sprintf($this->language->get('ms_mail_product_purchased_comment'), $order_info['comment']);
+				}
+
 				if ($this->config->get('msconf_provide_buyerinfo') == 1 || ($this->config->get('msconf_provide_buyerinfo') == 2 && $product['shipping'] == 1))
 				{
 					$mail_text .= sprintf($this->language->get('ms_mail_product_purchased_info'), $order_info['shipping_firstname'], $order_info['shipping_lastname'], $order_info['shipping_company'], $order_info['shipping_address_1'], $order_info['shipping_address_2'], $order_info['shipping_city'], $order_info['shipping_postcode'], $order_info['shipping_zone'], $order_info['shipping_country']);
-					
-					if ($order_info['comment']) {
-						$mail_text .= sprintf($this->language->get('ms_mail_product_purchased_comment'), $order_info['comment']);
-					}
 				}
 				break;				
 			

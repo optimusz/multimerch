@@ -125,7 +125,20 @@ class MsOrderData extends Model {
 
 		return $res->rows;
 	}
-	
+
+	public function getOrderComment($data = array()) {
+		$sql = "SELECT *
+				FROM " . DB_PREFIX . "ms_order_comment
+				WHERE 1 = 1 "
+			. (isset($data['product_id']) ? " AND product_id =  " .  (int)$data['product_id'] : '')
+			. (isset($data['seller_id']) ? " AND seller_id =  " .  (int)$data['seller_id'] : '')
+			. (isset($data['order_id']) ? " AND order_id =  " .  (int)$data['order_id'] : '');
+
+		$res = $this->db->query($sql);
+
+		return $res->row['comment'];
+	}
+
 	public function getOrderProducts($data) {
 		$sql = "SELECT *
 				FROM " . DB_PREFIX . "order_product
@@ -171,14 +184,27 @@ class MsOrderData extends Model {
 				SET order_id = " . (int)$order_id . ",
 					product_id = " . (int)$product_id . ",
 					seller_id = " . (int)$data['seller_id'] . ",
-             		store_commission_flat = " . (float)$data['store_commission_flat'] . ",
-             		store_commission_pct = " . (float)$data['store_commission_pct'] . ",
-             		seller_net_amt = " . (float)$data['seller_net_amt'];
-             	
+					store_commission_flat = " . (float)$data['store_commission_flat'] . ",
+					store_commission_pct = " . (float)$data['store_commission_pct'] . ",
+					seller_net_amt = " . (float)$data['seller_net_amt'];
+				
 		$this->db->query($sql);
 		
 		$order_product_data_id = $this->db->getLastId();
 		return $order_product_data_id;
+	}
+
+	public function addOrderComment($order_id, $product_id, $data) {
+		$sql = "INSERT INTO " . DB_PREFIX . "ms_order_comment
+				SET order_id = " . (int)$order_id . ",
+					product_id = " . (int)$product_id . ",
+					seller_id = " . (int)$data['seller_id'] . ",
+					comment = '" . $data['comment']. "'";
+
+		$this->db->query($sql);
+
+		$order_comment_id = mysql_insert_id();
+		return $order_comment_id;
 	}
 	
 	public function getTotalSales($data = array()) {
