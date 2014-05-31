@@ -289,6 +289,7 @@ $_['ms_account_register_seller_success_message']  = '<p>Welcome to %s!</p> <p>Co
 $_['ms_account_register_seller_success_approval'] = '<p>Welcome to %s!</p> <p>Your seller account has been registered and is waiting for approval. You will be notified by email once your account has been activated by the store owner.</p><p>If you have any problems, <a href="%s">contact us</a>.</p>';
 
 $_['ms_seller'] = 'Seller';
+$_['ms_seller_forseller'] = 'For seller';
 $_['ms_account_dashboard'] = 'Dashboard';
 $_['ms_account_seller_account'] = 'Seller Account';
 $_['ms_account_sellerinfo'] = 'Seller profile';

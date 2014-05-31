@@ -507,6 +507,13 @@
 						$sellers[] = $this->MsLoader->MsSeller->getSeller($this->MsLoader->MsProduct->getSellerId($product['product_id']));
 					}
 				}
+				
+				foreach($products as $product){
+						$id = $this->MsLoader->MsProduct->getSellerId($product['product_id']); 
+						if (!isset($sellers[$id])) $sellers[$id] = $this->MsLoader->MsSeller->getSeller($id);
+					}
+				}
+				
 				$this->session->data['sellers'] = $sellers;
 			}
 			]]></add>
@@ -560,13 +567,12 @@
 			<textarea name="comment" rows="8" style="width: 98%;"><?php echo $comment; ?></textarea>
 			]]></search>
 			<add><![CDATA[
-			<br />
-			<br />
-			<?php foreach($this->session->data['sellers'] as $seller): ?>
-					<div>For seller: <b><?php echo $seller['ms.nickname'] ?></b></div>
+			<br /><br />
+			<?php foreach($this->session->data['sellers'] as $seller) { ?>
+					<div><?php echo $this->language->get('ms_seller_forseller'); ?>: <b><?php echo $seller['ms.nickname'] ?></b></div>
 					<textarea name="comment[<?php echo $seller['seller_id'] ?>]" rows="8" style="width: 98%;"><?php echo $comment; ?></textarea>
 					<br /><br />
-		   <?php endforeach; ?>
+			<?php } ?>
 			]]></add>
 		</operation>
 	</file>
