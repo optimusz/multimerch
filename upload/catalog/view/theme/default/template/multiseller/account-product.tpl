@@ -55,7 +55,7 @@
 <script>
 	$(function() {
 		$('#list-products').dataTable( {
-			"sAjaxSource": "index.php?route=seller/account-product/getTableData",
+			"sAjaxSource": $('base').attr('href') . "index.php?route=seller/account-product/getTableData",
 			"aoColumns": [
 				{ "mData": "image" },
 				{ "mData": "product_name" },

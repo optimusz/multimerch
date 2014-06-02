@@ -46,7 +46,7 @@
 <script>
 	$(function() {
 		$('#list-orders').dataTable( {
-			"sAjaxSource": "index.php?route=seller/account-order/getTableData",
+			"sAjaxSource": $('base').attr('href') . "index.php?route=seller/account-order/getTableData",
 			"aoColumns": [
 				{ "mData": "order_id" },
 				{ "mData": "customer_name" },

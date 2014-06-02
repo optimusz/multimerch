@@ -7,10 +7,10 @@ $(function() {
 
 	$(document).delegate('#mc-submit:not(.disabled)', 'click', function() {
         if(typeof ms_comments_product_id !== 'undefined'){
-            var url = 'index.php?route=module/ms-comments/submitComment&product_id='+ms_comments_product_id;
+            var url = $('base').attr('href') . 'index.php?route=module/ms-comments/submitComment&product_id='+ms_comments_product_id;
             var render_url = 'index.php?route=module/ms-comments/renderComments&product_id='+ms_comments_product_id;
         }else if(typeof ms_comments_seller_id !== 'undefined'){
-            var url = 'index.php?route=module/ms-comments/submitComment&seller_id='+ms_comments_seller_id;
+            var url = $('base').attr('href') . 'index.php?route=module/ms-comments/submitComment&seller_id='+ms_comments_seller_id;
             var render_url = 'index.php?route=module/ms-comments/renderComments&seller_id='+ms_comments_seller_id;
         }
         

@@ -414,7 +414,7 @@ $('input[name=\'customer_group_id\']:checked').trigger('change');
 <script type="text/javascript"><!--
 $('select[name=\'country_id\']').bind('change', function() {
 	$.ajax({
-		url: 'index.php?route=account/register-seller/country&country_id=' + this.value,
+		url: $('base').attr('href') . 'index.php?route=account/register-seller/country&country_id=' + this.value,
 		dataType: 'json',
 		beforeSend: function() {
 			$('select[name=\'country_id\']').after('<span class="wait">&nbsp;<img src="catalog/view/theme/default/image/loading.gif" alt="" /></span>');
@@ -455,7 +455,7 @@ $('select[name=\'country_id\']').bind('change', function() {
 
 $('select[name=\'seller_country_id\']').bind('change', function() {
 	$.ajax({
-		url: 'index.php?route=account/register-seller/country&country_id=' + this.value,
+		url: $('base').attr('href') . 'index.php?route=account/register-seller/country&country_id=' + this.value,
 		dataType: 'json',
 		beforeSend: function() {
 			$('select[name=\'seller_country_id\']').after('<span class="wait">&nbsp;<img src="catalog/view/theme/default/image/loading.gif" alt="" /></span>');

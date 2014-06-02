@@ -46,7 +46,7 @@
 <script>
 	$(function() {
 		$('#list-conversations').dataTable( {
-			"sAjaxSource": "index.php?route=account/msconversation/getTableData",
+			"sAjaxSource": $('base').attr('href') . "index.php?route=account/msconversation/getTableData",
 			"aaSorting": [[ 3, "desc" ]],
 			"aoColumns": [
 				{ "mData": "icon", "bSortable": false },

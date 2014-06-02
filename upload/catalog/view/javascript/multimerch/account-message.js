@@ -3,7 +3,7 @@ $(function() {
 		$.ajax({
 			type: "POST",
 			dataType: "json",
-			url: 'index.php?route=account/msmessage/jxSendMessage',
+			url: $('base').attr('href') . 'index.php?route=account/msmessage/jxSendMessage',
 			data: $(this).parents("form").serialize(),
 			beforeSend: function() {
 				$('#ms-message-form a.button').hide().before('<span class="wait">&nbsp;<img src="catalog/view/theme/default/image/loading.gif" alt="" /></span>');

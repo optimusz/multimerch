@@ -23,7 +23,7 @@ $(function() {
 		            				$.ajax({
 		            					type: "POST",
 		            					dataType: "json",
-		            					url: 'index.php?route=seller/catalog-seller/jxSubmitRateDialog',
+		            					url: $('base').attr('href') . 'index.php?route=seller/catalog-seller/jxSubmitRateDialog',
 		            					data: $("#ms-seller-rate-dialog form").serialize(),
 		            					beforeSend: function() {
 		            						$('.ms-seller-rate-dialog .success,.ms-seller-rate-dialog .warning').remove();

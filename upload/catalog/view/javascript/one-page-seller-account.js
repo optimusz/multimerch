@@ -16,7 +16,7 @@ $(function() {
 		$.ajax({
 			type: "POST",
 			dataType: "text",
-			url: 'index.php?route=account/register-seller/index',
+			url: $('base').attr('href') . 'index.php?route=account/register-seller/index',
 			data: $("form#ms-accountinfo").serialize(),
 			beforeSend: function() {
 				button.hide().before('<span class="wait">&nbsp;<img src="catalog/view/theme/default/image/loading.gif" alt="" /></span>');
@@ -65,7 +65,7 @@ $(function() {
 		//runtimes : 'flash',
 		multi_selection:false,
 		browse_button: 'ms-file-selleravatar',
-		url: 'index.php?route=account/register-seller/jxUploadSellerAvatar',
+		url: $('base').attr('href') . 'index.php?route=account/register-seller/jxUploadSellerAvatar',
 		flash_swf_url: 'catalog/view/javascript/plupload/plupload.flash.swf',
 		silverlight_xap_url : 'catalog/view/javascript/plupload/plupload.silverlight.xap',
 		

@@ -31,7 +31,7 @@ $(function() {
             				$.ajax({
             					type: "POST",
             					dataType: "json",
-            					url: 'index.php?route=seller/account-product/jxSubmitPdfgenDialog',
+            					url: $('base').attr('href') . 'index.php?route=seller/account-product/jxSubmitPdfgenDialog',
             					data: $("#ms-pdfgen-dialog form").serialize(),		            					beforeSend: function() {
             						$('.ms-pdfgen-dialog .success, .ms-pdfgen-dialog .warning').remove();
             						$('#ms-pdfgen-dialog button').attr('disabled', true);

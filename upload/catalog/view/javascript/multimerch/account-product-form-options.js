@@ -1,9 +1,9 @@
 $(function() {
 	// load options tab
-	$('#tab-options').load('index.php?route=seller/account-product/jxRenderOptions&product_id=' + msGlobals.product_id, function(data){
+	$('#tab-options').load($('base').attr('href') . 'index.php?route=seller/account-product/jxRenderOptions&product_id=' + msGlobals.product_id, function(data){
 		// load existing product options
 		if (msGlobals.product_id.length > 0) {
-			$.get('index.php?route=seller/account-product/jxRenderProductOptions&product_id=' + msGlobals.product_id, function(data) {
+			$.get($('base').attr('href') . 'index.php?route=seller/account-product/jxRenderProductOptions&product_id=' + msGlobals.product_id, function(data) {
 				$('div.options').append(data).find('input[name$="[option_id]"]').each(function(index) {
 					$(this).closest('.ms-options').find('.select_option option[value="'+ $(this).val() + '"]').attr('disabled', true );
 				});
@@ -25,7 +25,7 @@ $(function() {
 		var option_id = $(this).children(':selected').val();
 		var select = this;
 		
-		$.get('index.php?route=seller/account-product/jxRenderOptionValues&option_id=' + option_id, function(data) {
+		$.get($('base').attr('href') . 'index.php?route=seller/account-product/jxRenderOptionValues&option_id=' + option_id, function(data) {
 			var lastRow = $(select).parents('.ms-options').find('.option:last input:last').attr('name');
 
 			if (typeof lastRow == "undefined") {

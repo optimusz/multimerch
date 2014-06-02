@@ -4,9 +4,9 @@ $(function() {
 	$( ".product_image_files" ).sortable();
 
 	$("body").delegate(".ms-price-dynamic", "propertychange input paste focusout", function(){
-		$(".attention.ms-commission span").load("index.php?route=seller/account-product/jxGetFee&price=" + $(".ms-price-dynamic").val());
+		$(".attention.ms-commission span").load($('base').attr('href') . "index.php?route=seller/account-product/jxGetFee&price=" + $(".ms-price-dynamic").val());
 	});
-	$(".attention.ms-commission span").load("index.php?route=seller/account-product/jxGetFee&price=" + $(".ms-price-dynamic").val());
+	$(".attention.ms-commission span").load($('base').attr('href') . "index.php?route=seller/account-product/jxGetFee&price=" + $(".ms-price-dynamic").val());
 	
 	$("body").delegate(".date", "focusin", function(){
 		$(this).datepicker({dateFormat: 'yy-mm-dd'});
@@ -74,7 +74,7 @@ $(function() {
 
         $.ajax({
             type: "POST",
-            url: 'index.php?route=seller/account-product/jxshippingcategories',
+            url: $('base').attr('href') . 'index.php?route=seller/account-product/jxshippingcategories',
             data: {'type':type,'product_id':product_id},
             success: function(out)
             {
@@ -90,7 +90,7 @@ $(function() {
             $.ajax({
                 type: "POST",
                 dataType: 'json',
-                url: 'index.php?route=seller/account-product/jxautocomplete',
+                url: $('base').attr('href') . 'index.php?route=seller/account-product/jxautocomplete',
                 data: {'type':'manufacturers', 'filter_name': encodeURIComponent(request.term)},
                 success: function(json) {
                     response($.map(json, function(item) {
@@ -135,7 +135,7 @@ $(function() {
 		$.ajax({
 			type: "POST",
 			dataType: "json",
-			url: 'index.php?route=seller/account-product/'+url,
+			url: $('base').attr('href') . 'index.php?route=seller/account-product/'+url,
 			data: $("form#ms-new-product").serialize(),
 			beforeSend: function() {
 				button.hide().before('<span class="wait">&nbsp;<img src="catalog/view/theme/default/image/loading.gif" alt="" /></span>');
@@ -230,7 +230,7 @@ $(function() {
 	
 	new plupload.Uploader($.extend(true, uploaderParams, {
 		browse_button: 'ms-file-addimages',
-		url: 'index.php?route=seller/account-product/jxUploadImages',
+		url: $('base').attr('href') . 'index.php?route=seller/account-product/jxUploadImages',
 		
 		preinit : {
 			Init: function(up, info) {
@@ -277,7 +277,7 @@ $(function() {
 	
 	new plupload.Uploader($.extend(true, uploaderParams, {
 		browse_button: 'ms-file-addfiles',
-		url: 'index.php?route=seller/account-product/jxUploadDownloads',
+		url: $('base').attr('href') . 'index.php?route=seller/account-product/jxUploadDownloads',
 		
 		preinit : {
 			Init: function(up, info) {
@@ -319,7 +319,7 @@ $(function() {
 			  				(data.files[i].filePages ? '<input type="hidden" name="product_downloads[' + newFileNum + '][filePages]" value="' + data.files[i].filePages + '" />' : '') +
 			  				'<span class="ms-download-name">'+data.files[i].fileMask+'</span>' +
 			  				'<div class="ms-buttons">' +
-			  				(data.files[i].filePages ? '<a href="index.php?route=seller/account-product/jxRenderPdfgenDialog" class="ms-button-pdf" title="'+msGlobals.button_generate+'"></a>' : '') +
+			  				(data.files[i].filePages ? '<a href="' . $('base').attr('href') . 'index.php?route=seller/account-product/jxRenderPdfgenDialog" class="ms-button-pdf" title="'+msGlobals.button_generate+'"></a>' : '') +
 			  				'<span class="ms-button-download disabled"></span>' +
 			  				'<span class="ms-button-update disabled"></span>' +
 				  			'</div>' +
@@ -343,7 +343,7 @@ $(function() {
 		var parentContainer = $(this).parents('.ms-download');
 		new plupload.Uploader($.extend(true, uploaderParams, {
 			browse_button: fileTag.attr('id'),
-			url: 'index.php?route=seller/account-product/jxUpdateFile',
+			url: $('base').attr('href') . 'index.php?route=seller/account-product/jxUpdateFile',
 
 			preinit : {
 				Init: function(up, info) {
