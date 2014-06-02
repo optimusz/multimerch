@@ -1335,18 +1335,19 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		}
 
 		$downloads = $this->MsLoader->MsProduct->getProductDownloads($product_id);
+		$product['downloads'] = array();
 		foreach ($downloads as $download) {
 			
-			$download_seller = $this->MsLoader->MsSeller->getSeller($this->MsLoader->MsProduct->getSellerId($download['product_id']));
+			//$download_seller = $this->MsLoader->MsSeller->getSeller($this->MsLoader->MsProduct->getSellerId($download['product_id']));
 			
 			if ($clone){
 				$oldPath				= DIR_DOWNLOAD . $download['filename'];
-				$download['filename']	= time() . '_' . md5(rand()) . '.' . $this->MsLoader->MsSeller->getNickname() . substr($download['mask'], strlen($download_seller['ms.nickname']));
+				//$download['filename']	= time() . '_' . md5(rand()) . '.' . $this->MsLoader->MsSeller->getNickname() . substr($download['mask'], strlen($download_seller['ms.nickname']));
+				$download['filename']	= time() . '_' . md5(rand()) . '.' . $download['mask'];
 				copy($oldPath, DIR_DOWNLOAD . $this->config->get('msconf_temp_download_path') . $download['filename']);
 			}
 			
 			//$ext = explode('.', $download['mask']); $ext = end($ext);
-			
 			$product['downloads'][] = array(
 				'name' => $download['mask'],
 				'src' => $download['filename'],
@@ -1416,6 +1417,8 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		
 		if ($clone) {
 			$this->data['product']['product_id'] = 0;
+			$this->data['product']['cloned_product_id'] = $product_id;
+			$this->data['clone'] = 1;
 			// Product listing period
 			if ($this->data['seller_group']['product_period'] > 0) {
 				$this->data['list_until'] = date('Y-m-d', strtotime(date('Y-m-d')) + (24 * 3600 * $this->data['seller_group']['product_period']));
