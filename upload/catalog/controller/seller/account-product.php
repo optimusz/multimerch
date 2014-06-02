@@ -1298,33 +1298,33 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		
 		$product['specials'] = $this->MsLoader->MsProduct->getProductSpecials($product_id);
 		$product['discounts'] = $this->MsLoader->MsProduct->getProductDiscounts($product_id);
-
-
+		
 		if (!empty($product['thumbnail'])) {
-
-            if($clone){
-                $oldPath                = DIR_IMAGE . $product['thumbnail'];
-                $product['thumbnail']   = $this->config->get('msconf_temp_image_path') .basename($product['thumbnail']);
-                copy($oldPath, DIR_IMAGE . $product['thumbnail']);
-            }
-
+		
+			if ($clone){
+				$oldPath				= DIR_IMAGE . $product['thumbnail'];
+				$product['thumbnail']	= $this->config->get('msconf_temp_image_path') .basename($product['thumbnail']);
+				copy($oldPath, DIR_IMAGE . $product['thumbnail']);
+			}
+			
 			$product['images'][] = array(
 				'name' => $product['thumbnail'],
 				'thumb' => $this->MsLoader->MsFile->resizeImage($product['thumbnail'], $this->config->get('msconf_preview_product_image_width'), $this->config->get('msconf_preview_product_image_height'))
 			);
-
+			
 			if (!in_array($product['thumbnail'], $this->session->data['multiseller']['files']))
 				$this->session->data['multiseller']['files'][] = $product['thumbnail'];
 		}
-
+		
 		$images = $this->MsLoader->MsProduct->getProductImages($product_id);
 		foreach ($images as $image) {
-            if($clone){
-                $oldPath        = DIR_IMAGE . $image['image'];
-                $image['image'] = $this->config->get('msconf_temp_image_path') .basename($image['image']);
-                copy($oldPath, DIR_IMAGE . $image['image']);
-            }
-
+			
+			if ($clone){
+				$oldPath		= DIR_IMAGE . $image['image'];
+				$image['image'] = $this->config->get('msconf_temp_image_path') .basename($image['image']);
+				copy($oldPath, DIR_IMAGE . $image['image']);
+			}
+			
 			$product['images'][] = array(
 				'name' => $image['image'],
 				'thumb' => $this->MsLoader->MsFile->resizeImage($image['image'], $this->config->get('msconf_preview_product_image_width'), $this->config->get('msconf_preview_product_image_height'))
@@ -1336,12 +1336,15 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 
 		$downloads = $this->MsLoader->MsProduct->getProductDownloads($product_id);
 		foreach ($downloads as $download) {
-            if($clone){
-                $oldPath                = DIR_DOWNLOAD . $download['filename'];
-                $download['filename']   = basename($download['filename']);
-                copy($oldPath, DIR_DOWNLOAD . $this->config->get('msconf_temp_download_path') .$download['filename']);
-            }
-
+			
+			$download_seller = $this->MsLoader->MsSeller->getSeller($this->MsLoader->MsProduct->getSellerId($download['product_id']));
+			
+			if ($clone){
+				$oldPath				= DIR_DOWNLOAD . $download['filename'];
+				$download['filename']	= time() . '_' . md5(rand()) . '.' . $this->MsLoader->MsSeller->getNickname() . substr($download['mask'], strlen($download_seller['ms.nickname']));
+				copy($oldPath, DIR_DOWNLOAD . $this->config->get('msconf_temp_download_path') . $download['filename']);
+			}
+			
 			//$ext = explode('.', $download['mask']); $ext = end($ext);
 			
 			$product['downloads'][] = array(
