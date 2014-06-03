@@ -11,7 +11,7 @@
 $('#button-confirm').bind('click', function() {
 	$.ajax({
 		type: 'POST',
-		url: $('base').attr('href') . 'index.php?route=payment/ms_pp_adaptive/send',
+		url: $('base').attr('href') + 'index.php?route=payment/ms_pp_adaptive/send',
 		dataType: 'json',
 		beforeSend: function() {
 			$('#button-confirm').attr('disabled', true);

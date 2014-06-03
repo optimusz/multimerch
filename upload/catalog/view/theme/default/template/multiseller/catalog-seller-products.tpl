@@ -114,7 +114,7 @@ $('#content input[name=\'filter_name\']').keydown(function(e) {
 });
 
 $('#button-search').bind('click', function() {
-	url = $('base').attr('href') . 'index.php?route=product/search';
+	url = $('base').attr('href') + 'index.php?route=product/search';
 	
 	var filter_name = $('#content input[name=\'filter_name\']').attr('value');
 	

@@ -87,7 +87,7 @@
 <script>
 $(function() {
 	$('#list-transactions').dataTable( {
-		"sAjaxSource": $('base').attr('href') . "index.php?route=seller/account-transaction/getTransactionData",
+		"sAjaxSource": $('base').attr('href') + "index.php?route=seller/account-transaction/getTransactionData",
 		"aoColumns": [
 			{ "mData": "transaction_id" },
 			{ "mData": "amount" },
@@ -98,7 +98,7 @@ $(function() {
 	});
 
 	$('#list-payments').dataTable( {
-		"sAjaxSource": $('base').attr('href') . "index.php?route=seller/account-transaction/getPaymentData",
+		"sAjaxSource": $('base').attr('href') + "index.php?route=seller/account-transaction/getPaymentData",
 		"aoColumns": [
 			{ "mData": "payment_id" },
 			{ "mData": "payment_type" },

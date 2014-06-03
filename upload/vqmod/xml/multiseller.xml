@@ -1037,8 +1037,8 @@
 			]]></search>
 			<add><![CDATA[
 			<?php if ($this->config->get('msconf_comments_enable')) { ?>
-				$('#tab-comments .pcForm').load($('base').attr('href') . 'index.php?route=module/ms-comments/renderForm&product_id=<?php echo $product_id; ?>');
-				$('#tab-comments .pcComments').load($('base').attr('href') . 'index.php?route=module/ms-comments/renderComments&product_id=<?php echo $product_id; ?>');
+				$('#tab-comments .pcForm').load($('base').attr('href') + 'index.php?route=module/ms-comments/renderForm&product_id=<?php echo $product_id; ?>');
+				$('#tab-comments .pcComments').load($('base').attr('href') + 'index.php?route=module/ms-comments/renderComments&product_id=<?php echo $product_id; ?>');
 			<?php } ?>
 			]]></add>
 		</operation>
