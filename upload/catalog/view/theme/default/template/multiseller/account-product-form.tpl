@@ -348,8 +348,8 @@
 						<?php $i = 0; ?> 
 						<?php foreach ($product['downloads'] as $download) { ?>
 							<div class="ms-download">
-								<input type="hidden" name="product_downloads[<?php echo $i; ?>][download_id]" value="<?php echo $download['id']; ?>" />
-								<input type="hidden" name="product_downloads[<?php echo $i; ?>][filename]" value="" />
+								<input type="hidden" name="product_downloads[<?php echo $i; ?>][download_id]" value="<?php echo isset($clone) ? '' : $download['id']; ?>" />
+								<input type="hidden" name="product_downloads[<?php echo $i; ?>][filename]" value="<?php echo (isset($clone)) ? $download['src'] : ''; ?>" />
 								<span class="ms-download-name"><?php echo $download['name']; ?></span>
 								<div class="ms-buttons">
 									<a href="<?php echo $download['href']; ?>" class="ms-button-download" title="<?php echo $ms_download; ?>"></a>
