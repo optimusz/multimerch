@@ -494,28 +494,26 @@
 	<file name="catalog/controller/checkout/payment_method.php">
 		<operation>
 			<search position="after"><![CDATA[
-			$this->session->data['payment_methods'] = $method_data;
+				$this->session->data['payment_methods'] = $method_data;
 			]]></search>
 			<add><![CDATA[
-			if($this->cart->hasProducts()){
-				$products = $this->cart->getProducts();
-				$sellers_id = array();
-				foreach($products as $product){
-					if(!in_array($this->MsLoader->MsProduct->getSellerId($product['product_id']),$sellers_id))
-					{
-						$sellers_id[] = $this->MsLoader->MsProduct->getSellerId($product['product_id']);
-						$sellers[] = $this->MsLoader->MsSeller->getSeller($this->MsLoader->MsProduct->getSellerId($product['product_id']));
+				if ($this->cart->hasProducts()) {
+					$products = $this->cart->getProducts();
+					$sellers_id = array();
+					foreach($products as $product){
+						if (!in_array($this->MsLoader->MsProduct->getSellerId($product['product_id']), $sellers_id)) {
+							$sellers_id[] = $this->MsLoader->MsProduct->getSellerId($product['product_id']);
+							$sellers[] = $this->MsLoader->MsSeller->getSeller($this->MsLoader->MsProduct->getSellerId($product['product_id']));
+						}
 					}
-				}
-				
-				foreach($products as $product){
-						$id = $this->MsLoader->MsProduct->getSellerId($product['product_id']); 
+					
+					foreach ($products as $product) {
+						$id = $this->MsLoader->MsProduct->getSellerId($product['product_id']);
 						if (!isset($sellers[$id])) $sellers[$id] = $this->MsLoader->MsSeller->getSeller($id);
 					}
+					
+					$this->session->data['sellers'] = $sellers;
 				}
-				
-				$this->session->data['sellers'] = $sellers;
-			}
 			]]></add>
 		</operation>
 
