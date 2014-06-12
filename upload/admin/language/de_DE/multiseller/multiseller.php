@@ -26,7 +26,7 @@ $_['ms_error_product_publish'] = 'Einige Produkte konnten nicht veröffentlicht 
 $_['ms_success_installed'] = 'Erweiterung erfolgreich installiert';
 $_['ms_success_product_status'] = 'Der Produkt Status wurde erfolgreich geändert.';
 
-$_['heading_title'] = '[MultiMerch] Digitaler Marktplatz';
+$_['heading_title'] = '<b>[MultiMerch]</b> Digitaler Marktplatz';
 $_['text_seller_select'] = 'Verkäufer wählen';
 $_['text_shipping_dependent'] = 'Liefer-abhängig';
 $_['text_no_results'] = 'Keine Ergebnisse';
