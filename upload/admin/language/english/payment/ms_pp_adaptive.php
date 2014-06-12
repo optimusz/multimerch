@@ -1,6 +1,6 @@
 <?php
 // Heading
-$_['heading_title']	= '[ffct.cc] PayPal Adaptive Payments for MultiMerch';
+$_['heading_title']	= '[MultiMerch] PayPal Adaptive Payments';
 
 $_['text_payment'] = 'Payment';
 

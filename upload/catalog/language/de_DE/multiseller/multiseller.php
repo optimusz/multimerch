@@ -411,7 +411,7 @@ $_['ms_comments_success'] = 'Danke für ihr Kommentar.';
 $_['ms_comments_captcha'] = 'Bitte geben sie den Code unten ein:';
 $_['ms_comments_no_comments_yet'] = 'Bisher keine Kommentare';
 $_['ms_comments_tab_comments'] = 'Kommentare (%s)';
-$_['ms_footer'] = '<br>MultiMerch Digital Marketplace by <a href="http://ffct.cc/">ffct.cc</a>';
+$_['ms_footer'] = '<br><a href="http://multimerch.com/">MultiMerch</a> Digital Marketplace';
 
 // Catalog - Sellers list
 $_['ms_catalog_sellers_heading'] = 'Verkäufer';

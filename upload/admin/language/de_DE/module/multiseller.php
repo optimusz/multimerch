@@ -1,3 +1,3 @@
 <?php
-$_['heading_title'] = '[ffct.cc] MultiMerch Digitaler Marktplatz';
+$_['heading_title'] = '[MultiMerch] Digitaler Marktplatz';
 ?>

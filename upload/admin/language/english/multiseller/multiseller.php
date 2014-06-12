@@ -30,7 +30,7 @@ $_['ms_error_product_publish'] = 'Failed to publish some products: seller accoun
 $_['ms_success_installed'] = 'Extension successfully installed';
 $_['ms_success_product_status'] = 'Successfully changed product status.';
 
-$_['heading_title'] = '[ffct.cc] MultiMerch Digital Marketplace';
+$_['heading_title'] = '[MultiMerch] Digital Marketplace';
 $_['text_seller_select'] = 'Seller select';
 $_['text_shipping_dependent'] = 'Shipping dependent';
 $_['text_no_results'] = 'No results';

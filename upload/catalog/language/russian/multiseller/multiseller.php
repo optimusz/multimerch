@@ -415,7 +415,7 @@ $_['ms_comments_success'] = 'Спасибо за Ваш комментарий.'
 $_['ms_comments_captcha'] = 'Введите код в поле ниже:';
 $_['ms_comments_no_comments_yet'] = 'Пока что комментарии отсутствуют';
 $_['ms_comments_tab_comments'] = 'Комментарии (%s)';
-$_['ms_footer'] = '<br>Торговая платформа MultiMerch <a href="http://ffct.cc/">ffct.cc</a>';
+$_['ms_footer'] = '<br>Торговая платформа <a href="http://multimerch.com/">MultiMerch</a>';
 
 // Catalog - Sellers list
 $_['ms_catalog_sellers_heading'] = 'Продавцы';

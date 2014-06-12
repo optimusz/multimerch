@@ -26,7 +26,7 @@ $_['ms_error_product_publish'] = 'Не удалось опубликовать �
 $_['ms_success_installed'] = 'Модуль успешно установлен';
 $_['ms_success_product_status'] = 'Статус продукта успешно поменян.';
 
-$_['heading_title'] = '[ffct.cc] MultiMerch Digital Marketplace';
+$_['heading_title'] = '[MultiMerch] Digital Marketplace';
 $_['text_seller_select'] = 'Выбор продавца';
 $_['text_shipping_dependent'] = 'Зависит от настроек доставки';
 $_['text_no_results'] = 'Нет результатов';
