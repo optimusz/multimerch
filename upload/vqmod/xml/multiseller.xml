@@ -497,15 +497,9 @@
 				$this->session->data['payment_methods'] = $method_data;
 			]]></search>
 			<add><![CDATA[
+				$this->language->load('multiseller/multiseller');
 				if ($this->cart->hasProducts()) {
 					$products = $this->cart->getProducts();
-					$sellers_id = array();
-					foreach($products as $product){
-						if (!in_array($this->MsLoader->MsProduct->getSellerId($product['product_id']), $sellers_id)) {
-							$sellers_id[] = $this->MsLoader->MsProduct->getSellerId($product['product_id']);
-							$sellers[] = $this->MsLoader->MsSeller->getSeller($this->MsLoader->MsProduct->getSellerId($product['product_id']));
-						}
-					}
 					
 					foreach ($products as $product) {
 						$id = $this->MsLoader->MsProduct->getSellerId($product['product_id']);
