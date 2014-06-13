@@ -50,7 +50,6 @@
 		</operation>
 	</file>
 	
-
 	<!-- ************************ -->
 	<!-- ************************ -->
 	<!--       FRONT OFFICE       -->
@@ -472,28 +471,20 @@
 	<file name="catalog/controller/checkout/payment_method.php">
 		<operation>
 			<search position="after"><![CDATA[
-			$this->session->data['payment_methods'] = $method_data;
+				$this->session->data['payment_methods'] = $method_data;
 			]]></search>
 			<add><![CDATA[
-			if($this->cart->hasProducts()){
-				$products = $this->cart->getProducts();
-				$sellers_id = array();
-				foreach($products as $product){
-					if(!in_array($this->MsLoader->MsProduct->getSellerId($product['product_id']),$sellers_id))
-					{
-						$sellers_id[] = $this->MsLoader->MsProduct->getSellerId($product['product_id']);
-						$sellers[] = $this->MsLoader->MsSeller->getSeller($this->MsLoader->MsProduct->getSellerId($product['product_id']));
-					}
-				}
-				
-				foreach($products as $product){
-						$id = $this->MsLoader->MsProduct->getSellerId($product['product_id']); 
+				$this->language->load('multiseller/multiseller');
+				if ($this->cart->hasProducts()) {
+					$products = $this->cart->getProducts();
+					
+					foreach ($products as $product) {
+						$id = $this->MsLoader->MsProduct->getSellerId($product['product_id']);
 						if (!isset($sellers[$id])) $sellers[$id] = $this->MsLoader->MsSeller->getSeller($id);
 					}
+					
+					$this->session->data['sellers'] = $sellers;
 				}
-				
-				$this->session->data['sellers'] = $sellers;
-			}
 			]]></add>
 		</operation>
 
@@ -1055,7 +1046,8 @@
 				<?php if ($this->config->get('msconf_attribute_display') != 0 && $attribute_groups) { ?>
 			]]></add>
 		</operation>
-
+	
+		<!-- Disallow seller to buy his own products -->
 		<operation>
 			<search position="after" error="skip"><![CDATA[
 				if (json['error']) {
@@ -1070,8 +1062,6 @@
 				}
 			]]></add>
 		</operation>
-
-
 	</file>
 
 	<file name="catalog/controller/product/product.php">
@@ -1500,6 +1490,8 @@
 				'product_id' => $product['product_id'],
 			]]></add>
 		</operation>
+		
+		<!-- Disallow seller to buy his own products -->
 		<operation error="log">
 			<search position="after"><![CDATA[
 				$product_info = $this->model_catalog_product->getProduct($product_id);
