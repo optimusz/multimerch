@@ -50,29 +50,7 @@
 		</operation>
 	</file>
 	
-	<!-- Disallow seller to buy his own products -->
-	<file name="system/library/cart.php">
-		<operation>
-			<search position="after"><![CDATA[
-				public function add
-			]]></search>
-			<add><![CDATA[
-				$res = $this->db->query("SELECT seller_id FROM " . DB_PREFIX . "ms_product WHERE product_id = " . (int)$product_id);
-				$seller_id = isset($res->row['seller_id']) ? (int)$res->row['seller_id'] : 0;
-				if (!$seller_id || $seller_id != (int)$this->customer->getId() || !$this->customer->isLogged()) {
-			]]></add>
-		</operation>
-		
-		<operation>
-			<search position="after" index="1"><![CDATA[
-				$this->data = array();
-			]]></search>
-			<add><![CDATA[
-				}
-			]]></add>
-		</operation>
-	</file>
-	
+
 	<!-- ************************ -->
 	<!-- ************************ -->
 	<!--       FRONT OFFICE       -->
@@ -494,20 +472,28 @@
 	<file name="catalog/controller/checkout/payment_method.php">
 		<operation>
 			<search position="after"><![CDATA[
-				$this->session->data['payment_methods'] = $method_data;
+			$this->session->data['payment_methods'] = $method_data;
 			]]></search>
 			<add><![CDATA[
-				$this->language->load('multiseller/multiseller');
-				if ($this->cart->hasProducts()) {
-					$products = $this->cart->getProducts();
-					
-					foreach ($products as $product) {
-						$id = $this->MsLoader->MsProduct->getSellerId($product['product_id']);
+			if($this->cart->hasProducts()){
+				$products = $this->cart->getProducts();
+				$sellers_id = array();
+				foreach($products as $product){
+					if(!in_array($this->MsLoader->MsProduct->getSellerId($product['product_id']),$sellers_id))
+					{
+						$sellers_id[] = $this->MsLoader->MsProduct->getSellerId($product['product_id']);
+						$sellers[] = $this->MsLoader->MsSeller->getSeller($this->MsLoader->MsProduct->getSellerId($product['product_id']));
+					}
+				}
+				
+				foreach($products as $product){
+						$id = $this->MsLoader->MsProduct->getSellerId($product['product_id']); 
 						if (!isset($sellers[$id])) $sellers[$id] = $this->MsLoader->MsSeller->getSeller($id);
 					}
-					
-					$this->session->data['sellers'] = $sellers;
 				}
+				
+				$this->session->data['sellers'] = $sellers;
+			}
 			]]></add>
 		</operation>
 
@@ -1069,6 +1055,23 @@
 				<?php if ($this->config->get('msconf_attribute_display') != 0 && $attribute_groups) { ?>
 			]]></add>
 		</operation>
+
+		<operation>
+			<search position="after" error="skip"><![CDATA[
+				if (json['error']) {
+			]]></search>
+			<add><![CDATA[
+				if (json['error']['seller']) {
+					$('#notification').html('<div class="warning" style="display: none;">' + json['error']['seller'] + '<img src="catalog/view/theme/default/image/close.png" alt="" class="close" /></div>');
+
+					$('.warning').fadeIn('slow');
+
+					$('html, body').animate({ scrollTop: 0 }, 'slow');
+				}
+			]]></add>
+		</operation>
+
+
 	</file>
 
 	<file name="catalog/controller/product/product.php">
@@ -1495,6 +1498,20 @@
 			]]></search>
 			<add><![CDATA[
 				'product_id' => $product['product_id'],
+			]]></add>
+		</operation>
+		<operation error="log">
+			<search position="after"><![CDATA[
+				$product_info = $this->model_catalog_product->getProduct($product_id);
+			]]></search>
+			<add><![CDATA[
+				$res = $this->db->query("SELECT seller_id FROM " . DB_PREFIX . "ms_product WHERE product_id = " . (int)$product_id);
+				$seller_id = isset($res->row['seller_id']) ? (int)$res->row['seller_id'] : 0;
+				if ($seller_id && $seller_id == (int)$this->customer->getId() && $this->customer->isLogged()) {
+					$this->load->language('multiseller/multiseller');
+					$product_info = false;
+					$json['error']['seller'] = $this->language->get('ms_error_seller_product');
+				}
 			]]></add>
 		</operation>
 	</file>
