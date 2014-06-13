@@ -279,6 +279,7 @@ $_['ms_error_invalid_quantity_discount_dates'] = 'Date fields for quantity disco
 $_['ms_error_invalid_special_price_priority'] = 'Error in priority field - please enter correct value';
 $_['ms_error_invalid_special_price_price'] = 'Invalid special price entered';
 $_['ms_error_invalid_special_price_dates'] = 'Date fields for special prices must be filled in';
+$_['ms_error_seller_product'] = 'You can\'t add your own product to cart';
 
 // Account - General
 $_['ms_account_unread_pm'] = 'You have unread private message';
