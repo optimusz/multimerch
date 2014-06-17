@@ -103,6 +103,9 @@
 				// note: renamed catalog
 				$lang = "view/javascript/multimerch/datatables/lang/" . $this->config->get('config_language') . ".txt";
 				$this->data['dt_language'] = file_exists(DIR_APPLICATION . $lang) ? "'catalog/$lang'" : "undefined";
+
+				// Add complemented common.js
+				$this->document->addScript('catalog/view/javascript/ms-common.js');
 			]]></add>
 		</operation>
 	</file>
@@ -1812,4 +1815,37 @@
 			]]></add>
 		</operation>
 	</file>
+
+	<!-- Modify addToCart -->
+	<file path="catalog/view/theme/default/template/product/" name="*.tpl" error="skip">
+		<operation>
+			<search position="replace"><![CDATA[
+			addToCart
+			]]></search>
+			<add><![CDATA[
+			ms_addToCart
+			]]></add>
+		</operation>
+	</file>
+	<file path="catalog/view/theme/&themeFolder;/template/module/" name="bestseller.tpl,featured.tpl,latest.tpl,special.tpl" error="skip">
+		<operation>
+			<search position="replace"><![CDATA[
+			addToCart
+			]]></search>
+			<add><![CDATA[
+			ms_addToCart
+			]]></add>
+		</operation>
+	</file>
+	<file path="catalog/view/theme/&themeFolder;/template/account/" name="wishlist.tpl" error="skip">
+		<operation>
+			<search position="replace"><![CDATA[
+			addToCart
+			]]></search>
+			<add><![CDATA[
+			ms_addToCart
+			]]></add>
+		</operation>
+	</file>
+
 </modification>
