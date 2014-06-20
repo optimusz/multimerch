@@ -300,6 +300,7 @@ $_['ms_account_products'] = 'Products';
 $_['ms_account_transactions'] = 'Transactions';
 $_['ms_account_orders'] = 'Orders';
 $_['ms_account_withdraw'] = 'Request payout';
+$_['ms_account_stats'] = 'Statistics';
 $_['ms_account_badges'] = 'Badges';
 $_['ms_account_badges_nobadges'] = 'No badges yet';
 
@@ -607,6 +608,36 @@ $_['ms_account_withdraw_all'] = 'All earnings currently available';
 $_['ms_account_withdraw_minimum_not_reached'] = 'Your total balance is less than the minimum payout amount!';
 $_['ms_account_withdraw_no_funds'] = 'No funds to withdraw.';
 $_['ms_account_withdraw_no_paypal'] = 'Please <a href="index.php?route=seller/account-profile">specify your PayPal address</a> first!';
+
+// Account - Stats
+$_['ms_account_stats_heading'] = 'Statistics';
+$_['ms_account_stats_breadcrumbs'] = 'Statistics';
+$_['ms_account_stats_tab_summary'] = 'Summary';
+$_['ms_account_stats_tab_by_product'] = 'By Product';
+$_['ms_account_stats_tab_by_year'] = 'By Year';
+$_['ms_account_stats_summary_comment'] = 'Below is a summary of your sales';
+$_['ms_account_stats_sales_data'] = 'Sales data';
+$_['ms_account_stats_number_of_orders'] = 'Number of orders';
+$_['ms_account_stats_total_revenue'] = 'Total revenue';
+$_['ms_account_stats_average_order'] = 'Average order';
+$_['ms_account_stats_statistics'] = 'Statistics';
+$_['ms_account_stats_grand_total'] = 'Grand total sales';
+$_['ms_account_stats_product'] = 'Product';
+$_['ms_account_stats_sold'] = 'Sold';
+$_['ms_account_stats_total'] = 'Total';
+$_['ms_account_stats_this_year'] = 'This Year';
+$_['ms_account_stats_year_comment'] = '<span id="sales_num">%s</span> Sale(s) for specified period';
+$_['ms_account_stats_show_orders'] = 'Show Orders From: ';
+$_['ms_account_stats_month'] = 'Month';
+$_['ms_account_stats_num_of_orders'] = 'Number of orders';
+$_['ms_account_stats_total_r'] = 'Total revenue';
+$_['ms_account_stats_average_order'] = 'Average order';
+$_['ms_account_stats_today'] = 'Today, ';
+$_['ms_account_stats_yesterday'] = 'Yesterday, ';
+$_['ms_account_stats_daily_average'] = 'Daily average for ';
+$_['ms_account_stats_date_month_format'] = 'F Y';
+$_['ms_account_stats_projected_totals'] = 'Projected totals for ';
+$_['ms_account_stats_grand_total_sales'] = 'Grand total sales';
 
 // Product page - Seller information
 $_['ms_catalog_product_sellerinfo'] = 'Seller information';

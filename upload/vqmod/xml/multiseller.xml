@@ -641,6 +641,14 @@
 										</a>
 									</li>
 								<?php } ?>
+									<li>
+										<a href="<?php echo $this->url->link('seller/account-stats', '', 'SSL'); ?>">
+											<?php if($this->config->get('msconf_graphical_sellermenu')) { ?>
+												<img src="catalog/view/theme/<?php echo $this->config->get('config_template'); ?>/image/ms-stats-96.png" />
+											<?php } ?>
+											<?php echo $ms_account_stats; ?>
+										</a>
+									</li>
 							<?php } ?>
 					</ul>
 				</div>
@@ -699,6 +707,7 @@
 					<?php if ($this->config->get('msconf_allow_withdrawal_requests')) { ?>
 					<li><a href="<?php echo $this->url->link('seller/account-withdrawal', '', 'SSL'); ?>"><?php echo $ms_account_withdraw; ?></a></li>
 					<?php } ?>
+					<li><a href="<?php echo $this->url->link('seller/account-stats', '', 'SSL'); ?>"><?php echo $ms_account_stats; ?></a></li>
 				<?php } ?>
 			]]></add>
 		</operation>

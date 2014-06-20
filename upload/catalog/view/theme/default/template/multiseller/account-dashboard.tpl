@@ -109,6 +109,11 @@
 			<span><?php echo $ms_account_dashboard_nav_payout; ?></span>
 		</a>
 		<?php } ?>
+		
+		<a href="<?php echo $this->url->link('seller/account-stats', '', 'SSL'); ?>">
+			<img src="catalog/view/theme/<?php echo $this->config->get('config_template'); ?>/image/ms-stats.png" />
+			<span><?php echo $ms_account_stats; ?></span>
+		</a>
 	</div>
 	
 	<h2><?php echo $ms_account_dashboard_orders; ?></h2>
