@@ -203,7 +203,7 @@ class MsOrderData extends Model {
 
 		$this->db->query($sql);
 
-		$order_comment_id = mysql_insert_id();
+		$order_comment_id = $this->db->getLastId();
 		return $order_comment_id;
 	}
 	
