@@ -155,9 +155,7 @@
 
 <script>
 	$(function() {
-
 		$('#tabs a').tabs();
-
 
 		$('#table-summary-1').dataTable( {
 			"aoColumns": [
@@ -214,21 +212,19 @@
 
 	});
 
-		$("#year_select").on("change", function(){
-			year = $(this).val();
-			window.table_year.fnSettings().sAjaxSource = "index.php?route=seller/account-stats/getByYearData&year=" + year;
-			window.table_year.fnClearTable();
+	$("#year_select").on("change", function(){
+		year = $(this).val();
+		window.table_year.fnSettings().sAjaxSource = "index.php?route=seller/account-stats/getByYearData&year=" + year;
+		window.table_year.fnClearTable();
 
-			window.table_year_total.fnSettings().sAjaxSource = "index.php?route=seller/account-stats/getTotalByYear&year=" + year;
-			window.table_year_total.fnClearTable();
+		window.table_year_total.fnSettings().sAjaxSource = "index.php?route=seller/account-stats/getTotalByYear&year=" + year;
+		window.table_year_total.fnClearTable();
 
-			$.getJSON("index.php?route=seller/account-stats/getSalesByYear&year=" + year, function(data){
-				$("#sales_num").text(data.sales);
-			});
-
+		$.getJSON("index.php?route=seller/account-stats/getSalesByYear&year=" + year, function(data){
+			$("#sales_num").text(data.sales);
 		});
 
-
+	});
 
 
 </script>

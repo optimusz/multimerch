@@ -6,12 +6,19 @@ class ModelMultisellerSettings extends Model {
 	}
 	public function checkDbVersion($version) {
 		switch ($version) {
-            case "5.1":
-                $res = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . "ms_version'");
-                if ($res->num_rows) {
-                    $res = $this->db->query("SELECT version FROM `" . DB_PREFIX . "ms_version` WHERE version >= '5.1'");
-                }
-                break;
+			case "5.2":
+				$res = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . "ms_version'");
+				if ($res->num_rows) {
+					$res = $this->db->query("SELECT version FROM `" . DB_PREFIX . "ms_version` WHERE version >= '5.2'");
+				}
+				break;
+							
+			case "5.1":
+				$res = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . "ms_version'");
+				if ($res->num_rows) {
+					$res = $this->db->query("SELECT version FROM `" . DB_PREFIX . "ms_version` WHERE version >= '5.1'");
+				}
+				break;
 
 			case "5.0":
 				$res = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . "ms_version'");
@@ -74,20 +81,24 @@ class ModelMultisellerSettings extends Model {
 	public function update($version) {
 		if (!$this->checkDbVersion($version)) {
 			switch ($version) {
-                case "5.1":
-                    $this->db->query("INSERT INTO " . DB_PREFIX . "ms_version (version, distribution) VALUES('5.1','" . $this->MsLoader->dist ."')");
+				case "5.2":
+					$this->db->query("INSERT INTO " . DB_PREFIX . "ms_version (version, distribution) VALUES('5.2','" . $this->MsLoader->dist ."')");
+					break;
 
-                    $sql = "
-                        CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "ms_order_comment` (
-                        `order_comment_id` int(11) NOT NULL AUTO_INCREMENT,
-                        `order_id` int(11) NOT NULL,
-                        `product_id` int(11) NOT NULL,
-                        `seller_id` int(11) NOT NULL,
-                        `comment` text NOT NULL,
-                        PRIMARY KEY (`order_comment_id`)
-                        ) DEFAULT CHARSET=utf8";
-                    $this->db->query($sql);
-                    break;
+				case "5.1":
+					$this->db->query("INSERT INTO " . DB_PREFIX . "ms_version (version, distribution) VALUES('5.1','" . $this->MsLoader->dist ."')");
+
+					$sql = "
+						CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "ms_order_comment` (
+						`order_comment_id` int(11) NOT NULL AUTO_INCREMENT,
+						`order_id` int(11) NOT NULL,
+						`product_id` int(11) NOT NULL,
+						`seller_id` int(11) NOT NULL,
+						`comment` text NOT NULL,
+						PRIMARY KEY (`order_comment_id`)
+						) DEFAULT CHARSET=utf8";
+					$this->db->query($sql);
+					break;
 
 				case "5.0":
 					$this->db->query("INSERT INTO " . DB_PREFIX . "ms_version (version, distribution) VALUES('5.0','" . $this->MsLoader->dist ."')");
@@ -667,16 +678,16 @@ class ModelMultisellerSettings extends Model {
 			PRIMARY KEY (`message_id`)) default CHARSET=utf8";
 		$this->db->query($sql);
 
-        $sql = "
-            CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "ms_order_comment` (
-            `order_comment_id` int(11) NOT NULL AUTO_INCREMENT,
-            `order_id` int(11) NOT NULL,
-            `product_id` int(11) NOT NULL,
-            `seller_id` int(11) NOT NULL,
-            `comment` text NOT NULL,
-            PRIMARY KEY (`order_comment_id`)
-            ) DEFAULT CHARSET=utf8";
-        $this->db->query($sql);
+		$sql = "
+			CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "ms_order_comment` (
+			`order_comment_id` int(11) NOT NULL AUTO_INCREMENT,
+			`order_id` int(11) NOT NULL,
+			`product_id` int(11) NOT NULL,
+			`seller_id` int(11) NOT NULL,
+			`comment` text NOT NULL,
+			PRIMARY KEY (`order_comment_id`)
+			) DEFAULT CHARSET=utf8";
+		$this->db->query($sql);
 	}
 	
 	public function addData() {
