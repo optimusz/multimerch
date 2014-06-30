@@ -78,8 +78,9 @@ class ControllerModuleMsComments extends Controller {
 	}
 	
 	public function renderForm() {
-		if (!$this->config->get('msconf_comments_enable')) return;
-		
+		if (!isset($this->request->get['seller_id']) && !$this->config->get('msconf_comments_enable')) return;
+		if (isset($this->request->get['seller_id']) && !$this->config->get('msconf_seller_comments_enable')) return;
+
 		$product_id = isset($this->request->get['product_id']) ? (int)$this->request->get['product_id'] : 0;
 		$seller_id = isset($this->request->get['seller_id']) ? (int)$this->request->get['seller_id'] : 0;
 		if  (!$product_id && !$seller_id) return;
