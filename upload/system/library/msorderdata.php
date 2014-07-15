@@ -191,6 +191,9 @@ class MsOrderData extends Model {
 		$this->db->query($sql);
 		
 		$order_product_data_id = $this->db->getLastId();
+
+		$this->db->query("INSERT INTO " . DB_PREFIX . "ms_suborder (order_id, customer_id, order_status_id) VALUES (" . (int)$order_id . ", " . (int)$data['seller_id'] . ", 1)");
+
 		return $order_product_data_id;
 	}
 

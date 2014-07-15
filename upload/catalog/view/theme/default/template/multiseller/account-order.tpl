@@ -19,6 +19,7 @@
 				<td><?php echo $ms_account_orders_products; ?></td>
 				<td class="medium"><?php echo $ms_date_created; ?></td>
 				<td class="small"><?php echo $ms_account_orders_total; ?></td>
+				<td class="small">View Order</td>
 			</tr>
 			<tr class="filter">
 				<td><input type="text"/></td>
@@ -26,6 +27,7 @@
 				<td><input type="text"/></td>
 				<td><input type="text"/></td>
 				<td><input type="text"/></td>
+				<td></td>
 			</tr>
 		</thead>
 		
@@ -52,7 +54,8 @@
 				{ "mData": "customer_name" },
 				{ "mData": "products", "bSortable": false, "sClass": "products" },
 				{ "mData": "date_created" },
-				{ "mData": "total_amount" }
+				{ "mData": "total_amount" },
+				{ "mData": "view_order" }
 			],
             "aaSorting":  [[4,'desc']]
 		});

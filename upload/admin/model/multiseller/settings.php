@@ -6,6 +6,13 @@ class ModelMultisellerSettings extends Model {
 	}
 	public function checkDbVersion($version) {
 		switch ($version) {
+			case "5.3":
+				$res = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . "ms_version'");
+				if ($res->num_rows) {
+					$res = $this->db->query("SELECT version FROM `" . DB_PREFIX . "ms_version` WHERE version >= '5.3'");
+				}
+				break;
+
 			case "5.2":
 				$res = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . "ms_version'");
 				if ($res->num_rows) {
@@ -81,6 +88,20 @@ class ModelMultisellerSettings extends Model {
 	public function update($version) {
 		if (!$this->checkDbVersion($version)) {
 			switch ($version) {
+				case "5.3":
+					$this->db->query("INSERT INTO " . DB_PREFIX . "ms_version (version, distribution) VALUES('5.3','" . $this->MsLoader->dist ."')");
+
+					$sql = "
+						CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "ms_suborder` (
+						`suborder_id` int(11) NOT NULL AUTO_INCREMENT,
+						`order_id` int(11) NOT NULL,
+						`customer_id` int(11) NOT NULL,
+						`order_status_id` int(11) NOT NULL,
+						PRIMARY KEY (`suborder_id`)
+						) DEFAULT CHARSET=utf8";
+					$this->db->query($sql);
+					break;
+
 				case "5.2":
 					$this->db->query("INSERT INTO " . DB_PREFIX . "ms_version (version, distribution) VALUES('5.2','" . $this->MsLoader->dist ."')");
 					break;
@@ -688,6 +709,16 @@ class ModelMultisellerSettings extends Model {
 			PRIMARY KEY (`order_comment_id`)
 			) DEFAULT CHARSET=utf8";
 		$this->db->query($sql);
+
+		$sql = "
+			CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "ms_suborder` (
+			`suborder_id` int(11) NOT NULL AUTO_INCREMENT,
+			`order_id` int(11) NOT NULL,
+			`customer_id` int(11) NOT NULL,
+			`order_status_id` int(11) NOT NULL,
+			PRIMARY KEY (`suborder_id`)
+			) DEFAULT CHARSET=utf8";
+		$this->db->query($sql);
 	}
 	
 	public function addData() {
@@ -758,6 +789,7 @@ class ModelMultisellerSettings extends Model {
 				`" . DB_PREFIX . "ms_badge_seller_group`,
 				`" . DB_PREFIX . "ms_conversation`,
 				`" . DB_PREFIX . "ms_message`,
+				`" . DB_PREFIX . "ms_suborder`,
 				`" . DB_PREFIX . "ms_version`";
 				
 		$this->db->query($sql);
