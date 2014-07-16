@@ -12,13 +12,13 @@ class ModelLocalisationOrderStatus extends Model {
 	}
 
 	public function getSuborderStatusId($order_id, $seller_id) {
-		$query = $this->db->query("SELECT `order_status_id` FROM " . DB_PREFIX . "ms_suborder WHERE `order_id` = " . $order_id . " AND `customer_id` = " . (int)$seller_id);
+		$query = $this->db->query("SELECT `order_status_id` FROM " . DB_PREFIX . "ms_suborder WHERE `order_id` = " . $order_id . " AND `seller_id` = " . (int)$seller_id);
 
 		return isset($query->row['order_status_id']) ? $query->row['order_status_id'] : 1;
 	}
 
 	public function getSuborderId($order_id) {
-		$query = $this->db->query("SELECT `suborder_id` FROM " . DB_PREFIX . "ms_suborder WHERE `order_id` = " . $order_id . " AND `customer_id` = " . (int)$this->customer->getId());
+		$query = $this->db->query("SELECT `suborder_id` FROM " . DB_PREFIX . "ms_suborder WHERE `order_id` = " . $order_id . " AND `seller_id` = " . (int)$this->customer->getId());
 
 		return $query->row['suborder_id'];
 	}
