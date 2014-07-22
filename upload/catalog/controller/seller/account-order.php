@@ -123,58 +123,26 @@ class ControllerSellerAccountOrder extends ControllerSellerAccount {
 		if ($order_info) {
 			$this->document->setTitle($this->language->get('text_order'));
 
-			$this->data['breadcrumbs'] = array();
-
-			$this->data['breadcrumbs'][] = array(
-				'text'      => $this->language->get('text_home'),
-				'href'      => $this->url->link('common/home'),        	
-				'separator' => false
-			); 
-
-			$this->data['breadcrumbs'][] = array(
-				'text'      => $this->language->get('text_account'),
-				'href'      => $this->url->link('account/account', '', 'SSL'),        	
-				'separator' => $this->language->get('text_separator')
-			);
-
-			$url = '';
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
-
-			$this->data['breadcrumbs'][] = array(
-				'text'      => $this->language->get('heading_title'),
-				'href'      => $this->url->link('account/order', $url, 'SSL'),      	
-				'separator' => $this->language->get('text_separator')
-			);
-
-			$this->data['breadcrumbs'][] = array(
-				'text'      => $this->language->get('text_order'),
-				'href'      => $this->url->link('account/order/info', 'order_id=' . $this->request->get['order_id'] . $url, 'SSL'),
-				'separator' => $this->language->get('text_separator')
-			);
-
 			$this->data['heading_title'] = $this->language->get('text_order');
 
 			$this->data['text_order_detail'] = $this->language->get('text_order_detail');
-			$this->data['text_invoice_no'] = $this->language->get('text_invoice_no');
+			// $this->data['text_invoice_no'] = $this->language->get('text_invoice_no');
 			$this->data['text_order_id'] = $this->language->get('text_order_id');
 			$this->data['text_date_added'] = $this->language->get('text_date_added');
-			$this->data['text_shipping_method'] = $this->language->get('text_shipping_method');
-			$this->data['text_shipping_address'] = $this->language->get('text_shipping_address');
+			// $this->data['text_shipping_method'] = $this->language->get('text_shipping_method');
+			// $this->data['text_shipping_address'] = $this->language->get('text_shipping_address');
 			$this->data['text_payment_method'] = $this->language->get('text_payment_method');
 			$this->data['text_payment_address'] = $this->language->get('text_payment_address');
 			$this->data['text_history'] = $this->language->get('text_history');
-			$this->data['text_comment'] = $this->language->get('text_comment');
+			// $this->data['text_comment'] = $this->language->get('text_comment');
 
 			$this->data['column_name'] = $this->language->get('column_name');
 			$this->data['column_model'] = $this->language->get('column_model');
 			$this->data['column_quantity'] = $this->language->get('column_quantity');
 			$this->data['column_price'] = $this->language->get('column_price');
 			$this->data['column_total'] = $this->language->get('column_total');
-			$this->data['column_action'] = $this->language->get('column_action');
-			$this->data['column_date_added'] = $this->language->get('column_date_added');
+			// $this->data['column_action'] = $this->language->get('column_action');
+			// $this->data['column_date_added'] = $this->language->get('column_date_added');
 			$this->data['column_status'] = $this->language->get('column_status');
 			$this->data['column_comment'] = $this->language->get('column_comment');
 
@@ -351,32 +319,6 @@ class ControllerSellerAccountOrder extends ControllerSellerAccount {
 			$this->data['text_error'] = $this->language->get('text_error');
 
 			$this->data['button_continue'] = $this->language->get('button_continue');
-
-			$this->data['breadcrumbs'] = array();
-
-			$this->data['breadcrumbs'][] = array(
-				'text'      => $this->language->get('text_home'),
-				'href'      => $this->url->link('common/home'),
-				'separator' => false
-			);
-
-			$this->data['breadcrumbs'][] = array(
-				'text'      => $this->language->get('text_account'),
-				'href'      => $this->url->link('account/account', '', 'SSL'),
-				'separator' => $this->language->get('text_separator')
-			);
-
-			$this->data['breadcrumbs'][] = array(
-				'text'      => $this->language->get('heading_title'),
-				'href'      => $this->url->link('account/order', '', 'SSL'),
-				'separator' => $this->language->get('text_separator')
-			);
-
-			$this->data['breadcrumbs'][] = array(
-				'text'      => $this->language->get('text_order'),
-				'href'      => $this->url->link('account/order/info', 'order_id=' . $order_id, 'SSL'),
-				'separator' => $this->language->get('text_separator')
-			);
 
 			$this->data['continue'] = $this->url->link('account/order', '', 'SSL');
 
