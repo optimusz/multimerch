@@ -1948,5 +1948,16 @@
 			]]></add>
 		</operation>
 	</file>
+	<file name="catalog/language/english/account/order.php" error="skip">
+		<operation>
+			<search position="after"><![CDATA[
+				$_['text_error']            = 'The order you requested could not be found!';
+			]]></search>
+			<add><![CDATA[
+				$_['text_change_status']    = 'Change suborder status';
+				$_['text_submit_status']    = 'Submit';
+			]]></add>
+		</operation>
+	</file>
 
 </modification>

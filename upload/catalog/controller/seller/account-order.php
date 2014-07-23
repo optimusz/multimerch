@@ -134,7 +134,7 @@ class ControllerSellerAccountOrder extends ControllerSellerAccount {
 			$this->data['text_payment_method'] = $this->language->get('text_payment_method');
 			$this->data['text_payment_address'] = $this->language->get('text_payment_address');
 			$this->data['text_history'] = $this->language->get('text_history');
-			// $this->data['text_comment'] = $this->language->get('text_comment');
+			$this->data['text_comment'] = $this->language->get('text_comment');
 
 			$this->data['column_name'] = $this->language->get('column_name');
 			$this->data['column_model'] = $this->language->get('column_model');
@@ -142,12 +142,14 @@ class ControllerSellerAccountOrder extends ControllerSellerAccount {
 			$this->data['column_price'] = $this->language->get('column_price');
 			$this->data['column_total'] = $this->language->get('column_total');
 			// $this->data['column_action'] = $this->language->get('column_action');
-			// $this->data['column_date_added'] = $this->language->get('column_date_added');
+			$this->data['column_date_added'] = $this->language->get('column_date_added');
 			$this->data['column_status'] = $this->language->get('column_status');
 			$this->data['column_comment'] = $this->language->get('column_comment');
 
 			$this->data['button_return'] = $this->language->get('button_return');
 			$this->data['button_continue'] = $this->language->get('button_continue');
+			$this->data['text_change_status'] = $this->language->get('text_change_status');
+			$this->data['text_submit_status'] = $this->language->get('text_submit_status');
 
 			if ($order_info['invoice_no']) {
 				$this->data['invoice_no'] = $order_info['invoice_prefix'] . $order_info['invoice_no'];

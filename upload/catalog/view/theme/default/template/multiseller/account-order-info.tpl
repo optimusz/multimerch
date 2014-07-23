@@ -101,7 +101,7 @@
   <?php } ?>
   <table class="list">
     <tr>
-      <td>Change suborder status</td>
+      <td><?= $text_change_status ?></td>
       <td>
         <form method="POST" action="<?= $redirect ?>">
           <select name="order_status_edit">
@@ -113,7 +113,7 @@
                 <?php } ?>
               <?php } ?>
           </select>
-            <button>Submit</button>
+            <button><?= $text_submit_status ?></button>
         </form>
     </td>
     </tr>
