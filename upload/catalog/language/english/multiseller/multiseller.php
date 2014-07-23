@@ -51,7 +51,7 @@ $_['ms_transaction_listing'] = 'Product listing: %s (%s)';
 $_['ms_transaction_signup']      = 'Signup fee at %s';
 $_['ms_request_submitted'] = 'Your request is submitted';
 
-$_['ms_totals_line'] = 'Currently %s sellers and %s products for sale!';
+$_['ms_totals_line'] = 'Curnently %s sellers and %s products for sale!';
 
 $_['ms_text_welcome'] = '<a href="%s">Login</a> | <a href="%s">Create an account</a> | <a href="%s">Create a seller account</a>.';
 $_['ms_button_register_seller'] = 'Register as a seller';
@@ -558,6 +558,7 @@ $_['ms_account_orders_id'] = 'Order #';
 $_['ms_account_orders_customer'] = 'Customer';
 $_['ms_account_orders_products'] = 'Products';
 $_['ms_account_orders_total'] = 'Total amount';
+$_['ms_account_orders_view'] = 'View order';
 $_['ms_account_orders_noorders'] = 'You don\'t have any orders yet!';
 
 // Account - Dashboard

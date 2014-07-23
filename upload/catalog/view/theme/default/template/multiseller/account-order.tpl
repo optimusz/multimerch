@@ -19,7 +19,7 @@
 				<td><?php echo $ms_account_orders_products; ?></td>
 				<td class="medium"><?php echo $ms_date_created; ?></td>
 				<td class="small"><?php echo $ms_account_orders_total; ?></td>
-				<td class="small">View Order</td>
+				<td class="small"><?php echo $ms_account_orders_view; ?></td>
 			</tr>
 			<tr class="filter">
 				<td><input type="text"/></td>

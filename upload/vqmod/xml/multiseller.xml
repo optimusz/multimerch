@@ -1706,6 +1706,7 @@
 			<add><![CDATA[
 			<?php
 				$this->load->language('multiseller/multiseller');
+				//$this->data = array_merge($this->data, $this->load->language('multiseller/multiseller'));
 				$seller = $this->MsLoader->MsSeller->getSeller($this->MsLoader->MsProduct->getSellerId($product['product_id']));
 				if ($seller) {
 					echo "<span class='ms-by-seller'>" . $this->language->get('ms_by') . " <a href='". $this->url->link('seller/catalog-seller/profile', 'seller_id=' . $seller['seller_id']) ."'>{$seller['ms.nickname']}</a>";
@@ -1733,7 +1734,7 @@
 				<td class="left"><?php echo $column_model; ?></td>
 			]]></search>
 			<add><![CDATA[
-				<td>Suborder Status</td>
+				<td><?php echo $this->language->get('ms_status'); ?></td>
 			]]></add>
 		</operation>
 	</file>
