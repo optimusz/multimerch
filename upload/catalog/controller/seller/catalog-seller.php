@@ -219,129 +219,142 @@ class ControllerSellerCatalogSeller extends ControllerSellerCatalog {
 			return;
 		}
 
-		if ($this->config->get('msconf_seller_comments_enable')) {
-			$this->document->addScript('catalog/view/javascript/ms-comments.js');
-		
-			if(file_exists('catalog/view/theme/'.$this->config->get('config_template').'/stylesheet/ms-comments.css')){
-				$this->document->addStyle("catalog/view/theme/" . $this->config->get('config_template') . "/stylesheet/ms-comments.css");
-			} else {
-				$this->document->addStyle("catalog/view/theme/default/stylesheet/ms-comments.css");
-			}
-		}
-		
-		$this->document->addScript('catalog/view/javascript/dialog-sellercontact.js');
+		$seller_id = $this->request->get['seller_id'];
 
-		if ($seller['ms.avatar'] && file_exists(DIR_IMAGE . $seller['ms.avatar'])) {
-			$image = $this->MsLoader->MsFile->resizeImage($seller['ms.avatar'], $this->config->get('msconf_seller_avatar_seller_profile_image_width'), $this->config->get('msconf_seller_avatar_seller_profile_image_height'));
-		} else {
-			$image = $this->MsLoader->MsFile->resizeImage('ms_no_image.jpg', $this->config->get('msconf_seller_avatar_seller_profile_image_width'), $this->config->get('msconf_seller_avatar_seller_profile_image_height'));
-		}
+		//var_dump($this->cache->get('seller' . $seller_id)); die();
+
+		if(empty($this->cache->get('seller' . $seller_id))) {
 		
-		$this->data['seller']['nickname'] = $seller['ms.nickname'];
-		$this->data['seller']['seller_id'] = $seller['seller_id'];
-		$this->data['seller']['description'] = html_entity_decode($seller['ms.description'], ENT_QUOTES, 'UTF-8');
-		$this->data['seller']['thumb'] = $image;
-		$this->data['seller']['href'] = $this->url->link('seller/catalog-seller/products', 'seller_id=' . $seller['seller_id']);
+			if ($this->config->get('msconf_seller_comments_enable')) {
+				$this->document->addScript('catalog/view/javascript/ms-comments.js');
+			
+				if(file_exists('catalog/view/theme/'.$this->config->get('config_template').'/stylesheet/ms-comments.css')){
+					$this->document->addStyle("catalog/view/theme/" . $this->config->get('config_template') . "/stylesheet/ms-comments.css");
+				} else {
+					$this->document->addStyle("catalog/view/theme/default/stylesheet/ms-comments.css");
+				}
+			}
+			
+			$this->document->addScript('catalog/view/javascript/dialog-sellercontact.js');
+
+			if ($seller['ms.avatar'] && file_exists(DIR_IMAGE . $seller['ms.avatar'])) {
+				$image = $this->MsLoader->MsFile->resizeImage($seller['ms.avatar'], $this->config->get('msconf_seller_avatar_seller_profile_image_width'), $this->config->get('msconf_seller_avatar_seller_profile_image_height'));
+			} else {
+				$image = $this->MsLoader->MsFile->resizeImage('ms_no_image.jpg', $this->config->get('msconf_seller_avatar_seller_profile_image_width'), $this->config->get('msconf_seller_avatar_seller_profile_image_height'));
+			}
+			
+			$this->data['seller']['nickname'] = $seller['ms.nickname'];
+			$this->data['seller']['seller_id'] = $seller['seller_id'];
+			$this->data['seller']['description'] = html_entity_decode($seller['ms.description'], ENT_QUOTES, 'UTF-8');
+			$this->data['seller']['thumb'] = $image;
+			$this->data['seller']['href'] = $this->url->link('seller/catalog-seller/products', 'seller_id=' . $seller['seller_id']);
+			
+			
+			$country = $this->model_localisation_country->getCountry($seller['ms.country_id']);
+			
+			if (!empty($country)) {			
+				$this->data['seller']['country'] = $country['name'];
+			} else {
+				$this->data['seller']['country'] = NULL;
+			}
+			
+			if (!empty($seller['ms.company'])) {
+				$this->data['seller']['company'] = $seller['ms.company'];
+			} else {
+				$this->data['seller']['company'] = NULL;
+			}
+			
+			if (!empty($seller['ms.website'])) {
+				$this->data['seller']['website'] = $seller['ms.website'];
+			} else {
+				$this->data['seller']['website'] = NULL;
+			}
+			
+			$this->data['seller']['total_sales'] = $this->MsLoader->MsSeller->getSalesForSeller($seller['seller_id']);
+			$this->data['seller']['total_products'] = $this->MsLoader->MsProduct->getTotalProducts(array(
+				'seller_id' => $seller['seller_id'],
+				'product_status' => array(MsProduct::STATUS_ACTIVE)
+			));
+					
+			$products = $this->MsLoader->MsProduct->getProducts(
+				array(
+					'seller_id' => $seller['seller_id'],
+					'language_id' => $this->config->get('config_language_id'),
+					'product_status' => array(MsProduct::STATUS_ACTIVE)
+				),
+				array(
+					'order_by'	=> 'pd.name',
+					'order_way'	=> 'ASC',
+					'offset'	=> 0,
+					'limit'		=> 5
+				)
+			);
+
+			// badges
+			$badges = array_unique(array_merge(
+				$this->MsLoader->MsBadge->getSellerGroupBadges(array('seller_id' => $seller['seller_id'], 'language_id' => $this->config->get('config_language_id'))),
+				$this->MsLoader->MsBadge->getSellerGroupBadges(array('seller_group_id' => $seller['ms.seller_group'], 'language_id' => $this->config->get('config_language_id'))),
+				$this->MsLoader->MsBadge->getSellerGroupBadges(array('seller_group_id' => $this->config->get('msconf_default_seller_group_id'), 'language_id' => $this->config->get('config_language_id')))
+			), SORT_REGULAR);		
+			
+			foreach ($badges as &$badge) {
+				$badge['image'] = $this->model_tool_image->resize($badge['image'], $this->config->get('msconf_badge_width'), $this->config->get('msconf_badge_height'));
+			}
+			$this->data['seller']['badges'] = $badges;
+
+			if (!empty($products)) {
+				foreach ($products as $product) {
+					$product_data = $this->model_catalog_product->getProduct($product['product_id']);
+					if ($product_data['image'] && file_exists(DIR_IMAGE . $product_data['image'])) {
+						$image = $this->MsLoader->MsFile->resizeImage($product_data['image'], $this->config->get('msconf_product_seller_profile_image_width'), $this->config->get('msconf_product_seller_profile_image_height'));
+					} else {
+						$image = $this->MsLoader->MsFile->resizeImage('no_image.jpg', $this->config->get('msconf_product_seller_profile_image_width'), $this->config->get('msconf_product_seller_profile_image_height'));
+					}
+
+					if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
+						$price = $this->currency->format($this->tax->calculate($product_data['price'], $product_data['tax_class_id'], $this->config->get('config_tax')));
+					} else {
+						$price = false;
+					}
+							
+					if ((float)$product_data['special']) {
+						$special = $this->currency->format($this->tax->calculate($product_data['special'], $product_data['tax_class_id'], $this->config->get('config_tax')));
+					} else {
+						$special = false;
+					}
+					
+					if ($this->config->get('config_review_status')) {
+						$rating = $product_data['rating'];
+					} else {
+						$rating = false;
+					}
+								
+					$this->data['seller']['products'][] = array(
+						'product_id' => $product['product_id'],				
+						'thumb' => $image,
+						'name' => $product_data['name'],
+						'price' => $price,
+						'special' => $special,
+						'rating' => $rating,
+						'reviews'    => sprintf($this->language->get('text_reviews'), (int)$product_data['reviews']),
+						'href'    	 => $this->url->link('product/product', 'product_id=' . $product_data['product_id']),						
+					);				
+				}
+			} else {
+				$this->data['seller']['products'] = NULL;
+			}
+
+			$this->cache->set('seller' . $seller_id, $this->data['seller']);
+		} else {
+			$this->data['seller'] = $this->cache->get('seller' . $seller_id);
+		}
+
 		$this->data['seller_id'] = $this->request->get['seller_id'];
 		$this->data['avg_overall'] = round((float)$rate['avg_overall'], 2);
 		$this->data['avg_communication'] = round((float)$rate['avg_communication'], 2);
 		$this->data['avg_honesty'] = round((float)$rate['avg_honesty'], 2);
 		$this->data['total_votes'] =  count($rate['rows']);
 		$this->data['href_ratings'] = $this->url->link('seller/catalog-seller/ratings', 'seller_id=' . $seller['seller_id'], 'SSL');
-		
-		$country = $this->model_localisation_country->getCountry($seller['ms.country_id']);
-		
-		if (!empty($country)) {			
-			$this->data['seller']['country'] = $country['name'];
-		} else {
-			$this->data['seller']['country'] = NULL;
-		}
-		
-		if (!empty($seller['ms.company'])) {
-			$this->data['seller']['company'] = $seller['ms.company'];
-		} else {
-			$this->data['seller']['company'] = NULL;
-		}
-		
-		if (!empty($seller['ms.website'])) {
-			$this->data['seller']['website'] = $seller['ms.website'];
-		} else {
-			$this->data['seller']['website'] = NULL;
-		}
-		
-		$this->data['seller']['total_sales'] = $this->MsLoader->MsSeller->getSalesForSeller($seller['seller_id']);
-		$this->data['seller']['total_products'] = $this->MsLoader->MsProduct->getTotalProducts(array(
-			'seller_id' => $seller['seller_id'],
-			'product_status' => array(MsProduct::STATUS_ACTIVE)
-		));
-				
-		$products = $this->MsLoader->MsProduct->getProducts(
-			array(
-				'seller_id' => $seller['seller_id'],
-				'language_id' => $this->config->get('config_language_id'),
-				'product_status' => array(MsProduct::STATUS_ACTIVE)
-			),
-			array(
-				'order_by'	=> 'pd.name',
-				'order_way'	=> 'ASC',
-				'offset'	=> 0,
-				'limit'		=> 5
-			)
-		);
-
-		// badges
-		$badges = array_unique(array_merge(
-			$this->MsLoader->MsBadge->getSellerGroupBadges(array('seller_id' => $seller['seller_id'], 'language_id' => $this->config->get('config_language_id'))),
-			$this->MsLoader->MsBadge->getSellerGroupBadges(array('seller_group_id' => $seller['ms.seller_group'], 'language_id' => $this->config->get('config_language_id'))),
-			$this->MsLoader->MsBadge->getSellerGroupBadges(array('seller_group_id' => $this->config->get('msconf_default_seller_group_id'), 'language_id' => $this->config->get('config_language_id')))
-		), SORT_REGULAR);		
-		
-		foreach ($badges as &$badge) {
-			$badge['image'] = $this->model_tool_image->resize($badge['image'], $this->config->get('msconf_badge_width'), $this->config->get('msconf_badge_height'));
-		}
-		$this->data['seller']['badges'] = $badges;
-
-		if (!empty($products)) {
-			foreach ($products as $product) {
-				$product_data = $this->model_catalog_product->getProduct($product['product_id']);
-				if ($product_data['image'] && file_exists(DIR_IMAGE . $product_data['image'])) {
-					$image = $this->MsLoader->MsFile->resizeImage($product_data['image'], $this->config->get('msconf_product_seller_profile_image_width'), $this->config->get('msconf_product_seller_profile_image_height'));
-				} else {
-					$image = $this->MsLoader->MsFile->resizeImage('no_image.jpg', $this->config->get('msconf_product_seller_profile_image_width'), $this->config->get('msconf_product_seller_profile_image_height'));
-				}
-
-				if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
-					$price = $this->currency->format($this->tax->calculate($product_data['price'], $product_data['tax_class_id'], $this->config->get('config_tax')));
-				} else {
-					$price = false;
-				}
-						
-				if ((float)$product_data['special']) {
-					$special = $this->currency->format($this->tax->calculate($product_data['special'], $product_data['tax_class_id'], $this->config->get('config_tax')));
-				} else {
-					$special = false;
-				}
-				
-				if ($this->config->get('config_review_status')) {
-					$rating = $product_data['rating'];
-				} else {
-					$rating = false;
-				}
-							
-				$this->data['seller']['products'][] = array(
-					'product_id' => $product['product_id'],				
-					'thumb' => $image,
-					'name' => $product_data['name'],
-					'price' => $price,
-					'special' => $special,
-					'rating' => $rating,
-					'reviews'    => sprintf($this->language->get('text_reviews'), (int)$product_data['reviews']),
-					'href'    	 => $this->url->link('product/product', 'product_id=' . $product_data['product_id']),						
-				);				
-			}
-		} else {
-			$this->data['seller']['products'] = NULL;
-		}
 
 		$this->data['ms_catalog_seller_profile_view'] = sprintf($this->language->get('ms_catalog_seller_profile_view'), $this->data['seller']['nickname']);
 		$this->document->setTitle(sprintf($this->language->get('ms_catalog_seller_profile_heading'), $this->data['seller']['nickname']));
