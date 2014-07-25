@@ -127,6 +127,7 @@
 				<td style="width: 40%"><?php echo $ms_account_orders_products; ?></td>
 				<td><?php echo $ms_date_created; ?></td>
 				<td><?php echo $ms_account_orders_total; ?></td>
+				<td><?php echo $ms_account_orders_view; ?></td>
 			</tr>
 		</thead>
 		
@@ -152,6 +153,7 @@
 				</td>
 				<td><?php echo $order['date_created']; ?></td>
 				<td><?php echo $order['total']; ?></td>
+				<td><a href="<?php echo $this->url->link('seller/account-order/viewOrder', 'order_id=' . $order['order_id']); ?>" class="ms-button ms-button-view"></a></td>
 			</tr>
 			<?php } ?>
 		<?php } else { ?>

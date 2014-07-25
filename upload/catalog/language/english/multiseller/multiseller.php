@@ -560,6 +560,7 @@ $_['ms_account_orders_products'] = 'Products';
 $_['ms_account_orders_total'] = 'Total amount';
 $_['ms_account_orders_view'] = 'View order';
 $_['ms_account_orders_noorders'] = 'You don\'t have any orders yet!';
+$_['ms_account_orders_view'] = 'View order';
 
 // Account - Dashboard
 $_['ms_account_dashboard_heading'] = 'Seller Dashboard';
