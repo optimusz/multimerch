@@ -55,23 +55,10 @@
       <?php foreach ($products as $product) { ?>
       <tr>
         <td class="left"><?php echo $product['name']; ?>
-          <?php foreach ($product['option'] as $option) { ?>
-          <br />
-          &nbsp;<small> - <?php echo $option['name']; ?>: <?php echo $option['value']; ?></small>
-          <?php } ?></td>
         <td class="left"><?php echo $product['model']; ?></td>
         <td class="right"><?php echo $product['quantity']; ?></td>
         <td class="right"><?php echo $product['price']; ?></td>
         <td class="right"><?php echo $product['total']; ?></td>
-      </tr>
-      <?php } ?>
-      <?php foreach ($vouchers as $voucher) { ?>
-      <tr>
-        <td class="left"><?php echo $voucher['description']; ?></td>
-        <td class="left"></td>
-        <td class="right">1</td>
-        <td class="right"><?php echo $voucher['amount']; ?></td>
-        <td class="right"><?php echo $voucher['amount']; ?></td>
       </tr>
       <?php } ?>
     </tbody>
@@ -85,23 +72,9 @@
       <?php } ?>
     </tfoot>
   </table>
-  <?php if ($comment) { ?>
-  <table class="list">
-    <thead>
-      <tr>
-        <td class="left"><?php echo $text_comment; ?></td>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td class="left"><?php echo $comment; ?></td>
-      </tr>
-    </tbody>
-  </table>
-  <?php } ?>
   <table class="list">
     <tr>
-      <td><?= $text_change_status ?></td>
+      <td><?php echo $text_change_status ?></td>
       <td>
         <form method="POST" action="<?= $redirect ?>">
           <select name="order_status_edit">
@@ -113,31 +86,10 @@
                 <?php } ?>
               <?php } ?>
           </select>
-            <button><?= $text_submit_status ?></button>
+            <button><?php echo $text_submit_status; ?></button>
         </form>
     </td>
     </tr>
   </table>
-  <?php if ($histories) { ?>
-  <h2><?php echo $text_history; ?></h2>
-  <table class="list">
-    <thead>
-      <tr>
-        <td class="left"><?php echo $column_date_added; ?></td>
-        <td class="left"><?php echo $column_status; ?></td>
-        <td class="left"><?php echo $column_comment; ?></td>
-      </tr>
-    </thead>
-    <tbody>
-      <?php foreach ($histories as $history) { ?>
-      <tr>
-        <td class="left"><?php echo $history['date_added']; ?></td>
-        <td class="left"><?php echo $history['status']; ?></td>
-        <td class="left"><?php echo $history['comment']; ?></td>
-      </tr>
-      <?php } ?>
-    </tbody>
-  </table>
-  <?php } ?>
   <?php echo $content_bottom; ?></div>
 <?php echo $footer; ?> 
