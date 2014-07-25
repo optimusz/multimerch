@@ -27,9 +27,6 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		
 		"msconf_paypal_sandbox" => 1,
 		"msconf_paypal_address" => "",
-		"msconf_paypal_api_username" => "",
-		"msconf_paypal_api_password" => "",
-		"msconf_paypal_api_signature" => "",
 		
 		"msconf_allow_withdrawal_requests" => 1,
 		"msconf_allowed_image_types" => 'png,jpg,jpeg',

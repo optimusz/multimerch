@@ -16,8 +16,6 @@
 	  <h1><img src="view/image/multiseller/ms-profile.png" alt="" /> <?php echo $ms_catalog_sellers_heading; ?></h1>
 		<div class="buttons" style="margin-top: -2px;">
 			<a onclick="location = '<?php echo $link_create_seller; ?>'" class="ms-button ms-button-profile v-top" title="<?php echo $ms_catalog_sellers_create; ?>"></a>
-			<a id="ms-pay"      class="ms-button ms-button-paypal-top v-top" title="<?php echo $ms_button_pay_masspay; ?>"></a>
-            <a id="ms-pay-all"  class="ms-button ms-button-paypal-top v-top" title="<?php echo $ms_button_pay_masspay_all; ?>"></a>
 		</div>
 	</div>
 	<div class="content">
@@ -93,77 +91,6 @@ $(document).ready(function() {
 					button.show().prev('.ms-loading').remove();
 				}
 			}
-		});
-	});
-
-	$("#ms-pay,#ms-pay-all").click(function() {
-		if (this.id == 'ms-pay' && $('#list-sellers input:checkbox:checked').length == 0)
-			return;
-
-		var data = $('#list-sellers input:checkbox').serialize() + '&' + this.id + '=1';
-
-		$.ajax({
-			type: "POST",
-			dataType: "json",
-			url: 'index.php?route=multiseller/seller/jxConfirmMasspay&token=<?php echo $token; ?>',
-			data: data,
-			success: function(jsonData) {
-				if (jsonData.error) {
-				    alert(jsonData.error);
-				} else {
-					console.log('success');
-					$('<div />').html(jsonData.html).dialog({
-						dialogClass: "msBlack",
-						resizable: false,
-						width: 600,
-						title: '<?php echo $ms_payment_confirmation; ?>',
-						modal: true,
-						buttons: [
-							{
-								id: "button-pay",
-								text: "<?php echo $ms_payment_pay; ?>",
-								click: function() {
-									var dialog = $(this);
-									$('#button-pay').remove();
-									$('#button-cancel').attr('disabled','disabled');
-									dialog.html('<p style="text-align: center"><img src="view/image/loading.gif" alt="" /></p>');
-								    $.ajax({
-										type: "POST",
-										dataType: "json",
-										url: 'index.php?route=multiseller/seller/jxCompleteMasspay&token=<?php echo $token; ?>',
-										data: data,
-										success: function(jsonData) {
-											$('#button-pay').remove();
-											$('#button-cancel').removeAttr('disabled').find("span").html("OK");
-											
-											if (!jQuery.isEmptyObject(jsonData.error)) {
-												dialog.html('<p class="warning">'+jsonData.error+'</p>');
-												if (!jQuery.isEmptyObject(jsonData.response)) {
-													dialog.append('<p class="warning">'+jsonData.response+'</p>');											
-												}
-												dialog.children('.ui-dialog-buttonset button:first').remove();
-											} else {
-												dialog.html('<p class="success">'+jsonData.success+'</p>');
-												$('#button-cancel').unbind('click').click(function() {
-													dialog.dialog("close");
-													window.location.reload();
-												});												
-											}
-										}
-									});
-								}
-							},
-							{
-	            				id: "button-cancel",
-	            				text: "<?php echo $button_cancel; ?>",
-								click: function() {
-									$(this).dialog("close");
-								}
-							}
-						]
-					});
-				}
-	       	}
 		});
 	});
 });
