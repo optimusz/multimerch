@@ -34,7 +34,7 @@ class ControllerSellerAccountOrder extends ControllerSellerAccount {
 			)
 		);
 		
-		$total = isset($orders[0]) ? $orders[0]['total_rows'] : 0;
+		$total_orders = isset($orders[0]) ? $orders[0]['total_rows'] : 0;
 
 		$columns = array();
 		foreach ($orders as $order) {
@@ -85,8 +85,8 @@ class ControllerSellerAccountOrder extends ControllerSellerAccount {
 		}
 		
 		$this->response->setOutput(json_encode(array(
-			'iTotalRecords' => $total,
-			'iTotalDisplayRecords' => $total,
+			'iTotalRecords' => $total_orders,
+			'iTotalDisplayRecords' => $total_orders,
 			'aaData' => $columns
 		)));
 	}
