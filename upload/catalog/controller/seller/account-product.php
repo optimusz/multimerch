@@ -855,6 +855,9 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 				$commissions = $this->MsLoader->MsCommission->calculateCommission(array('seller_id' => $this->customer->getId()));
 				$fee = (float)$commissions[MsCommission::RATE_LISTING]['flat'] + $commissions[MsCommission::RATE_LISTING]['percent'] * $data['product_price'] / 100;
 				$product_id = $this->MsLoader->MsProduct->saveProduct($data);
+
+				$seller_tax_class = $this->MsLoader->MsTax->getSellerTaxClassId($this->customer->getId());
+				$this->MsLoader->MsTax->setProductTaxClass($product_id, $seller_tax_class);
 				
 				// send product created emails
 				foreach ($mails as &$mail) {

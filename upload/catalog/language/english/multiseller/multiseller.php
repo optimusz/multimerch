@@ -436,6 +436,8 @@ $_['ms_account_sellerinfo_fee_balance'] = 'This amount will be deducted from you
 $_['ms_account_sellerinfo_fee_paypal'] = 'You will be redirected to the PayPal payment page after form submission.';
 $_['ms_account_sellerinfo_signup_itemname'] = 'Seller account registration at %s';
 $_['ms_account_sellerinfo_saved'] = 'Seller account data saved.';
+$_['ms_account_sellerinfo_tax_class'] = 'Tax Class: ';
+
 
 $_['ms_account_status'] = 'Your seller account status is: ';
 $_['ms_account_status_tobeapproved'] = '<br />You will be able to use your account as soon as it is approved by the store owner.';

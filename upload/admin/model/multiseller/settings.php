@@ -100,6 +100,15 @@ class ModelMultisellerSettings extends Model {
 						PRIMARY KEY (`suborder_id`)
 						) DEFAULT CHARSET=utf8";
 					$this->db->query($sql);
+
+					$sql = "
+						CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "ms_seller_tax_class` (
+						  `seller_id` int(11) NOT NULL,
+						  `tax_class_id` int(11) NOT NULL,
+						  PRIMARY KEY (`seller_id`),
+						  UNIQUE KEY `seller_id` (`seller_id`)
+						) DEFAULT CHARSET=utf8";
+					$this->db->query($sql);
 					break;
 
 				case "5.2":
@@ -719,6 +728,15 @@ class ModelMultisellerSettings extends Model {
 			PRIMARY KEY (`suborder_id`)
 			) DEFAULT CHARSET=utf8";
 		$this->db->query($sql);
+
+		$sql = "
+			CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "ms_seller_tax_class` (
+			  `seller_id` int(11) NOT NULL,
+			  `tax_class_id` int(11) NOT NULL,
+			  PRIMARY KEY (`seller_id`),
+			  UNIQUE KEY `seller_id` (`seller_id`)
+			) DEFAULT CHARSET=utf8";
+		$this->db->query($sql);
 	}
 	
 	public function addData() {
@@ -790,6 +808,7 @@ class ModelMultisellerSettings extends Model {
 				`" . DB_PREFIX . "ms_conversation`,
 				`" . DB_PREFIX . "ms_message`,
 				`" . DB_PREFIX . "ms_suborder`,
+				`" . DB_PREFIX . "ms_seller_tax_class`,
 				`" . DB_PREFIX . "ms_version`";
 				
 		$this->db->query($sql);

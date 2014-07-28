@@ -326,6 +326,9 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 				
 				$this->session->data['success'] = $this->language->get('ms_account_sellerinfo_saved');
 			}
+
+			$this->MsLoader->MsTax->setSellerTaxClass($this->customer->getId(), $data['tax_class']);
+
 		}
 		
 		$this->response->setOutput(json_encode($json));
@@ -351,6 +354,9 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 		
 		$this->data['salt'] = $this->MsLoader->MsSeller->getSalt($this->customer->getId());
 		$this->data['statusclass'] = 'attention';
+
+		$this->data['tax_classes'] = $this->MsLoader->MsTax->getTaxClasses();
+
 		if ($seller) {
 			switch ($seller['ms.seller_status']) {
 				case MsSeller::STATUS_UNPAID:
@@ -367,6 +373,7 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 			
 			$this->data['seller'] = $seller;
 			$this->data['country_id'] = $seller['ms.country_id'];
+			$this->data['tax_id'] = $this->MsLoader->MsTax->getSellerTaxClassId($this->customer->getId());
 			
 			if (!empty($seller['ms.avatar'])) {
 				$this->data['seller']['avatar']['name'] = $seller['ms.avatar'];
@@ -384,6 +391,7 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 		} else {
 			$this->data['seller'] = FALSE;
 			$this->data['country_id'] = $this->config->get('config_country_id');
+
 
 			$this->data['statustext'] = $this->language->get('ms_account_status_please_fill_in');
 			
