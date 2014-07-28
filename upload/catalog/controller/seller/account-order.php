@@ -173,7 +173,7 @@ class ControllerSellerAccountOrder extends ControllerSellerAccount {
 
 			$this->data['products'] = array();
 
-			$products = $this->model_account_order->getOrderProducts($this->request->get['order_id'], 'seller');
+			$products = $this->MsLoader->MsOrderData->getOrderProducts(array( 'order_id' => $order_id, 'seller_id' => $this->customer->getId() ));
 
 			foreach ($products as $product) {
 
@@ -188,7 +188,9 @@ class ControllerSellerAccountOrder extends ControllerSellerAccount {
 				);
 			}
 
-			$this->data['totals'] = $this->model_account_order->getOrderTotals($this->request->get['order_id']);
+			$subordertotal = $this->currency->format($this->MsLoader->MsOrderData->getOrderTotal($order_id, array('seller_id' => $this->customer->getId() )));
+			//$this->data['totals'] = $this->model_account_order->getOrderTotals($this->request->get['order_id']);
+			$this->data['totals'][0] = array('text' => $subordertotal, 'title' => 'Total');
 
 			$this->data['continue'] = $this->url->link('account/order', '', 'SSL');
 
