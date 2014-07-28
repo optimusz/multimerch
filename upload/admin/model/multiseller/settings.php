@@ -95,7 +95,7 @@ class ModelMultisellerSettings extends Model {
 						CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "ms_suborder` (
 						`suborder_id` int(11) NOT NULL AUTO_INCREMENT,
 						`order_id` int(11) NOT NULL,
-						`customer_id` int(11) NOT NULL,
+						`seller_id` int(11) NOT NULL,
 						`order_status_id` int(11) NOT NULL,
 						PRIMARY KEY (`suborder_id`)
 						) DEFAULT CHARSET=utf8";
@@ -714,7 +714,7 @@ class ModelMultisellerSettings extends Model {
 			CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "ms_suborder` (
 			`suborder_id` int(11) NOT NULL AUTO_INCREMENT,
 			`order_id` int(11) NOT NULL,
-			`customer_id` int(11) NOT NULL,
+			`seller_id` int(11) NOT NULL,
 			`order_status_id` int(11) NOT NULL,
 			PRIMARY KEY (`suborder_id`)
 			) DEFAULT CHARSET=utf8";

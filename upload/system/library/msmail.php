@@ -122,6 +122,7 @@ class MsMail extends Model {
 		if (isset($data['order_id'])) {
 			if ($this->_modelExists('checkout/order')) {
 				$this->load->model('checkout/order');
+				$this->load->model('account/order');
 				$order_info = $this->model_checkout_order->getOrder($data['order_id']);
 			} else {
 				$this->load->model('sale/order');
@@ -195,13 +196,17 @@ class MsMail extends Model {
 			case self::SMT_PRODUCT_PURCHASED:
 				$order_products = $this->MsLoader->MsOrderData->getOrderProducts(array('order_id' => $data['order_id'], 'seller_id' => $data['seller_id']));
 
-				$this->load->model('account/order');
+
 				$products = '';
 				foreach ($order_products as $p) {
 					if ($p['quantity'] > 1) $products .= "{$p['quantity']} x "; 
 					$products .= "{$p['name']}\t" . $this->currency->format($p['seller_net_amt'], $this->config->get('config_currency')) . "\n";
 
-					$options   = $this->model_account_order->getOrderOptions($data['order_id'], $p['order_product_id']);
+					if ($this->_modelExists('account/order')) {
+						$options = $this->model_account_order->getOrderOptions($data['order_id'], $p['order_product_id']);
+					} else {
+						$options = $this->model_sale_order->getOrderOptions($data['order_id'], $p['order_product_id']);
+					}
 
 					foreach ($options as $option)
 					{
