@@ -234,9 +234,7 @@ class ControllerSellerCatalogSeller extends ControllerSellerCatalog {
 
 		$seller_id = $this->request->get['seller_id'];
 
-		//var_dump($this->cache->get('seller' . $seller_id)); die();
-
-		if(empty($this->cache->get('seller' . $seller_id))) {
+		if(!$this->cache->get('seller' . $seller_id)) {
 		
 			if ($this->config->get('msconf_seller_comments_enable')) {
 				$this->document->addScript('catalog/view/javascript/ms-comments.js');
