@@ -39,12 +39,12 @@ class MsBalance extends Model {
 
 		// todo fix other getBalanceEntries calls
 		$sql = "SELECT
-				    SQL_CALC_FOUND_ROWS
+					SQL_CALC_FOUND_ROWS
 					*,
 					mb.description as 'mb.description',
 					mb.date_created as 'mb.date_created',
 					o.currency_code
-				FROM ms_balance AS mb, ms_seller AS ms, `order` AS o
+				FROM " . DB_PREFIX . "ms_balance AS mb, " . DB_PREFIX . "ms_seller AS ms, `" . DB_PREFIX . "order` AS o
 				WHERE mb.seller_id = ms.seller_id AND o.order_id = mb.order_id"
 				. (isset($data['order_id']) ? " AND mb.order_id =  " .  (int)$data['order_id'] : '')
 				. (isset($data['product_id']) ? " AND mb.product_id =  " .  (int)$data['product_id'] : '')
