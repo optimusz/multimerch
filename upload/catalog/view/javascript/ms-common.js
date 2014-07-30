@@ -13,12 +13,14 @@ function ms_addToCart(product_id, quantity) {
 				location = json['redirect'];
 			}
 
+			if (typeof(json['error']) != "undefined") {
 			if (json['error']['seller']) {
 				$('#notification').html('<div class="warning" style="display: none;">' + json['error']['seller'] + '<img src="catalog/view/theme/default/image/close.png" alt="" class="close" /></div>');
 
 				$('.warning').fadeIn('slow');
 
 				$('html, body').animate({ scrollTop: 0 }, 'slow');
+			}
 			}
 
 			if (json['success']) {
