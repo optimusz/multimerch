@@ -18,7 +18,8 @@ class ControllerMultisellerBase extends Controller {
 		$this->document->addScript('view/javascript/multimerch/common.js');
 	}
 			
-	public function validate($action, $level = 'access') {
+	// @todo: validation
+	public function validate($action = '', $level = 'access') {
 		return true;
 		//var_dump($this->user->hasPermission($level, 'module/multiseller'));
 //		if (in_array(strtolower($action), array('sellers', 'install','uninstall','jxsavesellerinfo', 'savesettings', 'jxconfirmpayment', 'jxcompletepayment', 'jxproductstatus'))
