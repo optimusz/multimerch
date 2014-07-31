@@ -34,7 +34,6 @@ $_['ms_date'] = 'Date';
 $_['ms_button_submit'] = 'Submit';
 $_['ms_button_add_special'] = 'Define a new special price';
 $_['ms_button_add_discount'] = 'Define a new quantity discount';
-$_['ms_button_generate'] = 'Generate images from PDF';
 $_['ms_button_submit_request'] = 'Submit request';
 $_['ms_button_save'] = 'Save';
 $_['ms_button_cancel'] = 'Cancel';
@@ -262,7 +261,6 @@ $_['ms_error_product_download_count'] = 'Please submit at least %s download(s) f
 $_['ms_error_product_image_maximum'] = 'No more than %s image(s) allowed';
 $_['ms_error_product_download_maximum'] = 'No more than %s download(s) allowed';
 $_['ms_error_product_message_length'] = 'Message cannot be longer than 1000 characters';
-$_['ms_error_product_invalid_pdf_range'] = 'Please specify comma delimited (,) pages or page ranges using hyphens (-)';
 $_['ms_error_product_attribute_required'] = 'This attribute is required';
 $_['ms_error_product_attribute_long'] = 'This value can not be longer than %s symbols';
 $_['ms_error_withdraw_amount'] = 'Invalid amount';
@@ -720,9 +718,4 @@ $_['ms_sellercontact_captcha'] = 'Captcha';
 $_['ms_sellercontact_sendmessage'] = 'Send a message to %s';
 $_['ms_sellercontact_success'] = 'Your message has been successfully sent';
 
-// Account - PDF generator dialog
-$_['ms_pdfgen_title'] = 'Generate images from PDF';
-$_['ms_pdfgen_pages'] = 'Pages';
-$_['ms_pdfgen_note'] = 'Select pages to generate images from. New images will be appended to the list of images on the product page.';
-$_['ms_pdfgen_file'] = 'File';
 ?>

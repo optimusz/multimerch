@@ -319,7 +319,7 @@ $(function() {
 			  				(data.files[i].filePages ? '<input type="hidden" name="product_downloads[' + newFileNum + '][filePages]" value="' + data.files[i].filePages + '" />' : '') +
 			  				'<span class="ms-download-name">'+data.files[i].fileMask+'</span>' +
 			  				'<div class="ms-buttons">' +
-			  				(data.files[i].filePages ? '<a href="' + $('base').attr('href') + 'index.php?route=seller/account-product/jxRenderPdfgenDialog" class="ms-button-pdf" title="'+msGlobals.button_generate+'"></a>' : '') +
+			  				(data.files[i].filePages ? '<a href="' + $('base').attr('href') + 'index.php?route=module/multimerch_pdfgen/jxRenderPdfgenDialog" class="ms-button-pdf" title="'+msGlobals.button_generate+'"></a>' : '') +
 			  				'<span class="ms-button-download disabled"></span>' +
 			  				'<span class="ms-button-update disabled"></span>' +
 				  			'</div>' +

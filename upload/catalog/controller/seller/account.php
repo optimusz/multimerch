@@ -46,8 +46,6 @@ class ControllerSellerAccount extends Controller {
 				$allowed_routes[] = 'jxSubmitProduct';
 				$allowed_routes[] = 'jxUploadDownloads';
 				$allowed_routes[] = 'jxUploadImages';
-				$allowed_routes[] = 'jxSubmitPdfgenDialog';
-				$allowed_routes[] = 'jxRenderPdfgenDialog';
 				$allowed_routes[] = 'jxAutocomplete';
 				$allowed_routes[] = 'tab-shipping';
 			}

@@ -245,14 +245,6 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 					$json['errors'] = array_merge($json['errors'], $errors);
 				} else {
 					$fileData = $this->MsLoader->MsFile->uploadDownload($file);
-					
-					if ($this->config->get('msconf_enable_pdf_generator') && extension_loaded('imagick')) {
-						$ext = explode('.', $file['name']); $ext = end($ext);
-						if (strtolower($ext) == 'pdf') {
-							$im = new imagick(DIR_DOWNLOAD . $this->config->get('msconf_temp_download_path') . $fileData['fileName']);
-							$pages = $im->getNumberImages() - 1;
-						}
-					}
 
 					$json['files'][] = array (
 						'fileName' => $fileData['fileName'],
@@ -925,41 +917,6 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		$this->response->setOutput(json_encode($json));
 	}
 
-  	public function jxSubmitPdfgenDialog() {
-		$json = array();
-
-		if (!$this->config->get('msconf_enable_pdf_generator') || !extension_loaded('imagick'))
-			return;
-			
-		$data = $this->request->post;
-		
-		$json = $this->MsLoader->MsFile->generatePdfImages($this->request->post['ms-pdfgen-filename'], $this->request->post['ms-pdfgen-pages']);
-		return $this->response->setOutput(json_encode($json));
-  	}
-  	
-  	public function jxRenderPdfgenDialog() {
-		if (!$this->config->get('msconf_enable_pdf_generator') || !extension_loaded('imagick'))
-			return;
-  		
-  		if (!empty($this->request->post['fileName'])) {
-  			$fileName = $this->request->post['fileName'];
-			$this->data['fileMask'] = substr($fileName,strpos($fileName,'.')+1,mb_strlen($fileName));
-  		} else {
-  			return;
-  		}
-
-  		$pages = $this->MsLoader->MsFile->getPdfPages($fileName);
-  		
-  		if ($pages == 0)
-  			return;
-  		
-		$this->data['fileName'] = $fileName;		
-		$this->data['filePages'] = $pages;
-
-		list($this->template, $this->children) = $this->MsLoader->MsHelper->loadTemplate('dialog-pdf');
-		return $this->response->setOutput($this->render());
-	}
-
 	public function jxRenderOptions() {
 		$this->data['options'] = $this->MsLoader->MsOption->getOptions();
 		foreach ($this->data['options'] as &$option) {
@@ -1138,10 +1095,6 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 		// ckeditor
 		if($this->config->get('msconf_enable_rte'))
 			$this->document->addScript('catalog/view/javascript/multimerch/ckeditor/ckeditor.js');
-				
-		if ($this->config->get('msconf_enable_pdf_generator') && extension_loaded('imagick')) {
-			$this->document->addScript('catalog/view/javascript/dialog-pdf.js');
-		}		
 
 		$this->data['seller'] = $this->MsLoader->MsSeller->getSeller($this->customer->getId());
 		$this->data['seller_group'] = $this->MsLoader->MsSellerGroup->getSellerGroup($this->data['seller']['ms.seller_group']);
@@ -1359,7 +1312,6 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 				//'href' => HTTPS_SERVER . 'download/' . $download['filename'],
 				'href' => $this->url->link('seller/account-product/download', 'download_id=' . $download['download_id'] . '&product_id=' . $product_id, 'SSL'),
 				'id' => $download['download_id'],
-				//'pdf' => ($this->config->get('msconf_enable_pdf_generator') && extension_loaded('imagick') && strtolower($ext) == 'pdf') ? 1 : 0
 			);
 			
 			if (!in_array($download['filename'], $this->session->data['multiseller']['files']))

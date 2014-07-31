@@ -311,11 +311,6 @@ input.option_quantity {
 	display: none;
 }
 
-.ms-product .ms-download .ms-button-pdf {
-	background-image: url(../image/ms-pdf.png);
-	background-repeat: no-repeat;
-}
-
 .ms-product .ms-download .ms-button-download {
 	background-image: url(../image/ms-arrowdown.png);
 }
@@ -724,34 +719,6 @@ div.ms-jquery-dialog.ui-widget-content,
 #ms-captcha {
 	display: inline;
 }
-
-
-/* pdf generator form */
-
-.ms-pdfgen-dialog .ms-form label {
-	margin-left: 20px;
-	width: 60px;
-	vertical-align: top;
-}
-
-.ms-pdfgen-dialog .ms-form input {
-	width: 50px;
-}
-
-.ms-pdfgen-dialog .ms-form label,
-.ms-pdfgen-dialog .ms-form input {
-	margin-top: 5px;
-	margin-bottom: 5px;
-	display: inline-block;
-}
-
-.ms-pdfgen-dialog .ms-form span.ms-filename {
-	font-weight: bold;
-	width: 220px;
-	display: inline-block;
-	margin: 3px 0;
-}
-
 
 /* seller account product list*/
 .ms-button {
