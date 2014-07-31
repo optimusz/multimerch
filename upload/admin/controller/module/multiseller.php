@@ -54,7 +54,6 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		"msconf_disable_product_after_quantity_depleted" => 0,
 		"msconf_allow_relisting" => 0,
 		
-		"msconf_enable_pdf_generator" => 0,
 		"msconf_enable_seo_urls_seller" => 0,
 		"msconf_enable_seo_urls_product" => 0,
 		"msconf_enable_update_seo_urls" => 0,
