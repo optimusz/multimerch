@@ -327,6 +327,15 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 				$this->session->data['success'] = $this->language->get('ms_account_sellerinfo_saved');
 			}
 
+            /*------------------------------Remove seller cache-----------------------------------------*/
+            $this->cache->delete("seller" . $data['seller']['seller_id']);
+            $this->cache->delete("catalog_seller");
+            $this->cache->delete("catalog_seller_total");
+            $this->cache->delete("ms_carousel");
+            $this->cache->delete("ms_newsellers");
+            $this->cache->delete("ms_topsellers");
+            /*------------------------------------------------------------------------------------------*/
+
 			$this->MsLoader->MsTax->setSellerTaxClass($this->customer->getId(), $data['tax_class']);
 
 		}
