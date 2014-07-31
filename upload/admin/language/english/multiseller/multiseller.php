@@ -237,13 +237,8 @@ $_['ms_config_ratings_perpage_note'] = 'Number of ratings per page in front stor
 $_['ms_config_graphical_sellermenu'] = 'Graphical seller menu';
 $_['ms_config_graphical_sellermenu_note'] = 'Graphical seller menu';
 
-$_['ms_config_carousel'] = 'Seller carousel';
-$_['ms_config_topsellers'] = 'Top sellers';
-$_['ms_config_modules'] = 'Modules';
 $_['ms_config_productform'] = 'Product form';
 $_['ms_config_finances'] = 'Finances';
-$_['ms_config_newsellers'] = 'New sellers';
-$_['ms_config_sellerdropdown'] = 'Seller dropdown';
 $_['ms_config_comments'] = 'Comments';
 $_['ms_config_miscellaneous'] = 'Miscellaneous';
 

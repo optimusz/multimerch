@@ -711,22 +711,6 @@ $_['ms_catalog_seller_products_heading'] = '%s\'s products';
 $_['ms_catalog_seller_products_breadcrumbs'] = '%s\'s products';
 $_['ms_catalog_seller_products_empty'] = 'This seller doesn\'t have any products yet!';
 
-// Catalog - Carousel
-$_['ms_carousel_sellers'] = 'Our sellers';
-$_['ms_carousel_view'] = 'View all sellers';
-
-// Catalog - Top sellers
-$_['ms_topsellers_sellers'] = 'Top sellers';
-$_['ms_topsellers_view'] = 'View all sellers';
-
-// Catalog - New sellers
-$_['ms_newsellers_sellers'] = 'New sellers';
-$_['ms_newsellers_view'] = 'View all sellers';
-
-// Catalog - Seller dropdown
-$_['ms_sellerdropdown_sellers'] = 'Our sellers';
-$_['ms_sellerdropdown_select'] = '-- Select a seller --';
-
 // Catalog - Seller contact dialog
 $_['ms_sellercontact_title'] = 'Contact seller';
 $_['ms_sellercontact_name'] = 'Your name';

@@ -34,10 +34,6 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		"msconf_minimum_product_price" => 0,
 		"msconf_maximum_product_price" => 0,
 		"msconf_notification_email" => "",
-		"ms_carousel_module" => "",
-		"ms_topsellers_module" => "",
-		"ms_newsellers_module" => "",
-		"ms_sellerdropdown_module" => "",
 		"msconf_allow_free_products" => 0,
 		
 		"msconf_allow_multiple_categories" => 0,
@@ -283,6 +279,9 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 			//var_dump($s,$this->config->get($s));
 			$this->data[$s] = $this->config->get($s);
 		}
+		
+		$this->document->addScript('view/javascript/multimerch/settings.js');
+		
 		$this->load->model("localisation/order_status");
 		$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
 		$this->load->model("catalog/option");
