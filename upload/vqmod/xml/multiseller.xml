@@ -392,7 +392,7 @@
 				}
 			]]></add>
 		</operation>
-		<operation>
+		<!-- <operation>
 			<search position="replace"><![CDATA[
 				public function getOrderProducts($order_id) {
 			]]></search>
@@ -411,7 +411,7 @@
 					$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order_product` AS op, `" . DB_PREFIX . "ms_order_product_data` AS m WHERE op.order_id = m.order_id AND m.order_id = '" . (int)$order_id . "' AND m.seller_id = " . (int)$this->customer->getId());
 				}
 			]]></add>
-		</operation>
+		</operation> -->
 	</file>
 	
 	<file name="catalog/controller/account/order.php">
@@ -1956,6 +1956,43 @@
 			<add><![CDATA[
 				$_['text_change_status']    = 'Change suborder status';
 				$_['text_submit_status']    = 'Submit';
+			]]></add>
+		</operation>
+	</file>
+
+	<file path="catalog/view/theme/&themeFolder;/template/checkout/" name="shipping_method.tpl">
+		<operation>
+			<search position="replace"><![CDATA[
+				<b><?php echo $text_comments; ?></b>
+			]]></search>
+			<add></add>
+		</operation>
+		<operation>
+			<search position="replace"><![CDATA[
+				<textarea name="comment" rows="8" style="width: 98%;"><?php echo $comment; ?></textarea>
+			]]></search>
+			<add></add>
+		</operation>
+	</file>
+
+	<file path="catalog/controller/checkout/" name="shipping_method.php">
+		<operation>
+			<search position="replace"><![CDATA[
+				$this->session->data['comment'] = strip_tags($this->request->post['comment']);
+			]]></search>
+			<add><![CDATA[
+				$this->session->data['comment'] = "";
+			]]></add>
+		</operation>
+	</file>
+
+	<file name="catalog/controller/checkout/confirm.php">
+		<operation>
+			<search position="after" offset="1"><![CDATA[
+				$data['comment']
+			]]></search>
+			<add><![CDATA[
+				$data['comment'] = end($this->session->data['comment']);
 			]]></add>
 		</operation>
 	</file>
