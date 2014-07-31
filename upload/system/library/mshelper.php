@@ -84,10 +84,15 @@ class MsHelper extends Model {
 	}	
 	
 	public function loadTemplate($templateName, $children = FALSE) {
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . "/template/multiseller/$templateName.tpl")) {
-			$template = $this->config->get('config_template') . "/template/multiseller/$templateName.tpl";
+		// ugly
+		if(strpos($templateName, '/') == false) {
+			$templateName = 'multiseller/' . $templateName;
+		}
+		
+		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . "/template/$templateName.tpl")) {
+			$template = $this->config->get('config_template') . "/template/$templateName.tpl";
 		} else {
-			$template = "default/template/multiseller/$templateName.tpl";
+			$template = "default/template/$templateName.tpl";
 		}
 		
 		if ($children === FALSE) {
