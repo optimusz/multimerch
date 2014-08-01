@@ -117,7 +117,10 @@ class ControllerSellerAccountOrder extends ControllerSellerAccount {
 
 		$order_info = $this->model_account_order->getOrder($order_id, 'seller');
 
-		if ($order_info) {
+		$this->data['products'] = array();
+		$products = $this->MsLoader->MsOrderData->getOrderProducts(array( 'order_id' => $order_id, 'seller_id' => $this->customer->getId() ));
+
+		if ($order_info && !empty($products)) {
 			$this->document->setTitle($this->language->get('text_order'));
 
 			$this->data = array_merge($this->data, $this->load->language('account/order'));
@@ -171,10 +174,6 @@ class ControllerSellerAccountOrder extends ControllerSellerAccount {
 				$this->data[$type . '_method'] = $order_info[$type . '_method'];
 			}
 
-			$this->data['products'] = array();
-
-			$products = $this->MsLoader->MsOrderData->getOrderProducts(array( 'order_id' => $order_id, 'seller_id' => $this->customer->getId() ));
-
 			foreach ($products as $product) {
 
 				$this->data['products'][] = array(
@@ -212,34 +211,7 @@ class ControllerSellerAccountOrder extends ControllerSellerAccount {
 
 			$this->response->setOutput($this->render());		
 		} else {
-			$this->document->setTitle($this->language->get('text_order'));
-
-			$this->data['heading_title'] = $this->language->get('text_order');
-
-			$this->data['text_error'] = $this->language->get('text_error');
-
-			$this->data['button_continue'] = $this->language->get('button_continue');
-
-			$this->data['continue'] = $this->url->link('account/order', '', 'SSL');
-
-			$this->response->addHeader($this->request->server['SERVER_PROTOCOL'] . '/1.1 404 Not Found');
-
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/error/not_found.tpl')) {
-				$this->template = $this->config->get('config_template') . '/template/error/not_found.tpl';
-			} else {
-				$this->template = 'default/template/error/not_found.tpl';
-			}
-
-			$this->children = array(
-				'common/column_left',
-				'common/column_right',
-				'common/content_top',
-				'common/content_bottom',
-				'common/footer',
-				'common/header'	
-			);
-
-			$this->response->setOutput($this->render());				
+			$this->redirect($this->url->link('seller/account-order', '', 'SSL'));				
 		}
 	}
 		
