@@ -14,7 +14,7 @@ class ControllerSellerAccountOrder extends ControllerSellerAccount {
 		$filterParams = $this->MsLoader->MsHelper->getFilterParams($filters, $colMap);
 		
 		$seller_id = $this->customer->getId();
-        $this->load->model('account/order');
+		$this->load->model('account/order');
 
 		$orders = $this->MsLoader->MsOrderData->getOrders(
 			array(
@@ -71,12 +71,24 @@ class ControllerSellerAccountOrder extends ControllerSellerAccount {
 				$products .= "</p>";
 			}
 			
+			$this->load->model('localisation/order_status');
+			$order_statuses = $this->model_localisation_order_status->getOrderStatuses();
+			$order_status_id = $this->model_localisation_order_status->getSuborderStatusId($order['order_id'], $this->customer->getId());			
+			
+			$order_status_name = '';
+			foreach ($order_statuses as $order_status) {
+				if ($order_status['order_status_id'] == $order_status_id) {
+					$order_status_name = $order_status['name'];
+				}
+			}
+			
 			$columns[] = array_merge(
 				$order,
 				array(
 					'order_id' => $order['order_id'],
 					'customer_name' => $customer_name,
 					'products' => $products,
+					'suborder_status' => $order_status_name,
 					'date_created' => date($this->language->get('date_format_short'), strtotime($order['date_added'])),
 					'total_amount' => $this->currency->format($order['total_amount'], $this->config->get('config_currency')),
 					'view_order' => '<a href="' . $this->url->link('seller/account-order/viewOrder', 'order_id=' . $order['order_id']) . '" class="ms-button ms-button-view"></a>'
@@ -103,6 +115,21 @@ class ControllerSellerAccountOrder extends ControllerSellerAccount {
 			$this->redirect($this->url->link('account/login', '', 'SSL'));
 		}
 
+		$this->data['breadcrumbs'] = $this->MsLoader->MsHelper->setBreadcrumbs(array(
+			array(
+				'text' => $this->language->get('text_account'),
+				'href' => $this->url->link('account/account', '', 'SSL'),
+			),
+			array(
+				'text' => $this->language->get('ms_account_dashboard_breadcrumbs'),
+				'href' => $this->url->link('seller/account-dashboard', '', 'SSL'),
+			),
+			array(
+				'text' => $this->language->get('ms_account_orders_breadcrumbs'),
+				'href' => $this->url->link('seller/account-order', '', 'SSL'),
+			)
+		));
+		
 		$this->load->model('localisation/order_status');
 		$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
 		$this->data['order_status_id'] = $this->model_localisation_order_status->getSuborderStatusId($order_id, $this->customer->getId());
@@ -209,9 +236,9 @@ class ControllerSellerAccountOrder extends ControllerSellerAccount {
 				'common/header'	
 			);
 
-			$this->response->setOutput($this->render());		
+			$this->response->setOutput($this->render());
 		} else {
-			$this->redirect($this->url->link('seller/account-order', '', 'SSL'));				
+			$this->redirect($this->url->link('seller/account-order', '', 'SSL'));
 		}
 	}
 		

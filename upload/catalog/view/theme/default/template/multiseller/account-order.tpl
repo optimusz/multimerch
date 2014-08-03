@@ -17,6 +17,7 @@
 				<td class="tiny"><?php echo $ms_account_orders_id; ?></td>
 				<td class="large"><?php echo $ms_account_orders_customer; ?></td>
 				<td><?php echo $ms_account_orders_products; ?></td>
+				<td><?php echo $ms_status; ?></td>
 				<td class="medium"><?php echo $ms_date_created; ?></td>
 				<td class="small"><?php echo $ms_account_orders_total; ?></td>
 				<td class="small"><?php echo $ms_account_orders_view; ?></td>
@@ -25,6 +26,7 @@
 				<td><input type="text"/></td>
 				<td><input type="text"/></td>
 				<td><input type="text"/></td>
+				<td></td>
 				<td><input type="text"/></td>
 				<td><input type="text"/></td>
 				<td></td>
@@ -53,11 +55,12 @@
 				{ "mData": "order_id" },
 				{ "mData": "customer_name" },
 				{ "mData": "products", "bSortable": false, "sClass": "products" },
+				{ "mData": "suborder_status", "bSortable": false },
 				{ "mData": "date_created" },
 				{ "mData": "total_amount" },
 				{ "mData": "view_order" }
 			],
-            "aaSorting":  [[4,'desc']]
+			"aaSorting":  [[4,'desc']]
 		});
 	});
 </script>
