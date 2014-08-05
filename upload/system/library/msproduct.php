@@ -1046,12 +1046,5 @@ class MsProduct extends Model {
 
         return $query->rows;
     }
-
-    public function getDefaultCurrency() {
-		$sql = "SELECT code FROM " . DB_PREFIX . "currency WHERE value = 1";
-
-		$res = $this->db->query($sql);
-		return $res->row['code'];
-	}
 }
 ?>

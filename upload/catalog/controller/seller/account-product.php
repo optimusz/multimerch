@@ -405,10 +405,8 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
 			$json['errors']['product_price'] = $this->language->get('ms_error_product_price_low');
 		} else if (($this->config->get('msconf_maximum_product_price') != 0) && ((float)$data['product_price'] > (float)$this->config->get('msconf_maximum_product_price'))) {
 			$json['errors']['product_price'] = $this->language->get('ms_error_product_price_high');
-		} else {
-			$data['product_price'] = $this->currency->convert($data['product_price'], $_SESSION['currency'], $this->MsLoader->MsProduct->getDefaultCurrency());
 		}
-
+		
 		$msconf_downloads_limits = $this->config->get('msconf_downloads_limits');
 		if (!isset($data['product_downloads'])) {
 			if ($msconf_downloads_limits[0] > 0) {
@@ -1324,6 +1322,7 @@ class ControllerSellerAccountProduct extends ControllerSellerAccount {
   		$thousand_point = $this->language->get('thousand_point');
 		//$product['price'] = number_format(round($this->currency->convert($product['price'], $this->MsLoader->MsProduct->getDefaultCurrency(), $_SESSION['currency'] ), (int)$decimal_place), (int)$decimal_place, $decimal_point, '');
 		$product['price'] = number_format(round($product['price'], (int)$decimal_place), (int)$decimal_place, $decimal_point, $thousand_point);
+		
         if(isset($product['manufacturer_id'])){
             $product['manufacturer_id'] = (int)$product['manufacturer_id'];
 			$this->load->model('catalog/manufacturer');
