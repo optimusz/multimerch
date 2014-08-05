@@ -1737,7 +1737,6 @@
 						<li><a href="<?php echo $ms_link_transactions; ?>"><?php echo $ms_menu_transactions; ?></a></li>
 						<li><a href="<?php echo $ms_link_payment; ?>"><?php echo $ms_menu_payment; ?></a></li>
 						<li><a href="<?php echo $ms_link_badge; ?>"><?php echo $ms_menu_badge; ?></a></li>
-						<li><a href="<?php echo $ms_link_comments; ?>"><?php echo $ms_menu_comments; ?></a></li>
 						<li><a href="<?php echo $ms_link_settings; ?>"><?php echo $ms_menu_settings; ?></a></li>
 					</ul>
 				</li>
