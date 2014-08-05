@@ -5,7 +5,6 @@
 ]>
 <modification>
 	<id>MultiMerch Digital Multivendor Marketplace</id>
-	<version>5.3</version>
 	<author>http://multimerch.com/</author>
 	
 	<!-- ************************ -->
@@ -1741,7 +1740,24 @@
 
 	<!-- navigation menu -->
 	<file name="&adminFolder;/view/template/common/header.tpl">
-			<operation>
+		<operation>
+			<search position="before"><![CDATA[
+				<div id="menu">
+			]]></search>
+			<add><![CDATA[
+				<?php $this->load->model('multiseller/upgrade'); ?>
+				<?php if (!$this->model_multiseller_upgrade->isDbLatest()) { ?>
+					<div class="attention" style="text-align:center; margin: 10px"><?php echo sprintf($this->language->get('ms_db_upgrade'), $this->url->link('module/multiseller/upgradeDb', 'token=' . $this->session->data['token'], 'SSL')); ?></div>
+				<?php } ?>
+				
+				<?php if (isset($this->session->data['ms_db_latest'])) { ?>
+					<div class="success" style="text-align:center; margin: 10px"><?php echo $this->session->data['ms_db_latest']; ?></div>
+					<?php unset($this->session->data['ms_db_latest']); ?>
+				<?php } ?>
+			]]></add>
+		</operation>
+	
+		<operation>
 			<search position="before"><![CDATA[
 				<?php foreach ($scripts as $script) { ?>
 			]]></search>

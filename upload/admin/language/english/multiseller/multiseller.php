@@ -30,6 +30,10 @@ $_['ms_error_product_publish'] = 'Failed to publish some products: seller accoun
 $_['ms_success_installed'] = 'Extension successfully installed';
 $_['ms_success_product_status'] = 'Successfully changed product status.';
 
+$_['ms_db_upgrade'] = 'Please <a href="%s">click here</a> to upgrade your MultiMerch Marketplace database to the latest version.';
+$_['ms_db_success'] = 'Your MultiMerch Marketplace database is now up to date!';
+$_['ms_db_latest'] = 'Your MultiMerch Marketplace database is already up to date!';
+
 $_['heading_title'] = '<b>[MultiMerch]</b> Digital Marketplace';
 $_['text_seller_select'] = 'Seller select';
 $_['text_shipping_dependent'] = 'Shipping dependent';

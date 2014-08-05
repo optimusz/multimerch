@@ -1,8 +1,6 @@
 <?php
 
 class ControllerModuleMultiseller extends ControllerMultisellerBase {
-	private $_versions = array("2.2", "2.3", "3.0", "4.0", "4.1", "4.2", "4.3", "4.4", "5.0", "5.1", "5.2", "5.3");
-	
 	private $_controllers = array(
 		"multiseller/base",
 		"multiseller/product",
@@ -181,11 +179,11 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 	}
 	public function install() {
 		$this->validate(__FUNCTION__);
-		$this->load->model("multiseller/settings");
+		$this->load->model("multiseller/install");
 		$this->load->model('setting/setting');
-		$this->model_multiseller_settings->dropTable();
-		$this->model_multiseller_settings->createTable();
-		$this->model_multiseller_settings->addData();
+		
+		$this->model_multiseller_install->createSchema();
+		$this->model_multiseller_install->createData();
 		$this->model_setting_setting->editSetting('multiseller', $this->settings);
 		
 		$this->load->model('user/user_group');
@@ -227,9 +225,9 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 
 	public function uninstall() {
 		$this->validate(__FUNCTION__);
-		$this->load->model("multiseller/settings");
-		$this->model_multiseller_settings->dropTable();
-		$this->model_multiseller_settings->removeData();
+		$this->load->model("multiseller/install");
+		$this->model_multiseller_install->deleteSchema();
+		$this->model_multiseller_install->deleteData();
 	}	
 
 	public function saveSettings() {
@@ -265,14 +263,6 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 	
 	public function index() {
 		$this->validate(__FUNCTION__);
-		
-		$this->load->model("multiseller/settings");
-		
-		foreach ($this->_versions as $version) {
-			if (!$this->model_multiseller_settings->checkDbVersion($version)) {
-				$this->data['updates'][$version] = $this->url->link('module/multiseller/update&version=' . $version, 'token=' . $this->session->data['token'], 'SSL');
-			}
-		}
 		
 		foreach($this->settings as $s=>$v) {
 			//var_dump($s,$this->config->get($s));
@@ -338,19 +328,16 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		$this->response->setOutput($this->render());
 	}
 	
-	public function update() {
-		$this->validate(__FUNCTION__);
-		$version = $this->request->get['version'];
-		
-		if  (!in_array($version, $this->_versions)) return; 
-		
-		$this->load->model("multiseller/settings");
-		if (!$this->model_multiseller_settings->checkDbVersion($version)) {
-			$this->model_multiseller_settings->update($version);
-			echo 'Done';
+	public function upgradeDb() {
+		$this->load->model("multiseller/upgrade");
+		if (!$this->model_multiseller_upgrade->isDbLatest()) {
+			$this->model_multiseller_upgrade->upgradeDb();
+			$this->session->data['ms_db_latest'] = $this->language->get('ms_db_success');
 		} else {
-			echo 'Db already at version ' . $version;
+			$this->session->data['ms_db_latest'] = $this->language->get('ms_db_latest');
 		}
-	}	
+		
+		$this->redirect($this->url->link('module/multiseller', 'token=' . $this->session->data['token'], 'SSL'));
+	}
 }
 ?>
