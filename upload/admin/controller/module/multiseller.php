@@ -9,7 +9,6 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		"multiseller/seller",
 		"multiseller/transaction",
 		"multiseller/seller-group",
-		"multiseller/comment",
 		"multiseller/badge"
 	);
 	
@@ -67,20 +66,6 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		"msconf_withdrawal_waiting_period" => 0,
 		"msconf_graphical_sellermenu" => 1,
 		
-		"msconf_comments_enable" => 1,
-		"msconf_comments_allow_guests" => 0,
-		"msconf_comments_enforce_customer_data" => 1,
-		"msconf_comments_enable_customer_captcha" => 0,
-		"msconf_comments_maxlen" => 500,
-		"msconf_comments_perpage" => 10,
-		
-		"msconf_seller_comments_enable" => 1,
-		"msconf_seller_comments_allow_guests" => 0,
-		"msconf_seller_comments_enforce_customer_data" => 1,
-		"msconf_seller_comments_enable_customer_captcha" => 0,
-		"msconf_seller_comments_maxlen" => 500,
-		"msconf_seller_comments_perpage" => 10,
-
 		"msconf_seller_rate_comment_maxlen" => 300,
 		"msconf_seller_ratings_perpage" => 10,
 		

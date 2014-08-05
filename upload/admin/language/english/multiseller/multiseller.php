@@ -96,7 +96,6 @@ $_['ms_menu_products'] = 'Products';
 $_['ms_menu_transactions'] = 'Transactions';
 $_['ms_menu_payment'] = 'Payments';
 $_['ms_menu_settings'] = 'Settings';
-$_['ms_menu_comments'] = 'Comments';
 $_['ms_menu_badge'] = 'Badges';
 
 // Settings
@@ -204,29 +203,6 @@ $_['ms_config_allow_discounts_note'] = 'Allow sellers to define quantity discoun
 $_['ms_config_withdrawal_waiting_period'] = 'Payout waiting period';
 $_['ms_config_withdrawal_waiting_period_note'] = 'Seller balance entries newer than this value will not be available for payout requests';
 
-$_['ms_config_product_comments'] = 'Product comments';
-$_['ms_config_comments_enable'] = 'Enable product comments';
-$_['ms_config_comments_enable_note'] = 'Enable or disable product comments functionality';
-
-$_['ms_config_seller_comments'] = 'Seller comments';
-$_['ms_config_seller_comments_enable'] = 'Enable seller comments';
-$_['ms_config_seller_comments_enable_note'] = 'Enable or disable seller comments functionality';
-
-$_['ms_config_comments_perpage'] = 'Comments per page';
-$_['ms_config_comments_perpage_note'] = 'Number of comments per page in front store';
-
-$_['ms_config_comments_allow_guests'] = 'Allow guest comments';
-$_['ms_config_comments_allow_guests_note'] = 'Allow unregistered visitors to post comments';
-
-$_['ms_config_comments_enforce_customer_data'] = 'Enforce customer data';
-$_['ms_config_comments_enforce_customer_data_note'] = 'Prevent registered customers from using custom name and email when posting comments';
-
-$_['ms_config_comments_enable_customer_captcha'] = 'Enable customer captcha';
-$_['ms_config_comments_enable_customer_captcha_note'] = 'Enable captcha for registered customers';
-
-$_['ms_config_comments_maxlen'] = 'Maximum comment length';
-$_['ms_config_comments_maxlen_note'] = 'Maximum comment length when posting comments in front store';
-
 $_['ms_config_seller_ratings'] = 'Seller ratings';
 
 $_['ms_config_rate_comment_maxlen'] = 'Maximum rate comment length';
@@ -240,7 +216,6 @@ $_['ms_config_graphical_sellermenu_note'] = 'Graphical seller menu';
 
 $_['ms_config_productform'] = 'Product form';
 $_['ms_config_finances'] = 'Finances';
-$_['ms_config_comments'] = 'Comments';
 $_['ms_config_miscellaneous'] = 'Miscellaneous';
 
 $_['ms_config_module'] = 'Modules';
@@ -448,12 +423,6 @@ $_['ms_error_seller_group_name'] = 'Error: Name must be between 3 and 32 symbols
 $_['ms_error_seller_group_default'] = 'Error: Default seller group can not be deleted!';
 $_['ms_success_seller_group_created'] = 'Seller group created';
 $_['ms_success_seller_group_updated'] = 'Seller group updated';
-
-// Comments
-$_['ms_comments_heading'] = 'Comments';
-$_['ms_comments_breadcrumbs'] = 'Comments';
-$_['ms_comments_comment'] = 'Comment';
-$_['ms_success_comments_deleted'] = 'Comments deleted';
 
 // Payments
 $_['ms_payment_heading'] = 'Payments';

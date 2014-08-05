@@ -164,36 +164,6 @@
 		</tbody>
 	</table>
 	
-	<br />
-	<h2><?php echo $ms_account_dashboard_comments; ?></h2>
-	<table class="list comments">
-		<thead>
-			<tr>
-				<td class="name"><?php echo $ms_account_comments_name; ?></a></td>
-				<td class="product"><?php echo $ms_account_comments_product; ?></a></td>
-				<td class="comment"><?php echo $ms_account_comments_comment; ?></a></td>
-				<td class="date"><?php echo $ms_date; ?></a></td>
-			</tr>
-		</thead>
-		
-		<tbody>
-			<?php if (isset($comments) && $comments) { ?>
-			<?php foreach ($comments as $comment) { ?>
-			<tr>
-				<td><?php echo $comment['name']; ?></td>
-				<td><a href="<?php echo $this->url->link('product/product', 'product_id=' . $comment['product_id'], 'SSL'); ?>"><?php echo $comment['product_name']; ?></a></td>
-				<td><?php echo $comment['comment']; ?></td>
-				<td><?php echo $comment['date_created']; ?></td>
-			</tr>
-			<?php } ?>
-			<?php } else { ?>
-			<tr>
-				<td class="center" colspan="4"><?php echo $ms_account_comments_nocomments; ?></td>
-			</tr>
-			<?php } ?>
-		</tbody>
-	</table>
-	
 	<div class="buttons">
 		<div class="left">
 			<a href="<?php echo $link_back; ?>" class="button">

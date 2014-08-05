@@ -235,17 +235,6 @@ class ControllerSellerCatalogSeller extends ControllerSellerCatalog {
 		$seller_id = $this->request->get['seller_id'];
 
 		if(!$this->cache->get('seller' . $seller_id)) {
-		
-			if ($this->config->get('msconf_seller_comments_enable')) {
-				$this->document->addScript('catalog/view/javascript/ms-comments.js');
-			
-				if(file_exists('catalog/view/theme/'.$this->config->get('config_template').'/stylesheet/ms-comments.css')){
-					$this->document->addStyle("catalog/view/theme/" . $this->config->get('config_template') . "/stylesheet/ms-comments.css");
-				} else {
-					$this->document->addStyle("catalog/view/theme/default/stylesheet/ms-comments.css");
-				}
-			}
-			
 			$this->document->addScript('catalog/view/javascript/dialog-sellercontact.js');
 
 			if ($seller['ms.avatar'] && file_exists(DIR_IMAGE . $seller['ms.avatar'])) {

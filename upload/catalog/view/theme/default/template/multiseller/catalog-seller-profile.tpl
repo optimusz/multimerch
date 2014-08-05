@@ -64,7 +64,6 @@
 
 	<div id="seller-tabs" class="htabs">
 		<a href="#tab-products"><?php echo $ms_catalog_seller_profile_tab_products; ?></a>
-		<?php if ($this->config->get('msconf_seller_comments_enable')) { ?><a href="#tab-comments"><?php echo $ms_catalog_seller_profile_tab_comments; ?></a><?php } ?>
 	</div>
 	
 	<div id="tab-products" class="tab-content">
@@ -103,20 +102,6 @@
 			<p style="text-align: center"><?php echo $ms_catalog_seller_products_empty; ?></p>
 		<?php } ?>
 	</div>
-	
-	<?php if ($this->config->get('msconf_seller_comments_enable')) { ?>
-	<div id="tab-comments" class="tab-content">
-		<script type="text/javascript">
-			$(function(){
-				$('#tab-comments .pcForm').load('index.php?route=module/ms-comments/renderForm&seller_id=<?php echo $seller_id; ?>>');
-				$('#tab-comments .pcComments').load('index.php?route=module/ms-comments/renderComments&seller_id=<?php echo $seller_id; ?>');
-			});
-		</script>
-	
-		<div class="pcComments"></div>
-		<div class="pcForm"></div>
-	</div>
-	<?php } ?>
 
 	<?php echo $content_bottom; ?>
 </div>

@@ -1052,9 +1052,6 @@
 					<a href="#tab-attribute-<?php echo $attribute['attribute_id']; ?>"><?php echo $attribute['name'] ?></a>
 					<?php } ?>
 				<?php } ?>
-				<?php if ($this->config->get('msconf_comments_enable')) { ?>
-					<a href="#tab-comments"><?php echo $tab_comments ?></a>
-				<?php } ?>
 			]]></add>
 		</operation>
 		
@@ -1070,24 +1067,6 @@
 					</div>
 					<?php } ?>
 				<?php } ?>
-				<?php if ($this->config->get('msconf_comments_enable')) { ?>
-				<div id="tab-comments" class="tab-content">
-					<div class="pcComments"></div>
-					<div class="pcForm"></div>
-				</div>
-				<?php } ?>
-			]]></add>
-		</operation>
-	
-		<operation>
-			<search position="before"><![CDATA[
-				$('#button-review').bind('click', function() {
-			]]></search>
-			<add><![CDATA[
-			<?php if ($this->config->get('msconf_comments_enable')) { ?>
-				$('#tab-comments .pcForm').load($('base').attr('href') + 'index.php?route=module/ms-comments/renderForm&product_id=<?php echo $product_id; ?>');
-				$('#tab-comments .pcComments').load($('base').attr('href') + 'index.php?route=module/ms-comments/renderComments&product_id=<?php echo $product_id; ?>');
-			<?php } ?>
 			]]></add>
 		</operation>
 
@@ -1230,29 +1209,6 @@
 
 			$this->data['ms_product_attributes'] = $this->MsLoader->MsAttribute->getProductAttributes($this->request->get['product_id'], array('multilang' => 0, 'attribute_type'=> array(MsAttribute::TYPE_TEXT, MsAttribute::TYPE_TEXTAREA, MsAttribute::TYPE_DATE, MsAttribute::TYPE_DATETIME, MsAttribute::TYPE_TIME), 'mavd.language_id' => 0));
 			$this->data['ms_product_attributes'] = array_merge($this->data['ms_product_attributes'], $this->MsLoader->MsAttribute->getProductAttributes($this->request->get['product_id'], (array())));
-			]]></add>
-		</operation>
-		
-		<!--  product comments  -->
-		<operation>
-			<search position="before"><![CDATA[
-				$this->data['tab_related'] = $this->language->get('tab_related');
-			]]></search>
-			<add><![CDATA[
-				if ($this->config->get('msconf_comments_enable')) {
-					$this->language->load('multiseller/multiseller');
-					$this->data['tab_comments'] = sprintf($this->language->get('ms_comments_tab_comments'), $this->MsLoader->MsComments->getTotalComments(array(
-						'product_id' => $this->request->get['product_id'],
-						'displayed' => 1
-					)));
-					
-					$this->document->addScript('catalog/view/javascript/ms-comments.js');
-					if (file_exists('catalog/view/theme/' . $this->config->get('config_template') . '/stylesheet/ms-comments.css')) {
-						$this->document->addStyle('catalog/view/theme/' . $this->config->get('config_template') . '/stylesheet/ms-comments.css');
-					} else {
-						$this->document->addStyle('catalog/view/theme/default/stylesheet/ms-comments.css');
-					}
-				}
 			]]></add>
 		</operation>
 	</file>
@@ -1409,7 +1365,6 @@
 			<add><![CDATA[
 				$this->db->query("DELETE FROM " . DB_PREFIX . "ms_product WHERE product_id = '" . (int)$product_id . "'");
 				$this->db->query("DELETE FROM " . DB_PREFIX . "ms_product_attribute WHERE product_id = '" . (int)$product_id . "'");
-				$this->db->query("DELETE FROM " . DB_PREFIX . "ms_comments WHERE product_id = '" . (int)$product_id . "'");
 			]]></add>
 		</operation>
 	</file>
@@ -1814,7 +1769,6 @@
 			$this->data['ms_link_products'] = $this->url->link('multiseller/product', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['ms_link_payment'] = $this->url->link('multiseller/payment', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['ms_link_transactions'] = $this->url->link('multiseller/transaction', 'token=' . $this->session->data['token'], 'SSL');
-			$this->data['ms_link_comments'] = $this->url->link('multiseller/comment', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['ms_link_settings'] = $this->url->link('module/multiseller', 'token=' . $this->session->data['token'], 'SSL'); 
 			$this->data['ms_link_badge'] = $this->url->link('multiseller/badge', 'token=' . $this->session->data['token'], 'SSL'); 
 			]]></add>

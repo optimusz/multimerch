@@ -566,7 +566,6 @@ $_['ms_account_orders_change_status']    = 'Change order status';
 $_['ms_account_dashboard_heading'] = 'Seller Dashboard';
 $_['ms_account_dashboard_breadcrumbs'] = 'Seller Dashboard';
 $_['ms_account_dashboard_orders'] = 'Last orders';
-$_['ms_account_dashboard_comments'] = 'Last comments';
 $_['ms_account_dashboard_overview'] = 'Overview';
 $_['ms_account_dashboard_seller_group'] = 'Seller group';
 $_['ms_account_dashboard_listing'] = 'Listing fee';
@@ -585,12 +584,6 @@ $_['ms_account_dashboard_nav_products'] = 'Manage your products';
 $_['ms_account_dashboard_nav_orders'] = 'View your orders';
 $_['ms_account_dashboard_nav_balance'] = 'View your financial records';
 $_['ms_account_dashboard_nav_payout'] = 'Request your payout';
-
-// Account - Comments
-$_['ms_account_comments_name'] = 'Name';
-$_['ms_account_comments_product'] = 'Product';
-$_['ms_account_comments_comment'] = 'Comment';
-$_['ms_account_comments_nocomments'] = 'You don\'t have any comments yet!';
 
 // Account - Request withdrawal
 $_['ms_account_withdraw_heading'] = 'Request Payout';
@@ -645,23 +638,6 @@ $_['ms_account_stats_grand_total_sales'] = 'Grand total sales';
 $_['ms_catalog_product_sellerinfo'] = 'Seller information';
 $_['ms_catalog_product_contact'] = 'Contact this seller';
 
-// Product page - Comments
-$_['ms_comments_post_comment'] = 'Post Comment';
-$_['ms_comments_name'] = 'Name';
-$_['ms_comments_note'] = '<span style="color: #FF0000;">Note:</span> HTML is not translated!';
-$_['ms_comments_email'] = 'E-mail';
-$_['ms_comments_comment'] = 'Comment';
-$_['ms_comments_wait'] = 'Please Wait!';
-$_['ms_comments_login_register'] = 'Please <a href="%s">login</a> or <a href="%s">register</a> to post a comment.';
-$_['ms_comments_error_name'] = 'Please enter a name between %s and %s characters long';
-$_['ms_comments_error_email'] = 'Please enter a valid email';
-$_['ms_comments_error_comment_short'] = 'The comment body must be at least %s characters long';
-$_['ms_comments_error_comment_long'] = 'The comment body cannot be longer than %s characters';
-$_['ms_comments_error_captcha'] = 'Verification code does not match the image';
-$_['ms_comments_success'] = 'Thank you for your comment.';
-$_['ms_comments_captcha'] = 'Enter the code in the box below:';
-$_['ms_comments_no_comments_yet'] = 'No comments added yet';
-$_['ms_comments_tab_comments'] = 'Comments (%s)';
 $_['ms_footer'] = '<br>MultiMerch Marketplace by <a href="http://multimerch.com/">multimerch.com</a>';
 
 // Catalog - Sellers list
@@ -684,7 +660,7 @@ $_['ms_catalog_seller_profile_breadcrumbs'] = '%s\'s profile';
 $_['ms_catalog_seller_profile_about_seller'] = 'About the seller';
 $_['ms_catalog_seller_profile_products'] = 'Some of seller\'s products';
 $_['ms_catalog_seller_profile_tab_products'] = 'Products';
-$_['ms_catalog_seller_profile_tab_comments'] = 'Comments';
+
 $_['ms_catalog_seller_profile_country'] = 'Country:';
 $_['ms_catalog_seller_profile_zone'] = 'Region/State:';
 $_['ms_catalog_seller_profile_website'] = 'Website:';

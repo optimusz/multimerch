@@ -140,6 +140,7 @@ class MsHelper extends Model {
 		return $res->row['language_id'];
 	}
 
+	// @todo Remove from MsHelper
     public function getStockStatuses($data = array()) {
         if ($data) {
             $sql = "SELECT * FROM " . DB_PREFIX . "stock_status WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'";
@@ -182,6 +183,7 @@ class MsHelper extends Model {
         }
     }
 
+    // @todo Remove from MsHelperg
     public function getTaxClasses($data = array()) {
         if ($data) {
             $sql = "SELECT * FROM " . DB_PREFIX . "tax_class";

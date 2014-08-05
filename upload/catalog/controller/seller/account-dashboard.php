@@ -92,35 +92,6 @@ class ControllerSellerAccountDashboard extends ControllerSellerAccount {
    			);
    		}
 		
-		$comments = $this->MsLoader->MsComments->getSellerProductComments(
-			array(
-				'seller_id' => $seller_id,
-				'displayed' => 1
-			),
-			array(
-				'order_by'  => 'create_time',
-				'order_way' => 'DESC',
-				'offset' => 0,
-				'limit' => 5
-			)
-		);
-		
-		foreach ($comments as $result) {
-			$product = $this->MsLoader->MsProduct->getProduct($result['product_id']);
-			if (!$this->config->get('msconf_hide_customer_email')) {
-				$customer_name = $result['name'];
-			} else {
-				$customer_name = "{$result['name']} ({$result['email']})";
-			}
-			$this->data['comments'][] = array(
-				'name' => $customer_name,
-				'product_id' => $result['product_id'],
-				'product_name' => $product['languages'][$this->config->get('config_language_id')]['name'],
-				'comment' => (mb_strlen($result['comment']) > 80 ? mb_substr($result['comment'], 0, 80) . '...' : $result['comment']),
-				'date_created' => date($this->language->get('date_format_short'), $result['create_time']),
-			);
-		}		
-		
 		$this->data['link_back'] = $this->url->link('account/account', '', 'SSL');
 		
 		$this->document->setTitle($this->language->get('ms_account_dashboard_heading'));
