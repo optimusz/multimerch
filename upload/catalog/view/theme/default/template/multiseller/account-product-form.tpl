@@ -144,7 +144,9 @@
 				<tr>
 					<td><span class="required">*</span> <?php echo $ms_account_product_price; ?></td>
 					<td>
+						<span class="vertical-align: auto"><?php echo $this->currency->getSymbolLeft($this->config->get('config_currency')); ?></span>
 						<input type="text" name="product_price" value="<?php echo $product['price']; ?>" <?php if (isset($seller['commissions']) && $seller['commissions'][MsCommission::RATE_LISTING]['percent'] > 0) { ?>class="ms-price-dynamic"<?php } ?> />
+						<span class="vertical-align: auto"><?php echo $this->currency->getSymbolRight($this->config->get('config_currency')); ?></span>
 						<p class="ms-note"><?php echo $ms_account_product_price_note; ?></p>
 						<p class="error" id="error_product_price"></p>
 					</td>
