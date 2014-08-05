@@ -330,7 +330,7 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 	
 	public function upgradeDb() {
 		$this->load->model("multiseller/upgrade");
-		if (!$this->model_multiseller_upgrade->isDbLatest()) {
+		if ($this->MsLoader->MsHelper->isInstalled() && !$this->model_multiseller_upgrade->isDbLatest()) {
 			$this->model_multiseller_upgrade->upgradeDb();
 			$this->session->data['ms_db_latest'] = $this->language->get('ms_db_success');
 		} else {

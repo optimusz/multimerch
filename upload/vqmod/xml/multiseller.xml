@@ -1746,7 +1746,8 @@
 			]]></search>
 			<add><![CDATA[
 				<?php $this->load->model('multiseller/upgrade'); ?>
-				<?php if (!$this->model_multiseller_upgrade->isDbLatest()) { ?>
+				
+				<?php if ($this->MsLoader->MsHelper->isInstalled() && !$this->model_multiseller_upgrade->isDbLatest()) { ?>
 					<div class="attention" style="text-align:center; margin: 10px"><?php echo sprintf($this->language->get('ms_db_upgrade'), $this->url->link('module/multiseller/upgradeDb', 'token=' . $this->session->data['token'], 'SSL')); ?></div>
 				<?php } ?>
 				

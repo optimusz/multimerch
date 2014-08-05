@@ -242,6 +242,12 @@ class MsHelper extends Model {
 		$thousand_point = $this->language->get('thousand_point');
 		return number_format(round($number, (int)$decimal_place), (int)$decimal_place, $decimal_point, '');
 	}
+	
+	public function isInstalled() {
+		$this->load->model('setting/extension');
+		$installed_extensions = $this->model_setting_extension->getInstalled('module');
+		return array_search('multiseller', $installed_extensions) !== FALSE;
+	}
 }
 
 ?>

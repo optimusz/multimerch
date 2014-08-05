@@ -89,7 +89,8 @@ class ModelMultisellerInstall extends Model {
 		`rating_honesty` int(1) DEFAULT NULL,
 		PRIMARY KEY (`rating_id`)) default CHARSET=utf8");
 	
-		$createTable = " CREATE TABLE " . DB_PREFIX . "ms_comments (
+		$this->db->query("
+		CREATE TABLE " . DB_PREFIX . "ms_comments (
 		`id` int(11) NOT NULL AUTO_INCREMENT,
 		`parent_id` int(11) DEFAULT NULL,
 		`product_id` int(11) DEFAULT NULL,
@@ -316,7 +317,7 @@ class ModelMultisellerInstall extends Model {
 	}
 	
 	public function createData() {
-		$schema = explode(".", $this-MsLoader->dbVer);
+		$schema = explode(".", $this->MsLoader->dbVer);
 		$this->db->query("INSERT INTO " . DB_PREFIX . "ms_db_schema (major, minor, build, revision, date_applied) VALUES({$schema[0]},{$schema[1]},{$schema[2]},{$schema[3]}, NOW())");
 	
 		// create default fees
@@ -392,16 +393,16 @@ class ModelMultisellerInstall extends Model {
 		//@todo
 		
 		// remove MultiMerch routes
-		$this->db->query("DELETE FROM " . DB_PREFIX . "layout WHEREE name = 'MultiMerch Seller Account'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "layout WHERE name = 'MultiMerch Seller Account'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "layout_route WHERE route = 'seller/account'");
 
-		$this->db->query("DELETE FROM " . DB_PREFIX . "layout WHEREE name = 'MultiMerch Seller List'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "layout WHERE name = 'MultiMerch Seller List'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "layout_route WHERE route = 'seller/catalog-seller'");
 		
-		$this->db->query("DELETE FROM " . DB_PREFIX . "layout WHEREE name = 'MultiMerch Seller Profile'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "layout WHERE name = 'MultiMerch Seller Profile'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "layout_route WHERE route = 'seller/catalog-seller/profile'");
 
-		$this->db->query("DELETE FROM " . DB_PREFIX . "layout WHEREE name = 'MultiMerch Seller Products'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "layout WHERE name = 'MultiMerch Seller Products'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "layout_route WHERE route = 'seller/catalog-seller/products'");
 	}
 }
