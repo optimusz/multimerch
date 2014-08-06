@@ -339,24 +339,6 @@
 		</operation>
 	</file>
 	
-	<!-- Conversations link for non-sellers in the "My Account" Area -->
-	<file name="catalog/view/theme/&themeFolder;/template/account/account.tpl">
-		<operation>
-			<search position="after"><![CDATA[
-				<li><a href="<?php echo $wishlist; ?>"><?php echo $text_wishlist; ?></a></li>
-			]]></search>
-			<add><![CDATA[
-				<?php if ($this->config->get('msconf_enable_private_messaging') == 1) { ?>
-					<li>
-						<a href="<?php echo $this->url->link('account/msconversation', '', 'SSL'); ?>">
-							<?php echo $ms_account_messages; ?>
-						</a>
-					</li>
-				<?php } ?>
-			]]></add>
-		</operation>
-	</file>
-
 	<!-- Get order status id from database -->
 	<file name="catalog/model/account/order.php">
 		<operation>
@@ -574,16 +556,6 @@
 										<?php echo $ms_account_transactions; ?>
 									</a>
 								</li>
-								<?php if ($this->config->get('msconf_enable_private_messaging') == 1) { ?>
-									<li>
-										<a href="<?php echo $this->url->link('account/msconversation', '', 'SSL'); ?>">
-											<?php if($this->config->get('msconf_graphical_sellermenu')) { ?>
-												<img src="catalog/view/theme/<?php echo $this->config->get('config_template'); ?>/image/ms-envelope-96.png" />
-											<?php } ?>
-											<?php echo $ms_account_messages; ?>
-										</a>
-									</li>
-								<?php } ?>
 								<?php if ($this->config->get('msconf_allow_withdrawal_requests')) { ?>
 									<li>
 										<a href="<?php echo $this->url->link('seller/account-withdrawal', '', 'SSL'); ?>">
@@ -624,21 +596,6 @@
 	<!-- seller account SIDEBAR area links -->
 	<file name="catalog/view/theme/&themeFolder;/template/module/account.tpl">
 		<operation>
-			<search position="after"><![CDATA[
-				<li><a href="<?php echo $wishlist; ?>"><?php echo $text_wishlist; ?></a></li>
-			]]></search>
-			<add><![CDATA[
-				<?php if ($this->config->get('msconf_enable_private_messaging') == 1) { ?>
-					<li>
-						<a href="<?php echo $this->url->link('account/msconversation', '', 'SSL'); ?>">
-							<?php echo $ms_account_messages; ?>
-						</a>
-					</li>
-				<?php } ?>
-			]]></add>
-		</operation>	
-	
-		<operation>
 			<search position="before"><![CDATA[
 			</ul>
 			]]></search>
@@ -654,7 +611,6 @@
 				<?php if ($ms_seller_created && $this->MsLoader->MsSeller->getStatus($this->customer->getId()) == MsSeller::STATUS_ACTIVE) { ?>
 					<li><a href="<?php echo $this->url->link('seller/account-product/create', '', 'SSL'); ?>"><?php echo $ms_account_newproduct; ?></a></li>
 					<li><a href="<?php echo $this->url->link('seller/account-product', '', 'SSL'); ?>"><?php echo $ms_account_products; ?></a></li>
-					<?php if ($this->config->get('msconf_enable_private_messaging') == 1) { ?> <li><a href="<?php echo $this->url->link('account/msconversation', '', 'SSL'); ?>"><?php echo $ms_account_messages; ?></a></li> <?php } ?>
 					<li><a href="<?php echo $this->url->link('seller/account-order', '', 'SSL'); ?>"><?php echo $ms_account_orders; ?></a></li>
 					<li><a href="<?php echo $this->url->link('seller/account-transaction', '', 'SSL'); ?>"><?php echo $ms_account_transactions; ?></a></li>
 					<?php if ($this->config->get('msconf_allow_withdrawal_requests')) { ?>
@@ -696,30 +652,6 @@
 			<add><![CDATA[
 				$this->data['ms_seller_created'] = $this->MsLoader->MsSeller->isCustomerSeller($this->customer->getId());			
 				$this->data = array_merge($this->data, $this->load->language('multiseller/multiseller'));
-			]]></add>
-		</operation>
-	</file>
-	
-	<!-- **************************************** -->
-	<!-- * Unread private message notifications * -->
-	<!-- **************************************** -->
-	
-	<file name="catalog/view/theme/&themeFolder;/template/account/account.tpl">
-		<operation>
-			<search position="after"><![CDATA[
-				<h1><?php echo $heading_title; ?></h1>
-			]]></search>
-			<add><![CDATA[
-				<?php $unread_messages = (int)$this->MsLoader->MsConversation->unreadMessages($this->customer->getId()); ?>
-				<?php if ($unread_messages) { ?>
-					<p class="attention">
-						<?php if ($unread_messages == 1) {
-							echo $ms_account_unread_pm;
-						} else {
-							echo sprintf($ms_account_unread_pms, $unread_messages);
-						}?>
-					</p>
-				<?php } ?>
 			]]></add>
 		</operation>
 	</file>
@@ -905,7 +837,7 @@
 
 						<p><b><?php echo $ms_catalog_seller_profile_totalsales; ?></b> <?php echo $seller['total_sales']; ?></p>
 						<p><b><?php echo $ms_catalog_seller_profile_totalproducts; ?></b> <?php echo $seller['total_products']; ?></p>
-						<?php if ((!$this->customer->getId() || ($this->customer->getId() && $this->customer->getId() != $seller['seller_id'])) && ($this->config->get('msconf_enable_private_messaging') == 2 || ($this->config->get('msconf_enable_private_messaging') == 1 && $this->customer->getId()))) { ?>
+						<?php if ((!$this->customer->getId() || ($this->customer->getId() && $this->customer->getId() != $seller['seller_id'])) && ($this->config->get('msconf_enable_private_messaging') == 2 || ($this->config->get('mmess_config_enable') == 1 && $this->customer->getId()))) { ?>
 							<p><a href="index.php?route=seller/catalog-seller/jxRenderContactDialog&product_id=<?php echo $product_id; ?>" class="ms-sellercontact" title="<?php echo $ms_sellercontact_title; ?>"><?php echo $ms_catalog_product_contact; ?></a></p>
 						<?php } ?>
 					</div>
