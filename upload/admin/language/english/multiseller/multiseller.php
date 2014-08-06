@@ -46,6 +46,7 @@ $_['ms_error_withdraw_status'] = 'Error: unsuccessful transaction';
 $_['ms_success'] = 'Success';
 $_['ms_success_transactions'] = 'Transactions successfully completed';
 $_['ms_success_payment_deleted'] = 'Payment deleted';
+$_['text_success']                 = 'Success: You have modified settings!';
 
 $_['ms_none'] = 'None';
 $_['ms_seller'] = 'Seller';
@@ -202,14 +203,6 @@ $_['ms_config_allow_discounts_note'] = 'Allow sellers to define quantity discoun
  
 $_['ms_config_withdrawal_waiting_period'] = 'Payout waiting period';
 $_['ms_config_withdrawal_waiting_period_note'] = 'Seller balance entries newer than this value will not be available for payout requests';
-
-$_['ms_config_seller_ratings'] = 'Seller ratings';
-
-$_['ms_config_rate_comment_maxlen'] = 'Maximum rate comment length';
-$_['ms_config_rate_comment_maxlen_note'] = 'Maximum comment length when rating seller in front store';
-
-$_['ms_config_ratings_perpage'] = 'Number of ratings per page';
-$_['ms_config_ratings_perpage_note'] = 'Number of ratings per page in front store';
 
 $_['ms_config_graphical_sellermenu'] = 'Graphical seller menu';
 $_['ms_config_graphical_sellermenu_note'] = 'Graphical seller menu';

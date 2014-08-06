@@ -376,40 +376,6 @@ input.option_quantity {
 	margin-bottom: 10px;
 }
 
-
-/* comments */
-
-#tab-comments .content span.comment {
-    display: block;
-    font-weight: bold;
-}
-
-#tab-comments .content .comment-name {
-    font-weight: bold;
-}
-
-#tab-comments .content .comment-date {
-    float: right;
-}
-
-#tab-comments .content .comment-content {
-    margin: 10px;
-}	
-
-#pcCommentlist #pagination {
-    margin: 20px auto;
-    float: left;
-    left: 50%;
-    position: relative;
-    
-}
-
-#pcCommentlist #pagination ul {
-    float: left;
-    position: relative;
-    right: 50%;
-}
-
 /* seller profile */
 .ms-sellerprofile {
 	width: 100%;
@@ -662,38 +628,6 @@ div.ms-jquery-dialog.ui-widget-content,
 	display: inline-block;
 }
 
-/* Seller rate form */
-
-.ms-seller-rate-dialog .ms-form {
-	width: 96%;
-}
-
-.ms-seller-rate-dialog .ms-form textarea {
-	width: 250px;
-	height: 50px;
-}
-
-.ms-seller-rate-dialog .ms-form label {
-	font-weight: bold;
-	display: inline-block;
-}
-
-.ms-seller-rate-dialog .ms-form .ratings {
-	display: inline;
-	font-weight: normal;
-}
-
-.ms-seller-rate-dialog .ms-form .ratings input[type=radio], .ms-seller-rate-dialog .ms-form .ratings input.radio, .ms-seller-rate-dialog .ms-form .ratings span {
-	display:inline;
-	width: 20px;
-	padding: 0;
-	margin:0;
-	vertical-align: center;
-	position: relative;
-	top: 5px;
-	*overflow: hidden;
-}
-
 /* seller contact form */
 
 .ms-sellercontact-image {
@@ -861,26 +795,6 @@ ul.ms-sellermenu.graphical li a {
 	height: 32px;
 	vertical-align: middle;
 	margin-right: 5px;
-}
-
-.ms-account-dashboard table.list.comments {
-	text-align: center;
-}
-
-.ms-account-dashboard table.list.comments tr {
-	height: 25px;
-}
-
-.ms-account-dashboard table.list.comments .name {
-	width: 200px;
-}
-
-.ms-account-dashboard table.list.comments .product {
-	width: 150px;
-}
-
-.ms-account-dashboard table.list.comments .date {
-	width: 75px;
 }
 
 

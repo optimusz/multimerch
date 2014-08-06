@@ -66,9 +66,6 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		"msconf_withdrawal_waiting_period" => 0,
 		"msconf_graphical_sellermenu" => 1,
 		
-		"msconf_seller_rate_comment_maxlen" => 300,
-		"msconf_seller_ratings_perpage" => 10,
-		
 		"msconf_enable_rte" => 0,
 		"msconf_rte_whitelist" => "",
 		

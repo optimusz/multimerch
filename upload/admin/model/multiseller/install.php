@@ -78,18 +78,6 @@ class ModelMultisellerInstall extends Model {
 		PRIMARY KEY (`seller_id`)) default CHARSET=utf8");
 	
 		$this->db->query("
-		CREATE TABLE `" . DB_PREFIX . "ms_rating` (
-		`rating_id` int(11) NOT NULL AUTO_INCREMENT,
-		`evaluator_id` int(11) DEFAULT NULL,
-		`rated_user_id` int(11) DEFAULT NULL,
-		`order_id` int(11) DEFAULT NULL,
-		`comment` VARCHAR(255) DEFAULT NULL,
-		`rating_overall` int(1) DEFAULT NULL,
-		`rating_communication` int(1) DEFAULT NULL,
-		`rating_honesty` int(1) DEFAULT NULL,
-		PRIMARY KEY (`rating_id`)) default CHARSET=utf8");
-	
-		$this->db->query("
 		CREATE TABLE `" . DB_PREFIX . "ms_balance` (
 		`balance_id` int(11) NOT NULL AUTO_INCREMENT,
 		`seller_id` int(11) NOT NULL,
@@ -343,7 +331,6 @@ class ModelMultisellerInstall extends Model {
 		$this->db->query("DROP TABLE IF EXISTS
 		`" . DB_PREFIX . "ms_product`,
 		`" . DB_PREFIX . "ms_seller`,
-		`" . DB_PREFIX . "ms_rating`,
 		`" . DB_PREFIX . "ms_order_product_data`,
 		`" . DB_PREFIX . "ms_balance`,
 		`" . DB_PREFIX . "ms_seller_group`,
