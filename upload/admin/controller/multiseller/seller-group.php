@@ -113,13 +113,6 @@ class ControllerMultisellerSellerGroup extends ControllerMultisellerBase {
 		$this->load->model('localisation/language');
 		$this->data['languages'] = $this->model_localisation_language->getLanguages();		
 		
-		// badges
-		$badges = $this->MsLoader->MsBadge->getBadges();
-		foreach($badges as &$badge) {
-			$badge['image'] = $this->model_tool_image->resize($badge['image'], 30, 30);
-		}
-		$this->data['badges'] = $badges;
-		
 		$this->data['seller_group'] = NULL;
 		
 		$this->data['breadcrumbs'] = $this->MsLoader->MsHelper->admSetBreadcrumbs(array(
@@ -157,13 +150,6 @@ class ControllerMultisellerSellerGroup extends ControllerMultisellerBase {
 		else
 			$rates = $this->MsLoader->MsCommission->getCommissionRates($seller_group['msg.commission_id']);
 		
-		// badges
-		$badges = $this->MsLoader->MsBadge->getBadges();
-		foreach($badges as &$badge) {
-			$badge['image'] = $this->model_tool_image->resize($badge['image'], 30, 30);
-		}
-		$this->data['badges'] = $badges;
-
 		$this->data['seller_group'] = array(
 			'seller_group_id' => $seller_group['seller_group_id'],
 			'description' => $this->MsLoader->MsSellerGroup->getSellerGroupDescriptions($this->request->get['seller_group_id']),
@@ -172,12 +158,6 @@ class ControllerMultisellerSellerGroup extends ControllerMultisellerBase {
 			'commission_id' => $seller_group['commission_id'],
 			'commission_rates' => $rates,
 		);
-		
-		$seller_group_badges = $this->MsLoader->MsBadge->getSellerGroupBadges(array('seller_group_id' => $this->request->get['seller_group_id']));
-		$this->data['seller_group']['badges'] = array();
-		foreach($seller_group_badges as $b) {
-			$this->data['seller_group']['badges'][] = $b['badge_id'];
-		}		
 		
 		$this->data['breadcrumbs'] = $this->MsLoader->MsHelper->admSetBreadcrumbs(array(
 			array(

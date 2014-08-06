@@ -284,18 +284,6 @@ class ControllerSellerCatalogSeller extends ControllerSellerCatalog {
 				)
 			);
 
-			// badges
-			$badges = array_unique(array_merge(
-				$this->MsLoader->MsBadge->getSellerGroupBadges(array('seller_id' => $seller['seller_id'], 'language_id' => $this->config->get('config_language_id'))),
-				$this->MsLoader->MsBadge->getSellerGroupBadges(array('seller_group_id' => $seller['ms.seller_group'], 'language_id' => $this->config->get('config_language_id'))),
-				$this->MsLoader->MsBadge->getSellerGroupBadges(array('seller_group_id' => $this->config->get('msconf_default_seller_group_id'), 'language_id' => $this->config->get('config_language_id')))
-			), SORT_REGULAR);		
-			
-			foreach ($badges as &$badge) {
-				$badge['image'] = $this->model_tool_image->resize($badge['image'], $this->config->get('msconf_badge_width'), $this->config->get('msconf_badge_height'));
-			}
-			$this->data['seller']['badges'] = $badges;
-
 			if (!empty($products)) {
 				foreach ($products as $product) {
 					$product_data = $this->model_catalog_product->getProduct($product['product_id']);
@@ -407,23 +395,11 @@ class ControllerSellerCatalogSeller extends ControllerSellerCatalog {
 			$this->data['seller']['website'] = NULL;
 		}
 		
-		// badges
-		$badges = array_unique(array_merge(
-			$this->MsLoader->MsBadge->getSellerGroupBadges(array('seller_id' => $seller['seller_id'], 'language_id' => $this->config->get('config_language_id'))),
-			$this->MsLoader->MsBadge->getSellerGroupBadges(array('seller_group_id' => $seller['ms.seller_group'], 'language_id' => $this->config->get('config_language_id'))),
-			$this->MsLoader->MsBadge->getSellerGroupBadges(array('seller_group_id' => $this->config->get('msconf_default_seller_group_id'), 'language_id' => $this->config->get('config_language_id')))
-		), SORT_REGULAR);		
-		
 		$this->data['seller']['total_sales'] = $this->MsLoader->MsSeller->getSalesForSeller($seller['seller_id']);
 		$this->data['seller']['total_products'] = $this->MsLoader->MsProduct->getTotalProducts(array(
 			'seller_id' => $seller['seller_id'],
 			'product_status' => array(MsProduct::STATUS_ACTIVE)
 		));
-
-		foreach ($badges as &$badge) {
-			$badge['image'] = $this->model_tool_image->resize($badge['image'], $this->config->get('msconf_badge_width'), $this->config->get('msconf_badge_height'));
-		}
-		$this->data['seller']['badges'] = $badges;
 
 		/* seller products part */
 		$this->data['text_display'] = $this->language->get('text_display');

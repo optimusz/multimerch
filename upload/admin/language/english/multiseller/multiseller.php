@@ -97,7 +97,6 @@ $_['ms_menu_products'] = 'Products';
 $_['ms_menu_transactions'] = 'Transactions';
 $_['ms_menu_payment'] = 'Payments';
 $_['ms_menu_settings'] = 'Settings';
-$_['ms_menu_badge'] = 'Badges';
 
 // Settings
 $_['ms_settings_heading'] = 'Settings';
@@ -245,8 +244,6 @@ $_['ms_config_product_image_size'] = 'Product image size';
 $_['ms_config_product_image_size_seller_profile'] = 'Seller profile';
 $_['ms_config_product_image_size_seller_products_list'] = 'Seller products list in catalog';
 $_['ms_config_product_image_size_seller_products_list_account'] = 'Seller products list in seller account area';
-
-$_['ms_config_badge_size'] = 'Badge size';
 
 $_['ms_config_minimum_uploaded_image_size'] = 'Minimum uploaded image size (Width x Height)';
 $_['ms_config_minimum_uploaded_image_size_note'] = 'Define minimum image dimensions allowed for uploaded images. Set 0 for no limits.';
@@ -554,17 +551,4 @@ $_['ms_payment_royalty_payout'] = 'Royalty payout to %s at %s';
 $_['ms_payment_generic'] = 'Payment #%s at %s';
 $_['ms_payment_completed'] = 'Payment completed';
 
-// Badges
-$_['ms_catalog_badges_breadcrumbs'] = 'Badges';
-$_['ms_catalog_badges_heading'] = 'Badges';
-$_['ms_catalog_badges_image'] = 'Image';
-$_['ms_badges_column_id'] = 'ID';
-$_['ms_badges_column_name'] = 'Name';
-$_['ms_badges_image'] = 'Image';
-$_['ms_badges_column_action'] = 'Action';
-$_['ms_catalog_insert_badge_heading'] = 'Create badge';
-$_['ms_catalog_edit_badge_heading'] = 'Edit badge';
-$_['ms_success_badge_created'] = 'Badge created';
-$_['ms_success_badge_updated'] = 'Badge updated';
-$_['ms_error_badge_name'] = 'Please specify a name for the badge';
 ?>

@@ -8,8 +8,7 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		"multiseller/payment",
 		"multiseller/seller",
 		"multiseller/transaction",
-		"multiseller/seller-group",
-		"multiseller/badge"
+		"multiseller/seller-group"
 	);
 	
 	private $settings = array(
@@ -87,8 +86,6 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		"msconf_product_seller_products_image_height" => 100,
 		"msconf_product_seller_product_list_seller_area_image_width" => 40,
 		"msconf_product_seller_product_list_seller_area_image_height" => 40,
-		"msconf_badge_width" => 30,
-		"msconf_badge_height" => 30,
 		
 		"msconf_min_uploaded_image_width" => 0,
 		"msconf_min_uploaded_image_height" => 0,

@@ -885,11 +885,6 @@
 					<div class="avatar-box">
 						<a style="text-decoration: none" href="<?php echo $seller['href']; ?>"><h2><?php echo $seller['nickname']; ?></h2></a>
 						<a href="<?php echo $seller['href']; ?>"><img src="<?php echo $seller['thumb']; ?>" /></a>
-						<div class="ms-badges">
-							<?php foreach($seller['badges'] as $badge) { ?>
-								<img src="<?php echo $badge['image']; ?>" title="<?php echo $badge['description']; ?>" />
-							<?php } ?>
-							</div>
 					</div>
 					<div class="info-box">
 						<?php if ($seller['country']) { ?>
@@ -1065,17 +1060,6 @@
 					'seller_id' => $seller['seller_id'],
 					'product_status' => array(MsProduct::STATUS_ACTIVE)
 				));
-
-				$badges = array_unique(array_merge(
-					$this->MsLoader->MsBadge->getSellerGroupBadges(array('seller_id' => $seller['seller_id'], 'language_id' => $this->config->get('config_language_id'))),
-					$this->MsLoader->MsBadge->getSellerGroupBadges(array('seller_group_id' => $seller['ms.seller_group'], 'language_id' => $this->config->get('config_language_id'))),
-					$this->MsLoader->MsBadge->getSellerGroupBadges(array('seller_group_id' => $this->config->get('msconf_default_seller_group_id'), 'language_id' => $this->config->get('config_language_id')))
-				), SORT_REGULAR);
-				
-				foreach ($badges as &$badge) {
-					$badge['image'] = $this->model_tool_image->resize($badge['image'], $this->config->get('msconf_badge_width'), $this->config->get('msconf_badge_height'));
-				}
-				$this->data['seller']['badges'] = $badges;
 			}
 
 			$this->data['ms_product_attributes'] = $this->MsLoader->MsAttribute->getProductAttributes($this->request->get['product_id'], array('multilang' => 0, 'attribute_type'=> array(MsAttribute::TYPE_TEXT, MsAttribute::TYPE_TEXTAREA, MsAttribute::TYPE_DATE, MsAttribute::TYPE_DATETIME, MsAttribute::TYPE_TIME), 'mavd.language_id' => 0));
@@ -1607,7 +1591,6 @@
 						<li><a href="<?php echo $ms_link_products; ?>"><?php echo $ms_menu_products; ?></a></li>
 						<li><a href="<?php echo $ms_link_transactions; ?>"><?php echo $ms_menu_transactions; ?></a></li>
 						<li><a href="<?php echo $ms_link_payment; ?>"><?php echo $ms_menu_payment; ?></a></li>
-						<li><a href="<?php echo $ms_link_badge; ?>"><?php echo $ms_menu_badge; ?></a></li>
 						<li><a href="<?php echo $ms_link_settings; ?>"><?php echo $ms_menu_settings; ?></a></li>
 					</ul>
 				</li>
@@ -1640,7 +1623,6 @@
 			$this->data['ms_link_payment'] = $this->url->link('multiseller/payment', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['ms_link_transactions'] = $this->url->link('multiseller/transaction', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['ms_link_settings'] = $this->url->link('module/multiseller', 'token=' . $this->session->data['token'], 'SSL'); 
-			$this->data['ms_link_badge'] = $this->url->link('multiseller/badge', 'token=' . $this->session->data['token'], 'SSL'); 
 			]]></add>
 		</operation>		
 	</file>

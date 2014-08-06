@@ -75,14 +75,6 @@ class MsSellerGroup extends Model {
 		");
 		$seller_group_id = $this->db->getLastId();
 		
-		// badges
-		$this->db->query("DELETE FROM " . DB_PREFIX . "ms_badge_seller_group WHERE seller_group_id = " . (int)$seller_group_id);
-		if (isset($data['badges'])) {
-			foreach ($data['badges'] as $k => $badge_id) {
-				$this->db->query("INSERT INTO " . DB_PREFIX . "ms_badge_seller_group (badge_id, seller_group_id) VALUES (" . (int)$badge_id.",".(int)$seller_group_id . ")");
-			}
-		}
-		
 		foreach ($data['description'] as $language_id => $value) {
 			$this->db->query("
 				INSERT INTO " . DB_PREFIX . "ms_seller_group_description 
@@ -102,14 +94,6 @@ class MsSellerGroup extends Model {
 			$commission_id = $this->MsLoader->MsCommission->createCommission($data['commission_rates']);
 		} else {
 			$commission_id = $this->MsLoader->MsCommission->editCommission($data['commission_id'], $data['commission_rates']);
-		}
-		
-		// badges
-		$this->db->query("DELETE FROM " . DB_PREFIX . "ms_badge_seller_group WHERE seller_group_id = " . (int)$seller_group_id);
-		if (isset($data['badges'])) {
-			foreach ($data['badges'] as $k => $badge_id) {
-				$this->db->query("INSERT INTO " . DB_PREFIX . "ms_badge_seller_group (badge_id, seller_group_id) VALUES (" . (int)$badge_id.",".(int)$seller_group_id . ")");
-			}
 		}
 		
 		$sql = "UPDATE " . DB_PREFIX . "ms_seller_group

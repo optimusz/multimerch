@@ -19,7 +19,6 @@
 				<div id="tabs" class="htabs">
 					<a href="#tab-general"><?php echo $tab_general; ?></a>
 					<a href="#tab-commission"><?php echo $ms_commissions_fees; ?></a>
-					<a href="#tab-badge"><?php echo $ms_catalog_badges_breadcrumbs; ?></a>
 				</div>
 				<div id="tab-general">
 				<table class="form">
@@ -124,25 +123,7 @@
 					</tr>
 				</table>
 				</div>
-				
-				<div id="tab-badge">
-					<table class="form">
-						<tr>
-							<td><div class="scrollbox">
-								<?php $class = 'odd'; ?>
-								<?php foreach ($badges as $badge) { ?>
-								<?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
-								<div class="<?php echo $class; ?>" style="height: 40px;">
-								<input style="margin-top:10px;" type="checkbox" name="seller_group[badges][]" value="<?php echo $badge['badge_id']; ?>" <?php if (isset($seller_group['badges']) && in_array($badge['badge_id'], $seller_group['badges'])) { ?>checked="checked"<?php } ?> />
-								<?php echo $badge['name']; ?> <img src="<?php echo $badge['image']; ?>"/>
-								</div>
-								<?php } ?>
-							</div>
-							<a onclick="$(this).parent().find(':checkbox').attr('checked', true);"><?php echo $text_select_all; ?></a> / <a onclick="$(this).parent().find(':checkbox').attr('checked', false);"><?php echo $text_unselect_all; ?></a>
-							</td>
-						</tr>
-					</table>
-				</div>
+				<!--  end commission tab -->
 			</form>
 		</div>
 	</div>
