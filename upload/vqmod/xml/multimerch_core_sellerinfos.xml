@@ -1,0 +1,171 @@
+<?xml version="1.0" ?>
+<!DOCTYPE modification [
+<!ENTITY themeFolder "default">
+]>
+<modification>
+	<id>MultiMerch Core seller information in various places</id>
+	<author>http://multimerch.com/</author>
+
+	<!-- seller info in cart -->
+	<file name="catalog/controller/checkout/cart.php">
+		<operation error="log">
+			<search position="after"><![CDATA[
+				$this->data['products'][] = array(
+			]]></search>
+			<add><![CDATA[
+				'product_id' => $product['product_id'],
+			]]></add>
+		</operation>
+	</file>
+	
+	<file name="catalog/view/theme/&themeFolder;/template/checkout/cart.tpl">
+		<operation error="log">
+			<search position="after"><![CDATA[
+				<a href="<?php echo $product['href']; ?>"><?php echo $product['name']; ?></a>
+			]]></search>
+			<add><![CDATA[
+				<?php
+					$this->load->language('multiseller/multiseller');
+					$seller = $this->MsLoader->MsSeller->getSeller($this->MsLoader->MsProduct->getSellerId($product['product_id']));
+					if ($seller) {
+						echo "<span class='ms-by-seller'>" . $this->language->get('ms_by') . " <a href='". $this->url->link('seller/catalog-seller/profile', 'seller_id=' . $seller['seller_id']) ."'>{$seller['ms.nickname']}</a>";
+					}
+				?>
+			]]></add>
+		</operation>
+	</file>
+	
+	<!-- seller info on checkout confirmation -->
+	<file name="catalog/view/theme/&themeFolder;/template/checkout/confirm.tpl">
+		<operation error="log">
+			<search position="after"><![CDATA[
+				<a href="<?php echo $product['href']; ?>"><?php echo $product['name']; ?></a>
+			]]></search>
+			<add><![CDATA[
+				<?php
+					$this->load->language('multiseller/multiseller');
+					$seller = $this->MsLoader->MsSeller->getSeller($this->MsLoader->MsProduct->getSellerId($product['product_id']));
+					if ($seller && $this->MsLoader->dist != "SE") {
+						echo "<span class='ms-by-seller'>" . $this->language->get('ms_by') . " <a href='". $this->url->link('seller/catalog-seller/profile', 'seller_id=' . $seller['seller_id']) ."'>{$seller['ms.nickname']}</a>";
+					}
+				?>
+			]]></add>
+		</operation>
+	</file>	
+	
+	<!--  seller info in minicart -->
+	<file name="catalog/controller/module/cart.php">
+		<operation error="log">
+			<search position="after"><![CDATA[
+			$this->data['products'][] = array(
+			]]></search>
+			<add><![CDATA[
+				'product_id' => $product['product_id'],
+			]]></add>
+		</operation>
+	</file>
+	
+	<file name="catalog/view/theme/&themeFolder;/template/module/cart.tpl">
+		<operation error="log">
+			<search position="after"><![CDATA[
+				<a href="<?php echo $product['href']; ?>"><?php echo $product['name']; ?></a>
+			]]></search>
+			<add><![CDATA[
+			<?php
+				$this->load->language('multiseller/multiseller');
+				$seller = $this->MsLoader->MsSeller->getSeller($this->MsLoader->MsProduct->getSellerId($product['product_id']));
+				if ($seller) {
+					echo "<span class='ms-by-seller'>" . $this->language->get('ms_by') . " <a href='". $this->url->link('seller/catalog-seller/profile', 'seller_id=' . $seller['seller_id']) ."'>{$seller['ms.nickname']}</a>";
+				}
+			?>
+			]]></add>
+		</operation>
+	</file>
+
+	<!-- seller info in confirmation email -->
+	<file name="catalog/model/checkout/order.php">
+		<operation error="log">
+			<search position="before"><![CDATA[
+				$template->data['products'][] = array(
+			]]></search>
+			<add><![CDATA[
+				$this->load->language('multiseller/multiseller');
+				$seller = $this->MsLoader->MsSeller->getSeller($this->MsLoader->MsProduct->getSellerId($product['product_id']));
+			]]></add>
+		</operation>
+
+		<operation error="log">
+			<search position="after"><![CDATA[
+				$template->data['products'][] = array(
+			]]></search>
+			<add><![CDATA[
+				'product_id' => $product['product_id'],
+				'seller_text' => $seller ? "<br/ > " . $this->language->get('ms_by') . " {$seller['ms.nickname']} <br />" : '',
+			]]></add>
+		</operation>
+	</file>
+
+	<file name="catalog/view/theme/&themeFolder;/template/mail/order.tpl">
+		<operation error="log">
+			<search position="after"><![CDATA[
+				<td style="font-size: 12px;	border-right: 1px solid #DDDDDD; border-bottom: 1px solid #DDDDDD; text-align: left; padding: 7px;"><?php echo $product['name']; ?>
+			]]></search>
+			<add><![CDATA[
+				<?php echo $product['seller_text']; ?>
+			]]></add>
+		</operation>
+	</file>
+
+	<!-- seller info in account -->
+	<file name="catalog/controller/account/order.php">
+		<operation error="log">
+			<search position="after"><![CDATA[
+			$this->data['products'][] = array(
+			]]></search>
+			<add><![CDATA[
+				'product_id' => $product['product_id'],
+			]]></add>
+		</operation>
+	</file>
+	
+	<file name="catalog/view/theme/&themeFolder;/template/account/order_info.tpl">
+		<operation error="log">
+			<search position="after"><![CDATA[
+				<td class="left"><?php echo $product['name']; ?>
+			]]></search>
+			<add><![CDATA[
+			<?php
+				$this->load->language('multiseller/multiseller');
+				//$this->data = array_merge($this->data, $this->load->language('multiseller/multiseller'));
+				$seller = $this->MsLoader->MsSeller->getSeller($this->MsLoader->MsProduct->getSellerId($product['product_id']));
+				if ($seller) {
+					echo "<span class='ms-by-seller'>" . $this->language->get('ms_by') . " <a href='". $this->url->link('seller/catalog-seller/profile', 'seller_id=' . $seller['seller_id']) ."'>{$seller['ms.nickname']}</a>";
+				}
+			?>
+			]]></add>
+		</operation>
+		<operation error="log">
+			<search position="after"><![CDATA[
+				<td class="left"><?php echo $product['model']; ?></td>
+			]]></search>
+			<add><![CDATA[
+				<?php foreach ($order_statuses as $order_status) { ?>
+					<?php if ($order_status['order_status_id'] == $product['order_status_id']) { ?>
+						<td>
+							<?php echo $order_status['name']; ?>
+						</td>
+					<?php } ?>
+				<?php } ?>
+			]]></add>
+		</operation>
+
+		<operation error="log">
+			<search position="after"><![CDATA[
+				<td class="left"><?php echo $column_model; ?></td>
+			]]></search>
+			<add><![CDATA[
+				<td><?php echo $this->language->get('ms_status'); ?></td>
+			]]></add>
+		</operation>
+	</file>
+</modification>

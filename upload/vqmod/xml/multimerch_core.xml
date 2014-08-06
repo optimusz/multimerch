@@ -1,0 +1,207 @@
+<?xml version="1.0" ?>
+<!DOCTYPE modification [
+<!ENTITY adminFolder "admin">
+<!ENTITY themeFolder "default">
+]>
+<modification>
+	<id>MultiMerch Digital Multivendor Marketplace Core</id>
+	<author>http://multimerch.com/</author>
+	
+	<!-- init multimerch loader -->
+	<file name="system/engine/loader.php">
+		<operation>
+			<search position="after"><![CDATA[
+				$this->registry = $registry;
+			]]></search>
+			<add><![CDATA[
+				require_once(VQMod::modCheck(DIR_SYSTEM . 'library/msloader.php'));
+				$registry->set('MsLoader', new MsLoader($registry));
+			]]></add>
+		</operation>
+	</file>
+
+	<!-- clear multimerch session data on logout -->
+	<file name="system/library/customer.php">
+			<operation>
+				<search position="after"><![CDATA[
+					public function logout() {
+				]]></search>
+				<add><![CDATA[
+					unset($this->session->data['multiseller']);
+				]]></add>
+		</operation>
+	</file>
+
+	<!-- IE console fix -->
+	<file name="catalog/view/theme/&themeFolder;/template/common/header.tpl">
+			<operation>
+			<search position="before"><![CDATA[
+				<?php foreach ($scripts as $script) { ?>
+			]]></search>
+			<add><![CDATA[
+				<script type="text/javascript"> if (!window.console) console = {log: function() {}}; var config_language = <?php echo $dt_language; ?>; </script>
+			]]></add>
+		</operation>	
+	</file>
+	
+	<!-- number of sellers/products in store -->
+	<file name="catalog/view/theme/&themeFolder;/template/common/header.tpl">
+		<operation error="log">
+			<search position="after"><![CDATA[
+				<div class="links"><a href="<?php echo $home; ?>"><?php echo $text_home; ?></a><a href="<?php echo $wishlist; ?>" id="wishlist-total"><?php echo $text_wishlist; ?></a><a href="<?php echo $account; ?>"><?php echo $text_account; ?></a><a href="<?php echo $shopping_cart; ?>"><?php echo $text_shopping_cart; ?></a><a href="<?php echo $checkout; ?>"><?php echo $text_checkout; ?></a></div>
+			]]></search>
+			<add><![CDATA[
+				<?php if (!$this->config->get('msconf_hide_sellers_product_count') == 1) { ?>
+					<div class="ms-totals"><?php echo sprintf($ms_totals_line, $ms_total_sellers, $ms_total_products); ?></div>
+				<?php } ?>
+			]]></add>
+		</operation>	
+	</file>
+
+	<!-- load common multimerch files -->
+	<file name="catalog/controller/common/header.php">
+		<operation error="log">
+			<search position="after"><![CDATA[
+				protected function index() {
+			]]></search>
+			<add><![CDATA[
+				$this->data = array_merge($this->data, $this->load->language('multiseller/multiseller'));
+				$this->data['ms_total_products'] = $this->MsLoader->MsProduct->getTotalProducts(array(
+					'enabled' => 1,
+					//'product_status' => array(MsProduct::STATUS_ACTIVE),
+				));
+				
+				$this->data['ms_total_sellers'] = $this->MsLoader->MsSeller->getTotalSellers(array(
+					'seller_status' => array(MsSeller::STATUS_ACTIVE) 
+				));
+				
+				$this->MsLoader->MsHelper->addStyle('multiseller');
+				
+				// note: renamed catalog
+				$lang = "view/javascript/multimerch/datatables/lang/" . $this->config->get('config_language') . ".txt";
+				$this->data['dt_language'] = file_exists(DIR_APPLICATION . $lang) ? "'catalog/$lang'" : "undefined";
+
+				// Add complemented common.js
+				$this->document->addScript('catalog/view/javascript/ms-common.js');
+			]]></add>
+		</operation>
+	</file>
+	
+	<!-- redirect sellers to the seller dashboard after login -->
+	<file name="catalog/controller/account/login.php">
+		<operation error="log">
+			<search position="replace"><![CDATA[
+				$this->redirect($this->url->link('account/account', '', 'SSL'));
+			]]></search>
+			<add><![CDATA[
+				if ($this->MsLoader->MsSeller->isCustomerSeller($this->customer->getId())) {
+					$this->redirect($this->url->link('seller/account-dashboard', '', 'SSL'));
+				} else {
+					$this->redirect($this->url->link('account/account', '', 'SSL'));
+				}
+			]]></add>
+		</operation>
+	</file>
+	
+	<!-- Get order status id from database -->
+	<file name="catalog/model/account/order.php">
+		<operation>
+			<search position="replace"><![CDATA[
+				$query = $this->db->query("SELECT o.order_id, o.firstname, o.lastname, os.name as status, o.date_added, o.total, o.currency_code, o.currency_value FROM `" . DB_PREFIX . "order` o LEFT JOIN " . DB_PREFIX . "order_status os ON (o.order_status_id = os.order_status_id) WHERE o.customer_id = '" . (int)$this->customer->getId() . "' AND o.order_status_id > '0' AND os.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY o.order_id DESC LIMIT " . (int)$start . "," . (int)$limit);
+			]]></search>
+			<add><![CDATA[
+				$query = $this->db->query("SELECT o.order_id, o.firstname, o.lastname, os.name as status, os.order_status_id, o.date_added, o.total, o.currency_code, o.currency_value FROM `" . DB_PREFIX . "order` o LEFT JOIN " . DB_PREFIX . "order_status os ON (o.order_status_id = os.order_status_id) WHERE o.customer_id = '" . (int)$this->customer->getId() . "' AND o.order_status_id > '0' AND os.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY o.order_id DESC LIMIT " . (int)$start . "," . (int)$limit);
+			]]></add>
+		</operation>
+		<operation>
+			<search position="replace"><![CDATA[
+				public function getOrder($order_id) {
+			]]></search>
+			<add><![CDATA[
+				public function getOrder($order_id, $type = NULL) {
+			]]></add>
+		</operation>
+		<operation>
+			<search position="replace"><![CDATA[
+				$order_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order` WHERE order_id = '" . (int)$order_id . "' AND customer_id = '" . (int)$this->customer->getId() . "' AND order_status_id > '0'");
+			]]></search>
+			<add><![CDATA[
+				if (empty($type)) {
+					$order_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order` WHERE order_id = '" . (int)$order_id . "' AND customer_id = '" . (int)$this->customer->getId() . "' AND order_status_id > '0'");
+				} elseif($type == 'seller') {
+					$order_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order` AS o, `" . DB_PREFIX . "ms_order_product_data` AS m WHERE o.order_id = m.order_id AND o.order_id = " . (int)$order_id . " AND m.seller_id = " . (int)$this->customer->getId() . " AND o.order_status_id > '0'");
+				}
+			]]></add>
+		</operation>
+	</file>
+	
+	<file name="catalog/controller/account/order.php">
+		<operation error="log">
+			<search position="after" offset="2"><![CDATA[
+				$order_id = 0; 
+			]]></search>
+			<add><![CDATA[
+				$this->load->model('localisation/order_status');
+				$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
+			]]></add>
+		</operation>
+
+		<operation error="log">
+			<search position="after"><![CDATA[
+				foreach ($products as $product) {
+			]]></search>
+			<add><![CDATA[
+				$seller_id = $this->MsLoader->MsProduct->getSellerId($product['product_id']);
+			]]></add>
+		</operation>
+
+		<operation error="log">
+			<search position="after"><![CDATA[
+				$this->data['products'][] = array(
+			]]></search>
+			<add><![CDATA[
+				'order_status_id' => $this->model_localisation_order_status->getSuborderStatusId($order_id, $seller_id),
+			]]></add>
+		</operation>
+	</file>
+
+	<file name="catalog/controller/common/footer.php">
+		<operation>
+			<search position="after"><![CDATA[
+				protected function index() {
+			]]></search>
+			<add><![CDATA[
+				$this->data = array_merge($this->data, $this->load->language('multiseller/multiseller'));
+			]]></add>
+		</operation>
+	</file>
+
+	<file name="catalog/view/theme/&themeFolder;/template/common/footer.tpl">
+		<operation error="skip">
+			<search position="replace"><![CDATA[
+			<div id="powered"><?php echo $powered; ?></div>
+			]]></search>
+			<add><![CDATA[
+			<div id="powered"><?php echo $powered; ?><?php echo $ms_footer; ?></div>
+			]]></add>
+		</operation>
+	</file>
+
+	<!-- Disable the product if quantity is 0 -->
+	<file name="catalog/model/checkout/order.php">
+		<operation>
+			<search position="after"><![CDATA[
+				$this->db->query("UPDATE " . DB_PREFIX . "product SET quantity = (quantity - " . (int)$order_product['quantity'] . ") WHERE product_id = '" . (int)$order_product['product_id'] . "' AND subtract = '1'");
+			]]></search>
+			<add><![CDATA[
+				if ($this->config->get('msconf_disable_product_after_quantity_depleted')) {
+					$res = $this->db->query("SELECT quantity FROM " . DB_PREFIX . "product WHERE product_id = '" . (int)$order_product['product_id'] . "'");
+					if ((int)$res->row['quantity'] <= 0) {
+						$this->MsLoader->MsProduct->changeStatus((int)$order_product['product_id'], MsProduct::STATUS_DISABLED);
+						$this->MsLoader->MsProduct->disapprove((int)$order_product['product_id']);
+					}
+				}
+			]]></add>
+		</operation>
+	</file>
+</modification>

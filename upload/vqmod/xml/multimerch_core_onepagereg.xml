@@ -1,0 +1,69 @@
+<?xml version="1.0" ?>
+<!DOCTYPE modification [
+<!ENTITY themeFolder "default">
+]>
+<modification>
+	<id>MultiMerch Core One Page Registration</id>
+	<author>http://multimerch.com/</author>
+	
+	<!-- header -->
+	<file name="catalog/controller/common/header.php">
+		<operation error="log">
+			<search position="replace"><![CDATA[
+				$this->data['text_welcome'] = sprintf($this->language->get('text_welcome'), $this->url->link('account/login', '', 'SSL'), $this->url->link('account/register', '', 'SSL'));
+			]]></search>
+			<add><![CDATA[
+				if ($this->config->get('msconf_enable_one_page_seller_registration')) {
+					$this->data['text_welcome'] = sprintf($this->language->get('ms_text_welcome'), $this->url->link('account/login', '', 'SSL'), $this->url->link('account/register', '', 'SSL'), $this->url->link('account/register-seller', '', 'SSL'));
+				} else {
+					$this->data['text_welcome'] = sprintf($this->language->get('text_welcome'), $this->url->link('account/login', '', 'SSL'), $this->url->link('account/register', '', 'SSL'));
+				}
+			]]></add>
+		</operation>
+	</file>
+	
+	<!-- login -->
+	<file name="catalog/view/theme/&themeFolder;/template/account/login.tpl">
+		<operation error="log">
+			<search position="replace"><![CDATA[
+				<a href="<?php echo $register; ?>" class="button"><?php echo $button_continue; ?></a></div>
+			]]></search>
+			<add><![CDATA[
+				<a href="<?php echo $register; ?>" class="button"><?php echo $text_register; ?></a>
+				<?php if ($this->config->get('msconf_enable_one_page_seller_registration')) { ?>
+					&nbsp;&nbsp;&nbsp; <a href="<?php echo $register_seller; ?>" class="button"><?php echo $ms_button_register_seller; ?></a>
+				<?php } ?>
+				</div>
+			]]></add>
+		</operation>
+	</file>
+	
+	<file name="catalog/controller/account/login.php">
+		<operation error="log">
+			<search position="after"><![CDATA[
+				$this->data['register'] = $this->url->link('account/register', '', 'SSL');
+			]]></search>
+			<add><![CDATA[
+				if ($this->config->get('msconf_enable_one_page_seller_registration')) {
+					$this->language->load('multiseller/multiseller');
+					$this->data['register_seller'] = $this->url->link('account/register-seller', '', 'SSL');
+					$this->data['ms_button_register_seller'] = $this->language->get('ms_button_register_seller');
+				}
+			]]></add>
+		</operation>
+	</file>
+	
+	<!-- sidebar -->
+	<file name="catalog/view/theme/&themeFolder;/template/module/account.tpl">
+		<operation>
+			<search position="after"><![CDATA[
+				<li><a href="<?php echo $login; ?>"><?php echo $text_login; ?></a> / <a href="<?php echo $register; ?>"><?php echo $text_register; ?></a></li>
+			]]></search>
+			<add><![CDATA[
+				<?php if ($this->config->get('msconf_enable_one_page_seller_registration')) { ?>
+					<li><a href="<?php echo $this->url->link('account/register-seller', '', 'SSL'); ?>"><?php echo $ms_register_seller_account; ?></a></li>
+				<?php } ?>
+			]]></add>
+		</operation>
+	</file>
+</modification>

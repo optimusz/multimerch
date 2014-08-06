@@ -1,0 +1,72 @@
+<?xml version="1.0" ?>
+<!DOCTYPE modification [
+<!ENTITY themeFolder "default">
+]>
+<modification>
+	<id>MultiMerch Core Disallow Own Products in Cart</id>
+	<author>http://multimerch.com/</author>
+
+	<file name="catalog/controller/checkout/cart.php">
+		<operation error="log">
+			<search position="after"><![CDATA[
+				$product_info = $this->model_catalog_product->getProduct($product_id);
+			]]></search>
+			<add><![CDATA[
+				$res = $this->db->query("SELECT seller_id FROM " . DB_PREFIX . "ms_product WHERE product_id = " . (int)$product_id);
+				$seller_id = isset($res->row['seller_id']) ? (int)$res->row['seller_id'] : 0;
+				if ($seller_id && $seller_id == (int)$this->customer->getId() && $this->customer->isLogged()) {
+					$this->load->language('multiseller/multiseller');
+					$product_info = false;
+					$json['error']['seller'] = $this->language->get('ms_error_seller_product');
+				}
+			]]></add>
+		</operation>
+	</file>
+	
+	<file name="catalog/view/theme/&themeFolder;/template/product/product.tpl">
+		<operation>
+			<search position="after" error="skip"><![CDATA[
+				if (json['error']) {
+			]]></search>
+			<add><![CDATA[
+				if (json['error']['seller']) {
+					$('#notification').html('<div class="warning" style="display: none;">' + json['error']['seller'] + '<img src="catalog/view/theme/default/image/close.png" alt="" class="close" /></div>');
+					$('.warning').fadeIn('slow');
+					$('html, body').animate({ scrollTop: 0 }, 'slow');
+				}
+			]]></add>
+		</operation>
+	</file>
+	
+	<!-- Modify addToCart -->
+	<file path="catalog/view/theme/default/template/product/" name="*.tpl">
+		<operation error="skip">
+			<search position="replace"><![CDATA[
+			addToCart
+			]]></search>
+			<add><![CDATA[
+			ms_addToCart
+			]]></add>
+		</operation>
+	</file>
+	<file path="catalog/view/theme/&themeFolder;/template/module/" name="bestseller.tpl,featured.tpl,latest.tpl,special.tpl" error="skip">
+		<operation error="skip">
+			<search position="replace"><![CDATA[
+			addToCart
+			]]></search>
+			<add><![CDATA[
+			ms_addToCart
+			]]></add>
+		</operation>
+	</file>
+	<file path="catalog/view/theme/&themeFolder;/template/account/" name="wishlist.tpl">
+		<operation error="skip">
+			<search position="replace"><![CDATA[
+			addToCart
+			]]></search>
+			<add><![CDATA[
+			ms_addToCart
+			]]></add>
+		</operation>
+	</file>
+</modification>

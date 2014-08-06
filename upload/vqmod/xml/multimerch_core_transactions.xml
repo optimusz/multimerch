@@ -1,0 +1,291 @@
+<?xml version="1.0" ?>
+<!DOCTYPE modification [
+<!ENTITY adminFolder "admin">
+]>
+<modification>
+	<id>MultiMerch Core Transactions</id>
+	<author>http://multimerch.com/</author>
+	
+	<!-- transactions for order -->
+	<file name="catalog/model/checkout/order.php">
+		<operation>
+			<search position="after"><![CDATA[
+				$this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int)$order_status_id . "', date_modified = NOW() WHERE order_id = '" . (int)$order_id . "'");
+			]]></search>
+			<add><![CDATA[
+				$ms_order_product_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int)$order_id . "'");
+			]]></add>
+		</operation>
+			
+		<operation>
+			<search position="after"><![CDATA[
+				$ms_order_product_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int)$order_id . "'");
+			]]></search>
+			<add><![CDATA[
+				$this->language->load('multiseller/multiseller');
+				if (in_array($order_status_id, $this->config->get('msconf_credit_order_statuses'))) {
+					$sendmail = false;
+					foreach ($ms_order_product_query->rows as $order_product) {
+						// increment sold counter
+						$this->db->query("UPDATE " . DB_PREFIX . "ms_product SET number_sold  = (number_sold + " . (int)$order_product['quantity'] . ") WHERE product_id = '" . (int)$order_product['product_id'] . "'");
+						$seller_id = $this->MsLoader->MsProduct->getSellerId($order_product['product_id']);
+						if (!$seller_id) continue;
+						
+						// check adaptive payments
+						$payment = $this->MsLoader->MsPayment->getPayments(array(
+							'order_id' => $order_id,
+							'seller_id' => $seller_id,
+							'payment_type' => array(MsPayment::TYPE_SALE),
+							'payment_status' => array(MsPayment::STATUS_PAID),
+							'single' => 1
+						));
+						
+						if ($payment) {
+							$sendmail = true;
+							continue;
+						}
+						
+						$balance_entry = $this->MsLoader->MsBalance->getBalanceEntry(
+							array(
+								'seller_id' => $seller_id,
+								'product_id' => $order_product['product_id'],
+								'order_id' => $order_id,
+								'balance_type' => MsBalance::MS_BALANCE_TYPE_SALE
+							)
+						);
+						
+						if (!$balance_entry) {
+							// don't calculate fees for free products
+							if ($order_product['total'] > 0) {
+								$commissions = $this->MsLoader->MsCommission->calculateCommission(array('seller_id' => $seller_id));
+								$store_commission_flat = $commissions[MsCommission::RATE_SALE]['flat'];
+								$store_commission_pct = $order_product['total'] * $commissions[MsCommission::RATE_SALE]['percent'] / 100;
+								$seller_net_amt = $order_product['total'] - ($store_commission_flat + $store_commission_pct);
+							} else {
+								$store_commission_flat = $store_commission_pct = $seller_net_amt = 0;
+							}
+							
+							// Add order data if doesn't exist yet
+							$order_data = $this->MsLoader->MsOrderData->getOrderData(
+								array(
+									'product_id' => $order_product['product_id'],
+									'order_id' => $order_product['order_id'],
+								)
+							);
+							if (!$order_data) {
+								$this->MsLoader->MsOrderData->addOrderProductData(
+									$order_product['order_id'],
+									$order_product['product_id'],
+									array(
+										'seller_id' => $seller_id,
+										'store_commission_flat' => $store_commission_flat,
+										'store_commission_pct' => $store_commission_pct,
+										'seller_net_amt' => $seller_net_amt
+									)
+								);
+							}
+							
+							$this->MsLoader->MsBalance->addBalanceEntry(
+								$seller_id,
+								array(
+									'order_id' => $order_product['order_id'],
+									'product_id' => $order_product['product_id'],
+									'balance_type' => MsBalance::MS_BALANCE_TYPE_SALE,
+									'amount' => $seller_net_amt,
+									'description' => sprintf($this->language->get('ms_transaction_sale'),  ($order_product['quantity'] > 1 ? $order_product['quantity'] . ' x ' : '')  . $order_product['name'], $this->currency->format($store_commission_flat + $store_commission_pct, $this->config->get('config_currency')))
+								)
+							);
+							$sendmail = true;
+						} else {
+							// send order status change mails
+						}
+					}
+					if ($sendmail) $this->MsLoader->MsMail->sendOrderMails($order_id);
+				} else if (in_array($order_status_id, $this->config->get('msconf_debit_order_statuses'))) {
+				$sendmail = false;
+				foreach ($ms_order_product_query->rows as $order_product) {
+					// decrement sold counter
+					$this->db->query("UPDATE " . DB_PREFIX . "ms_product SET number_sold  = (number_sold - " . (int)$order_product['quantity'] . ") WHERE product_id = '" . (int)$order_product['product_id'] . "'");
+				
+					$seller_id = $this->MsLoader->MsProduct->getSellerId($order_product['product_id']);
+					if (!$seller_id) continue;
+					$refund_balance_entry = $this->MsLoader->MsBalance->getBalanceEntry(
+						array(
+							'seller_id' => $seller_id,
+							'product_id' => $order_product['product_id'],
+							'order_id' => $order_id,
+							'balance_type' => MsBalance::MS_BALANCE_TYPE_REFUND
+						)
+					);
+					
+					if (!$refund_balance_entry) {
+						$balance_entry = $this->MsLoader->MsBalance->getBalanceEntry(
+							array(
+								'seller_id' => $seller_id,
+								'product_id' => $order_product['product_id'],
+								'order_id' => $order_id,
+								'balance_type' => MsBalance::MS_BALANCE_TYPE_SALE
+							)
+						);
+				
+						if ($balance_entry) {
+							$this->MsLoader->MsBalance->addBalanceEntry(
+								$balance_entry['seller_id'],
+								array(
+									'order_id' => $balance_entry['order_id'],
+									'product_id' => $balance_entry['product_id'],
+									'balance_type' => MsBalance::MS_BALANCE_TYPE_REFUND,
+									'amount' => -1 * $balance_entry['amount'],
+									'description' => sprintf($this->language->get('ms_transaction_refund'),  ($order_product['quantity'] > 1 ? $order_product['quantity'] . ' x ' : '')  . $order_product['name'])
+								)
+							);
+							
+							// todo send refund mails
+							// $this->MsLoader->MsMail->sendOrderMails($order_id);
+						} else {
+							// send order status change mails
+						}
+						
+					}
+				}
+				}
+			]]></add>
+		</operation>
+	</file>
+	
+	<file name="&adminFolder;/model/sale/order.php">
+		<operation>
+			<search position="after"><![CDATA[
+				$this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int)$data['order_status_id'] . "', date_modified = NOW() WHERE order_id = '" . (int)$order_id . "'");
+			]]></search>
+			<add><![CDATA[
+				// todo order balance entries
+				$ms_order_product_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int)$order_id . "'");
+			]]></add>
+		</operation>
+
+		<operation>
+			<search position="after"><![CDATA[
+				$ms_order_product_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int)$order_id . "'");
+			]]></search>
+			<add><![CDATA[
+			// todo order balance entries
+			$this->language->load('multiseller/multiseller');
+			if (in_array($data['order_status_id'], $this->config->get('msconf_credit_order_statuses'))) {
+				$sendmail = false;
+				foreach ($ms_order_product_query->rows as $order_product) {
+					// increment sold counter
+					$this->db->query("UPDATE " . DB_PREFIX . "ms_product SET number_sold  = (number_sold + " . (int)$order_product['quantity'] . ") WHERE product_id = '" . (int)$order_product['product_id'] . "'");
+				
+					$seller_id = $this->MsLoader->MsProduct->getSellerId($order_product['product_id']);
+					if (!$seller_id) continue;
+					
+					$balance_entry = $this->MsLoader->MsBalance->getBalanceEntry(
+						array(
+							'seller_id' => $seller_id,
+							'product_id' => $order_product['product_id'],
+							'order_id' => $order_id,
+							'balance_type' => MsBalance::MS_BALANCE_TYPE_SALE
+						)
+					);
+					
+					if (!$balance_entry) {
+						$commissions = $this->MsLoader->MsCommission->calculateCommission(array('seller_id' => $seller_id));
+						
+						if ($order_product['total'] > 0) {
+							$store_commission_flat = $commissions[MsCommission::RATE_SALE]['flat'];
+							$store_commission_pct = $order_product['total'] * $commissions[MsCommission::RATE_SALE]['percent'] / 100;
+							$seller_net_amt = $order_product['total'] - ($store_commission_flat + $store_commission_pct);
+						} else  {
+							$store_commission_flat = $store_commission_pct = $seller_net_amt = 0;
+						}
+						
+						// Add order data if doesn't exist yet
+						$order_data = $this->MsLoader->MsOrderData->getOrderData(
+							array(
+								'product_id' => $order_product['product_id'],
+								'order_id' => $order_product['order_id'],
+							)
+						);
+						if (!$order_data) {
+							$this->MsLoader->MsOrderData->addOrderProductData(
+								$order_product['order_id'],
+								$order_product['product_id'],
+								array(
+									'seller_id' => $seller_id,
+									'store_commission_flat' => $store_commission_flat,
+									'store_commission_pct' => $store_commission_pct,
+									'seller_net_amt' => $seller_net_amt
+								)
+							);
+						}
+						
+						$this->MsLoader->MsBalance->addBalanceEntry(
+							$seller_id,
+							array(
+								'order_id' => $order_product['order_id'],
+								'product_id' => $order_product['product_id'],
+								'balance_type' => MsBalance::MS_BALANCE_TYPE_SALE,
+								'amount' => $seller_net_amt,
+								'description' => sprintf($this->language->get('ms_transaction_sale'),  ($order_product['quantity'] > 1 ? $order_product['quantity'] . ' x ' : '')  . $order_product['name'], $this->currency->format($store_commission_flat + $store_commission_pct, $this->config->get('config_currency')))
+							)
+						);
+						
+						$sendmail = true;
+					} else {
+						// send order status change mails
+					}
+				}
+				if ($sendmail) $this->MsLoader->MsMail->sendOrderMails($order_id);
+			} else if (in_array($data['order_status_id'], $this->config->get('msconf_debit_order_statuses'))) {
+			$sendmail = false;
+			foreach ($ms_order_product_query->rows as $order_product) {
+				// decrement sold counter
+				$this->db->query("UPDATE " . DB_PREFIX . "ms_product SET number_sold  = (number_sold - " . (int)$order_product['quantity'] . ") WHERE product_id = '" . (int)$order_product['product_id'] . "'");
+				
+				$seller_id = $this->MsLoader->MsProduct->getSellerId($order_product['product_id']);
+				if (!$seller_id) continue;
+							
+				$refund_balance_entry = $this->MsLoader->MsBalance->getBalanceEntry(
+					array(
+						'seller_id' => $seller_id,
+						'product_id' => $order_product['product_id'],
+						'order_id' => $order_id,
+						'balance_type' => MsBalance::MS_BALANCE_TYPE_REFUND
+					)
+				);
+				
+				if (!$refund_balance_entry) {
+					$balance_entry = $this->MsLoader->MsBalance->getBalanceEntry(
+						array(
+							'seller_id' => $seller_id,
+							'product_id' => $order_product['product_id'],
+							'order_id' => $order_id,
+							'balance_type' => MsBalance::MS_BALANCE_TYPE_SALE
+						)
+					);
+			
+					if ($balance_entry) {
+						$this->MsLoader->MsBalance->addBalanceEntry(
+							$balance_entry['seller_id'],
+							array(
+								'order_id' => $balance_entry['order_id'],
+								'product_id' => $balance_entry['product_id'],
+								'balance_type' => MsBalance::MS_BALANCE_TYPE_REFUND,
+								'amount' => -1 * $balance_entry['amount'],
+								'description' => sprintf($this->language->get('ms_transaction_refund'),  ($order_product['quantity'] > 1 ? $order_product['quantity'] . ' x ' : '')  . $order_product['name'])
+							)
+						);
+						
+						// send refund mails
+						// $this->MsLoader->MsMail->sendOrderMails($order_id);
+					} else {
+						// send order status change mails
+					}
+				}
+			}
+			}
+			]]></add>
+		</operation>
+	</file>
+</modification>

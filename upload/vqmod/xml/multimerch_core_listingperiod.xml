@@ -1,0 +1,159 @@
+<?xml version="1.0" ?>
+<!DOCTYPE modification [
+]>
+<modification>
+	<id>MultiMerch Core disable expired products</id>
+	<author>http://multimerch.com/</author>
+	
+	<!-- disable products if listing period has ended -->
+	<file name="catalog/model/catalog/product.php">
+		<operation>
+			<search position="before" index="1" offset="2"><![CDATA[
+				return $query->row['total'];
+			]]></search>
+			<add><![CDATA[
+				$sql_disable = "SELECT p.product_id as 'product_id'";
+				
+				/* Filters */
+				if (!empty($data['filter_category_id'])) {
+					if (!empty($data['filter_sub_category'])) {
+						$sql_disable .= " FROM " . DB_PREFIX . "category_path cp LEFT JOIN " . DB_PREFIX . "product_to_category p2c ON (cp.category_id = p2c.category_id)";	
+					} else {
+						$sql_disable .= " FROM " . DB_PREFIX . "product_to_category p2c";
+					}
+					if (!empty($data['filter_filter'])) {
+						$sql_disable .= " LEFT JOIN " . DB_PREFIX . "product_filter pf ON (p2c.product_id = pf.product_id) LEFT JOIN " . DB_PREFIX . "product p ON (pf.product_id = p.product_id)";
+					} else {
+						$sql_disable .= " LEFT JOIN " . DB_PREFIX . "product p ON (p2c.product_id = p.product_id)";
+					}
+				} else {
+					$sql_disable .= " FROM " . DB_PREFIX . "product p";
+				}
+				
+				$sql_disable .= " LEFT JOIN `" . DB_PREFIX . "ms_product` mp ON (p.product_id = mp.product_id)";
+				
+				$sql_disable .= " LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'";
+				
+				if (!empty($data['filter_category_id'])) {
+					if (!empty($data['filter_sub_category'])) {
+						$sql_disable .= " AND cp.path_id = '" . (int)$data['filter_category_id'] . "'";
+					} else {
+						$sql_disable .= " AND p2c.category_id = '" . (int)$data['filter_category_id'] . "'";
+					}
+					
+					if (!empty($data['filter_filter'])) {
+						$implode = array();
+						
+						$filters = explode(',', $data['filter_filter']);
+						
+						foreach ($filters as $filter_id) {
+							$implode[] = (int)$filter_id;
+						}
+						
+						$sql_disable .= " AND pf.filter_id IN (" . implode(',', $implode) . ")";
+					}
+				}
+				
+				if (!empty($data['filter_name']) || !empty($data['filter_tag'])) {
+					$sql_disable .= " AND (";
+					
+					if (!empty($data['filter_name'])) {
+						$implode = array();
+						
+						$words = explode(' ', trim(preg_replace('/\s\s+/', ' ', $data['filter_name'])));
+						
+						foreach ($words as $word) {
+							$implode[] = "pd.name LIKE '%" . $this->db->escape($word) . "%'";
+						}
+						
+						if ($implode) {
+							$sql_disable .= " " . implode(" AND ", $implode) . "";
+						}
+
+						if (!empty($data['filter_description'])) {
+							$sql_disable .= " OR pd.description LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+						}
+					}
+					
+					if (!empty($data['filter_name']) && !empty($data['filter_tag'])) {
+						$sql_disable .= " OR ";
+					}
+					
+					if (!empty($data['filter_tag'])) {
+						$sql_disable .= "pd.tag LIKE '%" . $this->db->escape(utf8_strtolower($data['filter_tag'])) . "%'";
+					}
+				
+					if (!empty($data['filter_name'])) {
+						$sql_disable .= " OR LCASE(p.model) = '" . $this->db->escape(utf8_strtolower($data['filter_name'])) . "'";
+					}
+					
+					if (!empty($data['filter_name'])) {
+						$sql_disable .= " OR LCASE(p.sku) = '" . $this->db->escape(utf8_strtolower($data['filter_name'])) . "'";
+					}
+					
+					if (!empty($data['filter_name'])) {
+						$sql_disable .= " OR LCASE(p.upc) = '" . $this->db->escape(utf8_strtolower($data['filter_name'])) . "'";
+					}
+
+					if (!empty($data['filter_name'])) {
+						$sql_disable .= " OR LCASE(p.ean) = '" . $this->db->escape(utf8_strtolower($data['filter_name'])) . "'";
+					}
+
+					if (!empty($data['filter_name'])) {
+						$sql_disable .= " OR LCASE(p.jan) = '" . $this->db->escape(utf8_strtolower($data['filter_name'])) . "'";
+					}
+					
+					if (!empty($data['filter_name'])) {
+						$sql_disable .= " OR LCASE(p.isbn) = '" . $this->db->escape(utf8_strtolower($data['filter_name'])) . "'";
+					}
+					
+					if (!empty($data['filter_name'])) {
+						$sql_disable .= " OR LCASE(p.mpn) = '" . $this->db->escape(utf8_strtolower($data['filter_name'])) . "'";
+					}
+					
+					$sql_disable .= ")";
+				}
+				
+				if (!empty($data['filter_manufacturer_id'])) {
+					$sql_disable .= " AND p.manufacturer_id = '" . (int)$data['filter_manufacturer_id'] . "'";
+				}
+				
+				$this->language->load('multiseller/multiseller');
+				
+				$sql_disable .= " AND mp.list_until < NOW() AND p.status = 1";
+				
+				$res_disable = $this->db->query($sql_disable);
+				
+				if ($res_disable->num_rows) {
+					foreach ($res_disable->rows as $product) {
+						$this->MsLoader->MsProduct->changeStatus((int)$product['product_id'], MsProduct::STATUS_DISABLED);
+						$this->MsLoader->MsProduct->disapprove((int)$product['product_id']);
+						
+						$seller_id = $this->MsLoader->MsProduct->getSellerId((int)$product['product_id']);
+						$mail = array(
+							'recipients' => $this->MsLoader->MsSeller->getSellerEmail($seller_id),
+							'addressee' => $this->MsLoader->MsSeller->getSellerName($seller_id),
+							'seller_id' => $seller_id,
+							'product_id' => (int)$product['product_id']
+						);
+						$this->MsLoader->MsMail->sendMail(MsMail::SMT_REMIND_LISTING, $mail);
+					}
+				}
+			]]></add>
+		</operation>
+	</file>
+	
+	<!-- add manufacturer filter to the model -->
+	<file name="catalog/model/catalog/manufacturer.php">
+		<operation error="log">
+			<search position="after"><![CDATA[
+				$sql = "SELECT * FROM " . DB_PREFIX . "manufacturer m LEFT JOIN " . DB_PREFIX . "manufacturer_to_store m2s ON (m.manufacturer_id = m2s.manufacturer_id) WHERE m2s.store_id = '" . (int)$this->config->get('config_store_id') . "'";
+			]]></search>
+			<add><![CDATA[
+				if (!empty($data['filter_name'])) {
+					$sql .= " AND name LIKE '" . $this->db->escape($data['filter_name']) . "%'";
+				}
+			]]></add>
+		</operation>
+	</file>
+</modification>

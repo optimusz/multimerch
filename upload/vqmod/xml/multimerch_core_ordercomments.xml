@@ -1,0 +1,122 @@
+<?xml version="1.0" ?>
+<!DOCTYPE modification [
+<!ENTITY adminFolder "admin">
+<!ENTITY themeFolder "default">
+]>
+<modification>
+	<id>MultiMerch Core Order Comments per Seller</id>
+	<author>http://multimerch.com/</author>
+	
+	<file name="catalog/controller/checkout/payment_method.php">
+		<operation>
+			<search position="after"><![CDATA[
+				$this->session->data['payment_methods'] = $method_data;
+			]]></search>
+			<add><![CDATA[
+				$this->language->load('multiseller/multiseller');
+				if ($this->cart->hasProducts()) {
+					$products = $this->cart->getProducts();
+					
+					foreach ($products as $product) {
+						$id = $this->MsLoader->MsProduct->getSellerId($product['product_id']);
+						if (!isset($sellers[$id])) $sellers[$id] = $this->MsLoader->MsSeller->getSeller($id);
+					}
+					
+					$this->session->data['sellers'] = $sellers;
+				}
+			]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+			$this->session->data['comment'] = strip_tags($this->request->post['comment']);
+			]]></search>
+			<add><![CDATA[
+				foreach($this->request->post['comment'] as $key => $value)
+					$comment[$key] = strip_tags($value);
+				$this->session->data['comment'] = $comment;
+			]]></add>
+		</operation>
+	</file>
+
+	<file name="catalog/controller/checkout/confirm.php">
+		<operation>
+			<search position="replace"><![CDATA[
+			$data['comment'] = $this->session->data['comment'];
+			]]></search>
+			<add><![CDATA[
+			$data['comment'] = implode('\n',$this->session->data['comment']);
+			]]></add>
+		</operation>
+
+		<operation>
+			<search position="after" index="2"><![CDATA[
+				foreach ($this->cart->getProducts() as $product) {
+			]]></search>
+			<add><![CDATA[
+				$seller_id = $this->MsLoader->MsProduct->getSellerId($product['product_id']);
+				$this->MsLoader->MsOrderData->addOrderComment(
+					$this->session->data['order_id'],
+					$product['product_id'],
+					array(
+						'seller_id' => $seller_id,
+						'comment' => $this->session->data['comment'][$seller_id],
+					)
+				);
+			]]></add>
+		</operation>
+	</file>
+
+	<file name="catalog/view/theme/&themeFolder;/template/checkout/payment_method.tpl">
+		<operation>
+			<search position="replace"><![CDATA[
+				<textarea name="comment" rows="8" style="width: 98%;"><?php echo $comment; ?></textarea>
+			]]></search>
+			<add><![CDATA[
+				<br /><br />
+				<?php foreach($this->session->data['sellers'] as $seller) { ?>
+					<div><?php echo $this->language->get('ms_seller_forseller'); ?>: <b><?php echo $seller['ms.nickname'] ?></b></div>
+					<textarea name="comment[<?php echo $seller['seller_id'] ?>]" rows="8" style="width: 98%;"><?php echo $comment; ?></textarea>
+					<br /><br />
+				<?php } ?>
+			]]></add>
+		</operation>
+	</file>
+	
+	<file path="catalog/view/theme/&themeFolder;/template/checkout/" name="shipping_method.tpl">
+		<operation error="log">
+			<search position="replace"><![CDATA[
+				<b><?php echo $text_comments; ?></b>
+			]]></search>
+			<add></add>
+		</operation>
+		<operation error="log">
+			<search position="replace"><![CDATA[
+				<textarea name="comment" rows="8" style="width: 98%;"><?php echo $comment; ?></textarea>
+			]]></search>
+			<add></add>
+		</operation>
+	</file>
+
+	<file path="catalog/controller/checkout/" name="shipping_method.php">
+		<operation>
+			<search position="replace"><![CDATA[
+				$this->session->data['comment'] = strip_tags($this->request->post['comment']);
+			]]></search>
+			<add><![CDATA[
+				$this->session->data['comment'] = "";
+			]]></add>
+		</operation>
+	</file>
+
+	<file name="catalog/controller/checkout/confirm.php">
+		<operation>
+			<search position="after" offset="1"><![CDATA[
+				$data['comment']
+			]]></search>
+			<add><![CDATA[
+				$data['comment'] = end($this->session->data['comment']);
+			]]></add>
+		</operation>
+	</file>	
+</modification>

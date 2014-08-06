@@ -1,0 +1,278 @@
+<?xml version="1.0" ?>
+<!DOCTYPE modification [
+<!ENTITY adminFolder "admin">
+]>
+<modification>
+	<id>MultiMerch Core Admin Mods</id>
+	<author>http://multimerch.com/</author>
+	
+	<file name="&adminFolder;/model/localisation/language.php">
+		<!-- adding new language, copy attribute and option names -->
+		<operation>
+			<search position="after"><![CDATA[
+				$language_id = $this->db->getLastId();
+			]]></search>
+			<add><![CDATA[
+				// MultiMerch Attribute 
+				$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "ms_attribute_description WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'");
+				foreach ($query->rows as $attribute) {
+					$this->db->query("INSERT INTO " . DB_PREFIX . "ms_attribute_description SET attribute_id = '" . (int)$attribute['attribute_id'] . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($attribute['name']) . "', description = '" . $this->db->escape($attribute['description']) . "'");
+				}
+		
+				// MultiMerch Attribute Value 
+				$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "ms_attribute_value_description WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'");
+				foreach ($query->rows as $attribute_value) {
+					$this->db->query("INSERT INTO " . DB_PREFIX . "ms_attribute_value_description SET attribute_id = '" . (int)$attribute_value['attribute_id'] . "', attribute_value_id = '" . (int)$attribute_value['attribute_value_id'] . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($attribute_value['name']) . "'");
+				}
+				
+				// MultiMerch Seller Group 
+				$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "ms_seller_group_description WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'");
+				foreach ($query->rows as $group) {
+					$this->db->query("INSERT INTO " . DB_PREFIX . "ms_seller_group_description SET seller_group_id = '" . (int)$group['seller_group_id'] . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($group['name']) . "', description = '" . $this->db->escape($group['description']) . "'");
+				}
+			]]></add>
+		</operation>
+		
+		<!-- deleting language, delete attribute and option names -->
+		<operation>
+			<search position="after"><![CDATA[
+				public function deleteLanguage($language_id) {
+			]]></search>
+			<add><![CDATA[
+				// MultiMerch 
+				$this->db->query("DELETE FROM " . DB_PREFIX . "ms_attribute_description WHERE language_id = '" . (int)$language_id . "'");
+				$this->db->query("DELETE FROM " . DB_PREFIX . "ms_attribute_value_description WHERE language_id = '" . (int)$language_id . "'");
+				$this->db->query("DELETE FROM " . DB_PREFIX . "ms_seller_group_description WHERE language_id = '" . (int)$language_id . "'");
+			]]></add>
+		</operation>		
+	</file>
+	
+	<!-- delete seller account when customer deleted -->
+	<file name="&adminFolder;/model/sale/customer.php">
+		<operation>
+			<search position="after"><![CDATA[
+				public function deleteCustomer($customer_id) {
+			]]></search>
+			<add><![CDATA[
+				$this->MsLoader->MsSeller->deleteSeller($customer_id);
+			]]></add>
+		</operation>
+	</file>
+
+	<!-- delete multimerch product info when product deleted -->
+	<file name="&adminFolder;/model/catalog/product.php">
+		<operation>
+			<search position="after"><![CDATA[
+				public function deleteProduct($product_id) {
+			]]></search>
+			<add><![CDATA[
+				$this->db->query("DELETE FROM " . DB_PREFIX . "ms_product WHERE product_id = '" . (int)$product_id . "'");
+				$this->db->query("DELETE FROM " . DB_PREFIX . "ms_product_attribute WHERE product_id = '" . (int)$product_id . "'");
+			]]></add>
+		</operation>
+	</file>
+	
+	<!-- delete multimerch order info when order deleted -->
+	<file name="&adminFolder;/model/sale/order.php">
+		<operation>
+			<search position="after"><![CDATA[
+				public function deleteOrder($order_id) {
+			]]></search>
+			<add><![CDATA[
+				$this->db->query("DELETE FROM `" . DB_PREFIX . "ms_order_product_data` WHERE order_id = '" . (int)$order_id . "'");
+			]]></add>
+		</operation>
+	</file>
+	
+	<!-- multimerch admin navigation menu -->
+	<file name="&adminFolder;/view/template/common/header.tpl">
+		<operation>
+			<search position="before"><![CDATA[
+				<div id="menu">
+			]]></search>
+			<add><![CDATA[
+				<?php $this->load->model('multiseller/upgrade'); ?>
+				
+				<?php if ($this->MsLoader->MsHelper->isInstalled() && !$this->model_multiseller_upgrade->isDbLatest()) { ?>
+					<div class="attention" style="text-align:center; margin: 10px"><?php echo sprintf($this->language->get('ms_db_upgrade'), $this->url->link('module/multiseller/upgradeDb', 'token=' . $this->session->data['token'], 'SSL')); ?></div>
+				<?php } ?>
+				
+				<?php if (isset($this->session->data['ms_db_latest'])) { ?>
+					<div class="success" style="text-align:center; margin: 10px"><?php echo $this->session->data['ms_db_latest']; ?></div>
+					<?php unset($this->session->data['ms_db_latest']); ?>
+				<?php } ?>
+			]]></add>
+		</operation>
+	
+		<operation>
+			<search position="before"><![CDATA[
+				<?php foreach ($scripts as $script) { ?>
+			]]></search>
+			<add><![CDATA[
+				<script type="text/javascript"> if (!window.console) console = {log: function() {}}; var msGlobals = { config_admin_limit: '<?php echo $this->config->get('config_admin_limit'); ?>', config_language: <?php echo $dt_language; ?> }; </script>
+			]]></add>
+		</operation>
+
+		<operation>
+			<search position="before"><![CDATA[
+			<ul class="right"
+			]]></search>
+			<add><![CDATA[
+				<ul class="left">
+				<li id="multiseller" style="background: url('view/image/split.png') center left no-repeat"><a class="top"><?php echo $ms_menu_multiseller; ?></a>
+					<ul>
+						<li><a href="<?php echo $ms_link_sellers; ?>"><?php echo $ms_menu_sellers; ?></a></li>
+						<li><a href="<?php echo $ms_link_seller_groups; ?>"><?php echo $ms_menu_seller_groups; ?></a></li>
+						<li><a href="<?php echo $ms_link_attributes; ?>"><?php echo $ms_menu_attributes; ?></a></li>
+						<li><a href="<?php echo $ms_link_products; ?>"><?php echo $ms_menu_products; ?></a></li>
+						<li><a href="<?php echo $ms_link_transactions; ?>"><?php echo $ms_menu_transactions; ?></a></li>
+						<li><a href="<?php echo $ms_link_payment; ?>"><?php echo $ms_menu_payment; ?></a></li>
+						<li><a href="<?php echo $ms_link_settings; ?>"><?php echo $ms_menu_settings; ?></a></li>
+					</ul>
+				</li>
+				</ul>
+			]]></add>
+		</operation>
+	</file>
+	
+	<file name="&adminFolder;/controller/common/header.php">
+		<operation>
+			<search position="after"><![CDATA[
+			protected function index() {
+			]]></search>
+			<add><![CDATA[
+			$this->data = array_merge($this->data, $this->load->language('multiseller/multiseller'));
+			$lang = "view/javascript/multimerch/datatables/lang/" . $this->config->get('config_admin_language') . ".txt";
+			$this->data['dt_language'] = file_exists(DIR_APPLICATION . $lang) ? "'$lang'" : "undefined";
+			]]></add>
+		</operation>
+		
+		<operation>
+			<search position="before"><![CDATA[
+			$this->data['stores'] = array();
+			]]></search>
+			<add><![CDATA[
+			$this->data['ms_link_sellers'] = $this->url->link('multiseller/seller', 'token=' . $this->session->data['token'], 'SSL');
+			$this->data['ms_link_seller_groups'] = $this->url->link('multiseller/seller-group', 'token=' . $this->session->data['token'], 'SSL');
+			$this->data['ms_link_attributes'] = $this->url->link('multiseller/attribute', 'token=' . $this->session->data['token'], 'SSL');
+			$this->data['ms_link_products'] = $this->url->link('multiseller/product', 'token=' . $this->session->data['token'], 'SSL');
+			$this->data['ms_link_payment'] = $this->url->link('multiseller/payment', 'token=' . $this->session->data['token'], 'SSL');
+			$this->data['ms_link_transactions'] = $this->url->link('multiseller/transaction', 'token=' . $this->session->data['token'], 'SSL');
+			$this->data['ms_link_settings'] = $this->url->link('module/multiseller', 'token=' . $this->session->data['token'], 'SSL'); 
+			]]></add>
+		</operation>		
+	</file>
+	
+	<file name="&adminFolder;/controller/sale/order.php">
+		<operation>
+			<search position="before"><![CDATA[
+			$this->data['products'][] = array(
+			]]></search>
+			<add><![CDATA[
+			$this->language->load('multiseller/multiseller');
+			$this->data['column_seller'] = $this->language->get('ms_seller');
+			// todo check
+			$seller = $this->MsLoader->MsSeller->getSeller(
+				$this->MsLoader->MsProduct->getSellerId($product['product_id']),
+				array(
+					'product_id' => $product['product_id']
+				)
+			);
+			]]></add>
+		</operation>	
+	
+		<operation>
+			<search position="after"><![CDATA[
+			$this->data['products'][] = array(
+			]]></search>
+			<add><![CDATA[
+			'seller' => array(
+				'seller_id' => isset($seller['seller_id']) ? $seller['seller_id'] : '',
+				'nickname' => isset($seller['ms.nickname']) ? $seller['ms.nickname'] : ''
+			),
+			]]></add>
+		</operation>
+	</file>
+	
+	<file name="&adminFolder;/view/template/sale/order_info.tpl">
+		<operation>
+			<search position="before"><![CDATA[
+			<td class="left"><?php echo $column_product; ?></td>
+			]]></search>
+			<add><![CDATA[
+			<td class="left"><?php echo $column_seller; ?></td>
+			]]></add>
+		</operation>	
+	
+		<operation>
+			<search position="before"><![CDATA[
+			<td class="left"><a href="<?php echo $product['href']; ?>"><?php echo $product['name']; ?></a>
+			]]></search>
+			<add><![CDATA[
+			<td class="left"><?php if (!empty($product['seller']['seller_id'])) { ?><a href="<?php echo $this->url->link('multiseller/seller/update', 'token=' . $this->session->data['token'] . '&seller_id=' . $product['seller']['seller_id'], 'SSL');?>"><?php echo $product['seller']['nickname']; ?></a> <?php } ?></td>
+			]]></add>
+		</operation>
+		
+		<operation>
+			<search position="replace"><![CDATA[
+			<td colspan="4" class="right"><?php echo $totals['title']; ?>:</td>
+			]]></search>
+			<add><![CDATA[
+			<td colspan="5" class="right"><?php echo $totals['title']; ?>:</td>
+			]]></add>
+		</operation>		
+	</file>
+	
+	<!-- contact all sellers from admin -->
+	<file name="&adminFolder;/view/template/sale/contact.tpl">
+		<operation>
+			<search position="after"><![CDATA[
+				<option value="affiliate"><?php echo $text_affiliate; ?></option>
+			]]></search>
+			<add><![CDATA[
+				<option value="seller_all"><?php echo $text_seller_all; ?></option>
+			]]></add>
+		</operation>
+	</file>
+	
+	<file name="&adminFolder;/controller/sale/contact.php">
+		<operation>
+			<search position="after"><![CDATA[
+				$this->data['cancel'] = $this->url->link('sale/contact', 'token=' . $this->session->data['token'], 'SSL');
+			]]></search>
+			<add><![CDATA[
+				$this->language->load('multiseller/multiseller');
+				$this->data['text_seller_all'] = $this->language->get('ms_all_sellers');
+			]]></add>
+		</operation>
+
+		<operation>
+			<search position="before"><![CDATA[
+				case 'product':
+			]]></search>
+			<add><![CDATA[
+				case 'seller_all':
+					$email_total = $this->MsLoader->MsSeller->getTotalSellers(array(
+						'seller_status' => array(MsSeller::STATUS_ACTIVE)
+					));
+					
+					$results = $this->MsLoader->MsSeller->getSellers(
+						array(
+							'seller_status' => array(MsSeller::STATUS_ACTIVE)
+						),
+						array(
+							'order_by'	=> 'ms.nickname',
+							'order_way'	=> 'ASC',
+							'offset'		=> ($page - 1) * 10,
+							'limit'		=> 10,
+						)
+					);
+					
+					foreach ($results as $result) {
+						$emails[] = $result['c.email'];
+					}
+					break;
+			]]></add>
+		</operation>
+	</file>
+</modification>

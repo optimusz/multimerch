@@ -1,0 +1,155 @@
+<?xml version="1.0" ?>
+<!DOCTYPE modification [
+<!ENTITY themeFolder "default">
+]>
+<modification>
+	<id>MultiMerch Core Seller Menu</id>
+	<author>http://multimerch.com/</author>
+	
+	<!-- account area menu -->
+	<file name="catalog/view/theme/&themeFolder;/template/account/account.tpl">
+		<operation>
+			<search position="before"><![CDATA[
+				<h2><?php echo $text_my_newsletter; ?></h2>
+			]]></search>
+			<add><![CDATA[
+				<h2><?php echo $ms_account_seller_account; ?></h2>
+				<div class="content">
+					<ul class="ms-sellermenu <?php if ($this->config->get('msconf_graphical_sellermenu')) { ?>graphical<?php } ?>">
+							<?php if ($ms_seller_created && $this->MsLoader->MsSeller->getStatus($this->customer->getId()) == MsSeller::STATUS_ACTIVE) { ?>
+								<li>
+									<a href="<?php echo $this->url->link('seller/account-dashboard', '', 'SSL'); ?>">
+										<?php if($this->config->get('msconf_graphical_sellermenu')) { ?>
+											<img src="catalog/view/theme/<?php echo $this->config->get('config_template'); ?>/image/ms-graph-96.png" />
+										<?php } ?>
+										<?php echo $ms_account_dashboard; ?>
+									</a>
+								</li>
+							<?php } ?>
+
+							<li>
+								<a href="<?php echo $this->url->link('seller/account-profile', '', 'SSL'); ?>">
+									<?php if($this->config->get('msconf_graphical_sellermenu')) { ?>
+										<?php if ($ms_seller_created) { ?>
+										<img src="catalog/view/theme/<?php echo $this->config->get('config_template'); ?>/image/ms-profile-96.png" />
+										<?php } else { ?>
+										<img src="catalog/view/theme/<?php echo $this->config->get('config_template'); ?>/image/ms-profile-plus-96.png" />
+										<?php } ?>
+									<?php } ?>
+									<?php echo $ms_seller_created ? $ms_account_sellerinfo : $ms_account_sellerinfo_new; ?>
+								</a>
+							</li>
+							
+							<?php if ( ($ms_seller_created) && ( ($this->MsLoader->MsSeller->getStatus($this->customer->getId()) == MsSeller::STATUS_ACTIVE) || ($this->config->get('msconf_allow_inactive_seller_products')) ) ) { ?>
+								<li>
+									<a href="<?php echo $this->url->link('seller/account-product/create', '', 'SSL'); ?>">
+										<?php if($this->config->get('msconf_graphical_sellermenu')) { ?>
+											<img src="catalog/view/theme/<?php echo $this->config->get('config_template'); ?>/image/ms-bag-plus-96.png" />
+										<?php } ?>
+										<?php echo $ms_account_newproduct; ?>
+									</a>
+								</li>
+								<li>
+									<a href="<?php echo $this->url->link('seller/account-product', '', 'SSL'); ?>">
+										<?php if($this->config->get('msconf_graphical_sellermenu')) { ?>
+											<img src="catalog/view/theme/<?php echo $this->config->get('config_template'); ?>/image/ms-bag-96.png" />
+										<?php } ?>
+										<?php echo $ms_account_products; ?>
+									</a>
+								</li>
+							<?php } ?>
+							<?php if ($ms_seller_created && $this->MsLoader->MsSeller->getStatus($this->customer->getId()) == MsSeller::STATUS_ACTIVE) { ?>
+								<li>
+									<a href="<?php echo $this->url->link('seller/account-order', '', 'SSL'); ?>">
+										<?php if($this->config->get('msconf_graphical_sellermenu')) { ?>
+											<img src="catalog/view/theme/<?php echo $this->config->get('config_template'); ?>/image/ms-cart-96.png" />
+										<?php } ?>
+										<?php echo $ms_account_orders; ?>
+									</a>
+								</li>
+								<li>
+									<a href="<?php echo $this->url->link('seller/account-transaction', '', 'SSL'); ?>">
+										<?php if($this->config->get('msconf_graphical_sellermenu')) { ?>
+											<img src="catalog/view/theme/<?php echo $this->config->get('config_template'); ?>/image/ms-book-96.png" />
+										<?php } ?>
+										<?php echo $ms_account_transactions; ?>
+									</a>
+								</li>
+								<?php if ($this->config->get('msconf_allow_withdrawal_requests')) { ?>
+									<li>
+										<a href="<?php echo $this->url->link('seller/account-withdrawal', '', 'SSL'); ?>">
+											<?php if($this->config->get('msconf_graphical_sellermenu')) { ?>
+												<img src="catalog/view/theme/<?php echo $this->config->get('config_template'); ?>/image/ms-dollar-96.png" />
+											<?php } ?>
+											<?php echo $ms_account_withdraw; ?>
+										</a>
+									</li>
+								<?php } ?>
+									<li>
+										<a href="<?php echo $this->url->link('seller/account-stats', '', 'SSL'); ?>">
+											<?php if($this->config->get('msconf_graphical_sellermenu')) { ?>
+												<img src="catalog/view/theme/<?php echo $this->config->get('config_template'); ?>/image/ms-stats-96.png" />
+											<?php } ?>
+											<?php echo $ms_account_stats; ?>
+										</a>
+									</li>
+							<?php } ?>
+					</ul>
+				</div>
+			]]></add>
+		</operation>
+	</file>
+
+	<file name="catalog/controller/account/account.php">
+		<operation>
+			<search position="before"><![CDATA[
+				$this->response->setOutput($this->render());
+			]]></search>
+			<add><![CDATA[
+				$this->data['ms_seller_created'] = $this->MsLoader->MsSeller->isCustomerSeller($this->customer->getId());
+				$this->data = array_merge($this->data, $this->load->language('multiseller/multiseller'));
+			]]></add>
+		</operation>
+	</file>
+
+	<!-- account sidebar menu -->
+	<file name="catalog/view/theme/&themeFolder;/template/module/account.tpl">
+		<operation>
+			<search position="before"><![CDATA[
+			</ul>
+			]]></search>
+			<add><![CDATA[
+				<br />
+				<li style="list-style-type: none"><b><?php echo $ms_account_seller_account; ?></b></li>
+				<?php if ($ms_seller_created && $this->MsLoader->MsSeller->getStatus($this->customer->getId()) == MsSeller::STATUS_ACTIVE) { ?>
+					<li><a href="<?php echo $this->url->link('seller/account-dashboard', '', 'SSL'); ?>"><?php echo $ms_account_dashboard; ?></a></li>
+				<?php } ?>
+				
+				<li><a href="<?php echo $this->url->link('seller/account-profile', '', 'SSL'); ?>"><?php echo $ms_seller_created ? $ms_account_sellerinfo : $ms_account_sellerinfo; ?></a></li>
+				
+				<?php if ($ms_seller_created && $this->MsLoader->MsSeller->getStatus($this->customer->getId()) == MsSeller::STATUS_ACTIVE) { ?>
+					<li><a href="<?php echo $this->url->link('seller/account-product/create', '', 'SSL'); ?>"><?php echo $ms_account_newproduct; ?></a></li>
+					<li><a href="<?php echo $this->url->link('seller/account-product', '', 'SSL'); ?>"><?php echo $ms_account_products; ?></a></li>
+					<li><a href="<?php echo $this->url->link('seller/account-order', '', 'SSL'); ?>"><?php echo $ms_account_orders; ?></a></li>
+					<li><a href="<?php echo $this->url->link('seller/account-transaction', '', 'SSL'); ?>"><?php echo $ms_account_transactions; ?></a></li>
+					<?php if ($this->config->get('msconf_allow_withdrawal_requests')) { ?>
+					<li><a href="<?php echo $this->url->link('seller/account-withdrawal', '', 'SSL'); ?>"><?php echo $ms_account_withdraw; ?></a></li>
+					<?php } ?>
+					<li><a href="<?php echo $this->url->link('seller/account-stats', '', 'SSL'); ?>"><?php echo $ms_account_stats; ?></a></li>
+				<?php } ?>
+			]]></add>
+		</operation>
+	</file>
+	
+	<file name="catalog/controller/module/account.php">
+		<operation>
+			<search position="before"><![CDATA[
+				$this->render();
+			]]></search>
+			<add><![CDATA[
+				$this->data['ms_seller_created'] = $this->MsLoader->MsSeller->isCustomerSeller($this->customer->getId());			
+				$this->data = array_merge($this->data, $this->load->language('multiseller/multiseller'));
+			]]></add>
+		</operation>
+	</file>	
+</modification>
