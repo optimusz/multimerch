@@ -102,7 +102,7 @@ class ControllerModuleMultiseller extends ControllerMultisellerBase {
 		"msconf_avatars_for_sellers" => 0, // 0 - Uploaded manually by seller, 1 - Both, uploaded by seller and pre-defined, 2 - Only pre-defined
 		"msconf_change_seller_nickname" => 1,
 
-		"msconf_enable_private_messaging" => 1, // 0 - no, 1 - yes, 2 - email only
+		"msconf_enable_private_messaging" => 1, // 0 - no, 2 - yes (email only)
 		"msconf_enable_one_page_seller_registration" => 0 // 0 - no, 1 - yes
 	);
 	

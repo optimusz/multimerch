@@ -690,12 +690,10 @@
 							<span class="help"><?php echo $ms_config_enable_private_messaging_note; ?></span>
 						</td>
 						<td>
-							<input type="radio" name="msconf_enable_private_messaging" value="1" <?php if($msconf_enable_private_messaging == 1) { ?> checked="checked" <?php } ?>  />
+							<input type="radio" name="msconf_enable_private_messaging" value="2" <?php if($msconf_enable_private_messaging == 2) { ?> checked="checked" <?php } ?>  />
 							<?php echo $text_yes; ?>
 							<input type="radio" name="msconf_enable_private_messaging" value="0" <?php if($msconf_enable_private_messaging == 0) { ?> checked="checked" <?php } ?>  />
 							<?php echo $text_no; ?>
-							<input type="radio" name="msconf_enable_private_messaging" value="2" <?php if($msconf_enable_private_messaging == 2) { ?> checked="checked" <?php } ?>  />
-							<?php echo $ms_config_pm_dialog_only; ?>
 						</td>
 					</tr>
 					

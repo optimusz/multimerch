@@ -236,13 +236,13 @@ class ModelMultisellerInstall extends Model {
 		PRIMARY KEY (`suborder_id`)
 		) DEFAULT CHARSET=utf8");
 	
-		/*$this->db->query("
+		$this->db->query("
 		CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "ms_seller_tax_class` (
 		`seller_id` int(11) NOT NULL,
 		`tax_class_id` int(11) NOT NULL,
 		PRIMARY KEY (`seller_id`),
 		UNIQUE KEY `seller_id` (`seller_id`)
-		) DEFAULT CHARSET=utf8");*/
+		) DEFAULT CHARSET=utf8");
 	}
 	
 	public function createData() {

@@ -3,6 +3,10 @@
 class ControllerMultisellerSellerGroup extends ControllerMultisellerBase {
 	private $error = array();
 
+	public function __construct($registry) {
+		parent::__construct($registry);
+	}
+	
 	public function getTableData() {
 		$colMap = array(
 			'id' => 'msg.seller_group_id'

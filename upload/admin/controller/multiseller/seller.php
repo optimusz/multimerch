@@ -1,6 +1,10 @@
 <?php
 
 class ControllerMultisellerSeller extends ControllerMultisellerBase {
+	public function __construct($registry) {
+		parent::__construct($registry);
+	}
+		
 	public function getTableData() {
 		$colMap = array(
 			'seller' => '`c.name`',
