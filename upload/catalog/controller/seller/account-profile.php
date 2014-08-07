@@ -334,10 +334,7 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
             $this->cache->delete("ms_carousel");
             $this->cache->delete("ms_newsellers");
             $this->cache->delete("ms_topsellers");
-            /*------------------------------------------------------------------------------------------*/
-
-			$this->MsLoader->MsTax->setSellerTaxClass($this->customer->getId(), $data['tax_class']);
-
+            /*----------------------------------------------------------------------------------------------------*/
 		}
 		
 		$this->response->setOutput(json_encode($json));
@@ -364,8 +361,6 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 		$this->data['salt'] = $this->MsLoader->MsSeller->getSalt($this->customer->getId());
 		$this->data['statusclass'] = 'attention';
 
-		$this->data['tax_classes'] = $this->MsLoader->MsTax->getTaxClasses();
-
 		if ($seller) {
 			switch ($seller['ms.seller_status']) {
 				case MsSeller::STATUS_UNPAID:
@@ -382,8 +377,7 @@ class ControllerSellerAccountProfile extends ControllerSellerAccount {
 			
 			$this->data['seller'] = $seller;
 			$this->data['country_id'] = $seller['ms.country_id'];
-			$this->data['tax_id'] = $this->MsLoader->MsTax->getSellerTaxClassId($this->customer->getId());
-			
+
 			if (!empty($seller['ms.avatar'])) {
 				$this->data['seller']['avatar']['name'] = $seller['ms.avatar'];
 				$this->data['seller']['avatar']['thumb'] = $this->MsLoader->MsFile->resizeImage($seller['ms.avatar'], $this->config->get('msconf_preview_seller_avatar_image_width'), $this->config->get('msconf_preview_seller_avatar_image_height'));

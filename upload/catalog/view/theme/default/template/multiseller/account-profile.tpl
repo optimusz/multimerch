@@ -155,17 +155,6 @@
 					</td>
 				</tr>
 				<?php } ?>
-
-				<tr>
-					<td><?php echo $ms_account_sellerinfo_tax_class; ?></td>
-					<td>
-						<select name="tax_class" id="">
-							<?php foreach ($tax_classes as $key => $tax_class): ?>
-								<option value="<?php echo $tax_class['tax_class_id']; ?>" <?php if($tax_id && $tax_id == $tax_class['tax_class_id']) { echo 'selected'; } ?> ><?php echo $tax_class['title']; ?></option>
-							<?php endforeach; ?>
-						</select>
-					</td>
-				</tr>
 			</table>
 		</div>
 		</form>

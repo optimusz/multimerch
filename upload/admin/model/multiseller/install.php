@@ -235,14 +235,6 @@ class ModelMultisellerInstall extends Model {
 		`order_status_id` int(11) NOT NULL,
 		PRIMARY KEY (`suborder_id`)
 		) DEFAULT CHARSET=utf8");
-	
-		$this->db->query("
-		CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "ms_seller_tax_class` (
-		`seller_id` int(11) NOT NULL,
-		`tax_class_id` int(11) NOT NULL,
-		PRIMARY KEY (`seller_id`),
-		UNIQUE KEY `seller_id` (`seller_id`)
-		) DEFAULT CHARSET=utf8");
 	}
 	
 	public function createData() {
@@ -306,7 +298,6 @@ class ModelMultisellerInstall extends Model {
 		`" . DB_PREFIX . "ms_product_attribute`,
 		`" . DB_PREFIX . "ms_payment`,
 		`" . DB_PREFIX . "ms_suborder`,
-		`" . DB_PREFIX . "ms_seller_tax_class`,
 		`" . DB_PREFIX . "ms_db_schema`,
 		`" . DB_PREFIX . "ms_version`");
 	}
