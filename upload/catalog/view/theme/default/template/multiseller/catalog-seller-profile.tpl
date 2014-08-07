@@ -32,8 +32,10 @@
 				<p><b><?php echo $ms_catalog_seller_profile_totalsales; ?></b> <?php echo $seller['total_sales']; ?></p>
 				<p><b><?php echo $ms_catalog_seller_profile_totalproducts; ?></b> <?php echo $seller['total_products']; ?></p>
 				
-				<?php if ((!$this->customer->getId() || ($this->customer->getId() && $this->customer->getId() != $seller['seller_id'])) && ($this->config->get('mmess_conf_enable') || ($this->config->get('msconf_enable_private_messaging') == 1 && $this->customer->getId()))) { ?>
-					<p><a href="index.php?route=seller/catalog-seller/jxRenderContactDialog&seller_id=<?php echo $seller_id; ?>" class="ms-sellercontact" title="<?php echo $ms_sellercontact_title; ?>"><?php echo $ms_catalog_product_contact; ?></a></p>
+				<?php if ($this->customer->getId()) { ?>
+					<?php if (($this->customer->getId() != $seller['seller_id']) && ($this->config->get('mmess_conf_enable') || $this->config->get('msconf_enable_private_messaging') == 2)) { ?>	
+						<p><a href="index.php?route=seller/catalog-seller/jxRenderContactDialog&seller_id=<?php echo $seller_id; ?>" class="ms-sellercontact" title="<?php echo $ms_sellercontact_title; ?>"><?php echo $ms_catalog_product_contact; ?></a></p>
+					<?php } ?>
 				<?php } ?>
 			</div>
 		</div>

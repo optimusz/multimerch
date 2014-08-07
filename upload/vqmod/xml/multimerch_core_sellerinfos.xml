@@ -45,7 +45,8 @@
 				<?php
 					$this->load->language('multiseller/multiseller');
 					$seller = $this->MsLoader->MsSeller->getSeller($this->MsLoader->MsProduct->getSellerId($product['product_id']));
-					if ($seller && $this->MsLoader->dist != "SE") {
+					// @todo shipping edition not installed
+					if ($seller/* && $this->MsLoader->dist != "SE"*/) {
 						echo "<span class='ms-by-seller'>" . $this->language->get('ms_by') . " <a href='". $this->url->link('seller/catalog-seller/profile', 'seller_id=' . $seller['seller_id']) ."'>{$seller['ms.nickname']}</a>";
 					}
 				?>
