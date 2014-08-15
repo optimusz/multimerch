@@ -55,13 +55,34 @@ table.list td.comment {
 	background-image: url(../../image/multiseller/ms-paypal.png);
 }
 
-.ms-button-paypal-top {
-    background-image: url(../../image/multiseller/ms-paypal.png);
+.ms-button-paypal-mass-seller {
+	background-image: url(../../image/multiseller/ms-paypal-mass-seller.png);
+}
+
+.ms-button-paypal-mass-seller-all {
+	background-image: url(../../image/multiseller/ms-paypal-mass-seller-all.png);
+}
+
+.ms-button-paypal-mass-payment {
+	background-image: url(../../image/multiseller/ms-paypal-mass-payment.png);
+}
+
+.ms-button-paypal-mass-payment-all {
+	background-image: url(../../image/multiseller/ms-paypal-mass-payment-all.png);
 }
 
 .ms-button-profile {
-    background-image: url(../../image/multiseller/ms-profile.png);
+	background-image: url(../../image/multiseller/ms-profile.png);
 }
+
+.ms-button-profile-plus {
+	background-image: url(../../image/multiseller/ms-profile-plus.png);
+}
+
+.ms-button-dollar-plus {
+	background-image: url(../../image/multiseller/ms-dollar-plus.png);
+}
+
 
 .ms-button-paypal-bw {
 	background-image: url(../../image/multiseller/ms-paypal-bw.png);

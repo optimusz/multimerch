@@ -15,7 +15,7 @@
 	<div class="heading">
 	  <h1><img src="view/image/multiseller/ms-profile.png" alt="" /> <?php echo $ms_catalog_sellers_heading; ?></h1>
 		<div class="buttons" style="margin-top: -2px;">
-			<a onclick="location = '<?php echo $link_create_seller; ?>'" class="ms-button ms-button-profile v-top" title="<?php echo $ms_catalog_sellers_create; ?>"></a>
+			<a onclick="location = '<?php echo $link_create_seller; ?>'" class="ms-button ms-button-profile-plus v-top" title="<?php echo $ms_catalog_sellers_create; ?>"></a>
 		</div>
 	</div>
 	<div class="content">
